@@ -5,9 +5,14 @@ import androidx.annotation.Nullable;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import android.view.View;
+import android.view.ViewGroup;
 
-public class ExternalKeyboardView extends View {
+public class ExternalKeyboardView extends ViewGroup {
+
+  @Override
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    // No-op since UIManagerModule handles actually laying out children.
+  }
 
   public ExternalKeyboardView(Context context) {
     super(context);

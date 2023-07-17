@@ -159,7 +159,7 @@
   },
   "codegenConfig": {
     "name": "RNExternalKeyboardViewSpec",
-    "type": "components",
+    "type": "all",
     "jsSrcsDir": "src"
   }
 }
