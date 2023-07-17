@@ -21,8 +21,8 @@ export type OnFocusChangeFn = (e: KeyboardFocusEvent) => void;
 
 export type FocusWrapperProps = ViewProps & {
   onFocusChange?: OnFocusChangeFn;
-  onKeyUpPress: OnKeyPressFn;
-  onKeyDownPress: OnKeyPressFn;
+  onKeyUpPress?: OnKeyPressFn;
+  onKeyDownPress?: OnKeyPressFn;
   canBeFocused?: boolean;
 };
 
