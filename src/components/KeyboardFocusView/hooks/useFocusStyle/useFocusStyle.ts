@@ -1,20 +1,6 @@
 import { useState, useMemo } from 'react';
-import type { NativeSyntheticEvent } from 'react-native';
-import { StyleProp, ViewStyle, StyleSheet } from 'react-native';
-
-export type FocusStateCallbackType = {
-  readonly focused: boolean;
-};
-
-export type FocusStyle =
-  | StyleProp<ViewStyle>
-  | ((state: FocusStateCallbackType) => StyleProp<ViewStyle>)
-  | undefined;
-
-export type KeyboardFocusEvent = NativeSyntheticEvent<{
-  isFocused: boolean;
-}>;
-export type OnFocusChangeFn = (e: KeyboardFocusEvent) => void;
+import { StyleSheet } from 'react-native';
+import type { FocusStyle, OnFocusChangeFn } from 'src/types';
 
 export const useFocusStyle = (
   focusStyle?: FocusStyle,

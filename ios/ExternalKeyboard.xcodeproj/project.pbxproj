@@ -8,10 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		4909DF422A645F0F006648DA /* A11yKeyboardModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4909DF412A645F0F006648DA /* A11yKeyboardModule.mm */; };
-		492FDA5F2A43564600E3E60D /* KeyboardKeyPressHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 492FDA5E2A43564600E3E60D /* KeyboardKeyPressHandler.mm */; };
-		492FDA642A4357AF00E3E60D /* FocusWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 492FDA632A4357AF00E3E60D /* FocusWrapper.mm */; };
-		4968F6A02A3F913200ADC089 /* ExternalKeyboardView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4968F69C2A3F913100ADC089 /* ExternalKeyboardView.mm */; };
-		4968F6A12A3F913200ADC089 /* ExternalKeyboardViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4968F69D2A3F913100ADC089 /* ExternalKeyboardViewManager.mm */; };
+		49EA62882A65FBB500F8C388 /* ExternalKeyboardViewManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49EA62792A65FBB500F8C388 /* ExternalKeyboardViewManager.mm */; };
+		49EA62892A65FBB500F8C388 /* KeyboardKeyPressHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49EA627D2A65FBB500F8C388 /* KeyboardKeyPressHandler.mm */; };
+		49EA628A2A65FBB500F8C388 /* FocusWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49EA62802A65FBB500F8C388 /* FocusWrapper.mm */; };
+		49EA628B2A65FBB500F8C388 /* ExternalKeyboardView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49EA62832A65FBB500F8C388 /* ExternalKeyboardView.mm */; };
+		49EA628C2A65FBB500F8C388 /* A11yKeyboardModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 49EA62872A65FBB500F8C388 /* A11yKeyboardModule.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,14 +31,16 @@
 		134814201AA4EA6300B7C361 /* libExternalKeyboard.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libExternalKeyboard.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4909DF412A645F0F006648DA /* A11yKeyboardModule.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = A11yKeyboardModule.mm; sourceTree = "<group>"; };
 		4909DF432A645F17006648DA /* A11yKeyboardModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = A11yKeyboardModule.h; sourceTree = "<group>"; };
-		492FDA5E2A43564600E3E60D /* KeyboardKeyPressHandler.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardKeyPressHandler.mm; sourceTree = "<group>"; };
-		492FDA602A43565A00E3E60D /* KeyboardKeyPressHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardKeyPressHandler.h; sourceTree = "<group>"; };
-		492FDA622A4357A500E3E60D /* FocusWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FocusWrapper.h; sourceTree = "<group>"; };
-		492FDA632A4357AF00E3E60D /* FocusWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FocusWrapper.mm; sourceTree = "<group>"; };
-		493B97192A65514F0037E4D2 /* ExternalKeyboardViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExternalKeyboardViewManager.h; sourceTree = "<group>"; };
-		4968F69B2A3F913100ADC089 /* ExternalKeyboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalKeyboardView.h; sourceTree = "<group>"; };
-		4968F69C2A3F913100ADC089 /* ExternalKeyboardView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalKeyboardView.mm; sourceTree = "<group>"; };
-		4968F69D2A3F913100ADC089 /* ExternalKeyboardViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalKeyboardViewManager.mm; sourceTree = "<group>"; };
+		49EA62782A65FBB500F8C388 /* ExternalKeyboardViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalKeyboardViewManager.h; sourceTree = "<group>"; };
+		49EA62792A65FBB500F8C388 /* ExternalKeyboardViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalKeyboardViewManager.mm; sourceTree = "<group>"; };
+		49EA627C2A65FBB500F8C388 /* KeyboardKeyPressHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardKeyPressHandler.h; sourceTree = "<group>"; };
+		49EA627D2A65FBB500F8C388 /* KeyboardKeyPressHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardKeyPressHandler.mm; sourceTree = "<group>"; };
+		49EA627F2A65FBB500F8C388 /* FocusWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FocusWrapper.h; sourceTree = "<group>"; };
+		49EA62802A65FBB500F8C388 /* FocusWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FocusWrapper.mm; sourceTree = "<group>"; };
+		49EA62822A65FBB500F8C388 /* ExternalKeyboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalKeyboardView.h; sourceTree = "<group>"; };
+		49EA62832A65FBB500F8C388 /* ExternalKeyboardView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalKeyboardView.mm; sourceTree = "<group>"; };
+		49EA62862A65FBB500F8C388 /* A11yKeyboardModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A11yKeyboardModule.h; sourceTree = "<group>"; };
+		49EA62872A65FBB500F8C388 /* A11yKeyboardModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = A11yKeyboardModule.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,34 +79,84 @@
 			path = A11yKeyboardModule;
 			sourceTree = "<group>";
 		};
-		492FDA5C2A43562B00E3E60D /* KeyboardKeyPressHandler */ = {
+		49EA62762A65FBB500F8C388 /* ViewManagers */ = {
 			isa = PBXGroup;
 			children = (
-				492FDA5E2A43564600E3E60D /* KeyboardKeyPressHandler.mm */,
-				492FDA602A43565A00E3E60D /* KeyboardKeyPressHandler.h */,
+				49EA62772A65FBB500F8C388 /* ExternalKeyboardViewManager */,
+			);
+			path = ViewManagers;
+			sourceTree = "<group>";
+		};
+		49EA62772A65FBB500F8C388 /* ExternalKeyboardViewManager */ = {
+			isa = PBXGroup;
+			children = (
+				49EA62782A65FBB500F8C388 /* ExternalKeyboardViewManager.h */,
+				49EA62792A65FBB500F8C388 /* ExternalKeyboardViewManager.mm */,
+			);
+			path = ExternalKeyboardViewManager;
+			sourceTree = "<group>";
+		};
+		49EA627A2A65FBB500F8C388 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				49EA627B2A65FBB500F8C388 /* KeyboardKeyPressHandler */,
+				49EA627E2A65FBB500F8C388 /* FocusWrapper */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		49EA627B2A65FBB500F8C388 /* KeyboardKeyPressHandler */ = {
+			isa = PBXGroup;
+			children = (
+				49EA627C2A65FBB500F8C388 /* KeyboardKeyPressHandler.h */,
+				49EA627D2A65FBB500F8C388 /* KeyboardKeyPressHandler.mm */,
 			);
 			path = KeyboardKeyPressHandler;
 			sourceTree = "<group>";
 		};
-		492FDA612A43579B00E3E60D /* FocusWrapper */ = {
+		49EA627E2A65FBB500F8C388 /* FocusWrapper */ = {
 			isa = PBXGroup;
 			children = (
-				492FDA622A4357A500E3E60D /* FocusWrapper.h */,
-				492FDA632A4357AF00E3E60D /* FocusWrapper.mm */,
+				49EA627F2A65FBB500F8C388 /* FocusWrapper.h */,
+				49EA62802A65FBB500F8C388 /* FocusWrapper.mm */,
 			);
 			path = FocusWrapper;
+			sourceTree = "<group>";
+		};
+		49EA62812A65FBB500F8C388 /* ExternalKeyboardView */ = {
+			isa = PBXGroup;
+			children = (
+				49EA62822A65FBB500F8C388 /* ExternalKeyboardView.h */,
+				49EA62832A65FBB500F8C388 /* ExternalKeyboardView.mm */,
+			);
+			path = ExternalKeyboardView;
+			sourceTree = "<group>";
+		};
+		49EA62842A65FBB500F8C388 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				49EA62852A65FBB500F8C388 /* A11yKeyboardModule */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		49EA62852A65FBB500F8C388 /* A11yKeyboardModule */ = {
+			isa = PBXGroup;
+			children = (
+				49EA62862A65FBB500F8C388 /* A11yKeyboardModule.h */,
+				49EA62872A65FBB500F8C388 /* A11yKeyboardModule.mm */,
+			);
+			path = A11yKeyboardModule;
 			sourceTree = "<group>";
 		};
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
 				4909DF3F2A645EE3006648DA /* Modules */,
-				492FDA612A43579B00E3E60D /* FocusWrapper */,
-				492FDA5C2A43562B00E3E60D /* KeyboardKeyPressHandler */,
-				4968F69B2A3F913100ADC089 /* ExternalKeyboardView.h */,
-				4968F69C2A3F913100ADC089 /* ExternalKeyboardView.mm */,
-				493B97192A65514F0037E4D2 /* ExternalKeyboardViewManager.h */,
-				4968F69D2A3F913100ADC089 /* ExternalKeyboardViewManager.mm */,
+				49EA62812A65FBB500F8C388 /* ExternalKeyboardView */,
+				49EA627A2A65FBB500F8C388 /* Helpers */,
+				49EA62842A65FBB500F8C388 /* Modules */,
+				49EA62762A65FBB500F8C388 /* ViewManagers */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -165,11 +218,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				492FDA5F2A43564600E3E60D /* KeyboardKeyPressHandler.mm in Sources */,
-				4968F6A12A3F913200ADC089 /* ExternalKeyboardViewManager.mm in Sources */,
+				49EA628A2A65FBB500F8C388 /* FocusWrapper.mm in Sources */,
+				49EA628B2A65FBB500F8C388 /* ExternalKeyboardView.mm in Sources */,
+				49EA62892A65FBB500F8C388 /* KeyboardKeyPressHandler.mm in Sources */,
+				49EA62882A65FBB500F8C388 /* ExternalKeyboardViewManager.mm in Sources */,
 				4909DF422A645F0F006648DA /* A11yKeyboardModule.mm in Sources */,
-				492FDA642A4357AF00E3E60D /* FocusWrapper.mm in Sources */,
-				4968F6A02A3F913200ADC089 /* ExternalKeyboardView.mm in Sources */,
+				49EA628C2A65FBB500F8C388 /* A11yKeyboardModule.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

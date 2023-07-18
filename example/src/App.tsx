@@ -25,13 +25,13 @@ export default function App() {
   return (
     <View style={styles.container}>
       <KeyboardFocusView onKeyUpPress={() => A11yModule.setKeyboardFocus(ref)}>
-        <Text>Focusable</Text>
+        <Text accessible>Focusable</Text>
       </KeyboardFocusView>
       <KeyboardFocusView
         ref={ref}
         onKeyUpPress={() => A11yModule.setKeyboardFocus(ref)}
       >
-        <Text>Catch</Text>
+        <Text accessible>Catch</Text>
       </KeyboardFocusView>
       <ExternalKeyboardView
         onKeyDownPress={onKeyDownHandler}

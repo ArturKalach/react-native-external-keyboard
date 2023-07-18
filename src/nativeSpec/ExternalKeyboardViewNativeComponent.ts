@@ -1,5 +1,5 @@
-import type { ViewProps } from 'react-native';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+import type { ViewProps } from 'react-native';
 import type {
   BubblingEventHandler,
   Int32,
@@ -25,10 +25,13 @@ export type KeyPress = Readonly<{
   hasNoModifiers: boolean;
 }>;
 
-export interface NativeProps extends ViewProps {
+export interface ExternalKeyboardNativeProps extends ViewProps {
   onFocusChange?: BubblingEventHandler<FocusChange>;
   onKeyUpPress?: BubblingEventHandler<KeyPress>;
   onKeyDownPress?: BubblingEventHandler<KeyPress>;
   canBeFocused?: boolean;
 }
-export default codegenNativeComponent<NativeProps>('ExternalKeyboardView');
+
+export default codegenNativeComponent<ExternalKeyboardNativeProps>(
+  'ExternalKeyboardView'
+);

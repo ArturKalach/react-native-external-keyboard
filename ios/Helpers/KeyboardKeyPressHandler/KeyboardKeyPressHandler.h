@@ -14,13 +14,13 @@
 }
 
 -(NSDictionary*) getKeyPressEventInfo:(NSSet<UIPress *> *)presses
-                         withEvent:(UIPressesEvent *)event;
+                            withEvent:(UIPressesEvent *)event;
 
 -(NSDictionary*) actionDownHandler:(NSSet<UIPress *> *)presses
                          withEvent:(UIPressesEvent *)event;
 
 -(NSDictionary*) actionUpHandler:(NSSet<UIPress *> *)presses
-                         withEvent:(UIPressesEvent *)event;
+                       withEvent:(UIPressesEvent *)event;
 
 @end
 

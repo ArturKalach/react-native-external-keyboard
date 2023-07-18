@@ -1,4 +1,4 @@
-package com.externalkeyboard;
+package com.externalkeyboard.views.ExternalKeyboardView;
 
 import android.view.KeyEvent;
 import android.view.View;
@@ -6,17 +6,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.common.MapBuilder;
-import com.facebook.react.module.annotations.ReactModule;
-import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.annotations.ReactProp;
-import java.util.Map;
-import com.facebook.react.uimanager.UIManagerHelper;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
 import com.externalkeyboard.services.KeyboardKeyPressHandler;
+import com.facebook.react.common.MapBuilder;
+import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.UIManagerHelper;
+import com.facebook.react.uimanager.annotations.ReactProp;
+
+import java.util.Map;
 
 
 @ReactModule(name = ExternalKeyboardViewManager.NAME)
@@ -38,18 +38,17 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
 
 
   private void onKeyPressHandler(ExternalKeyboardView viewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
-    KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode,keyEvent);
+    KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
 
-    if(pressInfo.firePressDownEvent) {
+    if (pressInfo.firePressDownEvent) {
       KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(viewGroup.getId(), keyCode, keyEvent);
-      UIManagerHelper.getEventDispatcherForReactTag((ReactContext) reactContext, viewGroup.getId()).dispatchEvent(keyPressDownEvent);
+      UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressDownEvent);
     }
 
-    if(pressInfo.firePressUpEvent) {
+    if (pressInfo.firePressUpEvent) {
       KeyPressUpEvent keyPressUpEvent = new KeyPressUpEvent(viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
-      UIManagerHelper.getEventDispatcherForReactTag((ReactContext) reactContext, viewGroup.getId()).dispatchEvent(keyPressUpEvent);
+      UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressUpEvent);
     }
-
   }
 
   @Override
@@ -60,7 +59,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
         child.setOnFocusChangeListener(
           (v, hasFocus) -> {
             FocusChangeEvent event = new FocusChangeEvent(viewGroup.getId(), hasFocus);
-            UIManagerHelper.getEventDispatcherForReactTag((ReactContext) reactContext, v.getId()).dispatchEvent(event);
+            UIManagerHelper.getEventDispatcherForReactTag(reactContext, v.getId()).dispatchEvent(event);
           });
 
         child.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> {
@@ -76,7 +75,6 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
 
-
   @Nullable
   @Override
   public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
@@ -89,17 +87,15 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     export.put(KeyPressUpEvent.EVENT_NAME, MapBuilder.of("registrationName", "onKeyUpPress"));
     export.put(KeyPressDownEvent.EVENT_NAME, MapBuilder.of("registrationName", "onKeyDownPress"));
 
-
     return export;
   }
 
   @Override
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
   public void setCanBeFocused(ExternalKeyboardView wrapper, boolean canBeFocused) {
-    wrapper.setDescendantFocusability(
-      canBeFocused ?
-        wrapper.FOCUS_AFTER_DESCENDANTS
-        : wrapper.FOCUS_BLOCK_DESCENDANTS
-    );
+    int descendantFocusability = canBeFocused ?
+      ViewGroup.FOCUS_AFTER_DESCENDANTS
+      : ViewGroup.FOCUS_BLOCK_DESCENDANTS;
+    wrapper.setDescendantFocusability(descendantFocusability);
   }
 }

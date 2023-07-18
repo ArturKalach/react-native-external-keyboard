@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import type { View } from 'react-native';
-import ExternalKeyboardView from '../ExternalKeyboardViewNativeComponent';
-import { A11yModule } from '../A11yModule';
-import { useFocusStyle } from './useFocusStyle';
+import { ExternalKeyboardView } from '../../nativeSpec';
+import type { KeyboardFocusViewProps } from '../../types';
+import { A11yModule } from '../../services';
 
-import type { KeyboardFocusViewProps } from './KeyboardFocusView.types';
+import { useFocusStyle } from './hooks/useFocusStyle';
 
 export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
   (

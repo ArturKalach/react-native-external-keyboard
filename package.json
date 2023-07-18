@@ -160,6 +160,6 @@
   "codegenConfig": {
     "name": "RNExternalKeyboardViewSpec",
     "type": "all",
-    "jsSrcsDir": "src"
+    "jsSrcsDir": "src/nativeSpec"
   }
 }

@@ -4,6 +4,7 @@ package com.externalkeyboard.services;
 import static android.content.res.Configuration.HARDKEYBOARDHIDDEN_NO;
 import static android.content.res.Configuration.KEYBOARD_NOKEYS;
 import static android.content.res.Configuration.KEYBOARD_UNDEFINED;
+import static com.facebook.react.uimanager.common.UIManagerType.FABRIC;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -22,19 +23,12 @@ import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.common.ViewUtil;
 
-import static com.facebook.react.uimanager.common.UIManagerType.FABRIC;
-
 public class KeyboardService implements LifecycleEventListener {
   private final String NEW_CONFIG = "newConfig";
   private final String ON_CONFIGURATION_CHANGED = "onConfigurationChanged";
 
   private final ReactApplicationContext context;
   private final BroadcastReceiver receiver;
-
-  public boolean isKeyboardConnected() {
-    final int keyboard = context.getResources().getConfiguration().keyboard;
-    return keyboard != KEYBOARD_UNDEFINED && keyboard != KEYBOARD_NOKEYS;
-  }
 
   public KeyboardService(ReactApplicationContext context) {
     this.context = context;
@@ -47,6 +41,11 @@ public class KeyboardService implements LifecycleEventListener {
       }
     };
     keyboardChanged(isKeyboardConnected());
+  }
+
+  public boolean isKeyboardConnected() {
+    final int keyboard = context.getResources().getConfiguration().keyboard;
+    return keyboard != KEYBOARD_UNDEFINED && keyboard != KEYBOARD_NOKEYS;
   }
 
   public void keyboardChanged(Boolean info) {

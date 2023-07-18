@@ -8,12 +8,12 @@ const LINKING_ERROR =
 // @ts-expect-error
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
-const RCA11yModule = isTurboModuleEnabled
-  ? require('../../NativeKeyboardModule').default
+const A11yModule = isTurboModuleEnabled
+  ? require('../../nativeSpec/NativeKeyboardModule').default
   : NativeModules.A11yKeyboardModule;
 
-export const RCA11y =
-  RCA11yModule ||
+const RCA11y =
+  A11yModule ||
   new Proxy(
     {},
     {
@@ -23,13 +23,15 @@ export const RCA11y =
     }
   );
 
-export function setKeyboardFocus(nativeTag: number, _nextTag = 0): void {
+const setKeyboardFocus = (nativeTag: number, _nextTag = 0) => {
   RCA11y.setKeyboardFocus(nativeTag, _nextTag);
-}
+};
 
-export function setPreferredKeyboardFocus(
-  nativeTag: number,
-  nextTag: number
-): void {
+const setPreferredKeyboardFocus = (nativeTag: number, nextTag: number) => {
   RCA11y.setAccessibilityFocus(nativeTag, nextTag);
-}
+};
+
+export const A11yKeyboardModule = {
+  setKeyboardFocus,
+  setPreferredKeyboardFocus,
+};

@@ -11,11 +11,11 @@
 @implementation FocusWrapper
 
 - (instancetype)init {
-  self = [super init];
-  if (self) {
-      _keyboardKeyPressHandler = [[KeyboardKeyPressHandler alloc] init];
-  }
-  return self;
+    self = [super init];
+    if (self) {
+        _keyboardKeyPressHandler = [[KeyboardKeyPressHandler alloc] init];
+    }
+    return self;
 }
 
 

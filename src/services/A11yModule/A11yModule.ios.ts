@@ -1,7 +1,7 @@
 import { findNodeHandle } from 'react-native';
 
 import type { IA11yModule, RefObjType } from './A11yModule.types';
-import * as RCA11yModule from './RCA11yModule';
+import { A11yKeyboardModule } from '../../NativeModules';
 
 class A11yModuleIOSImpl implements IA11yModule {
   private _currentFocusedTag: number | null = null;
@@ -12,7 +12,7 @@ class A11yModuleIOSImpl implements IA11yModule {
 
   setPreferredKeyboardFocus = (tag: number, targetTag: number) => {
     if (Number.isInteger(tag) && Number.isInteger(targetTag)) {
-      RCA11yModule.setPreferredKeyboardFocus(tag, targetTag);
+      A11yKeyboardModule.setPreferredKeyboardFocus(tag, targetTag);
     }
   };
 
@@ -25,7 +25,7 @@ class A11yModuleIOSImpl implements IA11yModule {
       Number.isInteger(this._currentFocusedTag) &&
       Number.isInteger(tag)
     ) {
-      RCA11yModule.setKeyboardFocus(this._currentFocusedTag, tag);
+      A11yKeyboardModule.setKeyboardFocus(this._currentFocusedTag, tag);
     }
   };
 }
