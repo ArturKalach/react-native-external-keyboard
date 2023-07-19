@@ -1,12 +1,9 @@
 package com.externalkeyboard;
 
-import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
+import com.facebook.react.uimanager.ViewGroupManager;
 
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.SimpleViewManager;
-
-public abstract class ExternalKeyboardViewManagerSpec<T extends View> extends SimpleViewManager<T> {
-  public abstract void setColor(T view, @Nullable String value);
+public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> extends ViewGroupManager<T> {
+  public abstract void setCanBeFocused(T wrapper, boolean canBeFocused);
 }
