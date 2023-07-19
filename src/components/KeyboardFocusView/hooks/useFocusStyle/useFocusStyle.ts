@@ -15,9 +15,9 @@ export const useFocusStyle = (
 
   const fStyle = useMemo(() => {
     if (!focusStyle) return focused ? styles.defaultHighlight : undefined;
-    return typeof focusStyle === 'function'
-      ? focusStyle({ focused })
-      : focusStyle;
+    const specificStyle =
+      typeof focusStyle === 'function' ? focusStyle({ focused }) : focusStyle;
+    return focused ? specificStyle : undefined;
   }, [focused, focusStyle]);
 
   return {
@@ -27,5 +27,5 @@ export const useFocusStyle = (
 };
 
 const styles = StyleSheet.create({
-  defaultHighlight: { backgroundColor: '#9999' },
+  defaultHighlight: { backgroundColor: '#d8e2d9' },
 });

@@ -4,7 +4,7 @@ import { ExternalKeyboardView } from '../../nativeSpec';
 import type { KeyboardFocusViewProps } from '../../types';
 import { A11yModule } from '../../services';
 
-import { useFocusStyle } from './hooks/useFocusStyle';
+import { useFocusStyle } from './hooks';
 
 export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
   (

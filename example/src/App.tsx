@@ -6,6 +6,7 @@ import {
   KeyPress,
   KeyboardFocusView,
   A11yModule,
+  Pressable,
 } from 'react-native-external-keyboard';
 
 export default function App() {
@@ -24,8 +25,20 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <KeyboardFocusView onKeyUpPress={() => A11yModule.setKeyboardFocus(ref)}>
-        <Text accessible>Focusable</Text>
+      <Pressable
+        focusStyle={{ backgroundColor: '#a0dcbe' }}
+        onPress={() => console.log('onPress')}
+        onPressIn={() => console.log('onPressIn')}
+        onPressOut={() => console.log('onPressOut')}
+        onLongPress={() => console.log('onLongPress')}
+      >
+        <Text>On Press Check</Text>
+      </Pressable>
+      <KeyboardFocusView
+        focusStyle={{ backgroundColor: '#cdf2ef' }}
+        onFocusChange={(e) => console.log(e.nativeEvent.isFocused)}
+      >
+        <Text>Focusable</Text>
       </KeyboardFocusView>
       <KeyboardFocusView
         ref={ref}

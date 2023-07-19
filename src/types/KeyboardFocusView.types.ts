@@ -1,6 +1,7 @@
-import type { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
+import type { GestureResponderEvent } from 'react-native';
 
 import type { NativeSyntheticEvent, ViewProps } from 'react-native';
+import type { FocusStyle } from './FocusStyle';
 
 export type KeyboardFocusEvent = NativeSyntheticEvent<{
   isFocused: boolean;
@@ -29,11 +30,6 @@ export type FocusWrapperProps = ViewProps & {
 export type FocusStateCallbackType = {
   readonly focused: boolean;
 };
-
-export type FocusStyle =
-  | StyleProp<ViewStyle>
-  | ((state: FocusStateCallbackType) => StyleProp<ViewStyle>)
-  | undefined;
 
 export type KeyboardFocusViewProps = FocusWrapperProps & {
   focusStyle?: FocusStyle;
