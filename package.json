@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -39,7 +39,12 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "a11y",
+    "react-native a11y",
+    "keyboard",
+    "keyboard focus",
+    "WCAG"
   ],
   "repository": "https://github.com/ArturKalach/react-native-external-keyboard",
   "author": "Artur Kalach <artur.kalach.andreevich@gmail.com> (https://github.com/ArturKalach)",
