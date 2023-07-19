@@ -25,6 +25,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <Pressable onPress={() => A11yModule.setKeyboardFocus(ref)}>
+        <Text>Jump</Text>
+      </Pressable>
       <Pressable
         focusStyle={{ backgroundColor: '#a0dcbe' }}
         onPress={() => console.log('onPress')}
@@ -34,17 +37,15 @@ export default function App() {
       >
         <Text>On Press Check</Text>
       </Pressable>
+
       <KeyboardFocusView
         focusStyle={{ backgroundColor: '#cdf2ef' }}
         onFocusChange={(e) => console.log(e.nativeEvent.isFocused)}
       >
         <Text>Focusable</Text>
       </KeyboardFocusView>
-      <KeyboardFocusView
-        ref={ref}
-        onKeyUpPress={() => A11yModule.setKeyboardFocus(ref)}
-      >
-        <Text accessible>Catch</Text>
+      <KeyboardFocusView ref={ref}>
+        <Text>Catch</Text>
       </KeyboardFocusView>
       <ExternalKeyboardView
         onKeyDownPress={onKeyDownHandler}
