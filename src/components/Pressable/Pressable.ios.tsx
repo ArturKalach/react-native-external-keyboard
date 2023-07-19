@@ -238,7 +238,7 @@ export const Pressable = React.memo(
     const onKeyUpPress = React.useCallback<OnKeyPressFn>(
       (e) => {
         if (e.nativeEvent.keyCode === IOS_SPACE_KEY_CODE) {
-          onPressOut?.(e as unknown as GestureResponderEvent);
+          config?.onPressOut?.(e as unknown as GestureResponderEvent);
           if (e.nativeEvent.isLongPress) {
             onLongPress?.(e);
           } else {
@@ -246,16 +246,16 @@ export const Pressable = React.memo(
           }
         }
       },
-      [onLongPress, onPress, onPressOut]
+      [onLongPress, onPress, config]
     );
 
     const onKeyDownPress = React.useCallback<OnKeyPressFn>(
       (e) => {
         if (e.nativeEvent.keyCode === IOS_SPACE_KEY_CODE) {
-          onPressIn?.(e as unknown as GestureResponderEvent);
+          config?.onPressIn?.(e as unknown as GestureResponderEvent);
         }
       },
-      [onPressIn]
+      [config]
     );
 
     return (
