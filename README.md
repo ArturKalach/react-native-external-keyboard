@@ -95,6 +95,15 @@ import { ExternalKeyboardView } from 'react-native-external-keyboard';
 </ExternalKeyboardView>
 ```
 
+# Important
+## iOS
+New versions of iOS have specific `commands` for `physical keyboards`. If you can't handle a `long press event` on iOS, it may be that the `space` key is bound to an `Activate` command. Clearing the `Activate` command will help with handling of the `long press` event. There is no known way to handle this (if you have any ideas, please share).
+
+User can change `Commands` in:
+`Settings` -> `Accessibility` -> `Keyboards` -> `Full Keyboard Access` -> `Commands`
+
+
+
 ## License
 
 MIT
