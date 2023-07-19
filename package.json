@@ -39,7 +39,12 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "a11y",
+    "react-native a11y",
+    "keyboard",
+    "keyboard focus",
+    "WCAG"
   ],
   "repository": "https://github.com/ArturKalach/react-native-external-keyboard",
   "author": "Artur Kalach <artur.kalach.andreevich@gmail.com> (https://github.com/ArturKalach)",
