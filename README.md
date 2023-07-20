@@ -78,27 +78,8 @@ You can pass the default ReactNative view props and some extra:
 | ------------- | ------------- | ---- | 
 | canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean \| undefined` default `true` |
 | onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void` |
-| onKeyUpPress?: | Callback for handling key up event | 
-(e: NativeSyntheticEvent<{
-  keyCode: number;
-  isLongPress: boolean;
-  isAltPressed: boolean;
-  isShiftPressed: boolean;
-  isCtrlPressed: boolean;
-  isCapsLockOn: boolean;
-  hasNoModifiers: boolean;
-}>;)
- |
-| onKeyDownPress?: | Callback for handling key down event | 
-(e: NativeSyntheticEvent<{
-  keyCode: number;
-  isLongPress: boolean;
-  isAltPressed: boolean;
-  isShiftPressed: boolean;
-  isCtrlPressed: boolean;
-  isCapsLockOn: boolean;
-  hasNoModifiers: boolean;
-}>;)|
+| onKeyUpPress?: | Callback for handling key up event | `(e: OnKeyPress) => void` |
+| onKeyDownPress?: | Callback for handling key down event | `(e: OnKeyPress) => void`|
 | focusStyle?:  | Style for selected by keyboard component | `((state: { focused: boolean}) => StyleProp<ViewStyle> | StyleProp<ViewStyle>` |
 
 ### ExternalKeyboardView
@@ -125,27 +106,8 @@ import { ExternalKeyboardView } from 'react-native-external-keyboard';
 | ------------- | ------------- | ---- | 
 | canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean \| undefined` default `true` |
 | onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void` |
-| onKeyUpPress?: | Callback for handling key up event | 
-(e: NativeSyntheticEvent<{
-  keyCode: number;
-  isLongPress: boolean;
-  isAltPressed: boolean;
-  isShiftPressed: boolean;
-  isCtrlPressed: boolean;
-  isCapsLockOn: boolean;
-  hasNoModifiers: boolean;
-}>;)
- |
-| onKeyDownPress?: | Callback for handling key down event | 
-(e: NativeSyntheticEvent<{
-  keyCode: number;
-  isLongPress: boolean;
-  isAltPressed: boolean;
-  isShiftPressed: boolean;
-  isCtrlPressed: boolean;
-  isCapsLockOn: boolean;
-  hasNoModifiers: boolean;
-}>;)|
+| onKeyUpPress?: | Callback for handling key up event | `(e: OnKeyPress) => void` |
+| onKeyDownPress?: | Callback for handling key down event | `(e: OnKeyPress) => void`|
 
 ### A11yModule
 
@@ -195,7 +157,19 @@ New versions of iOS have specific `commands` for `physical keyboards`. If you ca
 User can change `Commands` in:
 `Settings` -> `Accessibility` -> `Keyboards` -> `Full Keyboard Access` -> `Commands`
 
+# API
 
+```ts
+export type OnKeyPress = NativeSyntheticEvent<{
+  keyCode: number;
+  isLongPress: boolean;
+  isAltPressed: boolean;
+  isShiftPressed: boolean;
+  isCtrlPressed: boolean;
+  isCapsLockOn: boolean;
+  hasNoModifiers: boolean;
+}>;
+```
 
 ## License
 
