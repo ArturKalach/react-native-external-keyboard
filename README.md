@@ -76,7 +76,7 @@ import { KeyboardFocusView } from "react-native-external-keyboard";
 You can pass the default ReactNative view props and some extra:
 | Props         | Description   | Type |
 | ------------- | ------------- | ---- | 
-| canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean | undefined` default `true` |
+| canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean \| undefined` default `true` |
 | onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void` |
 | onKeyUpPress?: | Callback for handling key up event | 
 (e: NativeSyntheticEvent<{
