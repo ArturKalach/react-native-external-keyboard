@@ -148,7 +148,7 @@ export interface IA11yModule {
 | ------------- | ------------- | ---- | 
 | currentFocusedTag?: | iOS only, it is used for the keyboard focus moving feature | `number` |
 | setPreferredKeyboardFocus: | iOS only, you can define default focus redirect from a component to a target | `(nativeTag: number, nextTag: number) => void;` |
-| setKeyboardFocus: | Move focus to the target by ref | (ref: RefObjType) => void; |
+| setKeyboardFocus: | Move focus to the target by ref | `(ref: RefObjType) => void` |
 
 # Important
 ## iOS
