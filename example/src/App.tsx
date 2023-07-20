@@ -12,6 +12,7 @@ import {
 export default function App() {
   const ref = React.useRef(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
+  const [status, setStatus] = React.useState('Not pressed');
   const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
 
   const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
@@ -30,20 +31,14 @@ export default function App() {
       </Pressable>
       <Pressable
         focusStyle={{ backgroundColor: '#a0dcbe' }}
-        onPress={() => console.log('onPress')}
-        onPressIn={() => console.log('onPressIn')}
-        onPressOut={() => console.log('onPressOut')}
-        onLongPress={() => console.log('onLongPress')}
+        onPress={() => setStatus('onPress')}
+        onPressIn={() => setStatus('onPressIn')}
+        onPressOut={() => setStatus('onPressOut')}
+        onLongPress={() => setStatus('onLongPress')}
       >
-        <Text>On Press Check</Text>
+        <Text>On Press Check: {status}</Text>
       </Pressable>
 
-      <KeyboardFocusView
-        focusStyle={{ backgroundColor: '#cdf2ef' }}
-        onFocusChange={(e) => console.log(e.nativeEvent.isFocused)}
-      >
-        <Text>Focusable</Text>
-      </KeyboardFocusView>
       <KeyboardFocusView ref={ref}>
         <Text>Catch</Text>
       </KeyboardFocusView>
