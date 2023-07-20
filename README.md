@@ -52,11 +52,11 @@ You can pass the default ReactNative `PressableProps` and some extra:
 | Props         | Description   | Type |
 | ------------- | ------------- | ---- | 
 | canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean \| undefined` default `true` |
-| onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void` |
-| focusStyle?:  | Style for selected by keyboard component | `((state: { focused: boolean}) => StyleProp<ViewStyle> | StyleProp<ViewStyle>` |
-| onPress?: | Default `onPress` or `keyboard` handled `onPress` | `(e: GestureResponderEvent | OnKeyPress) => void;`
-| onLongPress?: | Default `onLongPress` or `keyboard` handled `onLongPress` | `(e: GestureResponderEvent | OnKeyPress) => void;`|
-| withView?: | Android only prop, it is used for wrapping children in `<View accessible/>` | `boolean` |
+| onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void \| undefined` |
+| focusStyle?:  | Style for selected by keyboard component | `((state: { focused: boolean}) => StyleProp<ViewStyle> | StyleProp<ViewStyle> \| undefined` |
+| onPress?: | Default `onPress` or `keyboard` handled `onPress` | `(e: GestureResponderEvent | OnKeyPress) => void; \| undefined`
+| onLongPress?: | Default `onLongPress` or `keyboard` handled `onLongPress` | `(e: GestureResponderEvent | OnKeyPress) => void; \| undefined`|
+| withView?: | Android only prop, it is used for wrapping children in `<View accessible/>` | `boolean \| undefined` default `true` |
 
 
 ### KeyboardFocusView
