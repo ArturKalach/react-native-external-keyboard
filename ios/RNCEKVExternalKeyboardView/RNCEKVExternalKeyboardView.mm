@@ -2,11 +2,11 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
 #import <React/RCTLog.h>
-#import "KeyboardKeyPressHandler.h"
+#import "RNCEKVKeyboardKeyPressHandler.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
-#import "FocusWrapper.h"
+#import "RNCEKVFocusWrapper.h"
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
@@ -21,7 +21,7 @@ using namespace facebook::react;
 @end
 
 @implementation RNCEKVExternalKeyboardView {
-    FocusWrapper * _view;
+    RNCEKVFocusWrapper * _view;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -36,7 +36,7 @@ using namespace facebook::react;
         static const auto defaultProps = std::make_shared<const ExternalKeyboardViewProps>();
         _props = defaultProps;
         
-        _view = [[FocusWrapper alloc] init];
+        _view = [[RNCEKVFocusWrapper alloc] init];
         _view.onFocusChange = [self](NSDictionary* dictionary) {
             if (_eventEmitter) {
                 auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
@@ -115,7 +115,7 @@ using namespace facebook::react;
 
 Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 {
-    return ExternalKeyboardView.class;
+    return RNCEKVExternalKeyboardView.class;
 }
 
 @end
