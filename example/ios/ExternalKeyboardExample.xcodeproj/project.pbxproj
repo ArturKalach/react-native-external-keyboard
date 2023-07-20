@@ -12,6 +12,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		4972E8642A69B9D1009BE48A /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4972E8612A69B9D1009BE48A /* GameController.framework */; };
+		4972E8652A69B9D1009BE48A /* GameplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4972E8622A69B9D1009BE48A /* GameplayKit.framework */; };
+		4972E8662A69B9D1009BE48A /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4972E8632A69B9D1009BE48A /* GameKit.framework */; };
 		7699B88040F8A987B510C191 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -38,6 +41,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ExternalKeyboardExample/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-ExternalKeyboardExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.debug.xcconfig"; sourceTree = "<group>"; };
+		4972E8612A69B9D1009BE48A /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		4972E8622A69B9D1009BE48A /* GameplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameplayKit.framework; path = System/Library/Frameworks/GameplayKit.framework; sourceTree = SDKROOT; };
+		4972E8632A69B9D1009BE48A /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		5709B34CF0A7D63546082F79 /* Pods-ExternalKeyboardExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ExternalKeyboardExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,6 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4972E8642A69B9D1009BE48A /* GameController.framework in Frameworks */,
+				4972E8652A69B9D1009BE48A /* GameplayKit.framework in Frameworks */,
+				4972E8662A69B9D1009BE48A /* GameKit.framework in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* libPods-ExternalKeyboardExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +108,9 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4972E8612A69B9D1009BE48A /* GameController.framework */,
+				4972E8632A69B9D1009BE48A /* GameKit.framework */,
+				4972E8622A69B9D1009BE48A /* GameplayKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-ExternalKeyboardExample.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */,

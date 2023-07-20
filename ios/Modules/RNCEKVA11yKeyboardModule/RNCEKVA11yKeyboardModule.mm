@@ -12,8 +12,8 @@
 #import <UIKit/UIKit.h>
 
 #import <React/RCTUIManager.h>
-#import "A11yKeyboardModule.h"
-#import "ExternalKeyboardView.h"
+#import "RNCEKVA11yKeyboardModule.h"
+#import "RNCEKVExternalKeyboardView.h"
 #import <React/RCTUIManager.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -22,7 +22,7 @@ using namespace facebook::react;
 
 #endif
 
-@implementation A11yKeyboardModule
+@implementation RNCEKVA11yKeyboardModule
 
 - (NSArray<NSString *> *)supportedEvents
 {
@@ -49,8 +49,8 @@ RCT_EXPORT_METHOD(
     dispatch_async(dispatch_get_main_queue(), ^{
         UIView *field = [self.bridge.uiManager viewForReactTag:itemId];
         UIView *nextFocusElement = [self.bridge.uiManager viewForReactTag:nextElementId];
-        if(field != nil && nextFocusElement != nil && [field isKindOfClass: [ExternalKeyboardView class]]) {
-            ExternalKeyboardView *v = (ExternalKeyboardView *)field;
+        if(field != nil && nextFocusElement != nil && [field isKindOfClass: [RNCEKVExternalKeyboardView class]]) {
+            RNCEKVExternalKeyboardView *v = (RNCEKVExternalKeyboardView *)field;
             v.myPreferredFocusedView = nextFocusElement;
             [v setNeedsFocusUpdate];
             [v updateFocusIfNeeded];
@@ -65,8 +65,8 @@ RCT_EXPORT_METHOD(
     dispatch_async(dispatch_get_main_queue(), ^{
         UIView *field = [self.bridge.uiManager viewForReactTag:itemId];
         UIView *nextFocusElement = [self.bridge.uiManager viewForReactTag:nextElementId];
-        if(field != nil && nextFocusElement != nil && [field isKindOfClass: [ExternalKeyboardView class]]) {
-            ExternalKeyboardView *v = (ExternalKeyboardView *)field;
+        if(field != nil && nextFocusElement != nil && [field isKindOfClass: [RNCEKVExternalKeyboardView class]]) {
+            RNCEKVExternalKeyboardView *v = (RNCEKVExternalKeyboardView *)field;
             v.myPreferredFocusedView = nextFocusElement;
             [v setNeedsFocusUpdate];
             [v updateFocusIfNeeded];

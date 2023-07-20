@@ -6,10 +6,10 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
-#ifndef KeyboardKeyPressHandler_h
-#define KeyboardKeyPressHandler_h
+#ifndef RNCEKVKeyboardKeyPressHandler_h
+#define RNCEKVKeyboardKeyPressHandler_h
 
-@interface KeyboardKeyPressHandler:NSObject {
+@interface RNCEKVKeyboardKeyPressHandler:NSObject {
     NSMutableDictionary* _keyPressedTimestamps;
 }
 
