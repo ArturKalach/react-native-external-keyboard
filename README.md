@@ -2,7 +2,7 @@
 ### react-native-external-keyboard
 
 React Native library for extended external keyboard support.
-The new and old architectures are compatible!
+The `new` and `old` architectures are compatible!
 
 
 | iOS           | Android        |
@@ -32,7 +32,7 @@ cd ios && pod install && cd ..
 ### Pressable
 Updated pressable component with handling long press events on a keyboard 
 ```js
-import { Pressable,  } from "react-native-external-keyboard";
+import { Pressable } from "react-native-external-keyboard";
 
 // ...
 
@@ -51,7 +51,7 @@ You can pass the default ReactNative `PressableProps` and some extra:
 
 | Props         | Description   | Type |
 | ------------- | ------------- | ---- | 
-| canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean | undefined` default `true` |
+| canBeFocused?: | Boolean property whether component can be focused by keyboard | `boolean \| undefined` default `true` |
 | onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void` |
 | focusStyle?:  | Style for selected by keyboard component | `((state: { focused: boolean}) => StyleProp<ViewStyle> | StyleProp<ViewStyle>` |
 | onPress?: | Default `onPress` or `keyboard` handled `onPress` | `(e: GestureResponderEvent | OnKeyPress) => void;`
