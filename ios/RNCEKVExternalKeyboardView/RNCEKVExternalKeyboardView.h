@@ -1,7 +1,7 @@
-#ifndef ExternalKeyboardViewNativeComponent_h
-#define ExternalKeyboardViewNativeComponent_h
+#ifndef RNCEKVExternalKeyboardViewNativeComponent_h
+#define RNCEKVExternalKeyboardViewNativeComponent_h
 
-#import "KeyboardKeyPressHandler.h"
+#import "RNCEKVKeyboardKeyPressHandler.h"
 #import <UIKit/UIKit.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ExternalKeyboardView : RCTViewComponentView{
-    KeyboardKeyPressHandler* _keyboardKeyPressHandler;
+@interface RNCEKVExternalKeyboardView : RCTViewComponentView{
+    RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
 }
 @property BOOL canBeFocused;
 @property UIView* myPreferredFocusedView;
@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface ExternalKeyboardView : RCTView {
-    KeyboardKeyPressHandler* _keyboardKeyPressHandler;
+@interface RNCEKVExternalKeyboardView : RCTView {
+    RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
 }
 
 @property BOOL canBeFocused;

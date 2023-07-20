@@ -6,18 +6,18 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
-#ifndef FocusWrapper_h
-#define FocusWrapper_h
+#ifndef RNCEKVFocusWrapper_h
+#define RNCEKVFocusWrapper_h
 
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIAccessibilityContainer.h>
 #import <React/RCTView.h>
 
-#import "KeyboardKeyPressHandler.h"
+#import "RNCEKVKeyboardKeyPressHandler.h"
 
-@interface FocusWrapper : RCTView {
-    KeyboardKeyPressHandler* _keyboardKeyPressHandler;
+@interface RNCEKVFocusWrapper : RCTView {
+    RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
 }
 
 @property BOOL canBeFocused;
