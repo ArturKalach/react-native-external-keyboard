@@ -80,7 +80,7 @@ You can pass the default ReactNative view props and some extra:
 | onFocusChange?: | Callback for focus change handling | `(e:NativeSyntheticEvent<{ isFocused: boolean; }>) => void` |
 | onKeyUpPress?: | Callback for handling key up event | `(e: OnKeyPress) => void` |
 | onKeyDownPress?: | Callback for handling key down event | `(e: OnKeyPress) => void`|
-| focusStyle?:  | Style for selected by keyboard component | `((state: { focused: boolean}) => StyleProp<ViewStyle> | StyleProp<ViewStyle>` |
+| focusStyle?:  | Style for selected by keyboard component | `((state: { focused: boolean}) => StyleProp<ViewStyle> \| StyleProp<ViewStyle>` |
 
 ### ExternalKeyboardView
 It is a bare `Native` component. It is better to use `KeyboardFocusView` if you don't need your own specific implementation.
