@@ -1,4 +1,4 @@
-#import "ExternalKeyboardView.h"
+#import "RNCEKVExternalKeyboardView.h"
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
 #import <React/RCTLog.h>
@@ -16,11 +16,11 @@
 
 using namespace facebook::react;
 
-@interface ExternalKeyboardView () <RCTExternalKeyboardViewViewProtocol>
+@interface RNCEKVExternalKeyboardView () <RCTExternalKeyboardViewViewProtocol>
 
 @end
 
-@implementation ExternalKeyboardView {
+@implementation RNCEKVExternalKeyboardView {
     FocusWrapper * _view;
 }
 
@@ -121,12 +121,12 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 @end
 #else
 
-@implementation ExternalKeyboardView
+@implementation RNCEKVExternalKeyboardView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        _keyboardKeyPressHandler = [[KeyboardKeyPressHandler alloc] init];
+        _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
     }
     
     return self;

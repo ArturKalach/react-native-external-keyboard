@@ -6,14 +6,14 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
-#import "FocusWrapper.h"
+#import "RNCEKVFocusWrapper.h"
 
-@implementation FocusWrapper
+@implementation RNCEKVFocusWrapper
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _keyboardKeyPressHandler = [[KeyboardKeyPressHandler alloc] init];
+        _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
     }
     return self;
 }

@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "UIKit/UIResponder.h"
-#import "KeyboardKeyPressHandler.h"
+#import "RNCEKVKeyboardKeyPressHandler.h"
 #import <UIKit/UIKit.h>
 
-@implementation KeyboardKeyPressHandler
+@implementation RNCEKVKeyboardKeyPressHandler
 
 static const float LONG_PRESS_DURATION = 0.5;
 
