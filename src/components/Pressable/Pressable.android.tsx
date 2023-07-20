@@ -65,8 +65,14 @@ export const Pressable = React.forwardRef<
 
     const onKeyDownHandler = React.useCallback<OnKeyPressFn>(
       (e) => {
-        onKeyDownPress?.(e);
-        onPressIn?.(e as unknown as GestureResponderEvent);
+        const {
+          nativeEvent: { keyCode },
+        } = e;
+
+        if (keyCode === ANDROID_SPACE_KEY_CODE) {
+          onKeyDownPress?.(e);
+          onPressIn?.(e as unknown as GestureResponderEvent);
+        }
       },
       [onKeyDownPress, onPressIn]
     );
