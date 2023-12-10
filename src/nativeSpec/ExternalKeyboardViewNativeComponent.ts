@@ -17,6 +17,8 @@ export type EnterPress = Readonly<{
 
 export type KeyPress = Readonly<{
   keyCode: Int32;
+  unicode: Int32;
+  unicodeChar: string;
   isLongPress: boolean;
   isAltPressed: boolean;
   isShiftPressed: boolean;
