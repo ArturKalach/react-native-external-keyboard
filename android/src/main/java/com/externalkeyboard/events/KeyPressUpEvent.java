@@ -14,8 +14,11 @@ public class KeyPressUpEvent extends Event<KeyPressUpEvent> {
   public KeyPressUpEvent(int id, int keyCode, KeyEvent keyEvent, boolean isLongPress) {
     super(id);
 
+    int unicode = keyEvent.getUnicodeChar();
     WritableMap eventPayload = Arguments.createMap();
     eventPayload.putInt("keyCode", keyCode);
+    eventPayload.putInt("unicode", unicode);
+    eventPayload.putString("unicodeChar", String.valueOf((char)unicode));
     eventPayload.putBoolean("isLongPress", isLongPress);
     eventPayload.putBoolean("isAltPressed", keyEvent.isAltPressed());
     eventPayload.putBoolean("isShiftPressed", keyEvent.isShiftPressed());

@@ -6,6 +6,7 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
+#include <string>
 #import "RNCEKVFocusWrapper.h"
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
@@ -13,6 +14,19 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
 
 #import "RCTFabricComponentsPlugins.h"
+
+std::string convertNSStringToStdString(NSString * _Nullable nsString) {
+    if (nsString == nil) {
+        return "";
+    }
+
+    const char *utf8String = [nsString UTF8String];
+    if (utf8String != NULL) {
+        return std::string(utf8String);
+    } else {
+        return "";
+    }
+}
 
 using namespace facebook::react;
 
@@ -50,9 +64,13 @@ using namespace facebook::react;
         _view.onKeyDownPress = [self](NSDictionary* dictionary) {
             if (_eventEmitter) {
                 auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
+                
+                std::string unicodeChar = convertNSStringToStdString([dictionary valueForKey:@"unicodeChar"]);
                 facebook::react::ExternalKeyboardViewEventEmitter::OnKeyDownPress data = {
                     .keyCode = [[dictionary valueForKey:@"keyCode"] intValue],
                     .isLongPress = [[dictionary valueForKey:@"isLongPress"] boolValue],
+                    .unicode = [[dictionary valueForKey:@"unicode"] intValue],
+                    .unicodeChar = unicodeChar,
                     .isAltPressed = [[dictionary valueForKey:@"isAltPressed"] boolValue],
                     .isShiftPressed = [[dictionary valueForKey:@"isShiftPressed"] boolValue],
                     .isCtrlPressed = [[dictionary valueForKey:@"isCtrlPressed"] boolValue],
@@ -67,8 +85,11 @@ using namespace facebook::react;
         _view.onKeyUpPress = [self](NSDictionary* dictionary) {
             if (_eventEmitter) {
                 auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
+                std::string unicodeChar = convertNSStringToStdString([dictionary valueForKey:@"unicodeChar"]);
                 facebook::react::ExternalKeyboardViewEventEmitter::OnKeyUpPress data = {
                     .keyCode = [[dictionary valueForKey:@"keyCode"] intValue],
+                    .unicode = [[dictionary valueForKey:@"unicode"] intValue],
+                    .unicodeChar = unicodeChar,
                     .isLongPress = [[dictionary valueForKey:@"isLongPress"] boolValue],
                     .isAltPressed = [[dictionary valueForKey:@"isAltPressed"] boolValue],
                     .isShiftPressed = [[dictionary valueForKey:@"isShiftPressed"] boolValue],
