@@ -162,6 +162,8 @@ User can change `Commands` in:
 ```ts
 export type OnKeyPress = NativeSyntheticEvent<{
   keyCode: number;
+  unicode: number;
+  unicodeChar: string;
   isLongPress: boolean;
   isAltPressed: boolean;
   isShiftPressed: boolean;

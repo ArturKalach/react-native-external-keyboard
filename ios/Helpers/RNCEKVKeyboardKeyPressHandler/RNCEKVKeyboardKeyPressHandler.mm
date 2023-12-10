@@ -26,7 +26,14 @@ static const float LONG_PRESS_DURATION = 0.5;
 -(NSDictionary*) getKeyPressEventInfo:(NSSet<UIPress *> *)presses
                             withEvent:(UIPressesEvent *)event {
     UIKey *key = presses.allObjects[0].key;
+   
     NSNumber *keyCode = @(key.keyCode);
+    unichar unicode = 0;
+    NSString *unicodeChar = @"";
+    if ([key.characters length] != 0) {
+        unicode = [key.characters characterAtIndex:0];
+        unicodeChar = [[NSString alloc] initWithCharacters:&unicode length:1];
+    }
     NSNumber *isAltPressed = @((key.modifierFlags & UIKeyModifierAlternate) > 0);
     NSNumber *isShiftPressed = @((key.modifierFlags & UIKeyModifierShift) > 0);
     NSNumber *isCtrlPressed = @((key.modifierFlags & UIKeyModifierControl) > 0);
@@ -36,6 +43,8 @@ static const float LONG_PRESS_DURATION = 0.5;
     return @{
         @"keyCode": keyCode,
         @"isLongPress": @NO,
+        @"unicode": @(unicode),
+        @"unicodeChar": unicodeChar,
         @"isAltPressed": isAltPressed,
         @"isShiftPressed": isShiftPressed,
         @"isCtrlPressed": isCtrlPressed,
