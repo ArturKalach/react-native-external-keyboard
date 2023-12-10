@@ -45,6 +45,7 @@
     "react-native a11y",
     "keyboard",
     "keyboard focus",
+    "physical keyboard",
     "WCAG"
   ],
   "repository": "https://github.com/ArturKalach/react-native-external-keyboard",
