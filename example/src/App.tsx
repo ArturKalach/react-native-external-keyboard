@@ -61,6 +61,16 @@ export default function App() {
           </View>
         ))}
       </ExternalKeyboardView>
+      <View style={{ height: 10}} />
+      <KeyboardFocusView>
+        <Text>Parent component</Text>
+        <KeyboardFocusView>
+          <Text>Child component 1</Text>
+        </KeyboardFocusView>
+        <KeyboardFocusView>
+          <Text>Child component 2</Text>
+        </KeyboardFocusView>
+      </KeyboardFocusView>
     </View>
   );
 }
