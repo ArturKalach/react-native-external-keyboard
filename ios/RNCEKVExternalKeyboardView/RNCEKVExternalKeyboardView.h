@@ -1,6 +1,5 @@
 #ifndef RNCEKVExternalKeyboardViewNativeComponent_h
 #define RNCEKVExternalKeyboardViewNativeComponent_h
-
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import <UIKit/UIKit.h>
 
@@ -15,6 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @property BOOL canBeFocused;
 @property UIView* myPreferredFocusedView;
+
+
+- (void)onFocusChange:(BOOL)isFocused;
+- (void)onKeyDownPress:(NSDictionary*)dictionary;
+- (void)onKeyUpPress:(NSDictionary*)dictionary;
+
 @end
 
 NS_ASSUME_NONNULL_END
