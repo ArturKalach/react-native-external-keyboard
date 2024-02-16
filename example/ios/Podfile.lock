@@ -656,7 +656,7 @@ PODS:
   - React-jsinspector (0.71.11)
   - React-logger (0.71.11):
     - glog
-  - react-native-external-keyboard (0.2.5):
+  - react-native-external-keyboard (0.2.8):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -962,7 +962,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 18b5b33c5f2687a784a61bc8176611b73524ae77
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
-  react-native-external-keyboard: f0a18bfe3d5304ec75ead44c2065379e25526e2d
+  react-native-external-keyboard: 2c5e540654624d0dbe6baee3e2248e9b05381a1e
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a
   React-RCTAnimation: ccf3ef00101ea74bda73a045d79a658b36728a60
@@ -984,4 +984,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 961f06bc84daa08270c8a6a52c3fc344a9db0c17
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

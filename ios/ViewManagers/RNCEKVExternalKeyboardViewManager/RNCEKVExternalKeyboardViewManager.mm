@@ -3,7 +3,6 @@
 #import "RNCEKVExternalKeyboardViewManager.h"
 #import "RNCEKVExternalKeyboardView.h"
 #import "RCTBridge.h"
-#import "Utils.h"
 
 
 @implementation RNCEKVExternalKeyboardViewManager
