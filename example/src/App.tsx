@@ -30,7 +30,7 @@ export default function App() {
         <Text>Jump</Text>
       </Pressable>
       <Pressable
-        focusStyle={{ backgroundColor: '#a0dcbe' }}
+        focusStyle={styles.pressFocusStyle}
         onPress={() => setStatus('onPress')}
         onPressIn={() => setStatus('onPressIn')}
         onPressOut={() => setStatus('onPressOut')}
@@ -61,7 +61,7 @@ export default function App() {
           </View>
         ))}
       </ExternalKeyboardView>
-      <View style={{ height: 10}} />
+      <View style={styles.divider} />
       <KeyboardFocusView>
         <Text>Parent component</Text>
         <KeyboardFocusView>
@@ -86,4 +86,6 @@ const styles = StyleSheet.create({
     height: 60,
     marginVertical: 20,
   },
+  divider: { height: 10 },
+  pressFocusStyle: { backgroundColor: '#a0dcbe' },
 });

@@ -6,6 +6,7 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
+#include <string>
 #import "RNCEKVFocusWrapper.h"
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
@@ -13,6 +14,19 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
 
 #import "RCTFabricComponentsPlugins.h"
+
+std::string convertNSStringToStdString(NSString * _Nullable nsString) {
+    if (nsString == nil) {
+        return "";
+    }
+
+    const char *utf8String = [nsString UTF8String];
+    if (utf8String != NULL) {
+        return std::string(utf8String);
+    } else {
+        return "";
+    }
+}
 
 using namespace facebook::react;
 

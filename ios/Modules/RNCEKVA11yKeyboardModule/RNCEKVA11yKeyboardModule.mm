@@ -34,6 +34,7 @@ using namespace facebook::react;
     return self;
 }
 
+
 + (BOOL)requiresMainQueueSetup
 {
     return YES;
