@@ -27,5 +27,5 @@ export const useFocusStyle = (
 };
 
 const styles = StyleSheet.create({
-  defaultHighlight: { backgroundColor: '#d8e2d9' },
+  defaultHighlight: { backgroundColor: '#dce3f9' },
 });

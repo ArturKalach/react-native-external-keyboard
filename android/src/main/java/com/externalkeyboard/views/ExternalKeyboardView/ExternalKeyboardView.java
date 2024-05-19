@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 public class ExternalKeyboardView extends ViewGroup {
+  public boolean hasKeyDownListener = false;
+  public boolean hasKeyUpListener = false;
 
   public ExternalKeyboardView(Context context) {
     super(context);

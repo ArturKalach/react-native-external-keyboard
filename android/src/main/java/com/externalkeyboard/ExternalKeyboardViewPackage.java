@@ -4,6 +4,7 @@ package com.externalkeyboard;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardViewManager;
+import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapperManager;
 import com.facebook.react.TurboReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -53,6 +54,7 @@ public class ExternalKeyboardViewPackage extends TurboReactPackage {
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     List<ViewManager> viewManagers = new ArrayList<>();
     viewManagers.add(new ExternalKeyboardViewManager());
+    viewManagers.add(new TextInputFocusWrapperManager());
     return viewManagers;
   }
 

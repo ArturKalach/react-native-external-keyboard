@@ -1,1 +1,1 @@
-export { A11yModule } from './A11yModule';
+export { A11yModule, A11yModule as KeyboardExtendedModule } from './A11yModule';
