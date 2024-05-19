@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
 }
 @property BOOL canBeFocused;
+@property BOOL hasOnPressUp;
+@property BOOL hasOnPressDown;
 @property UIView* myPreferredFocusedView;
 
 
@@ -34,6 +36,8 @@ NS_ASSUME_NONNULL_END
 }
 
 @property BOOL canBeFocused;
+@property BOOL hasOnPressUp;
+@property BOOL hasOnPressDown;
 @property UIView* myPreferredFocusedView;
 @property (nonatomic, copy) RCTBubblingEventBlock onFocusChange;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;

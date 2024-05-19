@@ -1,6 +1,11 @@
-import ExternalKeyboardView from './ExternalKeyboardViewNativeComponent';
+import ExternalKeyboardViewNative from './ExternalKeyboardViewNativeComponent';
 import NativeKeyboardModule from './NativeKeyboardModule';
-
+import TextInputFocusWrapperNative from './TextInputFocusWrapperNativeComponent';
 import type { KeyPress } from './ExternalKeyboardViewNativeComponent';
 
-export { ExternalKeyboardView, NativeKeyboardModule, KeyPress };
+export {
+  TextInputFocusWrapperNative,
+  ExternalKeyboardViewNative,
+  NativeKeyboardModule,
+  KeyPress,
+};

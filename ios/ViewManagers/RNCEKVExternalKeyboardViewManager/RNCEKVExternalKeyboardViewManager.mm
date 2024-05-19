@@ -25,4 +25,17 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVExternalKeyboardView)
     [view setCanBeFocused: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(hasKeyDownPress, BOOL, RNCEKVExternalKeyboardView)
+{
+    BOOL value = json ? [RCTConvert BOOL:json] : NO;
+    [view setHasOnPressDown: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(hasKeyUpPress, BOOL, RNCEKVExternalKeyboardView)
+{
+    BOOL value = json ? [RCTConvert BOOL:json] : NO;
+    [view setHasOnPressUp: value];
+}
+
+
 @end

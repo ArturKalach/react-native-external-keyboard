@@ -1,5 +1,17 @@
 export { A11yKeyboardModule } from './NativeModules';
-export { ExternalKeyboardView, KeyPress } from './nativeSpec';
+export {
+  ExternalKeyboardViewNative,
+  TextInputFocusWrapperNative,
+  KeyPress,
+} from './nativeSpec';
 
-export { KeyboardFocusView, Pressable } from './components';
+export {
+  KeyboardFocusView,
+  Pressable,
+  ExternalKeyboardView,
+  KeyboardExtendedInput,
+  KeyboardExtendedView,
+  KeyboardExtendedPressable,
+  KeyboardExtendedBaseView,
+} from './components';
 export { A11yModule } from './services';
