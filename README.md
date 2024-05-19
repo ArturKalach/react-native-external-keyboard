@@ -195,11 +195,11 @@ User can change `Commands` in:
 
 It is believed that good naming can simplify usage and development. Based on this principle and for compatibility with `0.2.x`, aliases were added. You can still use the old naming convention, and it will be maintained in future releases.
 
-The map of aliases is provided below:
-`A11yModule` -> `KeyboardExtendedModule`
-`Pressable` -> `KeyboardExtendedPressable`
-`KeyboardFocusView` -> `KeyboardExtendedView`
-`ExternalKeyboardView` -> `KeyboardExtendedBaseView`
+The map of aliases is provided below: <br />
+`A11yModule` -> `KeyboardExtendedModule` <br />
+`Pressable` -> `KeyboardExtendedPressable` <br />
+`KeyboardFocusView` -> `KeyboardExtendedView` <br />
+`ExternalKeyboardView` -> `KeyboardExtendedBaseView` <br />
 
 # API
 
