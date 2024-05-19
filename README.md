@@ -59,7 +59,7 @@ import { KeyboardExtendedInput } from 'react-native-external-keyboard';
 
 The `Pressable` component with keyboard focus support. This component allows handling the `onLongPress` event fired by the keyboard.
 
-FYI: `iOS` has a specific press action that is configured by system settings. Read <a name="ios-commands">more</a>
+FYI: `iOS` has a specific press action that is configured by system settings. Read [more](#ios-commands)
 
 ```js
 import { KeyboardExtendedPressable } from 'react-native-external-keyboard';
