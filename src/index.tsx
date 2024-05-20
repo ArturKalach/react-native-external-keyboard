@@ -14,4 +14,4 @@ export {
   KeyboardExtendedPressable,
   KeyboardExtendedBaseView,
 } from './components';
-export { A11yModule } from './services';
+export { A11yModule, KeyboardExtendedModule } from './services';

@@ -4,7 +4,7 @@ import { NativeSyntheticEvent, StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedBaseView,
   KeyPress,
-  A11yModule,
+  KeyboardExtendedModule,
   KeyboardExtendedInput,
   KeyboardExtendedView,
   KeyboardExtendedPressable,
@@ -29,7 +29,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <KeyboardExtendedPressable
-        onPress={() => A11yModule.setKeyboardFocus(ref)}
+        onPress={() => KeyboardExtendedModule.setKeyboardFocus(ref)}
       >
         <Text>Jump</Text>
       </KeyboardExtendedPressable>
