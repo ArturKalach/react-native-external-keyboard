@@ -1,8 +1,9 @@
 # React Native External Keyboard
 
 React Native library for enhanced external keyboard support.
-⚡️ The New Architecture is supported
-:tired_face: Bridgeless is not supported
+
+- ⚡️ The New Architecture is supported
+- 😫 Bridgeless is not supported
 
 ## New Release Features
 
