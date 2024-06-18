@@ -75,6 +75,9 @@ export default function App() {
         </KeyboardExtendedView>
       </KeyboardExtendedView>
       <KeyboardExtendedInput value={textInput} onChangeText={setTextInput} />
+      <KeyboardExtendedView style={styles.borderExample}>
+        <Text>Border here</Text>
+      </KeyboardExtendedView>
     </View>
   );
 }
@@ -92,4 +95,11 @@ const styles = StyleSheet.create({
   },
   divider: { height: 10 },
   pressFocusStyle: { backgroundColor: '#b2c6b7' },
+  borderExample: {
+    marginVertical: 10,
+    borderColor: 'black',
+    borderRadius: 15,
+    borderWidth: 2,
+    padding: 10,
+  },
 });
