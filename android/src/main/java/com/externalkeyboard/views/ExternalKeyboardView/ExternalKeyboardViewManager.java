@@ -15,6 +15,7 @@ import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.views.view.ReactViewGroup;
 
 import java.util.Map;
 
@@ -37,7 +38,10 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
 
-  private void onKeyPressHandler(ExternalKeyboardView viewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
+  private void onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
+    if(!(reactViewGroup instanceof ExternalKeyboardView)) return;
+    ExternalKeyboardView viewGroup = (ExternalKeyboardView)reactViewGroup;
+
     if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
       return;
     }
@@ -56,7 +60,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  protected void addEventEmitters(final ThemedReactContext reactContext, ExternalKeyboardView viewGroup) {
+  protected void addEventEmitters(final ThemedReactContext reactContext, ReactViewGroup viewGroup) {
     viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
       @Override
       public void onChildViewAdded(View parent, View child) {
