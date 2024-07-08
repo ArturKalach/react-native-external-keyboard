@@ -20,6 +20,8 @@ using namespace facebook::react;
 
 @end
 
+#endif
+
 static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
@@ -27,54 +29,10 @@ static const NSInteger AUTO_BLUR = 2;
     
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
     return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
-}
-
-- (BOOL)canBecomeFocused {
-    return self.canBeFocused;
-}
-
-
-- (void)onFocusChange:(BOOL) isFocused {
-    if (_eventEmitter) {
-        auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
-        facebook::react::TextInputFocusWrapperEventEmitter::OnFocusChange data = {
-            .isFocused = isFocused,
-        };
-        viewEventEmitter->onFocusChange(data);
-    };
-}
-
-
-- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
-       withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-    BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
-    if(isTextInputFocus) {
-        _textField = (RCTUITextField *)context.nextFocusedView;
-        if(self.focusType == AUTO_FOCUS) {
-            [_textField reactFocus];
-        }
-        [self onFocusChange: YES];
-    }
-    
-    if(!isTextInputFocus && _textField != nil) {
-        if(self.blurType == AUTO_BLUR) {
-            [_textField reactBlur];
-        }
-        _textField = nil;
-        [self onFocusChange: NO];
-    }
-}
-
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    [super willMoveToSuperview:newSuperview];
-    
-    if (newSuperview == nil) {
-        _textField = nil;
-    }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -86,6 +44,7 @@ static const NSInteger AUTO_BLUR = 2;
     
     return self;
 }
+
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
@@ -118,50 +77,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     return RNCEKVTextInputFocusWrapper.class;
 }
 
-@end
 #else
-
-static const NSInteger AUTO_FOCUS = 2;
-static const NSInteger AUTO_BLUR = 2;
-
-@implementation RNCEKVTextInputFocusWrapper
-
-- (BOOL)canBecomeFocused {
-    return self.canBeFocused;
-}
-
-- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
-       withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-    BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
-    if(isTextInputFocus) {
-        _textField = (RCTUITextField *)context.nextFocusedView;
-        if(self.focusType == AUTO_FOCUS) {
-            [_textField reactFocus];
-        }
-        if(self.onFocusChange) {
-            self.onFocusChange(@{ @"isFocused": @(YES) });
-        }
-    }
-    
-    if(!isTextInputFocus && _textField != nil) {
-        if(self.blurType == AUTO_BLUR) {
-            [_textField reactBlur];
-        }
-        _textField = nil;
-        if(self.onFocusChange) {
-            self.onFocusChange(@{ @"isFocused": @(NO) });
-        }
-    }
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    [super willMoveToSuperview:newSuperview];
-    
-    if (newSuperview == nil) {
-        _textField = nil;
-    }
-}
-
 
 - (void)didUpdateReactSubviews
 {
@@ -171,7 +87,64 @@ static const NSInteger AUTO_BLUR = 2;
     }
 }
 
-@end
+#endif
+
+
+#ifdef RCT_NEW_ARCH_ENABLED
+
+- (void)onFocusChange:(BOOL) isFocused {
+    if (_eventEmitter) {
+        auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
+        facebook::react::TextInputFocusWrapperEventEmitter::OnFocusChange data = {
+            .isFocused = isFocused,
+        };
+        viewEventEmitter->onFocusChange(data);
+    };
+}
+
+#else
+
+
+- (void)onFocusChange:(BOOL) isFocused {
+    if(self.onFocusChange) {
+        self.onFocusChange(@{ @"isFocused": @(isFocused) });
+    }
+}
 
 #endif
 
+
+- (BOOL)canBecomeFocused {
+    return self.canBeFocused;
+}
+
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
+       withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
+    BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
+    if(isTextInputFocus && (_textField == nil || _textField == context.nextFocusedView)) {
+        [self onFocusChange: YES];
+        BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
+        if(_textField == nil) {
+                 _textField = (RCTUITextField *)context.nextFocusedView;
+             }
+             if(self.focusType == AUTO_FOCUS) {
+                 [_textField reactFocus];
+             }
+    } else if (context.previouslyFocusedView == _textField) {
+        [self onFocusChange: NO];
+              if(self.blurType == AUTO_BLUR) {
+                  [_textField reactBlur];
+              }
+    }
+}
+
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview:newSuperview];
+    
+    if (newSuperview == nil) {
+        _textField = nil;
+    }
+}
+
+@end
