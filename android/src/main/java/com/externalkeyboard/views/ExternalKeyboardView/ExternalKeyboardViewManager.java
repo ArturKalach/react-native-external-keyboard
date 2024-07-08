@@ -15,6 +15,7 @@ import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.views.view.ReactViewGroup;
 
 import java.util.Map;
 
@@ -37,22 +38,29 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
 
-  private void onKeyPressHandler(ExternalKeyboardView viewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
+  private void onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
+    if(!(reactViewGroup instanceof ExternalKeyboardView)) return;
+    ExternalKeyboardView viewGroup = (ExternalKeyboardView)reactViewGroup;
+
+    if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
+      return;
+    }
+
     KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
 
-    if (pressInfo.firePressDownEvent) {
+    if (pressInfo.firePressDownEvent && viewGroup.hasKeyDownListener) {
       KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(viewGroup.getId(), keyCode, keyEvent);
       UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressDownEvent);
     }
 
-    if (pressInfo.firePressUpEvent) {
+    if (pressInfo.firePressUpEvent && viewGroup.hasKeyUpListener) {
       KeyPressUpEvent keyPressUpEvent = new KeyPressUpEvent(viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
       UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressUpEvent);
     }
   }
 
   @Override
-  protected void addEventEmitters(final ThemedReactContext reactContext, ExternalKeyboardView viewGroup) {
+  protected void addEventEmitters(final ThemedReactContext reactContext, ReactViewGroup viewGroup) {
     viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
       @Override
       public void onChildViewAdded(View parent, View child) {
@@ -97,5 +105,17 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
       ViewGroup.FOCUS_AFTER_DESCENDANTS
       : ViewGroup.FOCUS_BLOCK_DESCENDANTS;
     wrapper.setDescendantFocusability(descendantFocusability);
+  }
+
+  @Override
+  @ReactProp(name = "hasKeyDownPress")
+  public void setHasKeyDownPress(ExternalKeyboardView view, boolean value) {
+    view.hasKeyDownListener = value;
+  }
+
+  @Override
+  @ReactProp(name = "hasKeyUpPress")
+  public void setHasKeyUpPress(ExternalKeyboardView view, boolean value) {
+    view.hasKeyUpListener = value;
   }
 }

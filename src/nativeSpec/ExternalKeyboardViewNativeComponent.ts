@@ -32,6 +32,8 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   onKeyUpPress?: BubblingEventHandler<KeyPress>;
   onKeyDownPress?: BubblingEventHandler<KeyPress>;
   canBeFocused?: boolean;
+  hasKeyDownPress?: boolean;
+  hasKeyUpPress?: boolean;
 }
 
 export default codegenNativeComponent<ExternalKeyboardNativeProps>(

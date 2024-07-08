@@ -15,26 +15,13 @@
 
 #import "RCTFabricComponentsPlugins.h"
 
-std::string convertNSStringToStdString(NSString * _Nullable nsString) {
-    if (nsString == nil) {
-        return "";
-    }
-
-    const char *utf8String = [nsString UTF8String];
-    if (utf8String != NULL) {
-        return std::string(utf8String);
-    } else {
-        return "";
-    }
-}
-
 using namespace facebook::react;
 
 @interface RNCEKVExternalKeyboardView () <RCTExternalKeyboardViewViewProtocol>
 
 @end
 
-@implementation RNCEKVExternalKeyboardView 
+@implementation RNCEKVExternalKeyboardView
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
@@ -82,6 +69,7 @@ using namespace facebook::react;
 - (void)onKeyUpPress:(NSDictionary*) dictionary {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
+        
         facebook::react::ExternalKeyboardViewEventEmitter::OnKeyUpPress data = {
             .keyCode = [[dictionary valueForKey:@"keyCode"] intValue],
             .isLongPress = [[dictionary valueForKey:@"isLongPress"] boolValue],
@@ -98,7 +86,6 @@ using namespace facebook::react;
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-
     if(context.nextFocusedView == self) {
         [self onFocusChange: YES];
     } else if (context.previouslyFocusedView == self) {
@@ -109,7 +96,6 @@ using namespace facebook::react;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    
     if (self = [super initWithFrame:frame]) {
         static const auto defaultProps = std::make_shared<const ExternalKeyboardViewProps>();
         _props = defaultProps;
@@ -121,14 +107,25 @@ using namespace facebook::react;
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
-    NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
-    [self onKeyDownPress: eventInfo];
+    if(self.hasOnPressUp || self.hasOnPressDown) {
+        NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
+        [self onKeyDownPress: eventInfo];
+    }
+    
+    if(!self.hasOnPressUp) {
+        [super pressesBegan:presses withEvent:event];
+    }
 }
 
 - (void)pressesEnded:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
-    NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
-    [self onKeyUpPress: eventInfo];
+    if(self.hasOnPressUp || self.hasOnPressDown) {
+        NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
+        [self onKeyUpPress: eventInfo];
+    }
+    if(!self.hasOnPressDown) {
+        [super pressesEnded:presses withEvent:event];
+    }
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
@@ -140,6 +137,14 @@ using namespace facebook::react;
     
     if(oldViewProps.canBeFocused != newViewProps.canBeFocused) {
         [self setCanBeFocused: newViewProps.canBeFocused];
+    }
+    
+    if(oldViewProps.hasKeyUpPress != newViewProps.hasKeyUpPress) {
+        [self setHasOnPressUp: newViewProps.hasKeyUpPress];
+    }
+    
+    if(oldViewProps.hasKeyDownPress != newViewProps.hasKeyDownPress) {
+        [self setHasOnPressDown: newViewProps.hasKeyDownPress];
     }
     
     if (@available(iOS 14.0, *)) {
@@ -174,6 +179,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
     if(self.onKeyDownPress) {
         self.onKeyDownPress(eventInfo);
+    } else {
+        [super pressesBegan:presses withEvent:event];
     }
 }
 
@@ -182,6 +189,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
     if(self.onKeyUpPress) {
         self.onKeyUpPress(eventInfo);
+    } else {
+        [super pressesEnded:presses withEvent:event];
     }
 }
 
