@@ -9,21 +9,37 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.externalkeyboard.events.EventHelper;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.views.textinput.ReactEditText;
 
-public class TextInputFocusWrapper extends ViewGroup {
-
+public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChangeListener {
+  private final Context context;
   public static final byte FOCUS_BY_PRESS = 1;
   private ReactEditText reactEditText = null;
-
+  private boolean focusEventIgnore = false;
   private int focusType = 0;
 
   public void setEditText(ReactEditText editText) {
     if(editText != null) {
       this.reactEditText = editText;
+      if(focusType == FOCUS_BY_PRESS) {
+        this.reactEditText.setFocusable(false);
+      }
     } else {
       this.reactEditText.setOnFocusChangeListener(null);
     }
+  }
+
+  @Override
+  public void onFocusChange(View v, boolean hasFocus) {
+    if(!this.focusEventIgnore){
+      EventHelper.focusChanged((ReactContext)  context, this.getId(), hasFocus);
+    }
+  }
+
+  public void subscribeOnFocus () {
+    this.setOnFocusChangeListener(this);
   }
 
   public void setFocusType(int focusType) {
@@ -36,19 +52,25 @@ public class TextInputFocusWrapper extends ViewGroup {
 
   public TextInputFocusWrapper(Context context) {
     super(context);
+    this.context = context;
   }
 
   public TextInputFocusWrapper(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
   }
 
   public TextInputFocusWrapper(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    this.context = context;
   }
 
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if(focusType == FOCUS_BY_PRESS) {
+      this.reactEditText.setFocusable(false);
+    }
     if(focusType == FOCUS_BY_PRESS && keyCode == KeyEvent.KEYCODE_SPACE) {
       this.handleTextInputFocus();
     }
@@ -66,15 +88,21 @@ public class TextInputFocusWrapper extends ViewGroup {
   }
 
   private void handleTextInputFocus () {
-    this.reactEditText.requestFocusFromJS();
-    this.setFocusable(false);
-
+    this.focusEventIgnore = true;
     this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
+      this.focusEventIgnore = false;
+      if(focusType != FOCUS_BY_PRESS || !hasTextEditFocus) {
+        onFocusChange(textInput, hasTextEditFocus);
+      }
+
       if(!hasTextEditFocus) {
         this.setFocusable(true);
         this.reactEditText.setFocusable(false);
       }
     });
+    this.reactEditText.setFocusable(true);
+    this.reactEditText.requestFocusFromJS();
+    this.setFocusable(false);
   }
 
   @Override
