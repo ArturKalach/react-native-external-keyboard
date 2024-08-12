@@ -38,6 +38,13 @@ using namespace facebook::react;
     return self.canBeFocused;
 }
 
+- (void)onContextMenuPress {
+    if (_eventEmitter) {
+        auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
+        facebook::react::ExternalKeyboardViewEventEmitter::OnContextMenuPress data = {};
+        viewEventEmitter->onContextMenuPress(data);
+    };
+}
 
 - (void)onFocusChange:(BOOL) isFocused {
     if (_eventEmitter) {
@@ -100,6 +107,8 @@ using namespace facebook::react;
         static const auto defaultProps = std::make_shared<const ExternalKeyboardViewProps>();
         _props = defaultProps;
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
+        UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
+        [self addInteraction: interaction];
     }
     
     return self;
@@ -154,6 +163,12 @@ using namespace facebook::react;
     }
 }
 
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
+    [self onContextMenuPress];
+    return nil;
+}
+
+
 Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 {
     return RNCEKVExternalKeyboardView.class;
@@ -168,11 +183,22 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 {
     if (self = [super initWithFrame:frame]) {
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
+        if (@available(iOS 13.0, *)) {
+            UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
+            [self addInteraction: interaction];
+        }
     }
     
     return self;
     
 }
+
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
+    self.onContextMenuPress(@{});
+    return nil;
+}
+
+
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {

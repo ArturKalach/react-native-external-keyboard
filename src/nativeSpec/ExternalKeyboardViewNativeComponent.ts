@@ -34,6 +34,7 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   canBeFocused?: boolean;
   hasKeyDownPress?: boolean;
   hasKeyUpPress?: boolean;
+  onContextMenuPress?: BubblingEventHandler<{}>;
 }
 
 export default codegenNativeComponent<ExternalKeyboardNativeProps>(

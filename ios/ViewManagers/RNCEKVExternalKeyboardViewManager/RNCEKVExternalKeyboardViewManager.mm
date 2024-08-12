@@ -17,6 +17,7 @@ RCT_EXPORT_MODULE(ExternalKeyboardView)
 RCT_EXPORT_VIEW_PROPERTY(onFocusChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onKeyUpPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onKeyDownPress, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onContextMenuPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(myPreferredFocusedView, UIView)
 
 RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVExternalKeyboardView)

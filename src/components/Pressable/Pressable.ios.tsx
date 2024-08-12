@@ -266,6 +266,7 @@ export const Pressable = React.memo(
         onFocusChange={onFocusChange}
         onKeyUpPress={onKeyUpPress}
         onKeyDownPress={onKeyDownPress}
+        onContextMenuPress={onLongPress}
         ref={viewRef}
         style={typeof style === 'function' ? style({ pressed }) : style}
         collapsable={false}

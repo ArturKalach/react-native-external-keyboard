@@ -3,6 +3,8 @@ import { TextInput, TextInputProps, StyleProp, ViewStyle } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
 import type { OnFocusChangeFn } from '../../types/KeyboardFocusView.types';
+import type { FocusStyle } from '../../types/FocusStyle';
+import { useFocusStyle } from '../KeyboardFocusView/hooks';
 
 const focusMap = {
   default: 0,
@@ -21,6 +23,7 @@ export type KeyboardFocusViewProps = TextInputProps & {
   blurType?: keyof typeof blurMap;
   containerStyle?: StyleProp<ViewStyle>;
   onFocusChange?: OnFocusChangeFn;
+  focusStyle?: FocusStyle;
 };
 
 export const KeyboardExtendedInput = React.forwardRef<
@@ -33,18 +36,27 @@ export const KeyboardExtendedInput = React.forwardRef<
       blurType = 'default',
       containerStyle,
       onFocusChange,
+      focusStyle,
+      style,
       ...props
     },
     ref
-  ) => (
-    <TextInputFocusWrapperNative
-      onFocusChange={onFocusChange}
-      focusType={focusMap[focusType]}
-      blurType={blurMap[blurType]}
-      style={containerStyle}
-      ref={ref}
-    >
-      <TextInput blurOnSubmit={false} {...props} />
-    </TextInputFocusWrapperNative>
-  )
+  ) => {
+    const { fStyle, onFocusChangeHandler } = useFocusStyle(
+      focusStyle,
+      onFocusChange
+    );
+
+    return (
+      <TextInputFocusWrapperNative
+        onFocusChange={onFocusChangeHandler}
+        focusType={focusMap[focusType]}
+        blurType={blurMap[blurType]}
+        style={containerStyle}
+        ref={ref}
+      >
+        <TextInput blurOnSubmit={false} style={[style, fStyle]} {...props} />
+      </TextInputFocusWrapperNative>
+    );
+  }
 );

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.externalkeyboard.events.EventHelper;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 @ReactModule(name = TextInputFocusWrapperManager.NAME)
 public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInputFocusWrapperManagerSpec<TextInputFocusWrapper> {
-
   public static final String NAME = "TextInputFocusWrapper";
 
   @Override
@@ -35,11 +35,7 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   @Override
   protected void addEventEmitters(final ThemedReactContext reactContext, TextInputFocusWrapper viewGroup) {
     viewGroup.setFocusable(true);
-    viewGroup.setOnFocusChangeListener(
-      (v, hasFocus) -> {
-        FocusChangeEvent event = new FocusChangeEvent(viewGroup.getId(), hasFocus);
-        UIManagerHelper.getEventDispatcherForReactTag(reactContext, v.getId()).dispatchEvent(event);
-      });
+    viewGroup.subscribeOnFocus();
   }
 
   protected TextInputFocusWrapper subscribeOnHierarchy(TextInputFocusWrapper viewGroup) {
