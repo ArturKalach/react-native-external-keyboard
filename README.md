@@ -7,7 +7,7 @@ React Native library for enhanced external keyboard support.
 
 ## New Release Features
 
-- `KeyboardExtendedTextInput`: a new component for handling TextInput focusability. More [here](#keyboardextendedinput)
+- `KeyboardExtendedInput`: a new component for handling TextInput focusability. More [here](#keyboardextendedinput)
 - Performance Optimization: Improved key press handling functionality.
 - Renaming: Added aliases for components and modules. More [here](#component-aliases)
 
@@ -89,6 +89,10 @@ You can pass the default React Native `PressableProps` as well as additional pro
 | onPress?:       | Default `onPress` or `keyboard` handled `onPress`                           | `(e: GestureResponderEvent \| OnKeyPress) => void; \| undefined`                             |
 | onLongPress?:   | Default `onLongPress` or `keyboard` handled `onLongPress`                   | `(e: GestureResponderEvent \| OnKeyPress) => void; \| undefined`                             |
 | withView?:      | Android only prop, it is used for wrapping children in `<View accessible/>` | `boolean \| undefined` default `true`                                                        |
+
+> [!NOTE]
+> You may discover that `long press on spacebar` does not trigger a long press event on `iOS`. This is because `iOS` use a `Full Keyboard Access` system that provides commands for interacting with the system. Rather than holding down the spacebar, you can use `Tab+M` (the default action for opening the context menu).
+> You can change `Commands` in: `Full Keyboard Access` -> `Commands`
 
 ### KeyboardExtendedView: (alias for: KeyboardFocusView)
 
@@ -181,15 +185,6 @@ export interface IA11yModule {
 | currentFocusedTag?:        | iOS only, it is used for the keyboard focus moving feature                   | `number`                                        |
 | setPreferredKeyboardFocus: | iOS only, you can define default focus redirect from a component to a target | `(nativeTag: number, nextTag: number) => void;` |
 | setKeyboardFocus:          | Move focus to the target by ref                                              | `(ref: RefObjType) => void`                     |
-
-# Important
-
-## iOS commands
-
-New versions of iOS have specific `commands` for `physical keyboards`. If you can't handle a `long press event` on iOS, it may be that the `space` key is bound to an `Activate` command. Clearing the `Activate` command will help with handling of the `long press` event. There is no known way to handle this (if you have any ideas, please share).
-
-User can change `Commands` in:
-`Settings` -> `Accessibility` -> `Keyboards` -> `Full Keyboard Access` -> `Commands`
 
 # Upgrading
 
