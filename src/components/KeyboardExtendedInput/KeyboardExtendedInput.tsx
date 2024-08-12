@@ -37,6 +37,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       containerStyle,
       onFocusChange,
       focusStyle,
+      style,
       ...props
     },
     ref
@@ -51,10 +52,10 @@ export const KeyboardExtendedInput = React.forwardRef<
         onFocusChange={onFocusChangeHandler}
         focusType={focusMap[focusType]}
         blurType={blurMap[blurType]}
-        style={[containerStyle, fStyle]}
+        style={containerStyle}
         ref={ref}
       >
-        <TextInput blurOnSubmit={false} {...props} />
+        <TextInput blurOnSubmit={false} style={[style, fStyle]} {...props} />
       </TextInputFocusWrapperNative>
     );
   }

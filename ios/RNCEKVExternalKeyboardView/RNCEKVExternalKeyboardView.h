@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVExternalKeyboardView : RCTViewComponentView{
+@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate>{
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
 }
 @property BOOL canBeFocused;
@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onFocusChange:(BOOL)isFocused;
 - (void)onKeyDownPress:(NSDictionary*)dictionary;
 - (void)onKeyUpPress:(NSDictionary*)dictionary;
+- (void)onContextMenuPress;
 
 @end
 
@@ -31,7 +32,8 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface RNCEKVExternalKeyboardView : RCTView {
+@interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate>
+{
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
 }
 
@@ -42,6 +44,7 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTBubblingEventBlock onFocusChange;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
+@property (nonatomic, copy) RCTBubblingEventBlock onContextMenuPress;
 
 @end
 
