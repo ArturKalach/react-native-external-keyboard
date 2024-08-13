@@ -1,0 +1,1 @@
+export { ExternalKeyboardRootView } from './ExternalKeyboardRootView';

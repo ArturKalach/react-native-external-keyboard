@@ -38,6 +38,17 @@ using namespace facebook::react;
     return self.canBeFocused;
 }
 
+- (void)focusView {
+    // UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, self);
+}
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
+    NSString *FOCUS = @"focus";
+    if([commandName isEqual:FOCUS]) {
+        [self focusView];
+    }
+}
+
 - (void)onContextMenuPress {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
