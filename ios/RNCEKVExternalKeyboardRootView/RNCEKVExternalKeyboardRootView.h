@@ -10,7 +10,6 @@
 
 
 #import <UIKit/UIKit.h>
-#import <React/RCTUITextField.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -21,8 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RNCEKVExternalKeyboardRootView : RCTViewComponentView
 
 @property NSString* viewId;
+@property (nullable) UIView* customFocusedView;
 
 - (void)focusView:(UIView*) view;
+- (void)setAutoFocus:(UIView*) view;
 
 @end
 
@@ -36,8 +37,10 @@ NS_ASSUME_NONNULL_END
 @interface RNCEKVExternalKeyboardRootView : RCTView
 
 @property NSString* viewId;
+@property (nullable) UIView* customFocusedView;
 
 - (void)focusView:(UIView*) view;
+- (void)setAutoFocus:(UIView*) view;
 
 @end
 

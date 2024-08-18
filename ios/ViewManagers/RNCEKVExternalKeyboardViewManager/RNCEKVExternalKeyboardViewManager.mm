@@ -38,5 +38,24 @@ RCT_CUSTOM_VIEW_PROPERTY(hasKeyUpPress, BOOL, RNCEKVExternalKeyboardView)
     [view setHasOnPressUp: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
+{
+  if (json) {
+    NSString *rootViewId = [RCTConvert NSString:json];
+    [view setAutoFocus: rootViewId];
+  }
+}
+
+RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag withRootView:(NSString *)withRootView)
+{
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+        UIView *view = viewRegistry[reactTag];
+        if (!view || ![view isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+            return;
+        }
+        RNCEKVExternalKeyboardView *keyboardView = (RNCEKVExternalKeyboardView*)view;
+        [keyboardView focus: withRootView];
+    }];
+}
 
 @end

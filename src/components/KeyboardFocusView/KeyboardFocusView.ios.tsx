@@ -15,6 +15,7 @@ export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
       canBeFocused = true,
       onKeyUpPress,
       onKeyDownPress,
+      autoFocus,
       ...props
     },
     ref
@@ -39,6 +40,7 @@ export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
     return (
       <ExternalKeyboardView
         ref={ref}
+        withAutoFocus={autoFocus}
         style={[style, fStyle]}
         canBeFocused={canBeFocused}
         onKeyUpPress={onKeyUpPress}

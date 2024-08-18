@@ -10,6 +10,7 @@ import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
 import com.externalkeyboard.services.KeyboardKeyPressHandler;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -117,5 +118,19 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @ReactProp(name = "hasKeyUpPress")
   public void setHasKeyUpPress(ExternalKeyboardView view, boolean value) {
     view.hasKeyUpListener = value;
+  }
+
+  @Override
+  public void focus(ExternalKeyboardView view, String rootViewId) {
+    view.requestFocus();
+  }
+
+  @Override
+  public void receiveCommand(ReactViewGroup root, String commandId, @Nullable ReadableArray args) {
+    if (commandId.equals("focus")) {
+      this.focus((ExternalKeyboardView)root, "");
+    } else {
+      super.receiveCommand(root, commandId, args);
+    }
   }
 }

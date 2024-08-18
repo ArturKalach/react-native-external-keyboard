@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ExternalKeyboardExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ExternalKeyboardExampleTests.m */; };
-		0FF30BDA89C615FA39BC7A88 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6D8F2C12AD1D46FAE661701 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */; };
+		05DF61CE6E018F58F2EA30B9 /* libPods-ExternalKeyboardExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDAF182F6B99F1A159AE0602 /* libPods-ExternalKeyboardExample.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -16,7 +16,7 @@
 		4972E8652A69B9D1009BE48A /* GameplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4972E8622A69B9D1009BE48A /* GameplayKit.framework */; };
 		4972E8662A69B9D1009BE48A /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4972E8632A69B9D1009BE48A /* GameKit.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A35CB5F2388FBD8D32F44F37 /* libPods-ExternalKeyboardExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B0C9D77587067398D14E63 /* libPods-ExternalKeyboardExample.a */; };
+		E39B163F93C9CCBDC2A2B518 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A8F9CD02D19F2EA5B5E71DE8 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +33,8 @@
 		00E356EE1AD99517003FC87E /* ExternalKeyboardExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExternalKeyboardExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ExternalKeyboardExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExternalKeyboardExampleTests.m; sourceTree = "<group>"; };
+		0C80E19DC7561DB3752AE452 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		10F3A9E2B858B1448F45BD36 /* Pods-ExternalKeyboardExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ExternalKeyboardExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExternalKeyboardExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ExternalKeyboardExample/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ExternalKeyboardExample/AppDelegate.mm; sourceTree = "<group>"; };
@@ -42,14 +44,12 @@
 		4972E8612A69B9D1009BE48A /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		4972E8622A69B9D1009BE48A /* GameplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameplayKit.framework; path = System/Library/Frameworks/GameplayKit.framework; sourceTree = SDKROOT; };
 		4972E8632A69B9D1009BE48A /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		544885E37D4894378BC0797E /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		77B0C9D77587067398D14E63 /* libPods-ExternalKeyboardExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		73F28EDD4A2790261356D9DC /* Pods-ExternalKeyboardExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.release.xcconfig"; sourceTree = "<group>"; };
+		796E62150AB535399AC8C0BA /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ExternalKeyboardExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		86E78DD5FC3D178410A72E89 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig"; sourceTree = "<group>"; };
-		97333F962AAE45D33AE8BD6C /* Pods-ExternalKeyboardExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.debug.xcconfig"; sourceTree = "<group>"; };
-		C60E377328DF078D1C7EDF9B /* Pods-ExternalKeyboardExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.release.xcconfig"; sourceTree = "<group>"; };
+		A8F9CD02D19F2EA5B5E71DE8 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F6D8F2C12AD1D46FAE661701 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDAF182F6B99F1A159AE0602 /* libPods-ExternalKeyboardExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FF30BDA89C615FA39BC7A88 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a in Frameworks */,
+				E39B163F93C9CCBDC2A2B518 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +68,7 @@
 				4972E8642A69B9D1009BE48A /* GameController.framework in Frameworks */,
 				4972E8652A69B9D1009BE48A /* GameplayKit.framework in Frameworks */,
 				4972E8662A69B9D1009BE48A /* GameKit.framework in Frameworks */,
-				A35CB5F2388FBD8D32F44F37 /* libPods-ExternalKeyboardExample.a in Frameworks */,
+				05DF61CE6E018F58F2EA30B9 /* libPods-ExternalKeyboardExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,8 +112,8 @@
 				4972E8632A69B9D1009BE48A /* GameKit.framework */,
 				4972E8622A69B9D1009BE48A /* GameplayKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				77B0C9D77587067398D14E63 /* libPods-ExternalKeyboardExample.a */,
-				F6D8F2C12AD1D46FAE661701 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */,
+				EDAF182F6B99F1A159AE0602 /* libPods-ExternalKeyboardExample.a */,
+				A8F9CD02D19F2EA5B5E71DE8 /* libPods-ExternalKeyboardExample-ExternalKeyboardExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -152,10 +152,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				97333F962AAE45D33AE8BD6C /* Pods-ExternalKeyboardExample.debug.xcconfig */,
-				C60E377328DF078D1C7EDF9B /* Pods-ExternalKeyboardExample.release.xcconfig */,
-				544885E37D4894378BC0797E /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */,
-				86E78DD5FC3D178410A72E89 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig */,
+				10F3A9E2B858B1448F45BD36 /* Pods-ExternalKeyboardExample.debug.xcconfig */,
+				73F28EDD4A2790261356D9DC /* Pods-ExternalKeyboardExample.release.xcconfig */,
+				796E62150AB535399AC8C0BA /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */,
+				0C80E19DC7561DB3752AE452 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -167,12 +167,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ExternalKeyboardExampleTests" */;
 			buildPhases = (
-				B7B8EC569E84F961A4E9CC6A /* [CP] Check Pods Manifest.lock */,
+				55DC68FED1EA54C7260941E4 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				522E098C9AB516EF82890DF1 /* [CP] Embed Pods Frameworks */,
-				D24C40F0F36902B022CE4BE1 /* [CP] Copy Pods Resources */,
+				0AD9819D3918B1C1C97880F7 /* [CP] Embed Pods Frameworks */,
+				993CE5D39695349C6C964DA3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -188,14 +188,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ExternalKeyboardExample" */;
 			buildPhases = (
-				6E9145E61E1383A570E2C3E3 /* [CP] Check Pods Manifest.lock */,
+				9FC893A18F90583D65398395 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				682450E685463E6D92E17AE4 /* [CP] Embed Pods Frameworks */,
-				3811A972430D4AE963180DDB /* [CP] Copy Pods Resources */,
+				FCFBD68A966584AB9B50DB49 /* [CP] Embed Pods Frameworks */,
+				62175C598DA519542405FB21 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -278,24 +278,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		3811A972430D4AE963180DDB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		522E098C9AB516EF82890DF1 /* [CP] Embed Pods Frameworks */ = {
+		0AD9819D3918B1C1C97880F7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -312,46 +295,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		682450E685463E6D92E17AE4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6E9145E61E1383A570E2C3E3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ExternalKeyboardExample-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B7B8EC569E84F961A4E9CC6A /* [CP] Check Pods Manifest.lock */ = {
+		55DC68FED1EA54C7260941E4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -373,7 +317,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D24C40F0F36902B022CE4BE1 /* [CP] Copy Pods Resources */ = {
+		62175C598DA519542405FB21 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		993CE5D39695349C6C964DA3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -388,6 +349,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9FC893A18F90583D65398395 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ExternalKeyboardExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FCFBD68A966584AB9B50DB49 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -442,7 +442,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 544885E37D4894378BC0797E /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 796E62150AB535399AC8C0BA /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -469,7 +469,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 86E78DD5FC3D178410A72E89 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig */;
+			baseConfigurationReference = 0C80E19DC7561DB3752AE452 /* Pods-ExternalKeyboardExample-ExternalKeyboardExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -493,7 +493,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 97333F962AAE45D33AE8BD6C /* Pods-ExternalKeyboardExample.debug.xcconfig */;
+			baseConfigurationReference = 10F3A9E2B858B1448F45BD36 /* Pods-ExternalKeyboardExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -524,7 +524,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C60E377328DF078D1C7EDF9B /* Pods-ExternalKeyboardExample.release.xcconfig */;
+			baseConfigurationReference = 73F28EDD4A2790261356D9DC /* Pods-ExternalKeyboardExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

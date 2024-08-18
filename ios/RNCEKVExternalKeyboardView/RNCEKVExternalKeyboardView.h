@@ -9,19 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate>{
-    RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
-}
+@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate>
+
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
-@property UIView* myPreferredFocusedView;
-
+@property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 
 - (void)onFocusChange:(BOOL)isFocused;
 - (void)onKeyDownPress:(NSDictionary*)dictionary;
 - (void)onKeyUpPress:(NSDictionary*)dictionary;
 - (void)onContextMenuPress;
+- (void)focus:(NSString *)rootViewId;
 
 @end
 
@@ -33,9 +32,6 @@ NS_ASSUME_NONNULL_END
 
 #import <React/RCTView.h>
 @interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate>
-{
-    RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
-}
 
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
@@ -45,7 +41,8 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onContextMenuPress;
-
+- (void)focus:(NSString *)rootViewId;
+- (void)setAutoFocus:(NSString *)rootViewId;
 @end
 
 

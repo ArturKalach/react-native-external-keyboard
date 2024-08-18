@@ -1,6 +1,8 @@
 package com.externalkeyboard;
 
 import android.view.ViewGroup;
+
+import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
 import com.facebook.react.views.view.ReactViewManager;
 
 public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> extends ReactViewManager {
@@ -9,4 +11,6 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
   public abstract void setHasKeyDownPress(T view, boolean value);
 
   public abstract void setHasKeyUpPress(T view, boolean value);
+
+  public abstract void focus(ExternalKeyboardView view, String rootViewId);
 }

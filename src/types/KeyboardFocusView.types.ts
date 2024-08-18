@@ -36,6 +36,7 @@ export type KeyboardFocusViewProps = FocusWrapperProps & {
   onPress?: (e: GestureResponderEvent | OnKeyPress) => void;
   onLongPress?: (e: GestureResponderEvent | OnKeyPress) => void;
   onContextMenuPress?: () => void;
+  autoFocus?: boolean;
   /**
    * @platform android
    */
