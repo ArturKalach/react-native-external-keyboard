@@ -50,9 +50,7 @@ export default function App() {
         onKeyDownPress={onKeyDownHandler}
         onKeyUpPress={onKeyUpHandler}
       >
-        <View accessible>
-          <Text>{isKeyDown ? 'Press begin:' : 'Press ended:'}</Text>
-        </View>
+        <Text>{isKeyDown ? 'Press begin:' : 'Press ended:'}</Text>
         {Object.keys(keyInfo ?? {}).map((key) => (
           <View key={key}>
             {

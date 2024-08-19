@@ -2,6 +2,8 @@ package com.externalkeyboard;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
 import com.facebook.react.views.view.ReactViewManager;
 
@@ -13,4 +15,6 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
   public abstract void setHasKeyUpPress(T view, boolean value);
 
   public abstract void focus(ExternalKeyboardView view, String rootViewId);
+
+  public abstract void setAutoFocus(ExternalKeyboardView view, @Nullable String value);
 }

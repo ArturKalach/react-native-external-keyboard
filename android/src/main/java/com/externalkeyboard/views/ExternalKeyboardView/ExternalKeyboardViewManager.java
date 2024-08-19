@@ -4,6 +4,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.events.FocusChangeEvent;
@@ -25,7 +26,6 @@ import java.util.Map;
 public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKeyboardViewManagerSpec<ExternalKeyboardView> {
 
   public static final String NAME = "ExternalKeyboardView";
-  private KeyboardKeyPressHandler keyboardKeyPressHandler;
 
   @Override
   public String getName() {
@@ -34,55 +34,8 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
 
   @Override
   public ExternalKeyboardView createViewInstance(ThemedReactContext context) {
-    this.keyboardKeyPressHandler = new KeyboardKeyPressHandler();
     return new ExternalKeyboardView(context);
   }
-
-
-  private void onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
-    if(!(reactViewGroup instanceof ExternalKeyboardView)) return;
-    ExternalKeyboardView viewGroup = (ExternalKeyboardView)reactViewGroup;
-
-    if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
-      return;
-    }
-
-    KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
-
-    if (pressInfo.firePressDownEvent && viewGroup.hasKeyDownListener) {
-      KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(viewGroup.getId(), keyCode, keyEvent);
-      UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressDownEvent);
-    }
-
-    if (pressInfo.firePressUpEvent && viewGroup.hasKeyUpListener) {
-      KeyPressUpEvent keyPressUpEvent = new KeyPressUpEvent(viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
-      UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressUpEvent);
-    }
-  }
-
-  @Override
-  protected void addEventEmitters(final ThemedReactContext reactContext, ReactViewGroup viewGroup) {
-    viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-      @Override
-      public void onChildViewAdded(View parent, View child) {
-        child.setOnFocusChangeListener(
-          (v, hasFocus) -> {
-            FocusChangeEvent event = new FocusChangeEvent(viewGroup.getId(), hasFocus);
-            UIManagerHelper.getEventDispatcherForReactTag(reactContext, v.getId()).dispatchEvent(event);
-          });
-
-        child.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> {
-          onKeyPressHandler(viewGroup, keyCode, keyEvent, reactContext);
-          return false;
-        });
-      }
-
-      @Override
-      public void onChildViewRemoved(View parent, View child) {
-      }
-    });
-  }
-
 
   @Nullable
   @Override
@@ -102,10 +55,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @Override
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
   public void setCanBeFocused(ExternalKeyboardView wrapper, boolean canBeFocused) {
-    int descendantFocusability = canBeFocused ?
-      ViewGroup.FOCUS_AFTER_DESCENDANTS
-      : ViewGroup.FOCUS_BLOCK_DESCENDANTS;
-    wrapper.setDescendantFocusability(descendantFocusability);
+    wrapper.setCanBeFocused(canBeFocused);
   }
 
   @Override
@@ -121,8 +71,14 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  @ReactProp(name = "autoFocus")
+  public void setAutoFocus(ExternalKeyboardView view, @Nullable String value) {
+    view.autoFocus = value != null;
+  }
+
+  @Override
   public void focus(ExternalKeyboardView view, String rootViewId) {
-    view.requestFocus();
+    view.focus();
   }
 
   @Override
