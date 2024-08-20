@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
+@property BOOL enableHaloEffect;
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 
 - (void)onFocusChange:(BOOL)isFocused;
@@ -21,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onKeyUpPress:(NSDictionary*)dictionary;
 - (void)onContextMenuPress;
 - (void)focus:(NSString *)rootViewId;
+- (void)setAutoFocus:(NSString *)rootViewId;
 
 @end
 

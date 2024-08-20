@@ -46,6 +46,12 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
   }
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(enableHaloEffect, BOOL, RNCEKVExternalKeyboardView)
+{
+    BOOL value =  json ? [RCTConvert BOOL:json] : NO;
+    [view setEnableHaloEffect: value];
+}
+
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag withRootView:(NSString *)withRootView)
 {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {

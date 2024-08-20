@@ -1,10 +1,13 @@
 import React from 'react';
-import { View } from 'react-native';
 import { useFocusStyle } from './hooks/useFocusStyle';
-import type { KeyboardFocusViewProps } from '../../types';
+import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
 import { ExternalKeyboardView } from '../ExternalKeyboardView';
+import type { ExternalKeyboardViewType } from '../../types/ExternalKeyboardView';
 
-export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
+export const KeyboardFocusView = React.forwardRef<
+  ExternalKeyboardViewType,
+  KeyboardFocusViewProps
+>(
   (
     {
       canBeFocused = true,
@@ -25,7 +28,7 @@ export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
 
     return (
       <ExternalKeyboardView
-        withAutoFocus={autoFocus}
+        autoFocus={autoFocus}
         onFocusChange={onFocusChangeHandler}
         style={[style, fStyle]}
         canBeFocused={canBeFocused}

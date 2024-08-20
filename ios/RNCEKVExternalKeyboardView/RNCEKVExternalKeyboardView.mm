@@ -3,8 +3,6 @@
 #import <React/RCTViewManager.h>
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import "RNCEKVPreferredFocusEnvironment.h"
-#import "RCTModalHostViewController.h"
-
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
@@ -42,7 +40,7 @@ using namespace facebook::react;
 }
 
 - (BOOL)canBecomeFocused {
-    return self.canBeFocused;
+    return [self getFocusingView] == self;
 }
 
 - (void)cleanReferences {
@@ -57,7 +55,8 @@ using namespace facebook::react;
 
 
 - (void)focus:(NSString *)rootViewId {
-    [[RNCEKVPreferredFocusEnvironment sharedInstance] focus:self withRootId: rootViewId];
+    UIView *focusingView = [self getFocusingView];
+    [[RNCEKVPreferredFocusEnvironment sharedInstance] focus:focusingView  withRootId: rootViewId];
 }
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
@@ -125,11 +124,20 @@ using namespace facebook::react;
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-    if(context.nextFocusedView == self) {
+    UIView* focusingView = [self getFocusingView];
+    if(context.nextFocusedView == focusingView) {
         [self onFocusChange: YES];
-    } else if (context.previouslyFocusedView == self) {
+    } else if (context.previouslyFocusedView == focusingView) {
         [self onFocusChange: NO];
     }
+}
+
+- (UIView*)getFocusingView {
+    if(self.subviews.count == 1 && self.subviews[0].canBecomeFocused) {
+        return self.subviews[0];
+    }
+    
+    return self;
 }
 
 
@@ -139,7 +147,7 @@ using namespace facebook::react;
         static const auto defaultProps = std::make_shared<const ExternalKeyboardViewProps>();
         _props = defaultProps;
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
-      
+        
         if (@available(iOS 13.0, *)) {
             UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
             [self addInteraction: interaction];
@@ -196,6 +204,10 @@ using namespace facebook::react;
         _autoFocus = [NSString stringWithUTF8String:newViewProps.autoFocus.c_str()];
     }
     
+    if(self.enableHaloEffect != newViewProps.enableHaloEffect) {
+        [self setEnableHaloEffect: newViewProps.enableHaloEffect];
+    }
+    
     if (@available(iOS 14.0, *)) {
         if(self.focusGroupIdentifier == nil) {
             self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%ld", self.tag];
@@ -206,10 +218,23 @@ using namespace facebook::react;
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
+    if (@available(iOS 15.0, *)) {
+        if(self.superview != nil && !self.enableHaloEffect) {
+            UIFocusHaloEffect *haloEffect = [UIFocusHaloEffect effectWithRect: CGRectMake(0,0,0,0)];
+            self.focusEffect = haloEffect;
+        }
+    }
+
     if (self.superview != nil && _autoFocus) {
-        [[RNCEKVPreferredFocusEnvironment sharedInstance] setAutoFocus:self withRootId: _autoFocus];
+        [self setAutoFocus: _autoFocus];
     }
 }
+
+
+- (void)setAutoFocus:(nonnull NSString *)rootViewId {
+    [[RNCEKVPreferredFocusEnvironment sharedInstance] setAutoFocus:self withRootId: _autoFocus];
+}
+
 
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
     [self onContextMenuPress];
@@ -247,6 +272,13 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
+    if (@available(iOS 15.0, *)) {
+        if(self.superview != nil && !self.enableHaloEffect) {
+            UIFocusHaloEffect *haloEffect = [UIFocusHaloEffect effectWithRect: CGRectMake(0,0,0,0)];
+            self.focusEffect = haloEffect;
+        }
+    }
+    
     if (self.superview != nil && _autoFocus) {
         [[RNCEKVPreferredFocusEnvironment sharedInstance] setAutoFocus:self withRootId: _autoFocus];
     }
@@ -282,7 +314,16 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 }
 
 - (void)focus:(NSString *)rootViewId {
-    [[RNCEKVPreferredFocusEnvironment sharedInstance] focus:self withRootId: rootViewId];
+    UIView *focusingView = [self getFocusingView];
+    [[RNCEKVPreferredFocusEnvironment sharedInstance] focus:focusingView  withRootId: rootViewId];
+}
+
+- (UIView*)getFocusingView {
+    if(self.subviews.count == 1 && self.subviews[0].canBecomeFocused) {
+        return self.subviews[0];
+    }
+    
+    return self;
 }
 
 
@@ -292,8 +333,9 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
     return @[self.myPreferredFocusedView];
 }
+
 - (BOOL)canBecomeFocused {
-    return self.canBeFocused;
+    return [self getFocusingView] == self;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -302,12 +344,14 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         return;
     }
     
-    if(context.nextFocusedView == self) {
+    UIView* focusingView = [self getFocusingView];
+    if(context.nextFocusedView == focusingView) {
         self.onFocusChange(@{ @"isFocused": @(YES) });
-    } else if (context.previouslyFocusedView == self) {
+    } else if (context.previouslyFocusedView == focusingView) {
         self.onFocusChange(@{ @"isFocused": @(NO) });
     }
 }
+
 
 - (void)didUpdateReactSubviews
 {

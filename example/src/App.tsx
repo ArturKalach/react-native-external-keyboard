@@ -4,14 +4,15 @@ import { NativeSyntheticEvent, StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedBaseView,
   KeyPress,
-  KeyboardExtendedModule,
   KeyboardExtendedInput,
   KeyboardExtendedView,
   KeyboardExtendedPressable,
+  KeyboardRootView,
+  KeyboardExtendedViewType,
 } from 'react-native-external-keyboard';
 
 export default function App() {
-  const ref = React.useRef(null);
+  const ref = React.useRef<KeyboardExtendedViewType>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [status, setStatus] = React.useState('Not pressed');
   const [textInput, setTextInput] = React.useState('Text input here!');
@@ -27,9 +28,12 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardRootView style={styles.container}>
       <KeyboardExtendedPressable
-        onPress={() => KeyboardExtendedModule.setKeyboardFocus(ref)}
+        onPress={() => {
+          console.log('123123');
+          ref.current?.focus();
+        }}
       >
         <Text>Jump</Text>
       </KeyboardExtendedPressable>
@@ -42,7 +46,6 @@ export default function App() {
       >
         <Text>On Press Check: {status}</Text>
       </KeyboardExtendedPressable>
-
       <KeyboardExtendedView ref={ref}>
         <Text>Catch</Text>
       </KeyboardExtendedView>
@@ -76,7 +79,7 @@ export default function App() {
       <KeyboardExtendedView style={styles.borderExample}>
         <Text>Border here</Text>
       </KeyboardExtendedView>
-    </View>
+    </KeyboardRootView>
   );
 }
 

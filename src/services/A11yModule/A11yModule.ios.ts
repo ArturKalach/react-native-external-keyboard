@@ -10,12 +10,20 @@ class A11yModuleIOSImpl implements IA11yModule {
     this._currentFocusedTag = value;
   }
 
+  /**
+   * @deprecated The method should not be used
+   * This API is going to be removed in future releases
+   */
   setPreferredKeyboardFocus = (tag: number, targetTag: number) => {
     if (Number.isInteger(tag) && Number.isInteger(targetTag)) {
       A11yKeyboardModule.setPreferredKeyboardFocus(tag, targetTag);
     }
   };
 
+  /**
+   * @deprecated The method should not be used
+   * This API is going to be removed in future releases
+   */
   setKeyboardFocus = (ref: RefObjType) => {
     const tag = findNodeHandle(ref.current);
 

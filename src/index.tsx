@@ -5,6 +5,8 @@ export {
   KeyPress,
 } from './nativeSpec';
 
+export type { ExternalKeyboardViewType as KeyboardExtendedViewType } from './types/ExternalKeyboardView';
+
 export {
   KeyboardFocusView,
   Pressable,
@@ -14,5 +16,5 @@ export {
   KeyboardExtendedPressable,
   KeyboardExtendedBaseView,
 } from './components';
-export { ExternalKeyboardRootView } from './components/ExternalKeyboardRootView';
+export { KeyboardRootView } from './components/KeyboardRootView';
 export { A11yModule, KeyboardExtendedModule } from './services';

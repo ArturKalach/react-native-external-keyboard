@@ -16,7 +16,7 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
-#import "RCTFabricModalHostViewController+Focus.h"
+#import "RCTModalViewController+Focus.h"
 #import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
@@ -68,7 +68,6 @@ using namespace facebook::react;
     else {
         [super willMoveToSuperview: newSuperview];
         UIViewController *presentedViewController = RCTPresentedViewController();
-        NSLog(@"arasd123");
     }
 }
 #endif

@@ -82,7 +82,6 @@ export const Pressable = React.forwardRef<
         style={style}
         focusStyle={focusStyle}
         ref={ref}
-        withView={false}
         onKeyUpPress={onKeyUpPressHandler}
         onKeyDownPress={onKeyDownHandler}
         canBeFocused={canBeFocused}

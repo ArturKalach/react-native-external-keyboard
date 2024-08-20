@@ -1,21 +1,26 @@
 import React, { useCallback } from 'react';
-import type { View } from 'react-native';
-import type { KeyboardFocusViewProps } from '../../types';
+import { ExternalKeyboardView } from '../ExternalKeyboardView';
+import type { ExternalKeyboardViewType } from '../../types/ExternalKeyboardView';
+import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
+
 import { A11yModule } from '../../services';
 
 import { useFocusStyle } from './hooks';
-import { ExternalKeyboardView } from '../ExternalKeyboardView';
 
-export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
+export const KeyboardFocusView = React.forwardRef<
+  ExternalKeyboardViewType,
+  KeyboardFocusViewProps
+>(
   (
     {
       onFocusChange,
       style,
       focusStyle,
-      canBeFocused = true,
+      canBeFocused: _canBeFocused = true, //ToDo add rule
       onKeyUpPress,
       onKeyDownPress,
       autoFocus,
+      enableHaloEffect = false,
       ...props
     },
     ref
@@ -40,12 +45,13 @@ export const KeyboardFocusView = React.forwardRef<View, KeyboardFocusViewProps>(
     return (
       <ExternalKeyboardView
         ref={ref}
-        withAutoFocus={autoFocus}
+        autoFocus={autoFocus}
         style={[style, fStyle]}
-        canBeFocused={canBeFocused}
+        // canBeFocused={canBeFocused}
         onKeyUpPress={onKeyUpPress}
         onKeyDownPress={onKeyDownPress}
         onFocusChange={onFocusChangeHandler}
+        enableHaloEffect={enableHaloEffect}
         {...props}
       />
     );

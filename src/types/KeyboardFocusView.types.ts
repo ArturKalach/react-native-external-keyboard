@@ -25,6 +25,7 @@ export type FocusWrapperProps = ViewProps & {
   onKeyUpPress?: OnKeyPressFn;
   onKeyDownPress?: OnKeyPressFn;
   canBeFocused?: boolean;
+  enableHaloEffect?: boolean;
 };
 
 export type FocusStateCallbackType = {
@@ -34,11 +35,7 @@ export type FocusStateCallbackType = {
 export type KeyboardFocusViewProps = FocusWrapperProps & {
   focusStyle?: FocusStyle;
   onPress?: (e: GestureResponderEvent | OnKeyPress) => void;
-  onLongPress?: (e: GestureResponderEvent | OnKeyPress) => void;
+  onLongPress?: (e?: GestureResponderEvent | OnKeyPress) => void;
   onContextMenuPress?: () => void;
   autoFocus?: boolean;
-  /**
-   * @platform android
-   */
-  withView?: boolean;
 };
