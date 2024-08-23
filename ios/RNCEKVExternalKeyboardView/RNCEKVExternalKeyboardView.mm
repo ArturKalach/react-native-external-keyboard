@@ -194,7 +194,9 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 }
 
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
-    self.onContextMenuPress(@{});
+    if(self.onContextMenuPress){
+        self.onContextMenuPress(@{});
+    }
     return nil;
 }
 
