@@ -26,6 +26,12 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVExternalKeyboardView)
     [view setCanBeFocused: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(hasOnFocusChanged, BOOL, RNCEKVExternalKeyboardView)
+{
+    BOOL value = json ? [RCTConvert BOOL:json] : NO;
+    [view setHasOnFocusChanged: value];
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(hasKeyDownPress, BOOL, RNCEKVExternalKeyboardView)
 {
     BOOL value = json ? [RCTConvert BOOL:json] : NO;
@@ -49,7 +55,7 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
 RCT_CUSTOM_VIEW_PROPERTY(enableHaloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
     BOOL value =  json ? [RCTConvert BOOL:json] : NO;
-    [view setEnableHaloEffect: value];
+    [view setHaloEffect: value];
 }
 
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag withRootView:(NSString *)withRootView)

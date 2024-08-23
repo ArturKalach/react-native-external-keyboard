@@ -14,13 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
-@property BOOL enableHaloEffect;
+@property BOOL hasOnFocusChanged;
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 
-- (void)onFocusChange:(BOOL)isFocused;
-- (void)onKeyDownPress:(NSDictionary*)dictionary;
-- (void)onKeyUpPress:(NSDictionary*)dictionary;
-- (void)onContextMenuPress;
+- (void)setHaloEffect:(BOOL)enable;
 - (void)focus:(NSString *)rootViewId;
 - (void)setAutoFocus:(NSString *)rootViewId;
 
@@ -38,11 +35,14 @@ NS_ASSUME_NONNULL_END
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
+@property BOOL hasOnFocusChanged;
 @property UIView* myPreferredFocusedView;
 @property (nonatomic, copy) RCTBubblingEventBlock onFocusChange;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onContextMenuPress;
+
+- (void)setHaloEffect:(BOOL)enable;
 - (void)focus:(NSString *)rootViewId;
 - (void)setAutoFocus:(NSString *)rootViewId;
 @end

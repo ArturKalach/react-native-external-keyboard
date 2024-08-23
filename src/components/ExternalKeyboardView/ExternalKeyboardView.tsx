@@ -29,6 +29,7 @@ export const ExternalKeyboardView = React.memo(
           autoFocus={props.autoFocus ? rootId : undefined}
           hasKeyDownPress={Boolean(props.onKeyDownPress)}
           hasKeyUpPress={Boolean(props.onKeyUpPress)}
+          hasOnFocusChanged={Boolean(props.onFocusChange)}
           // canBeFocused={props.canBeFocused ?? true} //ToDo add rule for configuration
         />
       );

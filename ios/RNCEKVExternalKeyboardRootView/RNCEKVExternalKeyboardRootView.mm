@@ -65,10 +65,6 @@ using namespace facebook::react;
     if (newSuperview == nil) {
         [self cleanReferences];
     }
-    else {
-        [super willMoveToSuperview: newSuperview];
-        UIViewController *presentedViewController = RCTPresentedViewController();
-    }
 }
 #endif
 

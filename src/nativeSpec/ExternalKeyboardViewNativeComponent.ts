@@ -36,6 +36,7 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   canBeFocused?: boolean;
   hasKeyDownPress?: boolean;
   hasKeyUpPress?: boolean;
+  hasOnFocusChanged?: boolean;
   onContextMenuPress?: BubblingEventHandler<{}>;
   autoFocus?: string;
   enableHaloEffect?: boolean;

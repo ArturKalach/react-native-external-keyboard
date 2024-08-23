@@ -35,6 +35,7 @@ export const Pressable = React.forwardRef<
       onKeyDownPress,
       onPressOut,
       onPressIn,
+      enableHaloEffect,
       ...props
     },
     ref
@@ -86,6 +87,7 @@ export const Pressable = React.forwardRef<
         onKeyDownPress={onKeyDownHandler}
         onFocusChange={onFocusChange}
         onContextMenuPress={onLongPress}
+        enableHaloEffect={enableHaloEffect}
       >
         <RNPressable
           onPressOut={onPressOut}
