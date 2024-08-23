@@ -293,14 +293,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     return nil;
 }
 
-// - (void)didUpdateReactSubviews
-// {
-//     [super didUpdateReactSubviews];
-//     if (@available(iOS 14.0, *)) {
-//         self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%@", self.reactTag];
-//     }
-// }
-
 @end
 
 
