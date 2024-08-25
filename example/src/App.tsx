@@ -31,23 +31,24 @@ export default function App() {
   return (
     <KeyboardRootView style={styles.container}>
       <KeyboardExtendedPressable
-        enableHaloEffect={true}
+        enableHaloEffect={false}
         onPress={() => {
           setShowAutoFocus((show) => !show);
-          console.log('123123');
+          // console.log('123123');
           ref.current?.focus();
+          // setShowAutoFocus(v => !v);
           // setSt((v) => !v);
         }}
       >
         <Text>Jump</Text>
       </KeyboardExtendedPressable>
       {showAutoFocus && (
-        <KeyboardExtendedView autoFocus enableHaloEffect={true}>
+        <KeyboardExtendedView autoFocus enableHaloEffect={false}>
           <Text>AutoFocus</Text>
         </KeyboardExtendedView>
       )}
       <KeyboardExtendedPressable
-        enableHaloEffect={true}
+        enableHaloEffect={false}
         focusStyle={styles.pressFocusStyle}
         onPress={() => setStatus('onPress')}
         onPressIn={() => setStatus('onPressIn')}
@@ -56,11 +57,11 @@ export default function App() {
       >
         <Text>On Press Check: {status}</Text>
       </KeyboardExtendedPressable>
-      <KeyboardExtendedView enableHaloEffect={true} ref={ref}>
+      <KeyboardExtendedView enableHaloEffect={false} ref={ref}>
         <Text>Catch</Text>
       </KeyboardExtendedView>
       <KeyboardExtendedBaseView
-        enableHaloEffect={true}
+        enableHaloEffect={false}
         onKeyDownPress={onKeyDownHandler}
         onKeyUpPress={onKeyUpHandler}
       >
@@ -77,18 +78,18 @@ export default function App() {
         ))}
       </KeyboardExtendedBaseView>
       <View style={styles.divider} />
-      <KeyboardExtendedView enableHaloEffect={true}>
+      <KeyboardExtendedView enableHaloEffect={false}>
         <Text>Parent component</Text>
-        <KeyboardExtendedView enableHaloEffect={true}>
+        <KeyboardExtendedView enableHaloEffect={false}>
           <Text>Child component 1</Text>
         </KeyboardExtendedView>
-        <KeyboardExtendedView enableHaloEffect={true}>
+        <KeyboardExtendedView enableHaloEffect={false}>
           <Text>Child component 2</Text>
         </KeyboardExtendedView>
       </KeyboardExtendedView>
       <KeyboardExtendedInput value={textInput} onChangeText={setTextInput} />
       <KeyboardExtendedView
-        enableHaloEffect={true}
+        enableHaloEffect={false}
         style={styles.borderExample}
       >
         <Text>Border here</Text>
