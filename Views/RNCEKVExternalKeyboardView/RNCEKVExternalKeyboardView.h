@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onContextMenuPress;
+@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 
 - (void)setHaloEffect:(BOOL)enable;
 - (void)focus:(NSString *)rootViewId;

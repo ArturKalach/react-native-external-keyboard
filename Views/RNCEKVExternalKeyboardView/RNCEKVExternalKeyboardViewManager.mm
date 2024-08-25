@@ -54,8 +54,15 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
 
 RCT_CUSTOM_VIEW_PROPERTY(enableHaloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
-    BOOL value =  json ? [RCTConvert BOOL:json] : NO;
-    [view setHaloEffect: value];
+    if(json) {
+        BOOL value = [RCTConvert BOOL:json];
+        if(view.isHaloActive == nil && !value) {
+            [view setIsHaloActive: @0];
+        }
+        if(view.isHaloActive != nil) {
+            [view setIsHaloActive: @(value)];
+        }
+    }
 }
 
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag withRootView:(NSString *)withRootView)
