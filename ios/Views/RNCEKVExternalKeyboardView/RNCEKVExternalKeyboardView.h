@@ -2,6 +2,7 @@
 #define RNCEKVExternalKeyboardViewNativeComponent_h
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import <UIKit/UIKit.h>
+#import "RNCEKVKeyboardFocusProtocol.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -30,8 +31,9 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate>
+@interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate, RNCEKVKeyboardFocusProtocol>
 
+@property (nonatomic, strong, nullable) NSString *autoFocusRootId;
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
@@ -42,10 +44,7 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onContextMenuPress;
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
-
-- (void)setHaloEffect:(BOOL)enable;
 - (void)focus:(NSString *)rootViewId;
-- (void)setAutoFocus:(NSString *)rootViewId;
 @end
 
 

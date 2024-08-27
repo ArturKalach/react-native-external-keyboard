@@ -3,6 +3,7 @@
 #import <React/RCTViewManager.h>
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import "RNCEKVPreferredFocusEnvironment.h"
+#import "RNCEKVKeyboardFocusDelegate.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
@@ -23,9 +24,8 @@ using namespace facebook::react;
 #endif
 
 @implementation RNCEKVExternalKeyboardView {
-    NSString* _autoFocus;
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
-    NSNumber* _delayedHaloDefinition;
+    RNCEKVKeyboardFocusDelegate* _keyboardFocusDelegate;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -36,6 +36,7 @@ using namespace facebook::react;
         _props = defaultProps;
 #endif
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
+        _keyboardFocusDelegate =  [[RNCEKVKeyboardFocusDelegate alloc] initWithView:self];
         
         if (@available(iOS 13.0, *)) {
             UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
@@ -70,7 +71,6 @@ using namespace facebook::react;
         }
     }
 }
-
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
@@ -124,51 +124,17 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 }
 
 - (BOOL)canBecomeFocused {
-    return [self getFocusingView] == self;
-}
-
-
-- (UIView*)getFocusingView {
-    if(self.subviews.count == 1 && self.subviews[0].canBecomeFocused) {
-        return self.subviews[0];
-    }
-    
-    return self;
-}
-
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    
-    if(self.window == nil) {
-        return;
-    }
-    
-    if(@available(iOS 15.0, *)) {
-        if(_delayedHaloDefinition != nil) {
-            [self setIsHaloActive: _delayedHaloDefinition];
-            _delayedHaloDefinition = nil;
-        }
-    }
+    return [_keyboardFocusDelegate canBecomeFocused];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
-    if (newSuperview) {
-        if (@available(iOS 14.0, *)) {
-            if(self.focusGroupIdentifier == nil) {
-#ifdef RCT_NEW_ARCH_ENABLED
-                self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%ld", self.tag];
-#else
-                self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%@", self.reactTag];
-#endif
-            }
-        }
-    }
+    [_keyboardFocusDelegate willMoveToSuperview:newSuperview];
 }
 
 
 - (void)focus:(NSString *)rootViewId {
-    UIView *focusingView = [self getFocusingView];
+    UIView *focusingView = [_keyboardFocusDelegate getFocusingView];
     [[RNCEKVPreferredFocusEnvironment sharedInstance] focus:focusingView withRootId:rootViewId];
 }
 
@@ -176,11 +142,9 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     if([self hasOnFocusChanged]) {
-        UIView* focusingView = [self getFocusingView];
-        if(context.nextFocusedView == focusingView) {
-            [self onFocusChangeHandler: YES];
-        } else if (context.previouslyFocusedView == focusingView) {
-            [self onFocusChangeHandler: NO];
+        NSNumber* isFocusChanged = [_keyboardFocusDelegate isFocusChanged: context];
+        if(isFocusChanged != nil) {
+            [self onFocusChangeHandler: [isFocusChanged  isEqual: @YES]];
         }
         
         return;
@@ -263,45 +227,37 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 }
 
 - (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
-    if(@available(iOS 15.0, *)) {
-        if(self.window != nil) {
-            if(isHaloActive != nil) {
-                UIView* view = [self getFocusingView];
-                if([isHaloActive intValue] == 1) {
-                    view.focusEffect = nil;
-                } else {
-//                    if(self != view) {
-//                        self.focusEffect = [UIFocusHaloEffect effectWithPath: [UIBezierPath bezierPath]];
-//                    }
-                    view.focusEffect = [UIFocusHaloEffect effectWithPath: [UIBezierPath bezierPath]];
-                }
-            }
-        } else {
-            _delayedHaloDefinition = isHaloActive;
-        }
-    }
     _isHaloActive = isHaloActive;
+    [_keyboardFocusDelegate updateHalo];
 }
-
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     
-    if (self.superview != nil && _autoFocus) {
-        [[RNCEKVPreferredFocusEnvironment sharedInstance] setAutoFocus:self withRootId: _autoFocus];
+    if (self.superview != nil && _autoFocusRootId) {
+        [[RNCEKVPreferredFocusEnvironment sharedInstance] setAutoFocus:self withRootId: _autoFocusRootId];
     }
 }
 
-
-- (void)setAutoFocus:(nonnull NSString *)rootViewId {
-    _autoFocus = rootViewId;
+- (void)addSubview:(UIView *)view {
+    [super addSubview:view];
+    [_keyboardFocusDelegate addSubview: view];
 }
 
-
-- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location  API_AVAILABLE(ios(13.0)){
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0)){
     [self onContextMenuPressHandler];
     return nil;
 }
+
+- (NSString*) getFocusGroupIdentifier {
+#ifdef RCT_NEW_ARCH_ENABLED
+    return  [NSString stringWithFormat:@"app.group.%ld", self.tag];
+#else
+    return [NSString stringWithFormat:@"app.group.%@", self.reactTag];
+#endif
+}
+
+
 
 @end
 

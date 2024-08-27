@@ -48,7 +48,7 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
 {
   if (json) {
     NSString *rootViewId = [RCTConvert NSString:json];
-    [view setAutoFocus: rootViewId];
+    [view setAutoFocusRootId: rootViewId];
   }
 }
 
