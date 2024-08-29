@@ -36,17 +36,18 @@
         [_views setObject: view forKey:viewId];
         keyboardRootView = view;
     }
-    if(_autoFocusView) {
-        [keyboardRootView setAutoFocus: _autoFocusView];
-    }
+//    if(_autoFocusView) {
+//        [keyboardRootView setAutoFocus: _autoFocusView];
+//    }
 }
 
 - (void)setAutoFocus:(UIView*)view withRootId:(NSString*)rootId {
     RNCEKVExternalKeyboardRootView* keyboardRootView = [_views objectForKey: rootId];
-    if(keyboardRootView) {
+    if(keyboardRootView && keyboardRootView.window) {
         [keyboardRootView focusView: view];
     } else {
-        _autoFocusView = view;
+        [keyboardRootView setAutoFocus: view];
+//        _autoFocusView = view;
     }
 }
 

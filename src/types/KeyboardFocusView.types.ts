@@ -25,7 +25,7 @@ export type FocusWrapperProps = ViewProps & {
   onKeyUpPress?: OnKeyPressFn;
   onKeyDownPress?: OnKeyPressFn;
   canBeFocused?: boolean;
-  enableHaloEffect?: boolean;
+  haloEffect?: boolean;
 };
 
 export type FocusStateCallbackType = {

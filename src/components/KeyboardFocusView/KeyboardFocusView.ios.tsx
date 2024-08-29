@@ -20,7 +20,7 @@ export const KeyboardFocusView = React.forwardRef<
       onKeyUpPress,
       onKeyDownPress,
       autoFocus,
-      enableHaloEffect = false,
+      haloEffect,
       ...props
     },
     ref
@@ -51,7 +51,7 @@ export const KeyboardFocusView = React.forwardRef<
         onKeyUpPress={onKeyUpPress}
         onKeyDownPress={onKeyDownPress}
         onFocusChange={onFocusChangeHandler}
-        enableHaloEffect={enableHaloEffect}
+        haloEffect={haloEffect}
         {...props}
       />
     );

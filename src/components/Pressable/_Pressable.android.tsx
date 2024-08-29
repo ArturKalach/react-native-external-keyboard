@@ -35,6 +35,7 @@ export const Pressable = React.forwardRef<
       onKeyDownPress,
       onPressOut,
       onPressIn,
+      autoFocus,
       ...props
     },
     ref
@@ -86,6 +87,7 @@ export const Pressable = React.forwardRef<
         onKeyDownPress={onKeyDownHandler}
         canBeFocused={canBeFocused}
         onFocusChange={onFocusChange}
+        autoFocus={autoFocus}
       >
         <RNPressable
           onPressOut={onPressOut}

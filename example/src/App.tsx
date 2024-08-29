@@ -9,6 +9,8 @@ import {
   KeyboardExtendedPressable,
   KeyboardRootView,
   KeyboardExtendedViewType,
+  TouchableOpacity,
+  // TouchableWithoutFeedback
 } from 'react-native-external-keyboard';
 
 export default function App() {
@@ -30,8 +32,8 @@ export default function App() {
   const [showAutoFocus, setShowAutoFocus] = React.useState(false);
   return (
     <KeyboardRootView style={styles.container}>
-      <KeyboardExtendedPressable
-        enableHaloEffect={false}
+      <TouchableOpacity
+        haloEffect={false}
         onPress={() => {
           setShowAutoFocus((show) => !show);
           // console.log('123123');
@@ -41,14 +43,14 @@ export default function App() {
         }}
       >
         <Text>Jump</Text>
-      </KeyboardExtendedPressable>
+      </TouchableOpacity>
       {showAutoFocus && (
-        <KeyboardExtendedView autoFocus enableHaloEffect={false}>
+        <KeyboardExtendedView autoFocus haloEffect={false}>
           <Text>AutoFocus</Text>
         </KeyboardExtendedView>
       )}
       <KeyboardExtendedPressable
-        enableHaloEffect={false}
+        haloEffect={false}
         focusStyle={styles.pressFocusStyle}
         onPress={() => setStatus('onPress')}
         onPressIn={() => setStatus('onPressIn')}
@@ -57,11 +59,11 @@ export default function App() {
       >
         <Text>On Press Check: {status}</Text>
       </KeyboardExtendedPressable>
-      <KeyboardExtendedView enableHaloEffect={false} ref={ref}>
+      <KeyboardExtendedView haloEffect={false} ref={ref}>
         <Text>Catch</Text>
       </KeyboardExtendedView>
       <KeyboardExtendedBaseView
-        enableHaloEffect={false}
+        haloEffect={false}
         onKeyDownPress={onKeyDownHandler}
         onKeyUpPress={onKeyUpHandler}
       >
@@ -78,20 +80,21 @@ export default function App() {
         ))}
       </KeyboardExtendedBaseView>
       <View style={styles.divider} />
-      <KeyboardExtendedView enableHaloEffect={false}>
+      <KeyboardExtendedView haloEffect={false}>
         <Text>Parent component</Text>
-        <KeyboardExtendedView enableHaloEffect={false}>
+        <KeyboardExtendedView haloEffect={false}>
           <Text>Child component 1</Text>
         </KeyboardExtendedView>
-        <KeyboardExtendedView enableHaloEffect={false}>
+        <KeyboardExtendedView haloEffect={false}>
           <Text>Child component 2</Text>
         </KeyboardExtendedView>
       </KeyboardExtendedView>
-      <KeyboardExtendedInput value={textInput} onChangeText={setTextInput} />
-      <KeyboardExtendedView
-        enableHaloEffect={false}
-        style={styles.borderExample}
-      >
+      <KeyboardExtendedInput
+        haloEffect={false}
+        value={textInput}
+        onChangeText={setTextInput}
+      />
+      <KeyboardExtendedView haloEffect={false} style={styles.borderExample}>
         <Text>Border here</Text>
       </KeyboardExtendedView>
     </KeyboardRootView>

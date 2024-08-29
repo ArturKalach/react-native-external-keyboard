@@ -16,5 +16,8 @@ export {
   KeyboardExtendedPressable,
   KeyboardExtendedBaseView,
 } from './components';
+export { TouchableOpacity } from './components/Pressable/TouchableOpacity';
+export { TouchableWithoutFeedback } from './components/Pressable/TouchableWithoutFeedback';
+export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { KeyboardRootView } from './components/KeyboardRootView';
 export { A11yModule, KeyboardExtendedModule } from './services';

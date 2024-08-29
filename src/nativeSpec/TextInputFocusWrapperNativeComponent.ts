@@ -14,6 +14,7 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   focusType?: Int32;
   blurType?: Int32;
   canBeFocused?: boolean;
+  haloEffect?: boolean;
 }
 
 export default codegenNativeComponent<TextInputFocusWrapperNativeComponent>(

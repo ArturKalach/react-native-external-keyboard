@@ -14,11 +14,19 @@ import {
   Pressable as RNPressable,
   View,
   PressableProps,
+  Platform,
 } from 'react-native';
 import type { KeyboardFocusViewProps, OnKeyPressFn } from '../../types';
 import { KeyboardFocusView } from '../KeyboardFocusView';
 
 const ANDROID_SPACE_KEY_CODE = 62;
+const IOS_SPACE_KEY_CODE = 44;
+
+const SPACE_KEY_CODE = Platform.select({
+  android: ANDROID_SPACE_KEY_CODE,
+  ios: IOS_SPACE_KEY_CODE,
+  default: -1,
+});
 
 export const Pressable = React.forwardRef<
   View,
@@ -26,6 +34,7 @@ export const Pressable = React.forwardRef<
 >(
   (
     {
+      autoFocus,
       canBeFocused: _canBeFocused, //ToDo add rule to handle
       focusStyle,
       style,
@@ -35,7 +44,7 @@ export const Pressable = React.forwardRef<
       onKeyDownPress,
       onPressOut,
       onPressIn,
-      enableHaloEffect,
+      haloEffect,
       ...props
     },
     ref
@@ -46,7 +55,7 @@ export const Pressable = React.forwardRef<
           nativeEvent: { keyCode, isLongPress },
         } = e;
 
-        if (keyCode === ANDROID_SPACE_KEY_CODE) {
+        if (keyCode === SPACE_KEY_CODE) {
           onPressOut?.(e as unknown as GestureResponderEvent);
           if (isLongPress) {
             onLongPress?.(e);
@@ -87,7 +96,8 @@ export const Pressable = React.forwardRef<
         onKeyDownPress={onKeyDownHandler}
         onFocusChange={onFocusChange}
         onContextMenuPress={onLongPress}
-        enableHaloEffect={enableHaloEffect}
+        haloEffect={haloEffect}
+        autoFocus={autoFocus}
       >
         <RNPressable
           onPressOut={onPressOut}

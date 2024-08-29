@@ -1,7 +1,5 @@
-import { View, PressableProps } from 'react-native';
+import { Pressable as RNPressable } from 'react-native';
 
-import type { KeyboardFocusViewProps } from '../../types';
+import { withKeyboardFocus } from '../../utils/withKeyboardFocus';
 
-export const Pressable = View as unknown as React.ForwardRefExoticComponent<
-  PressableProps & KeyboardFocusViewProps & React.RefAttributes<View>
->;
+export const Pressable = withKeyboardFocus(RNPressable);

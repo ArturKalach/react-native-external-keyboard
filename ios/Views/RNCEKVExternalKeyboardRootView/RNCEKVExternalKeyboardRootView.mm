@@ -7,7 +7,6 @@
 
 #import "RNCEKVExternalKeyboardRootView.h"
 #import "RNCEKVPreferredFocusEnvironment.h"
-#import "RNCEKVAutoFocus.h"
 #import "RCTUtils.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -77,9 +76,9 @@ using namespace facebook::react;
 }
 
 - (void)setAutoFocus:(UIView*) view {
-    if([view canBecomeFocused]) {
-        [self setCustomFocusedView: view];
-    }
+//    if(view.canBecomeFocused) {
+    [self setCustomFocusedView: view];
+//    }
 }
 
 - (void)didMoveToWindow {
@@ -90,18 +89,46 @@ using namespace facebook::react;
     }
     
     UIViewController *presentedViewController = RCTPresentedViewController();
+    BOOL isRootViewController = RCTKeyWindow().rootViewController == presentedViewController;
+//    #ifdef RCT_NEW_ARCH_ENABLED
+//        BOOL isKindOfModal = [presentedViewController isKindOfClass:[RCTFabricModalHostViewController class]];
+//    #else
+//        BOOL isKindOfModal = [presentedViewController isKindOfClass:[RCTModalHostViewController class]];
+//    #endif
 
-    #ifdef RCT_NEW_ARCH_ENABLED
-        BOOL isKindOfModal = [presentedViewController isKindOfClass:[RCTFabricModalHostViewController class]];
-    #else
-        BOOL isKindOfModal = [presentedViewController isKindOfClass:[RCTModalHostViewController class]];
-    #endif
-
-    if(isKindOfModal) {
-        _isModalChecked = YES;
-        [[RNCEKVAutoFocus sharedInstance] setFocusView: self];
+//    if(isKindOfModal) {
+//        [NSTimer scheduledTimerWithTimeInterval:1.0  // Delay in seconds
+//                                         target:self
+//                                       selector:@selector(yourMethod)
+//                                       userInfo:nil
+//                                        repeats:NO];
+//        _isModalChecked = YES;
+//        UIViewController *presentedViewController = RCTPresentedViewController();
+    if(!isRootViewController) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [presentedViewController.view setNeedsFocusUpdate];
+            [presentedViewController.view updateFocusIfNeeded];
+            [self setNeedsFocusUpdate];
+            [self updateFocusIfNeeded];
+        });
     }
+      
+       
+//        [[RNCEKVAutoFocus sharedInstance] setFocusView: self];
+//    }
 }
+
+//-(void)yourMethod {
+//    UIViewController *presentedViewController = RCTPresentedViewController();
+//    [RCTKeyWindow().rootViewController setNeedsFocusUpdate];
+//    [presentedViewController setNeedsFocusUpdate];
+//    [presentedViewController.view setNeedsFocusUpdate];
+//    [presentedViewController updateFocusIfNeeded];
+//    [presentedViewController.view updateFocusIfNeeded];
+//    [RCTKeyWindow().rootViewController updateFocusIfNeeded];
+//    [self setNeedsFocusUpdate];
+//    [self updateFocusIfNeeded];
+//}
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider

@@ -24,6 +24,7 @@ export type KeyboardFocusViewProps = TextInputProps & {
   containerStyle?: StyleProp<ViewStyle>;
   onFocusChange?: OnFocusChangeFn;
   focusStyle?: FocusStyle;
+  haloEffect?: boolean;
 };
 
 export const KeyboardExtendedInput = React.forwardRef<
@@ -38,6 +39,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       onFocusChange,
       focusStyle,
       style,
+      haloEffect,
       ...props
     },
     ref
@@ -53,8 +55,10 @@ export const KeyboardExtendedInput = React.forwardRef<
         focusType={focusMap[focusType]}
         blurType={blurMap[blurType]}
         style={containerStyle}
+        haloEffect={haloEffect}
         ref={ref}
       >
+        {/* ToDo why blur on submit? */}
         <TextInput blurOnSubmit={false} style={[style, fStyle]} {...props} />
       </TextInputFocusWrapperNative>
     );

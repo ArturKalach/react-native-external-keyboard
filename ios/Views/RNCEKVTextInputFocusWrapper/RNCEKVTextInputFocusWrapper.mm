@@ -2,7 +2,10 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
 #import <React/RCTLog.h>
-#import <React/RCTUITextField.h>
+#import <React/RCTUITextView.h>
+#import "RNCEKVFocusEffectUtility.h"
+#import "RCTBaseTextInputView.h"
+#import <React/RCTSinglelineTextInputView.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
@@ -79,13 +82,13 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #else
 
-- (void)didUpdateReactSubviews
-{
-    [super didUpdateReactSubviews];
-    if (@available(iOS 14.0, *)) {
-        self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%@", self.reactTag];
-    }
-}
+//- (void)didUpdateReactSubviews
+//{
+//    [super didUpdateReactSubviews];
+//    if (@available(iOS 14.0, *)) {
+//        self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%@", self.reactTag];
+//    }
+//}
 
 #endif
 
@@ -113,10 +116,10 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #endif
 
-
-- (BOOL)canBecomeFocused {
-    return self.canBeFocused;
-}
+//
+//- (BOOL)canBecomeFocused {
+//    return self.canBeFocused;
+//}
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
@@ -136,6 +139,26 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
                   [_textField reactBlur];
               }
     }
+}
+
+-(BOOL)isHaloHidden {
+    NSNumber* isHaloActive = [self isHaloActive];
+    return [isHaloActive isEqual: @NO];
+}
+
+- (void)updateHalo:(UIView*) view{
+    if (@available(iOS 15.0, *)) {
+        if([self isHaloHidden]) {
+            if([view isKindOfClass: [RCTSinglelineTextInputView class]]) {
+                view.subviews[0].focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
+                
+            }
+        }
+    }
+}
+
+- (void)didMoveToWindow {
+    [self updateHalo: self.subviews[0]];
 }
 
 

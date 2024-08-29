@@ -52,7 +52,7 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
   }
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(enableHaloEffect, BOOL, RNCEKVExternalKeyboardView)
+RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
     if(json) {
         BOOL value = [RCTConvert BOOL:json];

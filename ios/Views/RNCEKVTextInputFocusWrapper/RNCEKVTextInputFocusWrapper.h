@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_END
     RCTUITextField* _textField;
 }
 
-
+@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 @property BOOL canBeFocused;
 @property int focusType;
 @property int blurType;
