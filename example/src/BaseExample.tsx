@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native-external-keyboard';
 
-export default function App() {
+export const BaseExample = () => {
   const ref = React.useRef<KeyboardExtendedViewType>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [status, setStatus] = React.useState('Not pressed');
@@ -85,17 +85,13 @@ export default function App() {
           <Text>Child component 2</Text>
         </KeyboardExtendedView>
       </KeyboardExtendedView>
-      <KeyboardExtendedInput
-        haloEffect={false}
-        value={textInput}
-        onChangeText={setTextInput}
-      />
+      <KeyboardExtendedInput value={textInput} onChangeText={setTextInput} />
       <KeyboardExtendedView haloEffect={false} style={styles.borderExample}>
         <Text>Border here</Text>
       </KeyboardExtendedView>
     </KeyboardRootView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

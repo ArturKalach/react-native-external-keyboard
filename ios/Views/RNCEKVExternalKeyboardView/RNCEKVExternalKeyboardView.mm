@@ -47,7 +47,9 @@ using namespace facebook::react;
     return self;
 }
 
-
+- (void)cleanReferences{
+    [self setAutoFocusRootId: nil];
+}
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -61,6 +63,8 @@ using namespace facebook::react;
     [super prepareForRecycle];
     [self cleanReferences];
 }
+
+
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
     NSString *FOCUS = @"focus";
@@ -97,13 +101,29 @@ using namespace facebook::react;
     
     
     if(oldViewProps.autoFocus != newViewProps.autoFocus) {
-        _autoFocus = [NSString stringWithUTF8String:newViewProps.autoFocus.c_str()];
+        NSString* rootId = [NSString stringWithUTF8String:newViewProps.autoFocus.c_str()];
+        [self setAutoFocusRootId: rootId];
     }
     
-    if(oldViewProps.enableHaloEffect != newViewProps.enableHaloEffect) {
-        //        _haloEnabled = newViewProps.enableHaloEffect;
-        //        [self setHaloEffect: newViewProps.enableHaloEffect];
+    if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
+        BOOL haloState = newViewProps.haloEffect;
+        if(![self.isHaloActive isEqual: @(haloState)]) {
+            [self setIsHaloActive: @(haloState)];
+        }
     }
+}
+
+- (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask {
+    [super finalizeUpdates: updateMask];
+    NSLog(@"finalise");
+    if(self.subviews.count > 0) {
+        [_keyboardFocusDelegate addSubview: self.subviews[0]];
+    }
+}
+
+- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+{
+    [super mountChildComponentView:childComponentView index:index];
 }
 
 

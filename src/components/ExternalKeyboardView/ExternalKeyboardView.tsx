@@ -25,6 +25,7 @@ export const ExternalKeyboardView = React.memo(
       return (
         <ExternalKeyboardViewNative
           {...props}
+          haloEffect={props.haloEffect ?? true}
           ref={keyboardedRef}
           autoFocus={props.autoFocus ? rootId : undefined}
           hasKeyDownPress={Boolean(props.onKeyDownPress)}

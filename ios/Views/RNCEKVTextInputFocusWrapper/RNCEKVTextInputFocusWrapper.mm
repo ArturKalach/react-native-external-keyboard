@@ -5,7 +5,12 @@
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
+
+#ifdef RCT_NEW_ARCH_ENABLED
+#import <React/RCTTextInputComponentView.h>
+#else
 #import <React/RCTSinglelineTextInputView.h>
+#endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
@@ -14,6 +19,7 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
+
 
 #import "RCTFabricComponentsPlugins.h"
 
@@ -48,6 +54,16 @@ static const NSInteger AUTO_BLUR = 2;
     return self;
 }
 
+- (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
+    _isHaloActive = isHaloActive;
+    [self updateHalo];
+}
+
+- (void)prepareForRecycle
+{
+    [super prepareForRecycle];
+    [self cleanReferences];
+}
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
@@ -68,9 +84,10 @@ static const NSInteger AUTO_BLUR = 2;
         [self setBlurType: newViewProps.blurType];
     }
     
-    if (@available(iOS 14.0, *)) {
-        if(self.focusGroupIdentifier == nil) {
-            self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%ld", self.tag];
+    if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
+        BOOL haloState = newViewProps.haloEffect;
+        if(![self.isHaloActive isEqual: @(haloState)]) {
+            [self setIsHaloActive: @(haloState)];
         }
     }
 }
@@ -79,16 +96,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 {
     return RNCEKVTextInputFocusWrapper.class;
 }
-
-#else
-
-//- (void)didUpdateReactSubviews
-//{
-//    [super didUpdateReactSubviews];
-//    if (@available(iOS 14.0, *)) {
-//        self.focusGroupIdentifier =  [NSString stringWithFormat:@"app.group.%@", self.reactTag];
-//    }
-//}
 
 #endif
 
@@ -126,19 +133,22 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
     if(isTextInputFocus && (_textField == nil || _textField == context.nextFocusedView)) {
         [self onFocusChange: YES];
-        BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
         if(_textField == nil) {
-                 _textField = (RCTUITextField *)context.nextFocusedView;
-             }
-             if(self.focusType == AUTO_FOCUS) {
-                 [_textField reactFocus];
-             }
+            _textField = (RCTUITextField *)context.nextFocusedView;
+        }
+        if(self.focusType == AUTO_FOCUS) {
+            [_textField reactFocus];
+        }
     } else if (context.previouslyFocusedView == _textField) {
         [self onFocusChange: NO];
-              if(self.blurType == AUTO_BLUR) {
-                  [_textField reactBlur];
-              }
+        if(self.blurType == AUTO_BLUR) {
+            [_textField reactBlur];
+        }
     }
+}
+
+- (void)cleanReferences{
+    _textField = nil;
 }
 
 -(BOOL)isHaloHidden {
@@ -146,27 +156,41 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     return [isHaloActive isEqual: @NO];
 }
 
-- (void)updateHalo:(UIView*) view{
+- (BOOL)getIsTextInputView: (UIView*)view {
+#ifdef RCT_NEW_ARCH_ENABLED
+    BOOL isTextInput = [view isKindOfClass: [RCTTextInputComponentView class]];
+#else
+    BOOL isTextInput = [view isKindOfClass: [RCTSinglelineTextInputView class]];
+#endif
+    return isTextInput;
+}
+
+- (void)updateHalo {
+    if(self.subviews.count == 0) {
+        return;
+    }
+    
+    UIView* view = self.subviews[0];
     if (@available(iOS 15.0, *)) {
-        if([self isHaloHidden]) {
-            if([view isKindOfClass: [RCTSinglelineTextInputView class]]) {
-                view.subviews[0].focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
-                
-            }
+        BOOL isTextInput = [self getIsTextInputView: view];
+        if(isTextInput) {
+            view.subviews[0].focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
         }
     }
 }
 
+// ToDo, check if needed
+#ifndef RCT_NEW_ARCH_ENABLED
 - (void)didMoveToWindow {
-    [self updateHalo: self.subviews[0]];
+    [self updateHalo];
 }
-
+#endif
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
     
     if (newSuperview == nil) {
-        _textField = nil;
+        [self cleanReferences];
     }
 }
 

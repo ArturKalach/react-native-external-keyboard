@@ -42,9 +42,7 @@
 
 -(void)updateHalo {
     if(@available(iOS 15.0, *)) {
-        if([self isHaloHidden]) {
-            _delegate.focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
-        }
+        _delegate.focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
     }
 }
 
@@ -65,6 +63,16 @@
         }
     }
 }
+
+//- (void)finalizeUpdates {
+//    UIView* view = [self getFocusingView];
+//    if (@available(iOS 15.0, *)) {
+//        if([self isHaloHidden] && [view canBecomeFocused]) {
+//            view.focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
+//        }
+//    }
+//}
+
 
 
 - (NSNumber*)isFocusChanged:(UIFocusUpdateContext *)context {

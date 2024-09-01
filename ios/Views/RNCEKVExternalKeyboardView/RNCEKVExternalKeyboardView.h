@@ -10,17 +10,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate>
-
+@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate, RNCEKVKeyboardFocusProtocol>
+@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
 @property BOOL hasOnFocusChanged;
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
+@property (nonatomic, strong, nullable) NSString *autoFocusRootId;
 
-- (void)setHaloEffect:(BOOL)enable;
 - (void)focus:(NSString *)rootViewId;
-- (void)setAutoFocus:(NSString *)rootViewId;
 
 @end
 

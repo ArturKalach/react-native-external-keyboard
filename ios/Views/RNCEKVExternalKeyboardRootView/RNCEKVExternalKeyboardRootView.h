@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RNCEKVExternalKeyboardRootView : RCTViewComponentView
 
-@property NSString* viewId;
+@property (nullable) NSString* viewId;
 @property (nullable) UIView* customFocusedView;
 
 - (void)focusView:(UIView*) view;

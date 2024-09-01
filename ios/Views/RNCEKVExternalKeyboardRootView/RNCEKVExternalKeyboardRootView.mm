@@ -15,7 +15,6 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
-#import "RCTModalViewController+Focus.h"
 #import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
@@ -49,6 +48,7 @@ using namespace facebook::react;
         [[RNCEKVPreferredFocusEnvironment sharedInstance] detachRootView: self.viewId];
     }
     _isModalChecked = NO;
+    [self setViewId: nil];
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -56,7 +56,6 @@ using namespace facebook::react;
 {
     [super prepareForRecycle];
     [self cleanReferences];
-   
 }
 #else
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -76,9 +75,7 @@ using namespace facebook::react;
 }
 
 - (void)setAutoFocus:(UIView*) view {
-//    if(view.canBecomeFocused) {
     [self setCustomFocusedView: view];
-//    }
 }
 
 - (void)didMoveToWindow {
@@ -90,20 +87,7 @@ using namespace facebook::react;
     
     UIViewController *presentedViewController = RCTPresentedViewController();
     BOOL isRootViewController = RCTKeyWindow().rootViewController == presentedViewController;
-//    #ifdef RCT_NEW_ARCH_ENABLED
-//        BOOL isKindOfModal = [presentedViewController isKindOfClass:[RCTFabricModalHostViewController class]];
-//    #else
-//        BOOL isKindOfModal = [presentedViewController isKindOfClass:[RCTModalHostViewController class]];
-//    #endif
-
-//    if(isKindOfModal) {
-//        [NSTimer scheduledTimerWithTimeInterval:1.0  // Delay in seconds
-//                                         target:self
-//                                       selector:@selector(yourMethod)
-//                                       userInfo:nil
-//                                        repeats:NO];
-//        _isModalChecked = YES;
-//        UIViewController *presentedViewController = RCTPresentedViewController();
+    
     if(!isRootViewController) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [presentedViewController.view setNeedsFocusUpdate];
@@ -112,23 +96,8 @@ using namespace facebook::react;
             [self updateFocusIfNeeded];
         });
     }
-      
-       
-//        [[RNCEKVAutoFocus sharedInstance] setFocusView: self];
-//    }
 }
 
-//-(void)yourMethod {
-//    UIViewController *presentedViewController = RCTPresentedViewController();
-//    [RCTKeyWindow().rootViewController setNeedsFocusUpdate];
-//    [presentedViewController setNeedsFocusUpdate];
-//    [presentedViewController.view setNeedsFocusUpdate];
-//    [presentedViewController updateFocusIfNeeded];
-//    [presentedViewController.view updateFocusIfNeeded];
-//    [RCTKeyWindow().rootViewController updateFocusIfNeeded];
-//    [self setNeedsFocusUpdate];
-//    [self updateFocusIfNeeded];
-//}
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -161,7 +130,7 @@ using namespace facebook::react;
             NSString *oldViewId = [NSString stringWithUTF8String:oldViewProps.viewId.c_str()];
             [[RNCEKVPreferredFocusEnvironment sharedInstance] detachRootView:oldViewId];
         }
-
+        
         [[RNCEKVPreferredFocusEnvironment sharedInstance] storeRootView: rootViewId withView: self];
         [self setViewId: rootViewId];
     }

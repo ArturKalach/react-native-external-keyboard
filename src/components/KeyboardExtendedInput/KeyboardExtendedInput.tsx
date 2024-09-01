@@ -39,7 +39,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       onFocusChange,
       focusStyle,
       style,
-      haloEffect,
+      haloEffect = true,
       ...props
     },
     ref
