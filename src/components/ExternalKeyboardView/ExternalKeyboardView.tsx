@@ -9,7 +9,19 @@ import type {
 
 export const ExternalKeyboardView = React.memo(
   React.forwardRef<ExternalKeyboardViewType, ExternalKeyboardViewProps>(
-    (props, ref) => {
+    (
+      {
+        onKeyUpPress,
+        onFocusChange,
+        onKeyDownPress,
+        haloEffect,
+        autoFocus,
+        canBeFocused = true,
+        focusable = true,
+        ...props
+      },
+      ref
+    ) => {
       const rootId = useContext(KeyboardRootViewContext);
       const keyboardedRef = useRef(null);
 
@@ -25,13 +37,13 @@ export const ExternalKeyboardView = React.memo(
       return (
         <ExternalKeyboardViewNative
           {...props}
-          haloEffect={props.haloEffect ?? true}
+          haloEffect={haloEffect ?? true}
           ref={keyboardedRef}
-          autoFocus={props.autoFocus ? rootId : undefined}
-          hasKeyDownPress={Boolean(props.onKeyDownPress)}
-          hasKeyUpPress={Boolean(props.onKeyUpPress)}
-          hasOnFocusChanged={Boolean(props.onFocusChange)}
-          // canBeFocused={props.canBeFocused ?? true} //ToDo add rule for configuration
+          canBeFocused={focusable && canBeFocused}
+          autoFocus={autoFocus ? rootId : undefined}
+          hasKeyDownPress={Boolean(onKeyDownPress)}
+          hasKeyUpPress={Boolean(onKeyUpPress)}
+          hasOnFocusChanged={Boolean(onFocusChange)}
         />
       );
     }

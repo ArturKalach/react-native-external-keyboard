@@ -12,7 +12,8 @@
 
 @protocol RNCEKVKeyboardFocusProtocol <NSObject>
 - (NSNumber *)isHaloActive;
-- (NSString *) getFocusGroupIdentifier;
+- (NSString *)getFocusGroupIdentifier;
+- (BOOL)canBeFocused;
 @end
 
 #endif /* RNCEKVKeyboardFocusProtocol_h */

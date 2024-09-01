@@ -32,6 +32,9 @@
 }
 
 - (BOOL)canBecomeFocused {
+    if(!_delegate.canBeFocused) {
+        return false;
+    }
     return [self getFocusingView] == _delegate;
 }
 

@@ -16,11 +16,11 @@ export const KeyboardFocusView = React.forwardRef<
       onFocusChange,
       style,
       focusStyle,
-      canBeFocused: _canBeFocused = true, //ToDo add rule
+      canBeFocused,
       onKeyUpPress,
       onKeyDownPress,
       autoFocus,
-      haloEffect = true,
+      haloEffect,
       ...props
     },
     ref
@@ -47,7 +47,7 @@ export const KeyboardFocusView = React.forwardRef<
         ref={ref}
         autoFocus={autoFocus}
         style={[style, fStyle]}
-        // canBeFocused={canBeFocused}
+        canBeFocused={canBeFocused}
         onKeyUpPress={onKeyUpPress}
         onKeyDownPress={onKeyDownPress}
         onFocusChange={onFocusChangeHandler}

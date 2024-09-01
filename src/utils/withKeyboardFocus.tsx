@@ -26,7 +26,6 @@ export const withKeyboardFocus = <
     (
       {
         autoFocus,
-        canBeFocused: _canBeFocused, //ToDo add rule to handle
         focusStyle,
         style,
         onFocusChange,
@@ -36,6 +35,8 @@ export const withKeyboardFocus = <
         onPressOut,
         onPressIn,
         haloEffect,
+        canBeFocused = true,
+        focusable = true,
         ...props
       },
       ref
@@ -89,12 +90,16 @@ export const withKeyboardFocus = <
           onContextMenuPress={onLongPress}
           haloEffect={haloEffect}
           autoFocus={autoFocus}
+          canBeFocused={canBeFocused}
+          focusable={focusable}
         >
           <Component
             onPressOut={onPressOut}
             onPressIn={onPressIn}
             onPress={onPressablePressHandler}
             onLongPress={onLongPress}
+            focusable={canBeFocused && focusable}
+            disabled={!canBeFocused || !focusable}
             {...(props as T)}
           />
         </KeyboardFocusView>

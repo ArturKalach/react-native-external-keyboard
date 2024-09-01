@@ -123,10 +123,9 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #endif
 
-//
-//- (BOOL)canBecomeFocused {
-//    return self.canBeFocused;
-//}
+- (BOOL)canBecomeFocused {
+    return self.canBeFocused;
+}
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {

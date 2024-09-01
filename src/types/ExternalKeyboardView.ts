@@ -5,4 +5,4 @@ export type ExternalKeyboardViewType = Partial<View> & { focus: () => void };
 export type ExternalKeyboardViewProps = Omit<
   ExternalKeyboardNativeProps,
   'autoFocus'
-> & { autoFocus?: boolean };
+> & { autoFocus?: boolean; focusable?: boolean };
