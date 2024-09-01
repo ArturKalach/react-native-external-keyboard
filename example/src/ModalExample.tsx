@@ -23,13 +23,7 @@ export const ModalExample = () => {
         <Text>Jump</Text>
       </KeyboardedPressable>
       <Modal visible={showModal}>
-        <KeyboardRootView
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+        <KeyboardRootView style={styles.modalRootView}>
           <View>
             <Text>Modal here</Text>
             <Button
@@ -73,6 +67,11 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     marginVertical: 20,
+  },
+  modalRootView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   divider: { height: 10 },
   pressFocusStyle: { backgroundColor: '#b2c6b7' },
