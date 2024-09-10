@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { ExternalKeyboardView } from '../ExternalKeyboardView';
-import type { ExternalKeyboardViewType } from '../../types/ExternalKeyboardView';
+import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
+import type { BaseKeyboardViewType } from '../../types/BaseKeyboardView';
 import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
 
 import { A11yModule } from '../../services';
@@ -8,7 +8,7 @@ import { A11yModule } from '../../services';
 import { useFocusStyle } from './hooks';
 
 export const KeyboardFocusView = React.forwardRef<
-  ExternalKeyboardViewType,
+  BaseKeyboardViewType,
   KeyboardFocusViewProps
 >(
   (
@@ -43,7 +43,7 @@ export const KeyboardFocusView = React.forwardRef<
     const { fStyle, onFocusChangeHandler } = useFocusStyle(focusStyle, onFocus);
 
     return (
-      <ExternalKeyboardView
+      <BaseKeyboardView
         ref={ref}
         autoFocus={autoFocus}
         style={[style, fStyle]}

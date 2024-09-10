@@ -1,24 +1,26 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
 import { useFocusStyle } from './hooks/useFocusStyle';
 import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
-import { ExternalKeyboardView } from '../ExternalKeyboardView';
-import type { ExternalKeyboardViewType } from '../../types/ExternalKeyboardView';
+import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
+import type { BaseKeyboardViewType } from '../../types/BaseKeyboardView';
 import { A11yModule } from '../../services';
 
 //ToDo REMOVE_AFTER_REFACTOR
-const setCurrentFocusTag = (e: { nativeEvent: { target: number } }) => {
-  A11yModule.currentFocusedTag = e?.nativeEvent?.target || undefined;
+const setCurrentFocusTag = (tag: number | undefined) => {
+  A11yModule.currentFocusedTag = tag;
 };
 
 export const KeyboardFocusView = React.forwardRef<
-  ExternalKeyboardViewType,
+  BaseKeyboardViewType,
   KeyboardFocusViewProps
 >(
   (
     {
       canBeFocused = true,
       onFocusChange,
+      onFocus,
+      onBlur,
       focusStyle,
       style,
       onKeyUpPress,
@@ -30,27 +32,36 @@ export const KeyboardFocusView = React.forwardRef<
   ) => {
     //ToDo REMOVE_AFTER_REFACTOR
     const onIOSFocusHandler = useCallback(
-      (e) => {
-        setCurrentFocusTag(e);
-        onFocusChange?.(e);
+      (isFocused: boolean) => {
+        setCurrentFocusTag(0); //ToDo add stub
+        onFocusChange?.(isFocused);
       },
       [onFocusChange]
     );
 
     //ToDo REMOVE_AFTER_REFACTOR
-    const onFocus = Platform.OS === 'ios' ? onIOSFocusHandler : onFocusChange;
+    const onFocusHandler = Platform.select({
+      ios: onIOSFocusHandler,
+      android: onFocusChange,
+    });
 
-    const { fStyle, onFocusChangeHandler } = useFocusStyle(focusStyle, onFocus);
+    const { fStyle, onFocusChangeHandler } = useFocusStyle(
+      focusStyle,
+      onFocusHandler
+    );
+    const viewStyle = useMemo(() => [style, fStyle], [fStyle, style]);
 
     return (
-      <ExternalKeyboardView
+      <BaseKeyboardView
         autoFocus={autoFocus}
         onFocusChange={onFocusChangeHandler}
-        style={[style, fStyle]}
+        style={viewStyle}
         canBeFocused={canBeFocused}
         ref={ref}
         onKeyUpPress={onKeyUpPress}
         onKeyDownPress={onKeyDownPress}
+        onFocus={onFocus}
+        onBlur={onBlur}
         {...props}
       />
     );

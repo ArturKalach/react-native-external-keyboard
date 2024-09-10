@@ -1,11 +1,11 @@
 import React from 'react';
 import { useFocusStyle } from './hooks/useFocusStyle';
 import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
-import { ExternalKeyboardView } from '../ExternalKeyboardView';
-import type { ExternalKeyboardViewType } from '../../types/ExternalKeyboardView';
+import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
+import type { BaseKeyboardViewType } from '../../types/BaseKeyboardView';
 
 export const KeyboardFocusView = React.forwardRef<
-  ExternalKeyboardViewType,
+  BaseKeyboardViewType,
   KeyboardFocusViewProps
 >(
   (
@@ -27,7 +27,7 @@ export const KeyboardFocusView = React.forwardRef<
     );
 
     return (
-      <ExternalKeyboardView
+      <BaseKeyboardView
         autoFocus={autoFocus}
         onFocusChange={onFocusChangeHandler}
         style={[style, fStyle]}

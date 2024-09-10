@@ -3,7 +3,7 @@
 #import "RNCEKVExternalKeyboardViewManager.h"
 #import "RNCEKVExternalKeyboardView.h"
 #import "RCTBridge.h"
-
+#import "RNCEKVUtils.h"
 
 @implementation RNCEKVExternalKeyboardViewManager
 
@@ -26,6 +26,15 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVExternalKeyboardView)
     [view setCanBeFocused: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(tintColor, NSString, RNCEKVExternalKeyboardView)
+{
+    if (json) {
+        NSString *tintColor = [RCTConvert NSString:json];
+        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
+        [view setTintColor: resultColor];
+    }
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(hasOnFocusChanged, BOOL, RNCEKVExternalKeyboardView)
 {
     BOOL value = json ? [RCTConvert BOOL:json] : NO;
@@ -46,10 +55,10 @@ RCT_CUSTOM_VIEW_PROPERTY(hasKeyUpPress, BOOL, RNCEKVExternalKeyboardView)
 
 RCT_CUSTOM_VIEW_PROPERTY(autoFocus, NSString, RNCEKVExternalKeyboardView)
 {
-  if (json) {
-    NSString *rootViewId = [RCTConvert NSString:json];
-    [view setAutoFocusRootId: rootViewId];
-  }
+    if (json) {
+        NSString *rootViewId = [RCTConvert NSString:json];
+        [view setAutoFocusRootId: rootViewId];
+    }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)

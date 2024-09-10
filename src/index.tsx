@@ -5,19 +5,29 @@ export {
   KeyPress,
 } from './nativeSpec';
 
-export type { ExternalKeyboardViewType as KeyboardExtendedViewType } from './types/ExternalKeyboardView';
+export type {
+  OnKeyPress,
+  KeyboardFocus,
+  BaseKeyboardViewType as KeyboardExtendedViewType,
+} from './types/BaseKeyboardView';
 
 export {
+  BaseKeyboardView,
   KeyboardFocusView,
-  Pressable,
   ExternalKeyboardView,
-  KeyboardExtendedInput,
   KeyboardExtendedView,
-  KeyboardExtendedPressable,
   KeyboardExtendedBaseView,
 } from './components';
-export { TouchableOpacity } from './components/Pressable/TouchableOpacity';
-export { TouchableWithoutFeedback } from './components/Pressable/TouchableWithoutFeedback';
+export {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Pressable,
+  Pressable as KeyboardExtendedPressable,
+} from './components/Touchable/Touchable';
+export {
+  KeyboardExtendedInput,
+  KeyboardExtendedInput as TextInput,
+} from './components/KeyboardExtendedInput/KeyboardExtendedInput';
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { KeyboardRootView } from './components/KeyboardRootView';
 export { A11yModule, KeyboardExtendedModule } from './services';

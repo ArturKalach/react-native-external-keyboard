@@ -1,23 +1,30 @@
-import React, { useContext, useImperativeHandle, useRef } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import { KeyboardRootViewContext } from '../../context/KeyboardRootViewContext';
 import type {
-  ExternalKeyboardViewProps,
-  ExternalKeyboardViewType,
-} from '../../types/ExternalKeyboardView';
+  BaseKeyboardViewProps,
+  BaseKeyboardViewType,
+} from '../../types/BaseKeyboardView';
 
-export const ExternalKeyboardView = React.memo(
-  React.forwardRef<ExternalKeyboardViewType, ExternalKeyboardViewProps>(
+export const BaseKeyboardView = React.memo(
+  React.forwardRef<BaseKeyboardViewType, BaseKeyboardViewProps>(
     (
       {
-        onKeyUpPress,
         onFocusChange,
+        onKeyUpPress,
         onKeyDownPress,
         haloEffect,
         autoFocus,
         canBeFocused = true,
         focusable = true,
+        onFocus,
+        onBlur,
         ...props
       },
       ref
@@ -34,6 +41,20 @@ export const ExternalKeyboardView = React.memo(
         ...(keyboardedRef.current ?? {}),
       }));
 
+      const onFocusChangeHandler = useCallback(
+        (e) => {
+          onFocusChange?.(e.nativeEvent.isFocused);
+          if (e.nativeEvent.isFocused) {
+            onFocus?.();
+          } else {
+            onBlur?.();
+          }
+        },
+        [onBlur, onFocus, onFocusChange]
+      );
+
+      const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
+
       return (
         <ExternalKeyboardViewNative
           {...props}
@@ -41,9 +62,12 @@ export const ExternalKeyboardView = React.memo(
           ref={keyboardedRef}
           canBeFocused={focusable && canBeFocused}
           autoFocus={autoFocus ? rootId : undefined}
+          onKeyDownPress={onKeyDownPress}
+          onKeyUpPress={onKeyUpPress}
+          onFocusChange={hasOnFocusChanged && onFocusChangeHandler}
           hasKeyDownPress={Boolean(onKeyDownPress)}
           hasKeyUpPress={Boolean(onKeyUpPress)}
-          hasOnFocusChanged={Boolean(onFocusChange)}
+          hasOnFocusChanged={Boolean(hasOnFocusChanged)}
         />
       );
     }

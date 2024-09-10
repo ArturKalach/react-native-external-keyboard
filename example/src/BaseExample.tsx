@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NativeSyntheticEvent, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedBaseView,
   KeyPress,
@@ -10,6 +10,7 @@ import {
   KeyboardRootView,
   KeyboardExtendedViewType,
   TouchableOpacity,
+  OnKeyPress,
 } from 'react-native-external-keyboard';
 
 export const BaseExample = () => {
@@ -19,11 +20,11 @@ export const BaseExample = () => {
   const [textInput, setTextInput] = React.useState('Text input here!');
   const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
 
-  const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+  const onKeyUpHandler = (e: OnKeyPress) => {
     setIsKeyDown(false);
     setKeyInfo(e.nativeEvent);
   };
-  const onKeyDownHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+  const onKeyDownHandler = (e: OnKeyPress) => {
     setIsKeyDown(true);
     setKeyInfo(e.nativeEvent);
   };
@@ -32,7 +33,7 @@ export const BaseExample = () => {
   return (
     <KeyboardRootView style={styles.container}>
       <TouchableOpacity
-        focusable={false}
+        tintColor="#ff0000"
         haloEffect={true}
         onPress={() => {
           setShowAutoFocus((show) => !show);
@@ -47,8 +48,8 @@ export const BaseExample = () => {
         </KeyboardExtendedView>
       )}
       <KeyboardExtendedPressable
+        tintColor="#ff00ff"
         haloEffect={true}
-        focusable={false}
         focusStyle={styles.pressFocusStyle}
         onPress={() => setStatus('onPress')}
         onPressIn={() => setStatus('onPressIn')}
@@ -57,12 +58,11 @@ export const BaseExample = () => {
       >
         <Text>On Press Check: {status}</Text>
       </KeyboardExtendedPressable>
-      <KeyboardExtendedView focusable={false} haloEffect={true} ref={ref}>
+      <KeyboardExtendedView haloEffect={true} ref={ref}>
         <Text>Catch</Text>
       </KeyboardExtendedView>
       <KeyboardExtendedBaseView
         haloEffect={true}
-        focusable={false}
         onKeyDownPress={onKeyDownHandler}
         onKeyUpPress={onKeyUpHandler}
       >
@@ -79,12 +79,12 @@ export const BaseExample = () => {
         ))}
       </KeyboardExtendedBaseView>
       <View style={styles.divider} />
-      <KeyboardExtendedView focusable={false} haloEffect={true}>
+      <KeyboardExtendedView haloEffect={true}>
         <Text>Parent component</Text>
-        <KeyboardExtendedView focusable={false} haloEffect={true}>
+        <KeyboardExtendedView haloEffect={true}>
           <Text>Child component 1</Text>
         </KeyboardExtendedView>
-        <KeyboardExtendedView focusable={false} haloEffect={true}>
+        <KeyboardExtendedView haloEffect={true}>
           <Text>Child component 2</Text>
         </KeyboardExtendedView>
       </KeyboardExtendedView>
@@ -93,11 +93,7 @@ export const BaseExample = () => {
         value={textInput}
         onChangeText={setTextInput}
       />
-      <KeyboardExtendedView
-        focusable={false}
-        haloEffect={true}
-        style={styles.borderExample}
-      >
+      <KeyboardExtendedView haloEffect={true} style={styles.borderExample}>
         <Text>Border here</Text>
       </KeyboardExtendedView>
     </KeyboardRootView>

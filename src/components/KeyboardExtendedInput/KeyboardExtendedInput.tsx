@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TextInput, TextInputProps, StyleProp, ViewStyle } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
-import type { OnFocusChangeFn } from '../../types/KeyboardFocusView.types';
 import type { FocusStyle } from '../../types/FocusStyle';
 import { useFocusStyle } from '../KeyboardFocusView/hooks';
+import { focusEventMapper } from '../../utils/focusEventMapper';
 
 const focusMap = {
   default: 0,
@@ -22,7 +22,7 @@ export type KeyboardFocusViewProps = TextInputProps & {
   focusType?: keyof typeof focusMap;
   blurType?: keyof typeof blurMap;
   containerStyle?: StyleProp<ViewStyle>;
-  onFocusChange?: OnFocusChangeFn;
+  onFocusChange?: (isFocused: boolean) => void;
   focusStyle?: FocusStyle;
   haloEffect?: boolean;
   canBeFocusable?: boolean;
@@ -53,9 +53,14 @@ export const KeyboardExtendedInput = React.forwardRef<
       onFocusChange
     );
 
+    const nativeFocusHandler = useMemo(
+      () => focusEventMapper(onFocusChangeHandler),
+      [onFocusChangeHandler]
+    );
+
     return (
       <TextInputFocusWrapperNative
-        onFocusChange={onFocusChangeHandler}
+        onFocusChange={nativeFocusHandler}
         focusType={focusMap[focusType]}
         blurType={blurMap[blurType]}
         style={containerStyle}

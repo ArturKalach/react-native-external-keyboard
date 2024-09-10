@@ -1,17 +1,17 @@
 import { useState, useMemo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
-import type { FocusStyle, OnFocusChangeFn } from 'src/types';
+import type { FocusStyle } from 'src/types';
 
 export const useFocusStyle = (
   focusStyle?: FocusStyle,
-  onFocusChange?: OnFocusChangeFn
+  onFocusChange?: (isFocused: boolean) => void
 ) => {
   const [focused, setFocusStatus] = useState(false);
 
-  const onFocusChangeHandler: OnFocusChangeFn = useCallback(
-    (event) => {
-      setFocusStatus(event.nativeEvent.isFocused);
-      onFocusChange?.(event);
+  const onFocusChangeHandler = useCallback(
+    (isFocused: boolean) => {
+      setFocusStatus(isFocused);
+      onFocusChange?.(isFocused);
     },
     [onFocusChange]
   );

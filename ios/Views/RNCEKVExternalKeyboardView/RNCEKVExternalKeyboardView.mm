@@ -4,6 +4,7 @@
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import "RNCEKVPreferredFocusEnvironment.h"
 #import "RNCEKVKeyboardFocusDelegate.h"
+#import "RNCEKVUtils.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
@@ -103,6 +104,12 @@ using namespace facebook::react;
     if(oldViewProps.autoFocus != newViewProps.autoFocus) {
         NSString* rootId = [NSString stringWithUTF8String:newViewProps.autoFocus.c_str()];
         [self setAutoFocusRootId: rootId];
+    }
+    
+    if(oldViewProps.tintColor != newViewProps.tintColor) {
+        NSString* tintColor = [NSString stringWithUTF8String:newViewProps.tintColor.c_str()];
+        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
+        self.tintColor = resultColor;
     }
     
     if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
