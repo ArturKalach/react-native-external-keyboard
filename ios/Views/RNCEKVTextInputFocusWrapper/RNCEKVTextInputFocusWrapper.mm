@@ -124,7 +124,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 #endif
 
 - (BOOL)canBecomeFocused {
-    return self.canBeFocused;
+    return NO; //ToDo double check
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context

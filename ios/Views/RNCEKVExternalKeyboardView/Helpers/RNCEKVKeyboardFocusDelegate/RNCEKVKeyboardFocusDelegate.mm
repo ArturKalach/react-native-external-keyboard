@@ -18,7 +18,6 @@
     self = [super init];
     if (self) {
         _delegate = delegate;
-//        _delegate = delegate;
     }
     return self;
 }
@@ -45,7 +44,8 @@
 
 -(void)updateHalo {
     if(@available(iOS 15.0, *)) {
-        _delegate.focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
+        UIFocusEffect *focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
+        [self getFocusingView].focusEffect = focusEffect;
     }
 }
 

@@ -32,17 +32,33 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity ref={ref} style={styles.marginBottom}>
+      <TouchableOpacity
+        onPress={() => console.log(1)}
+        onLongPress={() => console.log(11)}
+        ref={ref}
+        style={styles.marginBottom}
+      >
         <View style={styles.touchable}>
           <Text>TouchableOpacity</Text>
         </View>
       </TouchableOpacity>
-      <TouchableWithoutFeedback haloEffect={false} style={styles.marginBottom}>
+      <TouchableWithoutFeedback
+        haloEffect={false}
+        containerStyle={styles.marginBottom}
+        onPress={() => console.log(2)}
+        onLongPress={() => console.log(22)}
+      >
         <View style={styles.touchable}>
           <Text>TouchableWithoutEffect</Text>
         </View>
       </TouchableWithoutFeedback>
-      <Pressable tintColor="#00ffff" style={styles.pressable}>
+      <Pressable
+        tintColor="#00ffff"
+        containerStyle={styles.marginBottom}
+        style={styles.pressable}
+        onPress={() => console.log(3)}
+        onLongPress={() => console.log(33)}
+      >
         <Text>Pressable: Focus Modal</Text>
       </Pressable>
       <Text>Label: </Text>
@@ -54,7 +70,12 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         style={styles.input}
       />
       <Text>Key tracker:</Text>
-      <Pressable style={styles.modalBtn}>
+      <Pressable
+        onPress={() => console.log(4)}
+        onLongPress={() => console.log(44)}
+        containerStyle={styles.doubleBottom}
+        style={styles.modalBtn}
+      >
         <Text>Modal</Text>
       </Pressable>
       <KeyboardExtendedBaseView
@@ -104,14 +125,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 2,
     borderRadius: 10,
-    marginBottom: 10,
   },
   modalBtn: {
     width: '100%',
     padding: 10,
     borderWidth: 2,
     borderRadius: 10,
-    marginBottom: 10,
   },
   keyHandler: {
     flex: 1,

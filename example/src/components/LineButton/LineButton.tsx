@@ -25,8 +25,9 @@ export const LineButton = ({
       haloEffect={false}
       onFocus={onFocus}
       onBlur={onBlur}
-      style={[styles.container, style]}
+      containerStyle={[styles.container, style]}
       onPress={onPress}
+      style={styles.content}
       onLongPress={onLongPress}
     >
       <View style={styles.content}>

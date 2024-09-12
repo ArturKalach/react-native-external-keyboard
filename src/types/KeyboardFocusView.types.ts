@@ -1,4 +1,9 @@
-import type { NativeSyntheticEvent, GestureResponderEvent } from 'react-native';
+import type {
+  ViewStyle,
+  StyleProp,
+  NativeSyntheticEvent,
+  GestureResponderEvent,
+} from 'react-native';
 import type { FocusStyle } from './FocusStyle';
 import type { BaseKeyboardViewProps, OnKeyPress } from './BaseKeyboardView';
 
@@ -22,6 +27,7 @@ export type FocusStateCallbackType = {
 
 export type KeyboardFocusViewProps = BaseKeyboardViewProps & {
   focusStyle?: FocusStyle;
+  containerStyle?: StyleProp<ViewStyle>;
   onPress?: (e: GestureResponderEvent | OnKeyPress) => void;
   onLongPress?: (e?: GestureResponderEvent | OnKeyPress) => void;
   onFocus?: () => void;
