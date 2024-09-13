@@ -1,9 +1,16 @@
 import React, { useCallback } from 'react';
-import { View, GestureResponderEvent, Platform } from 'react-native';
+import {
+  View,
+  GestureResponderEvent,
+  Platform,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import { BaseKeyboardView } from '../components';
-import type { KeyboardFocusViewProps } from '../types';
+import type { FocusStyle, KeyboardFocusViewProps } from '../types';
 import type { KeyboardFocus, OnKeyPressFn } from '../types/BaseKeyboardView';
-import { useFocusStyle } from '../components/KeyboardFocusView/hooks';
+// import { useFocusStyle } from '../components/KeyboardFocusView/hooks';
+import { useFocusStyle } from './useFocusStyle';
 
 const ANDROID_SPACE_KEY_CODE = 62;
 const IOS_SPACE_KEY_CODE = 44;
@@ -25,7 +32,15 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
   Component: React.ComponentType<T>
 ) => {
   const WithKeyboardFocus = React.memo(
-    React.forwardRef<View | KeyboardFocus, T & KeyboardFocusViewProps>(
+    React.forwardRef<
+      View | KeyboardFocus,
+      T &
+        KeyboardFocusViewProps & {
+          tintBackground?: string;
+          containerStyle?: StyleProp<ViewStyle>;
+          containerFocusStyle?: FocusStyle;
+        }
+    >(
       (
         {
           autoFocus,
@@ -37,12 +52,14 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
           onLongPress,
           onPressOut,
           onPressIn,
-          haloEffect,
+          haloEffect = true,
           canBeFocused = true,
           focusable = true,
           tintColor,
           onFocus,
           onBlur,
+          tintBackground,
+          containerFocusStyle,
           ...props
         },
         ref
@@ -90,14 +107,21 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
           [onPressIn]
         );
 
-        const { fStyle, onFocusChangeHandler } = useFocusStyle(
+        const {
+          containerFocusedStyle,
+          componentFocusedStyle,
+          onFocusChangeHandler,
+        } = useFocusStyle({
+          onFocusChange,
+          tintBackground,
           focusStyle,
-          onFocusChange
-        );
+          containerFocusStyle,
+        });
 
+        console.log('assd', [containerStyle, containerFocusedStyle]);
         return (
           <BaseKeyboardView
-            style={[fStyle, containerStyle]}
+            style={[containerStyle, containerFocusedStyle]}
             ref={ref}
             onKeyUpPress={onKeyUpPressHandler} //ToDo make it optional
             onKeyDownPress={onKeyDownHandler} //ToDo make it optional
@@ -112,11 +136,11 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
             tintColor={tintColor}
           >
             <Component
-              style={style}
+              style={[style, componentFocusedStyle]}
               onPressOut={onPressOut} //ToDo check long/default pressable
               onPressIn={onPressIn}
               onPress={onPressablePressHandler}
-              // onLongPress={onLongPress}
+              onLongPress={onLongPress}
               focusable={canBeFocused && focusable}
               disabled={!canBeFocused || !focusable}
               {...(props as T)}

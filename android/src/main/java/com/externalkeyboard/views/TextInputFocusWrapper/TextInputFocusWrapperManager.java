@@ -91,6 +91,11 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
+  public void setHaloEffect(TextInputFocusWrapper view, boolean value) {
+    //stub
+  }
+
+  @Override
   public void onDropViewInstance(@NonNull TextInputFocusWrapper viewGroup) {
     viewGroup.setEditText(null);
     viewGroup.setOnFocusChangeListener(null);

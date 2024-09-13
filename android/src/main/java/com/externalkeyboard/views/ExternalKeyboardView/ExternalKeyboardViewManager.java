@@ -71,9 +71,24 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  public void setHasOnFocusChanged(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
   @ReactProp(name = "autoFocus")
   public void setAutoFocus(ExternalKeyboardView view, @Nullable String value) {
     view.autoFocus = value != null;
+  }
+
+  @Override
+  public void setHaloEffect(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
+  public void setTintColor(ExternalKeyboardView view, @Nullable String value) {
+    //stub
   }
 
   @Override

@@ -10,11 +10,7 @@ export const FocusableImage = React.forwardRef<
   { source: ImageSourcePropType; width: string }
 >(({ width, source }, ref) => {
   return (
-    <KeyboardExtendedBaseView
-      ref={ref}
-      tintColor="#ff0000"
-      style={[styles.container, { width }]}
-    >
+    <KeyboardExtendedBaseView ref={ref} style={[styles.container, { width }]}>
       <Image source={source} style={styles.image} />
     </KeyboardExtendedBaseView>
   );

@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import { StyleSheet, Text, ViewStyle } from 'react-native';
 import { Pressable } from 'react-native-external-keyboard';
 
@@ -10,6 +9,7 @@ export type LineButtonProps = {
   style?: ViewStyle;
   onFocus?: () => void;
   onBlur?: () => void;
+  autoFocus?: boolean;
 };
 
 export const LineButton = ({
@@ -19,6 +19,7 @@ export const LineButton = ({
   style,
   onFocus,
   onBlur,
+  autoFocus,
 }: LineButtonProps) => {
   return (
     <Pressable
@@ -27,22 +28,22 @@ export const LineButton = ({
       onBlur={onBlur}
       containerStyle={[styles.container, style]}
       onPress={onPress}
+      autoFocus={autoFocus}
       style={styles.content}
+      tintBackground="#dce3f9"
       onLongPress={onLongPress}
     >
-      <View style={styles.content}>
-        <Text>{title}</Text>
-      </View>
+      <Text>{title}</Text>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     borderRadius: 15,
   },
   content: {
+    // width: '100%',
     height: 45,
     paddingHorizontal: 10,
     paddingVertical: 5,

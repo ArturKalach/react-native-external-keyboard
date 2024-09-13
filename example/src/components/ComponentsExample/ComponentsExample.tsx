@@ -1,4 +1,5 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef } from 'react';
+import { Modal } from 'react-native';
 import {
   NativeSyntheticEvent,
   ScrollView,
@@ -14,12 +15,15 @@ import {
   KeyboardExtendedBaseView,
   type KeyboardFocus,
   type KeyPress,
+  KeyboardRootView,
 } from 'react-native-external-keyboard';
 
 export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
+  const modalButtonRef = useRef<KeyboardFocus>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [textInput, setTextInput] = React.useState('Input here!');
   const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
+  const [showModal, setShowModal] = React.useState(false);
 
   const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
     setIsKeyDown(false);
@@ -36,14 +40,12 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         onPress={() => console.log(1)}
         onLongPress={() => console.log(11)}
         ref={ref}
-        style={styles.marginBottom}
+        style={styles.touchable}
+        containerStyle={styles.marginBottom}
       >
-        <View style={styles.touchable}>
-          <Text>TouchableOpacity</Text>
-        </View>
+        <Text>TouchableOpacity</Text>
       </TouchableOpacity>
       <TouchableWithoutFeedback
-        haloEffect={false}
         containerStyle={styles.marginBottom}
         onPress={() => console.log(2)}
         onLongPress={() => console.log(22)}
@@ -56,7 +58,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         tintColor="#00ffff"
         containerStyle={styles.marginBottom}
         style={styles.pressable}
-        onPress={() => console.log(3)}
+        onPress={() => modalButtonRef.current?.focus()}
         onLongPress={() => console.log(33)}
       >
         <Text>Pressable: Focus Modal</Text>
@@ -71,8 +73,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       />
       <Text>Key tracker:</Text>
       <Pressable
-        onPress={() => console.log(4)}
-        onLongPress={() => console.log(44)}
+        ref={modalButtonRef}
+        onPress={() => setShowModal(true)}
         containerStyle={styles.doubleBottom}
         style={styles.modalBtn}
       >
@@ -98,6 +100,21 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           ))}
         </View>
       </KeyboardExtendedBaseView>
+      <Modal visible={showModal}>
+        <KeyboardRootView style={styles.modal}>
+          <View>
+            <Pressable onPress={() => setShowModal(false)}>
+              <Text>Modal example</Text>
+            </Pressable>
+            <Pressable autoFocus onPress={() => setShowModal(false)}>
+              <Text>AutoFocus</Text>
+            </Pressable>
+            <Pressable onPress={() => setShowModal(false)}>
+              <Text>Close</Text>
+            </Pressable>
+          </View>
+        </KeyboardRootView>
+      </Modal>
     </ScrollView>
   );
 });
@@ -113,6 +130,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 10,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   touchable: {
     width: '100%',

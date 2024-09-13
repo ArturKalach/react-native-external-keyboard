@@ -27,6 +27,7 @@ using namespace facebook::react;
 @implementation RNCEKVExternalKeyboardView {
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
     RNCEKVKeyboardFocusDelegate* _keyboardFocusDelegate;
+    BOOL _isTouched;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -38,7 +39,7 @@ using namespace facebook::react;
 #endif
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
         _keyboardFocusDelegate =  [[RNCEKVKeyboardFocusDelegate alloc] initWithView:self];
-        
+        _isTouched = NO;
         if (@available(iOS 13.0, *)) {
             UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
             [self addInteraction: interaction];
@@ -50,6 +51,7 @@ using namespace facebook::react;
 
 - (void)cleanReferences{
     [self setAutoFocusRootId: nil];
+    _isHaloActive = @YES;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -271,8 +273,22 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [_keyboardFocusDelegate addSubview: view];
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    _isTouched = YES;
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    _isTouched = NO;
+}
+
+
+
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0)){
-    [self onContextMenuPressHandler];
+    if(!_isTouched) {
+        [self onContextMenuPressHandler];
+    }
     return nil;
 }
 

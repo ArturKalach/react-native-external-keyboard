@@ -81,7 +81,7 @@ export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
         <Pressable
           tintColor="#ff0000"
           ref={index === 0 ? ref : undefined}
-          style={styles.item}
+          containerStyle={styles.item}
         >
           <Color
             color={item.color}
