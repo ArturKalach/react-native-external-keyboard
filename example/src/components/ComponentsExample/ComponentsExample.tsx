@@ -40,23 +40,23 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         onPress={() => console.log(1)}
         onLongPress={() => console.log(11)}
         ref={ref}
-        style={styles.touchable}
-        containerStyle={styles.marginBottom}
+        style={styles.pressable}
+        containerStyle={styles.pressableContainer}
       >
         <Text>TouchableOpacity</Text>
       </TouchableOpacity>
       <TouchableWithoutFeedback
-        containerStyle={styles.marginBottom}
+        containerStyle={styles.pressableContainer}
         onPress={() => console.log(2)}
         onLongPress={() => console.log(22)}
       >
-        <View style={styles.touchable}>
+        <View style={styles.pressable}>
           <Text>TouchableWithoutEffect</Text>
         </View>
       </TouchableWithoutFeedback>
       <Pressable
         tintColor="#00ffff"
-        containerStyle={styles.marginBottom}
+        containerStyle={styles.pressableContainer}
         style={styles.pressable}
         onPress={() => modalButtonRef.current?.focus()}
         onLongPress={() => console.log(33)}
@@ -75,8 +75,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       <Pressable
         ref={modalButtonRef}
         onPress={() => setShowModal(true)}
-        containerStyle={styles.doubleBottom}
-        style={styles.modalBtn}
+        containerStyle={styles.pressableContainer}
+        style={styles.pressable}
       >
         <Text>Modal</Text>
       </Pressable>
@@ -136,17 +136,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  touchable: {
-    width: '100%',
-    padding: 10,
-    borderWidth: 2,
+  pressableContainer: {
     borderRadius: 10,
+    borderWidth: 2,
+    marginBottom: 10,
   },
   pressable: {
     width: '100%',
     padding: 10,
-    borderWidth: 2,
-    borderRadius: 10,
   },
   modalBtn: {
     width: '100%',

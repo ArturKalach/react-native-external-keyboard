@@ -45,5 +45,6 @@ export const useFocusStyle = ({
     componentFocusedStyle,
     containerFocusedStyle,
     onFocusChangeHandler,
+    focused,
   };
 };

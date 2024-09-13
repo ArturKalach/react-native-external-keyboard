@@ -9,7 +9,6 @@ import {
 import { BaseKeyboardView } from '../components';
 import type { FocusStyle, KeyboardFocusViewProps } from '../types';
 import type { KeyboardFocus, OnKeyPressFn } from '../types/BaseKeyboardView';
-// import { useFocusStyle } from '../components/KeyboardFocusView/hooks';
 import { useFocusStyle } from './useFocusStyle';
 
 const ANDROID_SPACE_KEY_CODE = 62;
@@ -21,12 +20,19 @@ const SPACE_KEY_CODE = Platform.select({
   default: -1,
 });
 
+// type tintType = 'default' | 'hover' | 'background' | 'none';
+
 type KeyboardFocusPress = {
   onPressOut?: null | ((event: GestureResponderEvent) => void) | undefined;
   onPressIn?: null | ((event: GestureResponderEvent) => void) | undefined;
   onPress?: null | ((event: GestureResponderEvent) => void) | undefined;
   onLongPress?: null | ((event: GestureResponderEvent) => void) | undefined;
 };
+
+const deafultTintBackground = Platform.select({
+  ios: undefined,
+  default: '#dce3f9',
+});
 
 export const withKeyboardFocus = <T extends KeyboardFocusPress>(
   Component: React.ComponentType<T>
@@ -58,7 +64,7 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
           tintColor,
           onFocus,
           onBlur,
-          tintBackground,
+          tintBackground = deafultTintBackground,
           containerFocusStyle,
           ...props
         },
@@ -118,7 +124,6 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
           containerFocusStyle,
         });
 
-        console.log('assd', [containerStyle, containerFocusedStyle]);
         return (
           <BaseKeyboardView
             style={[containerStyle, containerFocusedStyle]}
