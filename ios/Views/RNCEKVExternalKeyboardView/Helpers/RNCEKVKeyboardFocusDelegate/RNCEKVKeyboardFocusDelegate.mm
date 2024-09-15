@@ -67,14 +67,6 @@
     }
 }
 
-//- (void)finalizeUpdates {
-//    UIView* view = [self getFocusingView];
-//    if (@available(iOS 15.0, *)) {
-//        if([self isHaloHidden] && [view canBecomeFocused]) {
-//            view.focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
-//        }
-//    }
-//}
 
 
 

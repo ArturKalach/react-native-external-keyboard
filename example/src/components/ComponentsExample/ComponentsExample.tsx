@@ -35,7 +35,10 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.contentContainer}
+      style={styles.container}
+    >
       <TouchableOpacity
         onPress={() => console.log(1)}
         onLongPress={() => console.log(11)}
@@ -55,7 +58,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         </View>
       </TouchableWithoutFeedback>
       <Pressable
-        tintColor="#00ffff"
+        // tintColor="#00ffff"
         containerStyle={styles.pressableContainer}
         style={styles.pressable}
         onPress={() => modalButtonRef.current?.focus()}
@@ -120,7 +123,13 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
 });
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, paddingHorizontal: 10 },
+  contentContainer: {
+    backgroundColor: '#ffffff',
+    flex: 1,
+    padding: 10,
+    borderRadius: 15,
+  },
   marginBottom: { marginBottom: 5 },
   doubleBottom: {
     marginBottom: 10,

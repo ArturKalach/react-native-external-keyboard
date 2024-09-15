@@ -123,7 +123,8 @@ using namespace facebook::react;
     [super updateProps
      :props oldProps:oldProps];
     
-    if(oldViewProps.viewId != newViewProps.viewId) {
+    //ToDo RNCEKV-1, check ccomponen recycle flow, probably can be optimized
+    if(oldViewProps.viewId != newViewProps.viewId || _viewId == nil) {
         NSString *rootViewId = [NSString stringWithUTF8String:newViewProps.viewId.c_str()];
         
         if(_viewId) {

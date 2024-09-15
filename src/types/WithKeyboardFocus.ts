@@ -7,3 +7,5 @@ export type WithKeyboardFocus = KeyboardFocusViewProps & {
   containerStyle?: StyleProp<ViewStyle>;
   containerFocusStyle?: FocusStyle;
 };
+
+export type TintType = 'default' | 'hover' | 'background' | 'none';

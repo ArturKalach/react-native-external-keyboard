@@ -64,22 +64,23 @@ export const Home = () => {
 
   return (
     <View style={styles.container}>
-      <Menu onLongPress={onLongPressHandle} onPress={setSelected} />
-      <ContentDivider />
-      <Text>{selected}:</Text>
-      <View style={styles.content}>
-        {selected === 'Components' && (
-          <ComponentsExample ref={componentsExampleRef} />
-        )}
-        {selected === 'Colors' && <ContrastColors ref={contrastColorsRef} />}
-        {selected === 'Cats' && <Cats ref={catsRef} />}
+      <View style={styles.menu}>
+        <Menu onLongPress={onLongPressHandle} onPress={setSelected} />
+        <ContentDivider />
+        <Text>{selected}:</Text>
       </View>
+      {selected === 'Components' && (
+        <ComponentsExample ref={componentsExampleRef} />
+      )}
+      {selected === 'Colors' && <ContrastColors ref={contrastColorsRef} />}
+      {selected === 'Cats' && <Cats ref={catsRef} />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
+  container: { flex: 1 },
+  menu: { padding: 10 },
   content: {
     flex: 1,
     backgroundColor: '#ffffff',

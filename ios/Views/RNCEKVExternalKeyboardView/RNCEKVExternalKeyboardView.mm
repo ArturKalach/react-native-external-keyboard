@@ -51,7 +51,7 @@ using namespace facebook::react;
 
 - (void)cleanReferences{
     [self setAutoFocusRootId: nil];
-    _isHaloActive = @YES;
+    _isHaloActive = @2; //ToDo RNCEKV-0
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -66,7 +66,6 @@ using namespace facebook::react;
     [super prepareForRecycle];
     [self cleanReferences];
 }
-
 
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
@@ -114,6 +113,7 @@ using namespace facebook::react;
         self.tintColor = resultColor;
     }
     
+    //ToDo RNCEKV-0, refactor, condition for halo effect has side effect, recycle is a question. The problem that we have to check the condition, (true means we skip, but when it was false we should reset) and recycle (view is reused and we need to double check whether a new place for view should be with or without halo)
     if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
         BOOL haloState = newViewProps.haloEffect;
         if(![self.isHaloActive isEqual: @(haloState)]) {
@@ -124,7 +124,6 @@ using namespace facebook::react;
 
 - (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask {
     [super finalizeUpdates: updateMask];
-    NSLog(@"finalise");
     if(self.subviews.count > 0) {
         [_keyboardFocusDelegate addSubview: self.subviews[0]];
     }

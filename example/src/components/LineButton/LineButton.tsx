@@ -23,14 +23,14 @@ export const LineButton = ({
 }: LineButtonProps) => {
   return (
     <Pressable
-      haloEffect={false}
       onFocus={onFocus}
       onBlur={onBlur}
       containerStyle={[styles.container, style]}
       onPress={onPress}
       autoFocus={autoFocus}
       style={styles.content}
-      tintBackground="#dce3f9"
+      tintColor="#dce3f9"
+      tintType="background"
       onLongPress={onLongPress}
     >
       <Text>{title}</Text>
