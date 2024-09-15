@@ -123,8 +123,9 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #endif
 
+// ToDo RNCEKV-3, if we return yes here, it means that wrapper is focusable, with current implementation it works as expected, but it would be better to double check
 - (BOOL)canBecomeFocused {
-    return NO; //ToDo double check
+    return NO;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context

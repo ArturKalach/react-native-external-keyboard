@@ -77,9 +77,11 @@ export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
   return (
     <FlatList
       data={colors}
+      contentContainerStyle={styles.container}
       renderItem={({ item, index }) => (
         <Pressable
           tintColor="#ff0000"
+          tintType="hover"
           ref={index === 0 ? ref : undefined}
           containerStyle={styles.item}
         >
@@ -100,6 +102,7 @@ export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
 });
 
 const styles = StyleSheet.create({
+  container: { padding: 10 },
   column: { justifyContent: 'space-between' },
   item: { width: '48%' },
   separator: { width: '100%', height: 13 },

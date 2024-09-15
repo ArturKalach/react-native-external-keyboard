@@ -1,18 +1,29 @@
 import React from 'react';
-import { Image, ImageSourcePropType, StyleSheet } from 'react-native';
+import { Image, ImageSourcePropType, Platform, StyleSheet } from 'react-native';
 import {
-  KeyboardExtendedBaseView,
+  Pressable,
   KeyboardFocus,
+  TintType,
 } from 'react-native-external-keyboard';
+
+const tinyType: TintType | undefined = Platform.select({
+  android: 'hover',
+  default: undefined,
+});
 
 export const FocusableImage = React.forwardRef<
   KeyboardFocus,
   { source: ImageSourcePropType; width: string }
 >(({ width, source }, ref) => {
   return (
-    <KeyboardExtendedBaseView ref={ref} style={[styles.container, { width }]}>
+    <Pressable
+      ref={ref}
+      tintType={tinyType}
+      tintColor="#ffffff"
+      containerStyle={[styles.container, { width }]}
+    >
       <Image source={source} style={styles.image} />
-    </KeyboardExtendedBaseView>
+    </Pressable>
   );
 });
 

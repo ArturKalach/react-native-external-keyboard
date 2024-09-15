@@ -6,7 +6,7 @@ import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
 import type { BaseKeyboardViewType } from '../../types/BaseKeyboardView';
 import { A11yModule } from '../../services';
 
-//ToDo REMOVE_AFTER_REFACTOR
+//ToDo RNCEKV-DEPRICATED-0
 const setCurrentFocusTag = (tag: number | undefined) => {
   A11yModule.currentFocusedTag = tag;
 };
@@ -30,7 +30,7 @@ export const KeyboardFocusView = React.forwardRef<
     },
     ref
   ) => {
-    //ToDo REMOVE_AFTER_REFACTOR
+    //ToDo RNCEKV-DEPRICATED-0
     const onIOSFocusHandler = useCallback(
       (isFocused: boolean) => {
         setCurrentFocusTag(0); //ToDo add stub
@@ -39,7 +39,7 @@ export const KeyboardFocusView = React.forwardRef<
       [onFocusChange]
     );
 
-    //ToDo REMOVE_AFTER_REFACTOR
+    //ToDo RNCEKV-DEPRICATED-0
     const onFocusHandler = Platform.select({
       ios: onIOSFocusHandler,
       android: onFocusChange,

@@ -54,13 +54,11 @@ public class ExternalKeyboardView extends ReactViewGroup {
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
 
-    //ToDo memorize for reuse
     this.listeningView = getFocusingView();
     if(this.listeningView == this) {
       setFocusable(true);
     }
 
-    //ToDo probably extract to private function
     this.listeningView.setOnFocusChangeListener(
       (focusedView, hasFocus) -> {
         EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);
@@ -85,7 +83,6 @@ public class ExternalKeyboardView extends ReactViewGroup {
     }
   }
 
-  //ToDo define mods: default, strict
   private View getFocusingView() {
    if(this.getChildCount() == 1 && this.getChildAt(0).isFocusable()) {
      return this.getChildAt(0);

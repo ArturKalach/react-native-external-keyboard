@@ -143,7 +143,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 #endif
 
-//ToDo remove after new system migration
+//ToDo RNCEKV-DEPRICATED-0 remove after new system migration
 - (NSArray<id<UIFocusEnvironment>> *)preferredFocusEnvironments {
     if (self.myPreferredFocusedView == nil) {
         return @[];

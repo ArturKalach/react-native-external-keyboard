@@ -6,10 +6,12 @@ import { A11yKeyboardModule } from '../../NativeModules';
 class A11yModuleIOSImpl implements IA11yModule {
   private _currentFocusedTag: number | null = null;
 
+  //ToDo RNCEKV-DEPRICATED-0
   set currentFocusedTag(value: number) {
     this._currentFocusedTag = value;
   }
 
+  //ToDo RNCEKV-DEPRICATED-0
   /**
    * @deprecated The method should not be used
    * This API is going to be removed in future releases
@@ -20,6 +22,7 @@ class A11yModuleIOSImpl implements IA11yModule {
     }
   };
 
+  //ToDo RNCEKV-DEPRICATED-0
   /**
    * @deprecated The method should not be used
    * This API is going to be removed in future releases

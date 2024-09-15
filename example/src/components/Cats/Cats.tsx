@@ -24,13 +24,13 @@ export const Cats = forwardRef((_, ref) => {
       <FocusableImage source={require('./assets/08.png')} width="50%" />
       <FocusableImage source={require('./assets/09.png')} width="50%" />
       <FocusableImage source={require('./assets/10.png')} width="66%" />
-      <FocusableImage source={require('./assets/11.png')} width="33%" />
-      <FocusableImage source={require('./assets/12.png')} width="33%" />
+      <FocusableImage source={require('./assets/11.png')} width="34%" />
+      <FocusableImage source={require('./assets/12.png')} width="34%" />
       <FocusableImage source={require('./assets/13.png')} width="66%" />
       <FocusableImage source={require('./assets/14.png')} width="50%" />
       <FocusableImage source={require('./assets/15.png')} width="50%" />
-      <FocusableImage source={require('./assets/16.png')} width="40%" />
-      <FocusableImage source={require('./assets/17.png')} width="60%" />
+      <FocusableImage source={require('./assets/16.png')} width="45%" />
+      <FocusableImage source={require('./assets/17.png')} width="55%" />
       <FocusableImage source={require('./assets/19.png')} width="50%" />
       <FocusableImage source={require('./assets/20.png')} width="50%" />
     </ScrollView>

@@ -22,8 +22,9 @@
     return self;
 }
 
+// ToDo RNCEKV-2, Double check condition, count more then 1 means that a view can be a ViewGroup, bun when we use hover component it can be considered as ViewGroup instead of touchable component, it can be improved by flag, or by removing hover component from js implementation
 - (UIView*)getFocusingView {
-    if(_delegate.subviews.count == 1 && _delegate.subviews[0].canBecomeFocused) {
+    if(_delegate.subviews.count > 0 && _delegate.subviews[0].canBecomeFocused) {
         return _delegate.subviews[0];
     }
     

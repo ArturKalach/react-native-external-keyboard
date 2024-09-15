@@ -13,6 +13,8 @@ const backgroundTintMap = Platform.select<Partial<Record<TintType, boolean>>>({
   },
 });
 
+const DEFAULT_BACKGROUND_TINT = '#dce3f9';
+
 export const useFocusStyle = ({
   focusStyle,
   onFocusChange,
@@ -42,9 +44,18 @@ export const useFocusStyle = ({
     return focused ? specificStyle : undefined;
   }, [focusStyle, focused]);
 
+  const hoverColor = useMemo(
+    () => ({
+      backgroundColor: tintColor,
+    }),
+    [tintColor]
+  );
+
   const containerFocusedStyle = useMemo(() => {
     if (backgroundTintMap[tintType] && !containerFocusStyle) {
-      return focused ? { backgroundColor: tintColor } : undefined;
+      return focused
+        ? { backgroundColor: tintColor ?? DEFAULT_BACKGROUND_TINT }
+        : undefined;
     }
     if (!containerFocusStyle) return undefined;
 
@@ -60,6 +71,7 @@ export const useFocusStyle = ({
     componentFocusedStyle,
     containerFocusedStyle,
     onFocusChangeHandler,
+    hoverColor,
     focused,
   };
 };

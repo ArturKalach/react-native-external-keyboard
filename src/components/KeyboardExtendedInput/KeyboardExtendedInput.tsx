@@ -68,7 +68,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         ref={ref}
         canBeFocused={canBeFocusable && focusable}
       >
-        {/* ToDO why blur or submit blurOnSubmit={false}  */}
+        {/* ToDo RNCEKV-4 somewhy blurOnSubmit={false} has been set here, it would be better to verify and research for issues  */}
         <TextInput
           editable={canBeFocusable && focusable}
           style={[style, fStyle]}

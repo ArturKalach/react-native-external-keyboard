@@ -11,6 +11,8 @@ export type {
   BaseKeyboardViewType as KeyboardExtendedViewType,
 } from './types/BaseKeyboardView';
 
+export type { TintType } from './types/WithKeyboardFocus';
+
 export {
   BaseKeyboardView,
   KeyboardFocusView,
