@@ -3,7 +3,7 @@
 React Native library for enhanced external keyboard support.
 
 - ⚡️ The New Architecture is supported
-- 😫 Bridgeless is not supported
+- ⚡️ Bridgeless
 
 ## New Release Features
 
