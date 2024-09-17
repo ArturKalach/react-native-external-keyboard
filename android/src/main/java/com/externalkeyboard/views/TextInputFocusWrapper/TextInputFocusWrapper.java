@@ -19,10 +19,12 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private ReactEditText reactEditText = null;
   private boolean focusEventIgnore = false;
   private int focusType = 0;
+  private boolean unblockOnce = true;
 
   public void setEditText(ReactEditText editText) {
     if(editText != null) {
       this.reactEditText = editText;
+      this.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
       if(focusType == FOCUS_BY_PRESS) {
         this.reactEditText.setFocusable(false);
       }
@@ -71,7 +73,7 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     if(focusType == FOCUS_BY_PRESS) {
       this.reactEditText.setFocusable(false);
     }
-    if(focusType == FOCUS_BY_PRESS && keyCode == KeyEvent.KEYCODE_SPACE) {
+    if(keyCode == KeyEvent.KEYCODE_SPACE) {
       this.handleTextInputFocus();
     }
     return super.onKeyDown(keyCode, event);
@@ -88,6 +90,11 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   }
 
   private void handleTextInputFocus () {
+    if(this.unblockOnce) {
+      this.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+      this.unblockOnce = false;
+    }
+
     this.focusEventIgnore = true;
     this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
       this.focusEventIgnore = false;
