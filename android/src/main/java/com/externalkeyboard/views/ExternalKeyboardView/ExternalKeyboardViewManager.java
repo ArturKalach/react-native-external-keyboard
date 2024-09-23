@@ -1,19 +1,13 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.Nullable;
-
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
-import com.externalkeyboard.services.KeyboardKeyPressHandler;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.view.ReactViewGroup;
 
@@ -24,7 +18,6 @@ import java.util.Map;
 public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKeyboardViewManagerSpec<ExternalKeyboardView> {
 
   public static final String NAME = "ExternalKeyboardView";
-  private KeyboardKeyPressHandler keyboardKeyPressHandler;
 
   @Override
   public String getName() {
@@ -33,55 +26,8 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
 
   @Override
   public ExternalKeyboardView createViewInstance(ThemedReactContext context) {
-    this.keyboardKeyPressHandler = new KeyboardKeyPressHandler();
     return new ExternalKeyboardView(context);
   }
-
-
-  private void onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
-    if(!(reactViewGroup instanceof ExternalKeyboardView)) return;
-    ExternalKeyboardView viewGroup = (ExternalKeyboardView)reactViewGroup;
-
-    if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
-      return;
-    }
-
-    KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
-
-    if (pressInfo.firePressDownEvent && viewGroup.hasKeyDownListener) {
-      KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(viewGroup.getId(), keyCode, keyEvent);
-      UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressDownEvent);
-    }
-
-    if (pressInfo.firePressUpEvent && viewGroup.hasKeyUpListener) {
-      KeyPressUpEvent keyPressUpEvent = new KeyPressUpEvent(viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
-      UIManagerHelper.getEventDispatcherForReactTag(reactContext, viewGroup.getId()).dispatchEvent(keyPressUpEvent);
-    }
-  }
-
-  @Override
-  protected void addEventEmitters(final ThemedReactContext reactContext, ReactViewGroup viewGroup) {
-    viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-      @Override
-      public void onChildViewAdded(View parent, View child) {
-        child.setOnFocusChangeListener(
-          (v, hasFocus) -> {
-            FocusChangeEvent event = new FocusChangeEvent(viewGroup.getId(), hasFocus);
-            UIManagerHelper.getEventDispatcherForReactTag(reactContext, v.getId()).dispatchEvent(event);
-          });
-
-        child.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> {
-          onKeyPressHandler(viewGroup, keyCode, keyEvent, reactContext);
-          return false;
-        });
-      }
-
-      @Override
-      public void onChildViewRemoved(View parent, View child) {
-      }
-    });
-  }
-
 
   @Nullable
   @Override
@@ -101,10 +47,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @Override
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
   public void setCanBeFocused(ExternalKeyboardView wrapper, boolean canBeFocused) {
-    int descendantFocusability = canBeFocused ?
-      ViewGroup.FOCUS_AFTER_DESCENDANTS
-      : ViewGroup.FOCUS_BLOCK_DESCENDANTS;
-    wrapper.setDescendantFocusability(descendantFocusability);
+    wrapper.setCanBeFocused(canBeFocused);
   }
 
   @Override
@@ -117,5 +60,46 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @ReactProp(name = "hasKeyUpPress")
   public void setHasKeyUpPress(ExternalKeyboardView view, boolean value) {
     view.hasKeyUpListener = value;
+  }
+
+  @Override
+  public void setHasOnFocusChanged(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "autoFocus")
+  public void setAutoFocus(ExternalKeyboardView view, @Nullable String value) {
+    view.autoFocus = value != null;
+  }
+
+  @Override
+  @ReactProp(name = "haloEffect", defaultBoolean = false)
+  public void setHaloEffect(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
+  public void setTintColor(ExternalKeyboardView view, @Nullable String value) {
+    //stub
+  }
+
+  @Override
+  public void setGroup(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
+  public void focus(ExternalKeyboardView view, String rootViewId) {
+    view.focus();
+  }
+
+  @Override
+  public void receiveCommand(ReactViewGroup root, String commandId, @Nullable ReadableArray args) {
+    if (commandId.equals("focus")) {
+      this.focus((ExternalKeyboardView)root, "");
+    } else {
+      super.receiveCommand(root, commandId, args);
+    }
   }
 }
