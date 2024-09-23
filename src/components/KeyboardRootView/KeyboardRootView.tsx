@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { type ViewProps } from 'react-native';
+import type { ViewProps } from 'react-native';
 
 import ExternalKeyboardRootViewNativeComponent from '../../nativeSpec/ExternalKeyboardRootViewNativeComponent';
 import { KeyboardRootViewContext } from '../../context/KeyboardRootViewContext';
