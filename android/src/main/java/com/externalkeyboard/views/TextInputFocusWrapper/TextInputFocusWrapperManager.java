@@ -6,12 +6,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.externalkeyboard.events.EventHelper;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.textinput.ReactEditText;
 
@@ -75,6 +73,16 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
   public void setCanBeFocused(TextInputFocusWrapper view, boolean value) {
     view.setFocusable(value);
+  }
+
+  @Override
+  public void setHaloEffect(TextInputFocusWrapper view, boolean value) {
+    //stub
+  }
+
+  @Override
+  public void setTintColor(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
   }
 
   @Override

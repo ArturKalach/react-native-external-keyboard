@@ -1,10 +1,9 @@
 export {
-  ExternalKeyboardView,
-  ExternalKeyboardView as KeyboardExtendedBaseView,
-} from './ExternalKeyboardView';
+  BaseKeyboardView as ExternalKeyboardView,
+  BaseKeyboardView as KeyboardExtendedBaseView,
+  BaseKeyboardView,
+} from './BaseKeyboardView/BaseKeyboardView';
 export {
   KeyboardFocusView,
   KeyboardFocusView as KeyboardExtendedView,
 } from './KeyboardFocusView';
-export { Pressable, Pressable as KeyboardExtendedPressable } from './Pressable';
-export { KeyboardExtendedInput } from './KeyboardExtendedInput';
