@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.events.EventHelper;
@@ -19,17 +20,27 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private ReactEditText reactEditText = null;
   private boolean focusEventIgnore = false;
   private int focusType = 0;
-  private boolean unblockOnce = true;
 
   public void setEditText(ReactEditText editText) {
     if(editText != null) {
       this.reactEditText = editText;
-      this.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+      this.reactEditText.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+        @Override
+        public void onViewAttachedToWindow(@NonNull View view) {
+          reactEditText.setFocusable(false);
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(@NonNull View view) {
+
+        }
+      });
       if(focusType == FOCUS_BY_PRESS) {
         this.reactEditText.setFocusable(false);
       }
     } else {
       this.reactEditText.setOnFocusChangeListener(null);
+      this.reactEditText.addOnAttachStateChangeListener(null);
     }
   }
 
@@ -90,11 +101,6 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   }
 
   private void handleTextInputFocus () {
-    if(this.unblockOnce) {
-      this.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-      this.unblockOnce = false;
-    }
-
     this.focusEventIgnore = true;
     this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
       this.focusEventIgnore = false;
