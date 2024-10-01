@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "react": "18.2.0",
-    "react-native": "0.71.11"
+    "react-native": "0.71.11",
+    "react-native-gesture-handler": "2.18.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

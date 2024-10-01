@@ -14,7 +14,7 @@ export const useKeyboardPress = ({
   onPressOut,
   onPress,
   onLongPress,
-}: UseKeyboardPressProps) => {
+}: UseKeyboardPressProps<(e?: object) => void>) => {
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
       const {

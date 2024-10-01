@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.externalkeyboard.events.EventHelper;
 
+import com.externalkeyboard.helper.FocusHelper;
 import com.externalkeyboard.services.KeyboardKeyPressHandler;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -55,9 +56,7 @@ public class ExternalKeyboardView extends ReactViewGroup {
     super.onAttachedToWindow();
 
     this.listeningView = getFocusingView();
-    if(this.listeningView == this) {
-      setFocusable(true);
-    }
+    setFocusable(this.listeningView == this);
 
     this.listeningView.setOnFocusChangeListener(
       (focusedView, hasFocus) -> {
@@ -84,11 +83,8 @@ public class ExternalKeyboardView extends ReactViewGroup {
   }
 
   private View getFocusingView() {
-   if(this.getChildCount() == 1 && this.getChildAt(0).isFocusable()) {
-     return this.getChildAt(0);
-   }
-
-   return this;
+    View focusableView = FocusHelper.getFocusableView(this);
+    return focusableView != null ? focusableView : this;
   }
 
   public void setCanBeFocused(boolean canBeFocused) {

@@ -12,14 +12,17 @@ import {
 import { useKeyboardPress } from './useKeyboardPress/useKeyboardPress';
 import { IsViewFocusedContext } from '../context/IsViewFocusedContext';
 
-type KeyboardFocusPress = {
-  onPress?: PressType;
-  onLongPress?: PressType;
-  onPressIn?: PressType;
-  onPressOut?: PressType;
+type KeyboardFocusPress<T extends object> = {
+  onPress?: PressType<T>;
+  onLongPress?: PressType<T>;
+  onPressIn?: PressType<T>;
+  onPressOut?: PressType<T>;
 };
 
-export const withKeyboardFocus = <T extends KeyboardFocusPress>(
+export const withKeyboardFocus = <
+  K extends object,
+  T extends KeyboardFocusPress<K>
+>(
   Component: React.ComponentType<T>
 ) => {
   const WithKeyboardFocus = React.memo(
@@ -120,7 +123,6 @@ export const withKeyboardFocus = <T extends KeyboardFocusPress>(
                 onLongPress={onLongPress}
                 onPressIn={onPressIn}
                 onPressOut={onPressOut}
-                focusable={canBeFocused && focusable}
                 disabled={!canBeFocused || !focusable}
                 {...(props as T)}
               />
