@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
 import { SafeAreaView, StyleSheet } from 'react-native';
@@ -6,11 +7,13 @@ import { KeyboardRootView } from 'react-native-external-keyboard';
 
 export default function App() {
   return (
-    <KeyboardRootView style={styles.flex}>
-      <SafeAreaView style={styles.container}>
-        <Home />
-      </SafeAreaView>
-    </KeyboardRootView>
+    <GestureHandlerRootView style={styles.flex}>
+      <KeyboardRootView style={styles.flex}>
+        <SafeAreaView style={styles.container}>
+          <Home />
+        </SafeAreaView>
+      </KeyboardRootView>
+    </GestureHandlerRootView>
   );
 }
 

@@ -11,7 +11,7 @@ export const useKeyboardPress = ({
   onPress,
   onPressIn,
   onPressOut,
-}: UseKeyboardPressProps) => {
+}: UseKeyboardPressProps<(e?: any) => void>) => {
   const onKeyUpPressHandler = useMemo(() => {
     if (!onPressOut) return onKeyUpPress;
     return (e: OnKeyPress) => {
