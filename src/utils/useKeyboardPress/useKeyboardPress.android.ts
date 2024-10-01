@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { UseKeyboardPressProps } from './useKeyboardPress.types';
 
@@ -6,6 +6,7 @@ import type { UseKeyboardPressProps } from './useKeyboardPress.types';
 import type { OnKeyPress, OnKeyPressFn } from '../../types/BaseKeyboardView';
 
 export const ANDROID_SPACE_KEY_CODE = 62;
+const MILISECOND_THRESHOLD = 20;
 
 export const useKeyboardPress = ({
   onKeyUpPress,
@@ -15,6 +16,7 @@ export const useKeyboardPress = ({
   onPress,
   onLongPress,
 }: UseKeyboardPressProps<(e?: object) => void>) => {
+  const tresholdTime = useRef(0);
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
       const {
@@ -25,6 +27,7 @@ export const useKeyboardPress = ({
       onKeyUpPress?.(e);
 
       if (keyCode === ANDROID_SPACE_KEY_CODE) {
+        tresholdTime.current = e?.timeStamp;
         if (isLongPress) {
           onLongPress?.({} as GestureResponderEvent);
         } else {
@@ -47,7 +50,8 @@ export const useKeyboardPress = ({
 
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
-      if (event.nativeEvent.identifier !== undefined) {
+      const pressThreshold = (event?.timeStamp ?? 0) - tresholdTime.current;
+      if (pressThreshold > MILISECOND_THRESHOLD) {
         onPress?.(event);
       }
     },
