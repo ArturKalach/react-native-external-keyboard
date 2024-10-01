@@ -20,27 +20,43 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private ReactEditText reactEditText = null;
   private boolean focusEventIgnore = false;
   private int focusType = 0;
+  private View.OnAttachStateChangeListener onAttachListener;
 
-  public void setEditText(ReactEditText editText) {
-    if(editText != null) {
-      this.reactEditText = editText;
-      this.reactEditText.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+  private View.OnAttachStateChangeListener getOnAttachListener() {
+    if(onAttachListener == null) {
+      onAttachListener = new View.OnAttachStateChangeListener() {
         @Override
         public void onViewAttachedToWindow(@NonNull View view) {
-          reactEditText.setFocusable(false);
+          view.setFocusable(false);
         }
 
         @Override
         public void onViewDetachedFromWindow(@NonNull View view) {
-
         }
-      });
+      };
+    }
+   return onAttachListener;
+  }
+
+  private void clearEditText() {
+    if(this.reactEditText != null) {
+      this.reactEditText.setOnFocusChangeListener(null);
+      if(onAttachListener != null) {
+        this.reactEditText.removeOnAttachStateChangeListener(onAttachListener);
+      }
+    }
+    this.reactEditText = null;
+  }
+
+  public void setEditText(ReactEditText editText) {
+    if(editText != null) {
+      this.reactEditText = editText;
+      this.reactEditText.addOnAttachStateChangeListener(getOnAttachListener());
       if(focusType == FOCUS_BY_PRESS) {
         this.reactEditText.setFocusable(false);
       }
     } else {
-      this.reactEditText.setOnFocusChangeListener(null);
-      this.reactEditText.addOnAttachStateChangeListener(null);
+      this.clearEditText();
     }
   }
 
@@ -67,17 +83,6 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     super(context);
     this.context = context;
   }
-
-  public TextInputFocusWrapper(Context context, @Nullable AttributeSet attrs) {
-    super(context, attrs);
-    this.context = context;
-  }
-
-  public TextInputFocusWrapper(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    this.context = context;
-  }
-
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
