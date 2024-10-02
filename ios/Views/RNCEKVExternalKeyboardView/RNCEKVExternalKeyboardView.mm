@@ -27,7 +27,7 @@ using namespace facebook::react;
 @implementation RNCEKVExternalKeyboardView {
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
     RNCEKVKeyboardFocusDelegate* _keyboardFocusDelegate;
-    BOOL _isTouched;
+    NSNumber* _isFocused;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -39,7 +39,6 @@ using namespace facebook::react;
 #endif
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
         _keyboardFocusDelegate =  [[RNCEKVKeyboardFocusDelegate alloc] initWithView:self];
-        _isTouched = NO;
         if (@available(iOS 13.0, *)) {
             UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
             [self addInteraction: interaction];
@@ -173,10 +172,12 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
+    _isFocused = [_keyboardFocusDelegate isFocusChanged: context];
+   
+
     if([self hasOnFocusChanged]) {
-        NSNumber* isFocusChanged = [_keyboardFocusDelegate isFocusChanged: context];
-        if(isFocusChanged != nil) {
-            [self onFocusChangeHandler: [isFocusChanged  isEqual: @YES]];
+        if(_isFocused != nil) {
+            [self onFocusChangeHandler: [_isFocused isEqual: @YES]];
         }
         
         return;
@@ -276,20 +277,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [_keyboardFocusDelegate addSubview: view];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    _isTouched = YES;
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-    _isTouched = NO;
-}
-
-
-
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0)){
-    if(!_isTouched) {
+    if(_isFocused != nil && [_isFocused isEqual:@YES]) {
         [self onContextMenuPressHandler];
     }
     return nil;
