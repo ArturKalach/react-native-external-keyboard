@@ -34,6 +34,7 @@ const Menu = ({
       />
       <Divider />
       <LineButton
+        autoFocus
         onLongPress={() => onLongPress('Colors')}
         onPress={() => onPress('Colors')}
         title="Colors"

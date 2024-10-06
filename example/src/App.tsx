@@ -2,10 +2,13 @@ import * as React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { Button, SafeAreaView, StyleSheet } from 'react-native';
 import { KeyboardRootView } from 'react-native-external-keyboard';
+import { View, Text } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 
-export default function App() {
+export function DetailsScreen() {
   return (
     <GestureHandlerRootView style={styles.flex}>
       <KeyboardRootView style={styles.flex}>
@@ -13,6 +16,33 @@ export default function App() {
           <Home />
         </SafeAreaView>
       </KeyboardRootView>
+    </GestureHandlerRootView>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+function HomeScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <GestureHandlerRootView style={styles.flex}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </GestureHandlerRootView>
   );
 }
