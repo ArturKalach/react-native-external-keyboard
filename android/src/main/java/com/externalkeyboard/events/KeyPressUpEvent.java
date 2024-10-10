@@ -8,7 +8,7 @@ import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class KeyPressUpEvent extends Event<KeyPressUpEvent> {
-  public static String EVENT_NAME = "topOnKeyUpPress";
+  public static String EVENT_NAME = "topKeyUpPress";
   public WritableMap mExtraData;
 
   public KeyPressUpEvent(int id, int keyCode, KeyEvent keyEvent, boolean isLongPress) {

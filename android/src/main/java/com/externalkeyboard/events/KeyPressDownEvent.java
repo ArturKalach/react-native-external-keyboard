@@ -8,7 +8,7 @@ import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class KeyPressDownEvent extends Event<KeyPressDownEvent> {
-  public static String EVENT_NAME = "topOnKeyDownPress";
+  public static String EVENT_NAME = "topKeyDownPress";
   public WritableMap mExtraData;
 
   public KeyPressDownEvent(int id, int keyCode, KeyEvent keyEvent) {
