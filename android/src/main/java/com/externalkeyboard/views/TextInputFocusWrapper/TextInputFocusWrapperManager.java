@@ -58,19 +58,6 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     return viewGroup;
   }
 
-  @Nullable
-  @Override
-  public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
-    Map<String, Object> export = MapBuilder.<String, Object>builder().build();
-    if (export == null) {
-      export = MapBuilder.newHashMap();
-    }
-
-    export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
-
-    return export;
-  }
-
   @Override
   @ReactProp(name = "focusType")
   public void setFocusType(TextInputFocusWrapper view, int value) {
@@ -95,5 +82,18 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     viewGroup.setEditText(null);
     viewGroup.setOnFocusChangeListener(null);
     super.onDropViewInstance(viewGroup);
+  }
+
+  @Nullable
+  @Override
+  public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
+    Map<String, Object> export = MapBuilder.<String, Object>builder().build();
+    if (export == null) {
+      export = MapBuilder.newHashMap();
+    }
+
+    export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
+
+    return export;
   }
 }

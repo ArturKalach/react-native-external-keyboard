@@ -14,7 +14,7 @@ RCT_EXPORT_MODULE(TextInputFocusWrapper)
     return [[RNCEKVTextInputFocusWrapper alloc] init];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(onFocusChange, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onFocusChange, RCTDirectEventBlock)
 
 RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVTextInputFocusWrapper)
 {
