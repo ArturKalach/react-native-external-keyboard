@@ -29,7 +29,6 @@ export {
   KeyboardExtendedInput as TextInput,
 } from './components/KeyboardExtendedInput/KeyboardExtendedInput';
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
-export { KeyboardRootView } from './components/KeyboardRootView';
 export { A11yModule, KeyboardExtendedModule } from './services';
 
 export { Tappable } from './components/Touchable/Tappable';

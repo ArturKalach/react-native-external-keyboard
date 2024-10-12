@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL hasOnFocusChanged;
 @property BOOL isGroup;
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
-@property (nonatomic, strong, nullable) NSString *autoFocusRootId;
+@property BOOL autoFocus;
 
 - (void)focus:(NSString *)rootViewId;
 
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_END
 #import <React/RCTView.h>
 @interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate, RNCEKVKeyboardFocusProtocol>
 
-@property (nonatomic, strong, nullable) NSString *autoFocusRootId;
+@property BOOL autoFocus;
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
-- (void)focus:(NSString *)rootViewId;
+- (void)focus;
 @end
 
 

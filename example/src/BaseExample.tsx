@@ -1,17 +1,23 @@
 import * as React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity as RNTouchableOpacity,
+} from 'react-native';
 import {
   KeyboardExtendedBaseView,
   KeyPress,
   KeyboardExtendedInput,
   KeyboardExtendedView,
   KeyboardExtendedPressable,
-  KeyboardRootView,
   KeyboardExtendedViewType,
-  TouchableOpacity,
   OnKeyPress,
+  withKeyboardFocus,
 } from 'react-native-external-keyboard';
+
+const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 
 export const BaseExample = () => {
   const ref = React.useRef<KeyboardExtendedViewType>(null);
@@ -31,7 +37,7 @@ export const BaseExample = () => {
 
   const [showAutoFocus, setShowAutoFocus] = React.useState(false);
   return (
-    <KeyboardRootView style={styles.container}>
+    <View style={styles.container}>
       <TouchableOpacity
         tintColor="#ff0000"
         haloEffect={true}
@@ -96,7 +102,7 @@ export const BaseExample = () => {
       <KeyboardExtendedView haloEffect={true} style={styles.borderExample}>
         <Text>Border here</Text>
       </KeyboardExtendedView>
-    </KeyboardRootView>
+    </View>
   );
 };
 

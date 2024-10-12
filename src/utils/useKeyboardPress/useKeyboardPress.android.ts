@@ -8,14 +8,17 @@ import type { OnKeyPress, OnKeyPressFn } from '../../types/BaseKeyboardView';
 export const ANDROID_SPACE_KEY_CODE = 62;
 const MILISECOND_THRESHOLD = 20;
 
-export const useKeyboardPress = ({
+export const useKeyboardPress = <
+  T extends (event?: any) => void,
+  K extends (event?: any) => void
+>({
   onKeyUpPress,
   onKeyDownPress,
   onPressIn,
   onPressOut,
   onPress,
   onLongPress,
-}: UseKeyboardPressProps<(e?: object) => void>) => {
+}: UseKeyboardPressProps<T, K>) => {
   const tresholdTime = useRef(0);
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {

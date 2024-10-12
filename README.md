@@ -36,31 +36,6 @@ iOS:
 cd ios && pod install && cd ..
 ```
 
-After installation, wrap your entry point and modals with `<KeyboardRootView>`. This is required for the `autoFocus` and `focus command`. functionality.
-
-```
-import { KeyboardRootView } from 'react-native-external-keyboard';
-
-export default function App() {
-  return (
-    <KeyboardRootView style={{ flex: 1 }}>
-      {/* content */}
-    </KeyboardRootView>
-  );
-}
-
-...
-
-export function CustomModal() {
-  return <Modal>
-    <KeyboardRootView style={{ flex: 1 }}>
-      {/* content */}
-    </KeyboardRootView>
-  </Modal>
-}
-```
-
-
 
 ## Usage
 
@@ -225,68 +200,6 @@ tintColor | Color used for tinting the component | `string`
 ref->focus | Command to programmatically focus the component | () => void;
 ...rest | Remaining View props | `View`
 
-### Focus system, focus and autoFocus property
-
-The focus system consists of two main parts: `KeyboardRootView` and `KeyboardExtendedBaseView`-based components.
-
-- `KeyboardRootView` is used to manage preferredFocusEnvironments on iOS, enabling native control over focus.
-- Components based on `KeyboardExtendedBaseView` (or `withKeyboardFocus` HOC) interact with `KeyboardRootView` and provide the `KeyboardFocus` command, allowing components to be focused via a ref (e.g., ref.current.focus).
-
-For example:
-
-```js
-import { KeyboardFocus, KeyboardRootView, Pressable } from 'react-native-external-keyboard';
-
-export default function App() {
-  const ref = useRef<KeyboardFocus>(null);
-
-
-  return (
-    <KeyboardRootView>
-      <SafeAreaView style={styles.container}>
-        <Pressable
-          ref={ref}
-          autoFocus
-          tintType={tinyType}
-          tintColor="#ffffff"
-          containerStyle={[styles.container, { width }]}
-        >
-          <Image source={source} style={styles.image} />
-        </Pressable>
-        <Button title="Focus" onPress={() => ref.current?.focus()}>
-      </SafeAreaView>
-    </KeyboardRootView>
-  );
-}
-```
-
-Ideally, the `KeyboardRootView` should be placed at the `root` of your app. If you have focusable components inside a modal and want to control them using the `autoFocus` or `focus command`, the `KeyboardRootView` should also be placed at the root of the `Modal`.
-
-```js
-import { KeyboardRootView, Pressable } from 'react-native-external-keyboard';
-...
-
-export default function App() {
-  return (
-    <KeyboardRootView style={{ flex: 1 }}>
-      {/* content */}
-    </KeyboardRootView>
-  );
-}
-
-...
-
-export function CustomModal() {
-  return <Modal>
-    <KeyboardRootView style={{ flex: 1 }}>
-      {/* content */}
-      <Pressable autoFocus>
-        <Text>Focusable pressable</Text>
-      </Pressable>
-    </KeyboardRootView>
-  </Modal>
-}
-```
 
 # Migration 0.3.x to 0.4.0
 ToDo

@@ -38,14 +38,14 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   hasKeyDownPress?: boolean;
   hasKeyUpPress?: boolean;
   hasOnFocusChanged?: boolean;
-  autoFocus?: string;
+  autoFocus?: boolean;
   haloEffect?: boolean;
   tintColor?: string;
   group?: boolean;
 }
 
 export interface NativeCommands {
-  focus: (viewRef: React.ElementRef<ComponentType>, rootViewId: string) => void;
+  focus: (viewRef: React.ElementRef<ComponentType>) => void;
 }
 
 export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({

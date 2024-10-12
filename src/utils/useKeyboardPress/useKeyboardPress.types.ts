@@ -1,11 +1,10 @@
 import type { OnKeyPressFn } from '../../types/BaseKeyboardView';
-import type { PressType } from '../../types/WithKeyboardFocus';
 
-export type UseKeyboardPressProps<T extends object> = {
+export type UseKeyboardPressProps<T, K> = {
   onKeyUpPress?: OnKeyPressFn;
   onKeyDownPress?: OnKeyPressFn;
-  onLongPress?: PressType<T>;
-  onPress?: PressType<T>;
-  onPressIn?: PressType<T>;
-  onPressOut?: PressType<T>;
+  onLongPress?: T;
+  onPress?: T;
+  onPressIn?: K;
+  onPressOut?: K;
 };

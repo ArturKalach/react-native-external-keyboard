@@ -2,9 +2,9 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
 #import "RNCEKVKeyboardKeyPressHandler.h"
-#import "RNCEKVPreferredFocusEnvironment.h"
 #import "RNCEKVKeyboardFocusDelegate.h"
 #import "RNCEKVUtils.h"
+#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
@@ -28,6 +28,7 @@ using namespace facebook::react;
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
     RNCEKVKeyboardFocusDelegate* _keyboardFocusDelegate;
     NSNumber* _isFocused;
+    BOOL _isAttachedToController;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -37,6 +38,7 @@ using namespace facebook::react;
         static const auto defaultProps = std::make_shared<const ExternalKeyboardViewProps>();
         _props = defaultProps;
 #endif
+        _isAttachedToController = NO;
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
         _keyboardFocusDelegate =  [[RNCEKVKeyboardFocusDelegate alloc] initWithView:self];
         if (@available(iOS 13.0, *)) {
@@ -49,7 +51,7 @@ using namespace facebook::react;
 }
 
 - (void)cleanReferences{
-    [self setAutoFocusRootId: nil];
+    _isAttachedToController = NO;
     _isHaloActive = @2; //ToDo RNCEKV-0
 }
 
@@ -163,12 +165,40 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [_keyboardFocusDelegate willMoveToSuperview:newSuperview];
 }
 
-
-- (void)focus:(NSString *)rootViewId {
-    UIView *focusingView = [_keyboardFocusDelegate getFocusingView];
-    [[RNCEKVPreferredFocusEnvironment sharedInstance] focus:focusingView withRootId:rootViewId];
+- (void)focus {
+//    UIViewController *rootViewController = RCTKeyWindow().rootViewController;
+    UIViewController *viewController = RCTKeyWindow().rootViewController;
+    [self updateFocus: viewController];
+//    if(rootViewController) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            rootViewController.customFocusView = self;
+//            [rootViewController.view setNeedsFocusUpdate];
+//            [rootViewController.view updateFocusIfNeeded];
+//            [self setNeedsFocusUpdate];
+//            [self updateFocusIfNeeded];
+//        });
+//    }
 }
 
+- (void)updateFocus: (UIViewController *) controller {
+    UIView *focusingView = self; // [_keyboardFocusDelegate getFocusingView];
+    UIViewController *rootController = RCTKeyWindow().rootViewController;
+
+    if (self.superview != nil && controller != nil) {
+        controller.customFocusView = focusingView;
+//        rootController.customFocusView = focusingView;
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            [rootController setNeedsFocusUpdate];
+//            [rootController updateFocusIfNeeded];
+            [controller setNeedsFocusUpdate];
+            [controller updateFocusIfNeeded];
+//            [self setNeedsFocusUpdate];
+//            [self updateFocusIfNeeded];
+//            controller.customFocusView = nil;
+//            rootController.customFocusView = nil;
+        });
+    }
+}
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
@@ -264,13 +294,47 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [_keyboardFocusDelegate updateHalo];
 }
 
-- (void)didMoveToSuperview {
-    [super didMoveToSuperview];
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
     
-    if (self.superview != nil && _autoFocusRootId) {
-        [[RNCEKVPreferredFocusEnvironment sharedInstance] setAutoFocus:self withRootId: _autoFocusRootId];
+    if (self.window) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(viewControllerChanged:)
+                                                     name:@"ViewControllerChangedNotification"
+                                                   object:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ViewControllerChangedNotification" object:nil];
     }
+    
+//    if(self.window && self.autoFocus) {
+//        UIViewController *viewController = RCTKeyWindow().rootViewController;
+//        [self updateFocus: viewController];
+//    }
 }
+
+- (void)viewControllerChanged:(NSNotification *)notification {
+    UIViewController *viewController = notification.object;
+//    UIViewController *viewController = RCTKeyWindow().rootViewController;
+    if (self.autoFocus && !_isAttachedToController) {
+        _isAttachedToController = YES;
+        [self updateFocus: viewController];
+    }
+//    if (self.superview != nil && self.autoFocus && !_isAttachedToController) {
+//        _isAttachedToController = YES;
+//        if(viewController) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                viewController.customFocusView = self;
+//                [viewController setNeedsFocusUpdate];
+//                [viewController updateFocusIfNeeded];
+//                [self setNeedsFocusUpdate];
+//                [self updateFocusIfNeeded];
+//            });
+//        }
+//    }
+}
+
+
 
 - (void)addSubview:(UIView *)view {
     [super addSubview:view];

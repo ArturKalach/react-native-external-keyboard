@@ -332,6 +332,9 @@ PODS:
   - react-native-external-keyboard (0.4.0-alpha0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
+  - react-native-pager-view (6.4.1):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - react-native-safe-area-context (4.11.0):
     - React-Core
   - React-perflogger (0.71.11)
@@ -477,6 +480,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-external-keyboard (from `../..`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -556,6 +560,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-external-keyboard:
     :path: "../.."
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -626,6 +632,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
   react-native-external-keyboard: 4f53af2f90d90ce2d0154f564b304c3883c2da14
+  react-native-pager-view: d1e43158dd108b1b7377d7972157317e06dcc579
   react-native-safe-area-context: 851c62c48dce80ccaa5637b6aa5991a1bc36eca9
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a

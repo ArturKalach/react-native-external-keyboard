@@ -9,27 +9,27 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  Pressable as RNPressable,
   View,
 } from 'react-native';
 import {
-  Pressable,
   KeyboardExtendedInput,
   KeyboardExtendedBaseView,
   type KeyboardFocus,
   type KeyPress,
-  KeyboardRootView,
   withKeyboardFocus,
 } from 'react-native-external-keyboard';
 
+const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 const TouchableWithoutFeedback = withKeyboardFocus(RNTouchableWithoutFeedback);
-
 export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   const modalButtonRef = useRef<KeyboardFocus>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [textInput, setTextInput] = React.useState('Input here!');
   const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
   const [showModal, setShowModal] = React.useState(false);
+  const [dShow, setDShow] = React.useState(false);
 
   const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
     setIsKeyDown(false);
@@ -46,7 +46,10 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       style={styles.container}
     >
       <TouchableOpacity
-        onPress={() => console.log(1)}
+        onPress={() => {
+          console.log(1);
+          setDShow(v => !v)
+        }}
         onLongPress={() => console.log(11)}
         ref={ref}
         style={styles.pressable}
@@ -54,6 +57,13 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       >
         <Text>TouchableOpacity</Text>
       </TouchableOpacity>
+      {dShow && (
+        <Pressable autoFocus>
+          <View>
+            <Text>Display</Text>
+          </View>
+        </Pressable>
+      )}
       <TouchableWithoutFeedback
         containerStyle={styles.pressableContainer}
         onPress={() => console.log(2)}
@@ -64,6 +74,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         </View>
       </TouchableWithoutFeedback>
       <Pressable
+        // autoFocus
         containerStyle={styles.pressableContainer}
         style={styles.pressable}
         onPress={() => modalButtonRef.current?.focus()}
@@ -109,7 +120,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         </View>
       </KeyboardExtendedBaseView>
       <Modal visible={showModal}>
-        <KeyboardRootView style={styles.modal}>
+        <View style={styles.modal}>
           <View>
             <Pressable onPress={() => setShowModal(false)}>
               <Text>Modal example</Text>
@@ -121,7 +132,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
               <Text>Close</Text>
             </Pressable>
           </View>
-        </KeyboardRootView>
+        </View>
       </Modal>
     </ScrollView>
   );

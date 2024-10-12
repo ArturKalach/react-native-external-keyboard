@@ -3,28 +3,38 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
 import { Button, SafeAreaView, StyleSheet } from 'react-native';
-import { KeyboardRootView } from 'react-native-external-keyboard';
 import { View, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+
 
 export function DetailsScreen() {
   return (
     <GestureHandlerRootView style={styles.flex}>
-      <KeyboardRootView style={styles.flex}>
-        <SafeAreaView style={styles.container}>
-          <Home />
-        </SafeAreaView>
-      </KeyboardRootView>
+      <SafeAreaView style={styles.container}>
+        <Home />
+      </SafeAreaView>
     </GestureHandlerRootView>
   );
 }
 
 const Stack = createNativeStackNavigator();
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={styles.home}>
       <Text>Home Screen</Text>
       <Button
         title="Go to Details"
@@ -55,4 +65,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f4f4f4',
   },
+  home: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

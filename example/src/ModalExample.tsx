@@ -1,10 +1,7 @@
 import * as React from 'react';
 
 import { Button, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import {
-  KeyboardRootView,
-  withKeyboardFocus,
-} from 'react-native-external-keyboard';
+import { withKeyboardFocus } from 'react-native-external-keyboard';
 
 const KeyboardedPressable = withKeyboardFocus(Pressable);
 
@@ -12,7 +9,7 @@ export const ModalExample = () => {
   const [showModal, setShowModal] = React.useState(false);
 
   return (
-    <KeyboardRootView style={styles.container}>
+    <View style={styles.container}>
       <KeyboardedPressable
         onPress={() => {
           setShowModal(true);
@@ -21,7 +18,7 @@ export const ModalExample = () => {
         <Text>Jump</Text>
       </KeyboardedPressable>
       <Modal visible={showModal}>
-        <KeyboardRootView style={styles.modalRootView}>
+        <View style={styles.modalRootView}>
           <View>
             <Text>Modal here</Text>
             <Button
@@ -38,9 +35,9 @@ export const ModalExample = () => {
               <Text>Close</Text>
             </KeyboardedPressable>
           </View>
-        </KeyboardRootView>
+        </View>
       </Modal>
-    </KeyboardRootView>
+    </View>
   );
 };
 
