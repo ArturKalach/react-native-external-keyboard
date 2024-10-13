@@ -28,6 +28,7 @@ using namespace facebook::react;
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
     RNCEKVKeyboardFocusDelegate* _keyboardFocusDelegate;
     NSNumber* _isFocused;
+    BOOL _isAttachedToWindow;
     BOOL _isAttachedToController;
 }
 
@@ -39,6 +40,7 @@ using namespace facebook::react;
         _props = defaultProps;
 #endif
         _isAttachedToController = NO;
+        _isAttachedToWindow = NO;
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
         _keyboardFocusDelegate =  [[RNCEKVKeyboardFocusDelegate alloc] initWithView:self];
         if (@available(iOS 13.0, *)) {
@@ -194,7 +196,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
             [controller updateFocusIfNeeded];
 //            [self setNeedsFocusUpdate];
 //            [self updateFocusIfNeeded];
-//            controller.customFocusView = nil;
+            controller.customFocusView = nil;
 //            rootController.customFocusView = nil;
         });
     }
@@ -207,6 +209,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
     if([self hasOnFocusChanged]) {
         if(_isFocused != nil) {
+            _isAttachedToWindow = YES;
+            _isAttachedToController = YES;
             [self onFocusChangeHandler: [_isFocused isEqual: @YES]];
         }
         
@@ -307,10 +311,11 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ViewControllerChangedNotification" object:nil];
     }
     
-//    if(self.window && self.autoFocus) {
-//        UIViewController *viewController = RCTKeyWindow().rootViewController;
-//        [self updateFocus: viewController];
-//    }
+    if(self.window && self.autoFocus && !_isAttachedToWindow) {
+        UIViewController *viewController = RCTKeyWindow().rootViewController;
+        [self updateFocus: viewController];
+        _isAttachedToWindow = YES;
+    }
 }
 
 - (void)viewControllerChanged:(NSNotification *)notification {

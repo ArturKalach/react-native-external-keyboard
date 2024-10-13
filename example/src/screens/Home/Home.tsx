@@ -65,11 +65,11 @@ export const Home = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.menu}>
+      {/* <View style={styles.menu}>
         <Menu onLongPress={onLongPressHandle} onPress={setSelected} />
         <ContentDivider />
         <Text>{selected}:</Text>
-      </View>
+      </View> */}
       {selected === 'Components' && (
         <ComponentsExample ref={componentsExampleRef} />
       )}

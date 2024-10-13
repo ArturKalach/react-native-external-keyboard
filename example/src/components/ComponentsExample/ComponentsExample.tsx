@@ -65,6 +65,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         </Pressable>
       )}
       <TouchableWithoutFeedback
+        autoFocus
         containerStyle={styles.pressableContainer}
         onPress={() => console.log(2)}
         onLongPress={() => console.log(22)}
