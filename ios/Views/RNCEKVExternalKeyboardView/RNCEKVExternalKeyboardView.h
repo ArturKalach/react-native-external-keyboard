@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 @property BOOL autoFocus;
 
-- (void)focus:(NSString *)rootViewId;
+- (void)focus;
 
 @end
 

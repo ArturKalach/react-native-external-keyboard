@@ -48,7 +48,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       <TouchableOpacity
         onPress={() => {
           console.log(1);
-          setDShow(v => !v)
+          setDShow((v: boolean) => !v);
         }}
         onLongPress={() => console.log(11)}
         ref={ref}

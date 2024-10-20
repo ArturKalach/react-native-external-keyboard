@@ -54,6 +54,7 @@ using namespace facebook::react;
 
 - (void)cleanReferences{
     _isAttachedToController = NO;
+    _isAttachedToWindow = NO;
     _isHaloActive = @2; //ToDo RNCEKV-0
 }
 
@@ -74,10 +75,7 @@ using namespace facebook::react;
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
     NSString *FOCUS = @"focus";
     if([commandName isEqual:FOCUS]) {
-        if (args.count > 0 && [args.firstObject isKindOfClass:[NSString class]]) {
-            NSString *rootViewId = (NSString *)args.firstObject;
-            [self focus: rootViewId];
-        }
+        [self focus];
     }
 }
 
@@ -106,8 +104,8 @@ using namespace facebook::react;
     
     
     if(oldViewProps.autoFocus != newViewProps.autoFocus) {
-        NSString* rootId = [NSString stringWithUTF8String:newViewProps.autoFocus.c_str()];
-        [self setAutoFocusRootId: rootId];
+        BOOL hasAutoFocus = newViewProps.autoFocus;
+        [self setAutoFocus: hasAutoFocus];
     }
     
     if(oldViewProps.tintColor != newViewProps.tintColor) {

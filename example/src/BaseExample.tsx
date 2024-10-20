@@ -43,7 +43,7 @@ export const BaseExample = () => {
         haloEffect={true}
         onPress={() => {
           setShowAutoFocus((show) => !show);
-          ref.current?.focus();
+          // ref.current?.focus();
         }}
       >
         <Text>Jump</Text>

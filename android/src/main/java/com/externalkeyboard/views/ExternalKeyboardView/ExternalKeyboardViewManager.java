@@ -69,8 +69,8 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
 
   @Override
   @ReactProp(name = "autoFocus")
-  public void setAutoFocus(ExternalKeyboardView view, @Nullable String value) {
-    view.autoFocus = value != null;
+  public void setAutoFocus(ExternalKeyboardView view, @Nullable boolean value) {
+    view.autoFocus = value;
   }
 
   @Override
@@ -90,14 +90,14 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  public void focus(ExternalKeyboardView view, String rootViewId) {
+  public void focus(ExternalKeyboardView view) {
     view.focus();
   }
 
   @Override
   public void receiveCommand(ReactViewGroup root, String commandId, @Nullable ReadableArray args) {
     if (commandId.equals("focus")) {
-      this.focus((ExternalKeyboardView)root, "");
+      this.focus((ExternalKeyboardView)root);
     } else {
       super.receiveCommand(root, commandId, args);
     }

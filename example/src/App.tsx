@@ -6,19 +6,6 @@ import { Button, SafeAreaView, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, NavigationProp } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-const Tab = createBottomTabNavigator();
-
-
 
 export function DetailsScreen() {
   return (
