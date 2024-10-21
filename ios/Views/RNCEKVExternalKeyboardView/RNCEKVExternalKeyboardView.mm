@@ -166,37 +166,24 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 }
 
 - (void)focus {
-//    UIViewController *rootViewController = RCTKeyWindow().rootViewController;
-    UIViewController *viewController = RCTKeyWindow().rootViewController;
+    UIViewController *viewController = self.reactViewController;
     [self updateFocus: viewController];
-//    if(rootViewController) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            rootViewController.customFocusView = self;
-//            [rootViewController.view setNeedsFocusUpdate];
-//            [rootViewController.view updateFocusIfNeeded];
-//            [self setNeedsFocusUpdate];
-//            [self updateFocusIfNeeded];
-//        });
-//    }
 }
 
 - (void)updateFocus: (UIViewController *) controller {
     UIView *focusingView = self; // [_keyboardFocusDelegate getFocusingView];
-    UIViewController *rootController = RCTKeyWindow().rootViewController;
+
 
     if (self.superview != nil && controller != nil) {
-        controller.customFocusView = focusingView;
-//        rootController.customFocusView = focusingView;
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            [rootController setNeedsFocusUpdate];
-//            [rootController updateFocusIfNeeded];
-            [controller setNeedsFocusUpdate];
-            [controller updateFocusIfNeeded];
-//            [self setNeedsFocusUpdate];
-//            [self updateFocusIfNeeded];
-            controller.customFocusView = nil;
-//            rootController.customFocusView = nil;
-        });
+//        UIViewController *rootController = RCTKeyWindow().rootViewController;
+//      
+//        if(rootController != controller) {
+            controller.customFocusView = focusingView;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [controller setNeedsFocusUpdate];
+                [controller updateFocusIfNeeded];
+            });
+//        }
     }
 }
 
@@ -310,7 +297,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
     
     if(self.window && self.autoFocus && !_isAttachedToWindow) {
-        UIViewController *viewController = RCTKeyWindow().rootViewController;
+        UIViewController *viewController = self.reactViewController;
         [self updateFocus: viewController];
         _isAttachedToWindow = YES;
     }
