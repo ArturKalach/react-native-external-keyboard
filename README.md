@@ -302,7 +302,7 @@ export type OnKeyPress = NativeSyntheticEvent<{
 - Create the documentation.
 
 ## Contributing
-ToDo
+Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas.
 
 ## Acknowledgements
 It has been a long journey since the first release of the `react-native-external-keyboard` package. Many features have been added, and a lot of issues have been fixed.
