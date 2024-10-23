@@ -30,23 +30,27 @@ public class ExternalKeyboardView extends ReactViewGroup {
   }
 
 
-  private void onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
-    if(!(reactViewGroup instanceof ExternalKeyboardView)) return;
+  private boolean onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
+    if(!(reactViewGroup instanceof ExternalKeyboardView)) return false;
     ExternalKeyboardView viewGroup = (ExternalKeyboardView)reactViewGroup;
 
     if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
-      return;
+      return false;
     }
 
     KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
 
     if (pressInfo.firePressDownEvent && viewGroup.hasKeyDownListener) {
       EventHelper.pressDown((ReactContext) context, viewGroup.getId(), keyCode, keyEvent);
+      return true;
     }
 
     if (pressInfo.firePressUpEvent && viewGroup.hasKeyUpListener) {
       EventHelper.pressUp((ReactContext) context, viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
+      return true;
     }
+
+    return false;
   }
 
 
@@ -63,14 +67,10 @@ public class ExternalKeyboardView extends ReactViewGroup {
         EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);
       });
 
-    this.listeningView.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> {
-      onKeyPressHandler(this, keyCode, keyEvent, (ThemedReactContext) context);
-      return false;
-    });
+    this.listeningView.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> onKeyPressHandler(this, keyCode, keyEvent, (ThemedReactContext) context));
 
     if(autoFocus) {
       this.focus();
-      EventHelper.focusChanged((ReactContext) context, this.getId(), true);
     }
   }
 

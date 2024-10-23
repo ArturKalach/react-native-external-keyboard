@@ -34,7 +34,6 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.flex}>
-      {/* <DetailsScreen /> */}
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Home" component={HomeScreen} />
