@@ -7,7 +7,7 @@ React Native library for enhanced external keyboard support.
 
 ## New Release Features
 
-- `withKeyboardFocus`: an HOC that adds focus capabilities to any pressable component.
+- `withKeyboardFocus`: an HOC that adds focus capabilities to default pressable components (and some external ones).
 - Tint and halo effects for iOS.
 - Keyboard focus and autofocus support.
 
@@ -294,13 +294,26 @@ export type OnKeyPress = NativeSyntheticEvent<{
 ```
 
 ## Roadmap
-ToDo
+- Update the example to the new version (0.75.x).
+- TintColor component for controlling the tint color of scrollable components on iOS.
+- Update events from direct to bubbling to improve control of keyboard functionality.
+- Add keyboard focus order. Check for the possibility of implementing a focus order to enhance navigation across components.
+- Add PreferableFocusEnvironment component. Managing focus on iOS can be tricky and relies on preferredFocusEnvironments; this component should help manage keyboard focus in uncommon cases.
+- Create the documentation.
 
 ## Contributing
 ToDo
 
 ## Acknowledgements
-ToDo
+It has been a long journey since the first release of the `react-native-external-keyboard` package. Many features have been added, and a lot of issues have been fixed.
+
+With that, I would like to thank the contributors, those who created issues, and the followers, because achieving these results wouldn't have been possible without you.
+
+Thanks to the initial authors: [Andrii Koval](https://github.com/ZioVio), [Michail Chavkin](https://github.com/mchavkin), [Dzmitry Khamitsevich](https://github.com/bulletxenus).
+Thanks to the contributors: [Stéphane](https://github.com/stephane-r).
+Thanks to those who created issues: [Stéphane](https://github.com/stephane-r), [proohit](https://github.com/proohit), [Rananjaya Bandara](https://github.com/Rananjaya), [SteveHoneckPGE](https://github.com/SteveHoneckPGE), [Wes](https://github.com/mrpoodestump)
+
+I really appreciate your help; it has truly helped me move forward!
 
 ## License
 
