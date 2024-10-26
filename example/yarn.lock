@@ -3604,6 +3604,11 @@ react-devtools-core@^4.26.1:
     shell-quote "^1.6.1"
     ws "^7"
 
+react-freeze@^1.0.0:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-freeze/-/react-freeze-1.0.4.tgz#cbbea2762b0368b05cbe407ddc9d518c57c6f3ad"
+  integrity sha512-r4F0Sec0BLxWicc7HEyo2x3/2icUTrRmDjaaRyzzn+7aDyFZliszMDOgLVwSnQnYENOlL1o569Ze2HZefk8clA==
+
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
@@ -3643,6 +3648,19 @@ react-native-gradle-plugin@^0.71.19:
   version "0.71.19"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz#3379e28341fcd189bc1f4691cefc84c1a4d7d232"
   integrity sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==
+
+react-native-safe-area-context@^4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.11.1.tgz#dae959f4512ca125f087a44c16b2c23de10b0e29"
+  integrity sha512-urF1m4nFiZFaWjsv2zj8J/hKvo4b2tJW+6CYU1mY4lKv1RwhG2eV8J/EHKuNlLhATZx3+6j7szrpHrQW2ZcAaQ==
+
+react-native-screens@^3.34.1:
+  version "3.34.1"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.34.1.tgz#f1c3b7bcb7963a4424a7fe4a0382684518f4ab2b"
+  integrity sha512-pcq/4YEJ9Jy1Ft1DROkIatHr7YawQSq3Q1YKBm1YaFHTSG9L4zrD5JT/8g8JejLy5ldDnVA+HD1eFLIvwYBCJg==
+  dependencies:
+    react-freeze "^1.0.0"
+    warn-once "^0.1.0"
 
 react-native@0.71.11:
   version "0.71.11"

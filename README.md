@@ -300,6 +300,7 @@ export type OnKeyPress = NativeSyntheticEvent<{
 - Add keyboard focus order. Check for the possibility of implementing a focus order to enhance navigation across components.
 - Add PreferableFocusEnvironment component. Managing focus on iOS can be tricky and relies on preferredFocusEnvironments; this component should help manage keyboard focus in uncommon cases.
 - Create the documentation.
+- iOS Halo effect config for customization.
 
 ## Contributing
 Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas.

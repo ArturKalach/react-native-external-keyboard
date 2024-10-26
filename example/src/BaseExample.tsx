@@ -42,11 +42,17 @@ export const BaseExample = () => {
         tintColor="#ff0000"
         haloEffect={true}
         onPress={() => {
-          setShowAutoFocus((show) => !show);
-          // ref.current?.focus();
+          ref.current?.focus();
         }}
       >
         <Text>Jump</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          setShowAutoFocus(true);
+        }}
+      >
+        <Text>Show auto focus component</Text>
       </TouchableOpacity>
       {showAutoFocus && (
         <KeyboardExtendedView autoFocus haloEffect={true}>

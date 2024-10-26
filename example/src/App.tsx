@@ -31,7 +31,7 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   );
 }
 
-export default function App() {
+export function App() {
   return (
     <GestureHandlerRootView style={styles.flex}>
       <NavigationContainer>

@@ -175,15 +175,11 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 
     if (self.superview != nil && controller != nil) {
-//        UIViewController *rootController = RCTKeyWindow().rootViewController;
-//      
-//        if(rootController != controller) {
-            controller.customFocusView = focusingView;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [controller setNeedsFocusUpdate];
-                [controller updateFocusIfNeeded];
-            });
-//        }
+        controller.customFocusView = focusingView;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [controller setNeedsFocusUpdate];
+            [controller updateFocusIfNeeded];
+        });
     }
 }
 
@@ -305,23 +301,10 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)viewControllerChanged:(NSNotification *)notification {
     UIViewController *viewController = notification.object;
-//    UIViewController *viewController = RCTKeyWindow().rootViewController;
     if (self.autoFocus && !_isAttachedToController) {
         _isAttachedToController = YES;
         [self updateFocus: viewController];
     }
-//    if (self.superview != nil && self.autoFocus && !_isAttachedToController) {
-//        _isAttachedToController = YES;
-//        if(viewController) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                viewController.customFocusView = self;
-//                [viewController setNeedsFocusUpdate];
-//                [viewController updateFocusIfNeeded];
-//                [self setNeedsFocusUpdate];
-//                [self updateFocusIfNeeded];
-//            });
-//        }
-//    }
 }
 
 
