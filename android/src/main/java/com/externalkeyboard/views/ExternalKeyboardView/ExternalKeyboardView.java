@@ -5,7 +5,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.externalkeyboard.events.EventHelper;
 
 import com.externalkeyboard.helper.FocusHelper;
@@ -31,10 +30,14 @@ public class ExternalKeyboardView extends ReactViewGroup {
 
 
   private boolean onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
-    if(!(reactViewGroup instanceof ExternalKeyboardView)) return false;
-    ExternalKeyboardView viewGroup = (ExternalKeyboardView)reactViewGroup;
+    if (!(reactViewGroup instanceof ExternalKeyboardView)) return false;
+    ExternalKeyboardView viewGroup = (ExternalKeyboardView) reactViewGroup;
 
     if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
+      return false;
+    }
+
+    if (keyCode == KeyEvent.KEYCODE_TAB) {
       return false;
     }
 
@@ -54,7 +57,6 @@ public class ExternalKeyboardView extends ReactViewGroup {
   }
 
 
-
   @Override
   protected void onAttachedToWindow() {
     super.onAttachedToWindow();
@@ -62,14 +64,13 @@ public class ExternalKeyboardView extends ReactViewGroup {
     this.listeningView = getFocusingView();
     setFocusable(this.listeningView == this);
 
-    this.listeningView.setOnFocusChangeListener(
-      (focusedView, hasFocus) -> {
-        EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);
-      });
+    this.listeningView.setOnFocusChangeListener((focusedView, hasFocus) -> {
+      EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);
+    });
 
     this.listeningView.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> onKeyPressHandler(this, keyCode, keyEvent, (ThemedReactContext) context));
 
-    if(autoFocus) {
+    if (autoFocus) {
       this.focus();
     }
   }
@@ -77,7 +78,7 @@ public class ExternalKeyboardView extends ReactViewGroup {
   @Override
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    if(this.listeningView != null) {
+    if (this.listeningView != null) {
       this.listeningView.setOnFocusChangeListener(null);
     }
   }
@@ -88,9 +89,7 @@ public class ExternalKeyboardView extends ReactViewGroup {
   }
 
   public void setCanBeFocused(boolean canBeFocused) {
-    int descendantFocusability = canBeFocused ?
-      ViewGroup.FOCUS_BEFORE_DESCENDANTS
-      : ViewGroup.FOCUS_BLOCK_DESCENDANTS;
+    int descendantFocusability = canBeFocused ? ViewGroup.FOCUS_BEFORE_DESCENDANTS : ViewGroup.FOCUS_BLOCK_DESCENDANTS;
     this.setDescendantFocusability(descendantFocusability);
   }
 

@@ -32,8 +32,7 @@ public class KeyboardService {
       try {
         int uiManagerType = ViewUtil.getUIManagerType(tag);
         if (uiManagerType == FABRIC) {
-          UIManager fabricUIManager =
-            UIManagerHelper.getUIManager(context, uiManagerType);
+          UIManager fabricUIManager = UIManagerHelper.getUIManager(context, uiManagerType);
           if (fabricUIManager != null) {
             View view = fabricUIManager.resolveView(tag);
             view.requestFocus();

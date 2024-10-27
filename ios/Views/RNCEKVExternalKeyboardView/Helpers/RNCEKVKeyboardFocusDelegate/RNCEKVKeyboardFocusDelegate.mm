@@ -27,7 +27,7 @@
     if(_delegate.isGroup) {
         return _delegate;
     }
-
+    
     if(_delegate.subviews.count > 0 && _delegate.subviews[0].canBecomeFocused) {
         return _delegate.subviews[0];
     }
@@ -80,7 +80,7 @@
     if(context.nextFocusedView == view) {
         return @YES;
     } else if (context.previouslyFocusedView == view) {
-       return @NO;
+        return @NO;
     }
     
     return nil;

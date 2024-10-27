@@ -1,6 +1,7 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
 import androidx.annotation.Nullable;
+
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
@@ -97,7 +98,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @Override
   public void receiveCommand(ReactViewGroup root, String commandId, @Nullable ReadableArray args) {
     if (commandId.equals("focus")) {
-      this.focus((ExternalKeyboardView)root);
+      this.focus((ExternalKeyboardView) root);
     } else {
       super.receiveCommand(root, commandId, args);
     }

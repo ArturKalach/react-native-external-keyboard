@@ -19,7 +19,7 @@ void SwizzleInstanceMethod(Class swizzleClass, SEL originalSelector, SEL swizzle
                                         originalSelector,
                                         method_getImplementation(swizzledMethod),
                                         method_getTypeEncoding(swizzledMethod));
-
+    
     if (didAddMethod) {
         class_replaceMethod(swizzleClass,
                             swizzledSelector,
@@ -44,16 +44,16 @@ static char kCustomFocusViewKey;
 
 + (void)load
 {
-  static dispatch_once_t once_token;
+    static dispatch_once_t once_token;
     
-  dispatch_once(&once_token, ^{
-      SwizzleInstanceMethod([self class], @selector(viewDidAppear:), @selector(keyboardedViewDidAppear:));
-
-      method_exchangeImplementations(
-          class_getInstanceMethod(self, @selector(preferredFocusEnvironments)),
-          class_getInstanceMethod(self, @selector(keyboardedPreferredFocusEnvironments))
-      );
-  });
+    dispatch_once(&once_token, ^{
+        SwizzleInstanceMethod([self class], @selector(viewDidAppear:), @selector(keyboardedViewDidAppear:));
+        
+        method_exchangeImplementations(
+                                       class_getInstanceMethod(self, @selector(preferredFocusEnvironments)),
+                                       class_getInstanceMethod(self, @selector(keyboardedPreferredFocusEnvironments))
+                                       );
+    });
 }
 
 - (void)keyboardedViewDidAppear:(BOOL)animated {
@@ -63,14 +63,14 @@ static char kCustomFocusViewKey;
 
 - (NSArray<id<UIFocusEnvironment>> *)keyboardedPreferredFocusEnvironments {
     NSArray<id<UIFocusEnvironment>> *originalEnvironments = [self keyboardedPreferredFocusEnvironments];
-
+    
     NSMutableArray *focusEnvironments = [originalEnvironments mutableCopy];
-
+    
     UIView *customFocusView = self.customFocusView;
     if (customFocusView) {
         [focusEnvironments insertObject:customFocusView atIndex:0];
     }
-
+    
     return focusEnvironments;
 }
 

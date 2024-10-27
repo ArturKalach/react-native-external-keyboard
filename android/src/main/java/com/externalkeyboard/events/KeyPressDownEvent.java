@@ -18,7 +18,7 @@ public class KeyPressDownEvent extends Event<KeyPressDownEvent> {
     WritableMap eventPayload = Arguments.createMap();
     eventPayload.putInt("keyCode", keyCode);
     eventPayload.putInt("unicode", unicode);
-    eventPayload.putString("unicodeChar", String.valueOf((char)unicode));
+    eventPayload.putString("unicodeChar", String.valueOf((char) unicode));
     eventPayload.putBoolean("isLongPress", keyEvent.isLongPress());
     eventPayload.putBoolean("isAltPressed", keyEvent.isAltPressed());
     eventPayload.putBoolean("isShiftPressed", keyEvent.isShiftPressed());

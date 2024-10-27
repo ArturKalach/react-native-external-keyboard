@@ -26,7 +26,7 @@ static const float LONG_PRESS_DURATION = 0.5;
 -(NSDictionary*) getKeyPressEventInfo:(NSSet<UIPress *> *)presses
                             withEvent:(UIPressesEvent *)event {
     UIKey *key = presses.allObjects[0].key;
-   
+    
     NSNumber *keyCode = @(key.keyCode);
     unichar unicode = 0;
     NSString *unicodeChar = @"";

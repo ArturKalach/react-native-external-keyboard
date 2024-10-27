@@ -172,8 +172,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)updateFocus: (UIViewController *) controller {
     UIView *focusingView = self; // [_keyboardFocusDelegate getFocusingView];
-
-
+    
+    
     if (self.superview != nil && controller != nil) {
         controller.customFocusView = focusingView;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -186,8 +186,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     _isFocused = [_keyboardFocusDelegate isFocusChanged: context];
-   
-
+    
+    
     if([self hasOnFocusChanged]) {
         if(_isFocused != nil) {
             _isAttachedToWindow = YES;
