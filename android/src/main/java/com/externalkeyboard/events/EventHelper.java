@@ -4,20 +4,33 @@ import android.view.KeyEvent;
 
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
+import com.facebook.react.uimanager.events.EventDispatcher;
 
 public class EventHelper {
   public static void focusChanged(ReactContext context, int id, boolean hasFocus) {
-    FocusChangeEvent event = new FocusChangeEvent(id, hasFocus);
-    UIManagerHelper.getEventDispatcherForReactTag(context, id).dispatchEvent(event);
+    int surfaceId = UIManagerHelper.getSurfaceId(context);
+    FocusChangeEvent event = new FocusChangeEvent(surfaceId, id, hasFocus);
+    EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
+    if (eventDispatcher != null) {
+      eventDispatcher.dispatchEvent(event);
+    }
   }
 
   public static void pressDown(ReactContext context, int id, int keyCode, KeyEvent keyEvent) {
-    KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(id, keyCode, keyEvent);
-    UIManagerHelper.getEventDispatcherForReactTag(context, id).dispatchEvent(keyPressDownEvent);
+    int surfaceId = UIManagerHelper.getSurfaceId(context);
+    KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(surfaceId, id, keyCode, keyEvent);
+    EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
+    if (eventDispatcher != null) {
+      eventDispatcher.dispatchEvent(keyPressDownEvent);
+    }
   }
 
   public static void pressUp(ReactContext context, int id, int keyCode, KeyEvent keyEvent, boolean isLongPress) {
-    KeyPressUpEvent keyPressUpEvent = new KeyPressUpEvent(id, keyCode, keyEvent, isLongPress);
-    UIManagerHelper.getEventDispatcherForReactTag(context, id).dispatchEvent(keyPressUpEvent);
+    int surfaceId = UIManagerHelper.getSurfaceId(context);
+    KeyPressUpEvent keyPressUpEvent = new KeyPressUpEvent(surfaceId, id, keyCode, keyEvent, isLongPress);
+    EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
+    if (eventDispatcher != null) {
+      eventDispatcher.dispatchEvent(keyPressUpEvent);
+    }
   }
 }
