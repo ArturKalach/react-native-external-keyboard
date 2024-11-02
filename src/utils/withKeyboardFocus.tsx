@@ -19,7 +19,6 @@ type KeyboardFocusPress<T = Function, K = Function> = {
   onPressOut?: K;
 };
 
-//ToDo return correct type
 export const withKeyboardFocus = <K, T>(
   Component: React.ComponentType<KeyboardFocusPress<T, K>>
 ) => {

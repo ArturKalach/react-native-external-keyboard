@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { UseKeyboardPressProps } from './useKeyboardPress.types';
-
-//ToDo RNCEKV-5
 import type { OnKeyPress, OnKeyPressFn } from '../../types/BaseKeyboardView';
 
 export const ANDROID_SPACE_KEY_CODE = 62;

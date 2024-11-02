@@ -31,6 +31,4 @@ export {
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { A11yModule, KeyboardExtendedModule } from './services';
 
-export { Tappable } from './components/Touchable/Tappable';
-
 export { useIsViewFocused } from './context/IsViewFocusedContext';

@@ -7,6 +7,11 @@ export type A11yNativeModule = {
 };
 
 export interface IA11yModule {
+  //ToDo RNCEKV-DEPRICATED-0
+  /**
+   * @deprecated The method should not be used
+   * This API is going to be removed in future releases
+   */
   currentFocusedTag?: number;
 
   //ToDo RNCEKV-DEPRICATED-0

@@ -202,7 +202,42 @@ ref->focus | Command to programmatically focus the component | () => void;
 
 
 # Migration 0.3.x to 0.4.0
-ToDo
+
+## Module (A11yModule, KeyboardExtendedModule)
+
+Functions in the `A11yModule` (`KeyboardExtendedModule`) have been deprecated. They appeared appropriate at the time, but with the new architecture and to improve usability, they have been replaced with `ref` actions.
+
+Previous:
+```jsx
+import { KeyboardExtendedModule } from 'react-native-external-keyboard';
+
+KeyboardExtendedModule.setKeyboardFocus(ref); //or A11yModule.setKeyboardFocus(ref);
+```
+
+Updated: 
+```
+import { KeyboardExtendedPressable, type KeyboardFocus } from 'react-native-external-keyboard';
+...
+
+const ref = useRef<KeyboardFocus>(null);
+
+...
+
+const onPressForFocus = () => {
+  ref.current.focus()
+}
+
+<TouchableOpacity
+  ref={ref}
+>
+  <Text>TouchableOpacity</Text>
+</TouchableOpacity>
+
+```
+
+The specific method for iOS, `setPreferredKeyboardFocus`, has not been added so far because we now have the new feature `autoFocus`, which does not fit well with the new API and its approach. It is better to use `autoFocus` for focusing views on both Android and iOS.
+
+If you truly need this method, please create a new issue, and we will consider how to return it.
 
 ## Pressable
 <details>
@@ -216,52 +251,7 @@ This led to two main problems:
 1. Difficulty in updating Pressable for iOS.
 2. Challenges in controlling styles.
 
-For example:
-
-| Android | iOS |
-| ------- | --- |
-```js
-  <KeyboardFocusView
-        style={style}
-        focusStyle={focusStyle}
-        ref={ref}
-        withView={false}
-        onKeyUpPress={onKeyUpPressHandler}
-        onKeyDownPress={onKeyDownHandler}
-        canBeFocused={canBeFocused}
-        onFocusChange={onFocusChange}
-      >
-        <RNPressable
-          onPressOut={onPressOut}
-          onPressIn={onPressIn}
-          onPress={onPressablePressHandler}
-          onLongPress={onLongPress}
-          {...props}
-        />
-      </KeyboardFocusView>
- ```
- |
- ```js
-<KeyboardFocusView
-        {...restPropsWithDefaults}
-        {...eventHandlers}
-        canBeFocused={canBeFocused}
-        onFocusChange={onFocusChange}
-        onKeyUpPress={onKeyUpPress}
-        onKeyDownPress={onKeyDownPress}
-        onContextMenuPress={onLongPress}
-        ref={viewRef}
-        style={typeof style === 'function' ? style({ pressed }) : style}
-        collapsable={false}
-      >
-        {typeof children === 'function' ? children({ pressed }) : children}
-      </KeyboardFocusView> |
-```
-
-For these reasons, we replaced Pressable with `withKeyboardFocus(Pressable)`, as it was the only viable path forward to introduce new features. To ease the migration, a `Tappable` component was added as a temporary substitute.
-
-The `KeyboardExtendedPressable` component is an Android-based version of Pressable that mimics the previous implementation. However, it will also likely be deprecated, possibly with the final release.
-
+For these reasons, we replaced Pressable with `withKeyboardFocus(Pressable)`, as it was the only viable path forward to introduce new features.
 </details>
 
 
