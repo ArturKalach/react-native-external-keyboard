@@ -18,6 +18,7 @@ public class ExternalKeyboardView extends ReactViewGroup {
   public boolean hasKeyDownListener = false;
   public boolean hasKeyUpListener = false;
   public boolean autoFocus = false;
+  public boolean hasBeenFocused = false;
 
   private final KeyboardKeyPressHandler keyboardKeyPressHandler;
   private final Context context;
@@ -71,8 +72,9 @@ public class ExternalKeyboardView extends ReactViewGroup {
 
     this.listeningView.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> onKeyPressHandler(this, keyCode, keyEvent, (ThemedReactContext) context));
 
-    if (autoFocus) {
+    if (autoFocus && !hasBeenFocused) {
       this.autoFocusOnDraw();
+      hasBeenFocused = true;
     }
   }
 
