@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.externalkeyboard.events.EventHelper;
 
@@ -71,8 +72,20 @@ public class ExternalKeyboardView extends ReactViewGroup {
     this.listeningView.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> onKeyPressHandler(this, keyCode, keyEvent, (ThemedReactContext) context));
 
     if (autoFocus) {
-      this.focus();
+      this.autoFocusOnDraw();
     }
+  }
+
+  private void autoFocusOnDraw() {
+    getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+      @Override
+      public boolean onPreDraw() {
+        getViewTreeObserver().removeOnPreDrawListener(this);
+        focus();
+
+        return true;
+      }
+    });
   }
 
   @Override
