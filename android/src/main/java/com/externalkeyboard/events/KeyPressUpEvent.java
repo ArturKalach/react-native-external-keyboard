@@ -8,40 +8,23 @@ import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class KeyPressUpEvent extends Event<KeyPressUpEvent> {
-  public static String EVENT_NAME = "topOnKeyUpPress";
-  public WritableMap mExtraData;
+  public static String EVENT_NAME = "topKeyUpPress";
+  public WritableMap payload;
 
-  public KeyPressUpEvent(int id, int keyCode, KeyEvent keyEvent, boolean isLongPress) {
-    super(id);
+  public KeyPressUpEvent(int surfaceId, int id, int keyCode, KeyEvent keyEvent, boolean isLongPress) {
+    super(surfaceId, id);
 
     int unicode = keyEvent.getUnicodeChar();
-    WritableMap eventPayload = Arguments.createMap();
-    eventPayload.putInt("keyCode", keyCode);
-    eventPayload.putInt("unicode", unicode);
-    eventPayload.putString("unicodeChar", String.valueOf((char)unicode));
-    eventPayload.putBoolean("isLongPress", isLongPress);
-    eventPayload.putBoolean("isAltPressed", keyEvent.isAltPressed());
-    eventPayload.putBoolean("isShiftPressed", keyEvent.isShiftPressed());
-    eventPayload.putBoolean("isCtrlPressed", keyEvent.isCtrlPressed());
-    eventPayload.putBoolean("isCapsLockOn", keyEvent.isCapsLockOn());
-    eventPayload.putBoolean("hasNoModifiers", keyEvent.hasNoModifiers());
-
-    this.mExtraData = eventPayload;
-  }
-
-  @Override
-  public void dispatch(RCTEventEmitter rCTEventEmitter) {
-    rCTEventEmitter.receiveEvent(this.getViewTag(), this.getEventName(), this.mExtraData);
-  }
-
-  @Override
-  public short getCoalescingKey() {
-    return 0;
-  }
-
-  @Override
-  public boolean canCoalesce() {
-    return false;
+    payload = Arguments.createMap();
+    payload.putInt("keyCode", keyCode);
+    payload.putInt("unicode", unicode);
+    payload.putString("unicodeChar", String.valueOf((char) unicode));
+    payload.putBoolean("isLongPress", isLongPress);
+    payload.putBoolean("isAltPressed", keyEvent.isAltPressed());
+    payload.putBoolean("isShiftPressed", keyEvent.isShiftPressed());
+    payload.putBoolean("isCtrlPressed", keyEvent.isCtrlPressed());
+    payload.putBoolean("isCapsLockOn", keyEvent.isCapsLockOn());
+    payload.putBoolean("hasNoModifiers", keyEvent.hasNoModifiers());
   }
 
   @Override
@@ -49,4 +32,8 @@ public class KeyPressUpEvent extends Event<KeyPressUpEvent> {
     return EVENT_NAME;
   }
 
+  @Override
+  public WritableMap getEventData() {
+    return payload;
+  }
 }

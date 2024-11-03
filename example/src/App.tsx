@@ -1,105 +1,56 @@
 import * as React from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { NativeSyntheticEvent, StyleSheet, Text, View } from 'react-native';
-import {
-  KeyboardExtendedBaseView,
-  KeyPress,
-  KeyboardExtendedModule,
-  KeyboardExtendedInput,
-  KeyboardExtendedView,
-  KeyboardExtendedPressable,
-} from 'react-native-external-keyboard';
+import { Home } from './screens/Home/Home';
+import { Button, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 
-export default function App() {
-  const ref = React.useRef(null);
-  const [isKeyDown, setIsKeyDown] = React.useState(true);
-  const [status, setStatus] = React.useState('Not pressed');
-  const [textInput, setTextInput] = React.useState('Text input here!');
-  const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
-
-  const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
-    setIsKeyDown(false);
-    setKeyInfo(e.nativeEvent);
-  };
-  const onKeyDownHandler = (e: NativeSyntheticEvent<KeyPress>) => {
-    setIsKeyDown(true);
-    setKeyInfo(e.nativeEvent);
-  };
-
+export function DetailsScreen() {
   return (
-    <View style={styles.container}>
-      <KeyboardExtendedPressable
-        onPress={() => KeyboardExtendedModule.setKeyboardFocus(ref)}
-      >
-        <Text>Jump</Text>
-      </KeyboardExtendedPressable>
-      <KeyboardExtendedPressable
-        focusStyle={styles.pressFocusStyle}
-        onPress={() => setStatus('onPress')}
-        onPressIn={() => setStatus('onPressIn')}
-        onPressOut={() => setStatus('onPressOut')}
-        onLongPress={() => setStatus('onLongPress')}
-      >
-        <Text>On Press Check: {status}</Text>
-      </KeyboardExtendedPressable>
+    <GestureHandlerRootView style={styles.flex}>
+      <SafeAreaView style={styles.container}>
+        <Home />
+      </SafeAreaView>
+    </GestureHandlerRootView>
+  );
+}
 
-      <KeyboardExtendedView ref={ref}>
-        <Text>Catch</Text>
-      </KeyboardExtendedView>
-      <KeyboardExtendedBaseView
-        onKeyDownPress={onKeyDownHandler}
-        onKeyUpPress={onKeyUpHandler}
-      >
-        <View accessible>
-          <Text>{isKeyDown ? 'Press begin:' : 'Press ended:'}</Text>
-        </View>
-        {Object.keys(keyInfo ?? {}).map((key) => (
-          <View key={key}>
-            {
-              <Text>{`${key}: ${
-                (keyInfo as Record<string, string | number | boolean>)[key] ??
-                ''
-              }`}</Text>
-            }
-          </View>
-        ))}
-      </KeyboardExtendedBaseView>
-      <View style={styles.divider} />
-      <KeyboardExtendedView>
-        <Text>Parent component</Text>
-        <KeyboardExtendedView>
-          <Text>Child component 1</Text>
-        </KeyboardExtendedView>
-        <KeyboardExtendedView>
-          <Text>Child component 2</Text>
-        </KeyboardExtendedView>
-      </KeyboardExtendedView>
-      <KeyboardExtendedInput value={textInput} onChangeText={setTextInput} />
-      <KeyboardExtendedView style={styles.borderExample}>
-        <Text>Border here</Text>
-      </KeyboardExtendedView>
+const Stack = createNativeStackNavigator();
+
+function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  return (
+    <View style={styles.home}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
     </View>
   );
 }
 
+export function App() {
+  return (
+    <GestureHandlerRootView style={styles.flex}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
+  );
+}
+
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f4f4f4',
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-  divider: { height: 10 },
-  pressFocusStyle: { backgroundColor: '#b2c6b7' },
-  borderExample: {
-    marginVertical: 10,
-    borderColor: 'black',
-    borderRadius: 15,
-    borderWidth: 2,
-    padding: 10,
-  },
+  home: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

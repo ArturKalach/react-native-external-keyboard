@@ -6,12 +6,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.externalkeyboard.events.EventHelper;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.UIManagerHelper;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.textinput.ReactEditText;
 
@@ -58,19 +56,6 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     return viewGroup;
   }
 
-  @Nullable
-  @Override
-  public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
-    Map<String, Object> export = MapBuilder.<String, Object>builder().build();
-    if (export == null) {
-      export = MapBuilder.newHashMap();
-    }
-
-    export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
-
-    return export;
-  }
-
   @Override
   @ReactProp(name = "focusType")
   public void setFocusType(TextInputFocusWrapper view, int value) {
@@ -91,9 +76,32 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
+  public void setHaloEffect(TextInputFocusWrapper view, boolean value) {
+    //stub
+  }
+
+  @Override
+  public void setTintColor(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
+  }
+
+  @Override
   public void onDropViewInstance(@NonNull TextInputFocusWrapper viewGroup) {
     viewGroup.setEditText(null);
     viewGroup.setOnFocusChangeListener(null);
     super.onDropViewInstance(viewGroup);
+  }
+
+  @Nullable
+  @Override
+  public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
+    Map<String, Object> export = MapBuilder.<String, Object>builder().build();
+    if (export == null) {
+      export = MapBuilder.newHashMap();
+    }
+
+    export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
+
+    return export;
   }
 }

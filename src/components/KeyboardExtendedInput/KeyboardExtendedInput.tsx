@@ -1,10 +1,22 @@
-import React from 'react';
-import { TextInput, TextInputProps, StyleProp, ViewStyle } from 'react-native';
+import React, { useMemo } from 'react';
+import {
+  View,
+  TextInput,
+  TextInputProps,
+  StyleProp,
+  ViewStyle,
+  StyleSheet,
+} from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
-import type { OnFocusChangeFn } from '../../types/KeyboardFocusView.types';
 import type { FocusStyle } from '../../types/FocusStyle';
-import { useFocusStyle } from '../KeyboardFocusView/hooks';
+import { useFocusStyle } from '../../utils/useFocusStyle';
+import { focusEventMapper } from '../../utils/focusEventMapper';
+import type { TintType } from '../../types/WithKeyboardFocus';
+import {
+  RenderProp,
+  RenderPropComponent,
+} from '../RenderPropComponent/RenderPropComponent';
 
 const focusMap = {
   default: 0,
@@ -22,8 +34,15 @@ export type KeyboardFocusViewProps = TextInputProps & {
   focusType?: keyof typeof focusMap;
   blurType?: keyof typeof blurMap;
   containerStyle?: StyleProp<ViewStyle>;
-  onFocusChange?: OnFocusChangeFn;
+  onFocusChange?: (isFocused: boolean) => void;
   focusStyle?: FocusStyle;
+  haloEffect?: boolean;
+  canBeFocusable?: boolean;
+  focusable?: boolean;
+  tintColor?: string;
+  tintType?: TintType;
+  containerFocusStyle?: FocusStyle;
+  FocusHoverComponent?: RenderProp;
 };
 
 export const KeyboardExtendedInput = React.forwardRef<
@@ -38,29 +57,79 @@ export const KeyboardExtendedInput = React.forwardRef<
       onFocusChange,
       focusStyle,
       style,
+      haloEffect = true,
+      canBeFocusable = true,
+      focusable = true,
+      containerFocusStyle,
+      tintColor,
+      tintType = 'default',
+      FocusHoverComponent,
       ...props
     },
     ref
   ) => {
-    const { fStyle, onFocusChangeHandler } = useFocusStyle(
+    const {
+      focused,
+      containerFocusedStyle,
+      componentFocusedStyle,
+      onFocusChangeHandler,
+      hoverColor,
+    } = useFocusStyle({
+      onFocusChange,
+      tintColor,
       focusStyle,
-      onFocusChange
+      containerFocusStyle,
+      tintType,
+    });
+
+    const withHaloEffect = tintType === 'default' && haloEffect;
+
+    const nativeFocusHandler = useMemo(
+      () => focusEventMapper(onFocusChangeHandler),
+      [onFocusChangeHandler]
     );
+
+    const HoverComonent = useMemo(() => {
+      if (FocusHoverComponent) return FocusHoverComponent;
+      if (tintType === 'hover')
+        return <View style={[hoverColor, styles.absolute, styles.opacity]} />;
+
+      return undefined;
+    }, [FocusHoverComponent, hoverColor, tintType]);
 
     return (
       <TextInputFocusWrapperNative
-        onFocusChange={onFocusChangeHandler}
+        onFocusChange={nativeFocusHandler}
         focusType={focusMap[focusType]}
         blurType={blurMap[blurType]}
-        style={containerStyle}
+        style={[containerStyle, containerFocusedStyle]}
+        haloEffect={withHaloEffect}
+        canBeFocused={canBeFocusable && focusable}
+        tintColor={tintColor}
       >
         <TextInput
           ref={ref}
-          blurOnSubmit={false}
-          style={[style, fStyle]}
+          editable={canBeFocusable && focusable}
+          style={[style, componentFocusedStyle]}
           {...props}
         />
+        {focused && HoverComonent && (
+          <RenderPropComponent render={HoverComonent} />
+        )}
       </TextInputFocusWrapperNative>
     );
   }
 );
+
+const styles = StyleSheet.create({
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  opacity: {
+    opacity: 0.3,
+  },
+});

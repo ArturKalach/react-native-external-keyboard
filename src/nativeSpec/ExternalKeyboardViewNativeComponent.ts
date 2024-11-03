@@ -1,9 +1,11 @@
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 import type { ViewProps } from 'react-native';
 import type {
-  BubblingEventHandler,
+  DirectEventHandler,
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
+import type { ComponentType } from 'react';
+import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
 
 export type FocusChange = Readonly<{
   isFocused: boolean;
@@ -28,14 +30,27 @@ export type KeyPress = Readonly<{
 }>;
 
 export interface ExternalKeyboardNativeProps extends ViewProps {
-  onFocusChange?: BubblingEventHandler<FocusChange>;
-  onKeyUpPress?: BubblingEventHandler<KeyPress>;
-  onKeyDownPress?: BubblingEventHandler<KeyPress>;
+  onFocusChange?: DirectEventHandler<FocusChange>;
+  onKeyUpPress?: DirectEventHandler<KeyPress>;
+  onKeyDownPress?: DirectEventHandler<KeyPress>;
+  onContextMenuPress?: DirectEventHandler<{}>;
   canBeFocused?: boolean;
   hasKeyDownPress?: boolean;
   hasKeyUpPress?: boolean;
-  onContextMenuPress?: BubblingEventHandler<{}>;
+  hasOnFocusChanged?: boolean;
+  autoFocus?: boolean;
+  haloEffect?: boolean;
+  tintColor?: string;
+  group?: boolean;
 }
+
+export interface NativeCommands {
+  focus: (viewRef: React.ElementRef<ComponentType>) => void;
+}
+
+export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
+  supportedCommands: ['focus'],
+});
 
 export default codegenNativeComponent<ExternalKeyboardNativeProps>(
   'ExternalKeyboardView'

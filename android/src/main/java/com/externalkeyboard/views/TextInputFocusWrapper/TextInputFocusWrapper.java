@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.events.EventHelper;
@@ -19,26 +20,54 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private ReactEditText reactEditText = null;
   private boolean focusEventIgnore = false;
   private int focusType = 0;
+  private View.OnAttachStateChangeListener onAttachListener;
+
+  private View.OnAttachStateChangeListener getOnAttachListener() {
+    if (onAttachListener == null) {
+      onAttachListener = new View.OnAttachStateChangeListener() {
+        @Override
+        public void onViewAttachedToWindow(@NonNull View view) {
+          view.setFocusable(false);
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(@NonNull View view) {
+        }
+      };
+    }
+    return onAttachListener;
+  }
+
+  private void clearEditText() {
+    if (this.reactEditText != null) {
+      this.reactEditText.setOnFocusChangeListener(null);
+      if (onAttachListener != null) {
+        this.reactEditText.removeOnAttachStateChangeListener(onAttachListener);
+      }
+    }
+    this.reactEditText = null;
+  }
 
   public void setEditText(ReactEditText editText) {
-    if(editText != null) {
+    if (editText != null) {
       this.reactEditText = editText;
-      if(focusType == FOCUS_BY_PRESS) {
+      this.reactEditText.addOnAttachStateChangeListener(getOnAttachListener());
+      if (focusType == FOCUS_BY_PRESS) {
         this.reactEditText.setFocusable(false);
       }
     } else {
-      this.reactEditText.setOnFocusChangeListener(null);
+      this.clearEditText();
     }
   }
 
   @Override
   public void onFocusChange(View v, boolean hasFocus) {
-    if(!this.focusEventIgnore){
-      EventHelper.focusChanged((ReactContext)  context, this.getId(), hasFocus);
+    if (!this.focusEventIgnore) {
+      EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);
     }
   }
 
-  public void subscribeOnFocus () {
+  public void subscribeOnFocus() {
     this.setOnFocusChangeListener(this);
   }
 
@@ -55,23 +84,12 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     this.context = context;
   }
 
-  public TextInputFocusWrapper(Context context, @Nullable AttributeSet attrs) {
-    super(context, attrs);
-    this.context = context;
-  }
-
-  public TextInputFocusWrapper(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    this.context = context;
-  }
-
-
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if(focusType == FOCUS_BY_PRESS) {
+    if (focusType == FOCUS_BY_PRESS) {
       this.reactEditText.setFocusable(false);
     }
-    if(focusType == FOCUS_BY_PRESS && keyCode == KeyEvent.KEYCODE_SPACE) {
+    if (keyCode == KeyEvent.KEYCODE_SPACE) {
       this.handleTextInputFocus();
     }
     return super.onKeyDown(keyCode, event);
@@ -80,22 +98,22 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   @Override
   public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
     if ((direction == View.FOCUS_FORWARD || direction == View.FOCUS_BACKWARD) && focusType != FOCUS_BY_PRESS) {
-        this.handleTextInputFocus();
-        return true;
+      this.handleTextInputFocus();
+      return true;
     }
 
     return super.requestFocus(direction, previouslyFocusedRect);
   }
 
-  private void handleTextInputFocus () {
+  private void handleTextInputFocus() {
     this.focusEventIgnore = true;
     this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
       this.focusEventIgnore = false;
-      if(focusType != FOCUS_BY_PRESS || !hasTextEditFocus) {
+      if (focusType != FOCUS_BY_PRESS || !hasTextEditFocus) {
         onFocusChange(textInput, hasTextEditFocus);
       }
 
-      if(!hasTextEditFocus) {
+      if (!hasTextEditFocus) {
         this.setFocusable(true);
         this.reactEditText.setFocusable(false);
       }
