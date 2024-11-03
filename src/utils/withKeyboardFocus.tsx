@@ -30,6 +30,7 @@ export const withKeyboardFocus = <K, T>(
         onLongPress?: T | ((e?: OnKeyPress) => void);
         onPressIn?: K | ((e?: OnKeyPress) => void);
         onPressOut?: K | ((e?: OnKeyPress) => void);
+        disabled?: boolean;
       } & Omit<KeyboardFocusViewProps, 'onPress' | 'onLongPress'> & {
           containerStyle?: StyleProp<ViewStyle>;
           containerFocusStyle?: FocusStyle;
@@ -128,7 +129,6 @@ export const withKeyboardFocus = <K, T>(
                 onLongPress={onLongPress as T}
                 onPressIn={onPressIn as K}
                 onPressOut={onPressOut as K}
-                disabled={!canBeFocused || !focusable}
                 {...(props as T)}
               />
               {focused && HoverComonent && (

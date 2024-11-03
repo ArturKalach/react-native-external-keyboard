@@ -157,6 +157,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 }
 
 - (BOOL)canBecomeFocused {
+    if(!_canBeFocused) NO;
     return [_keyboardFocusDelegate canBecomeFocused];
 }
 
@@ -306,8 +307,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         [self updateFocus: viewController];
     }
 }
-
-
 
 - (void)addSubview:(UIView *)view {
     [super addSubview:view];

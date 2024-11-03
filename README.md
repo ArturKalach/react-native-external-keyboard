@@ -285,6 +285,7 @@ export type OnKeyPress = NativeSyntheticEvent<{
 
 ## Roadmap
 - Update Readme.md
+- Update `focusable` and `disable` state for iOS and Android.
 - Update the example to the new version (0.75.x).
 - TintColor component for controlling the tint color of scrollable components on iOS.
 - Update events from direct to bubbling to improve control of keyboard functionality.
