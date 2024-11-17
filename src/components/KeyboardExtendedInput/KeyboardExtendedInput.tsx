@@ -45,6 +45,7 @@ export type KeyboardFocusViewProps = TextInputProps & {
   tintType?: TintType;
   containerFocusStyle?: FocusStyle;
   FocusHoverComponent?: RenderProp;
+  submitBehavior?: string;
   onSubmitEditing?: (
     e?: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
@@ -70,6 +71,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       tintType = 'default',
       FocusHoverComponent,
       onSubmitEditing,
+      submitBehavior,
       ...props
     },
     ref
@@ -107,6 +109,11 @@ export const KeyboardExtendedInput = React.forwardRef<
       () => onSubmitEditing?.(),
       [onSubmitEditing]
     );
+
+    const blurOnSubmit = submitBehavior
+      ? submitBehavior === 'blurAndSubmit'
+      : props.blurOnSubmit ?? true;
+
     return (
       <TextInputFocusWrapperNative
         onFocusChange={nativeFocusHandler}
@@ -115,7 +122,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         style={[containerStyle, containerFocusedStyle]}
         haloEffect={withHaloEffect}
         multiline={props.multiline}
-        blurOnSubmit={props.blurOnSubmit ?? true}
+        blurOnSubmit={blurOnSubmit}
         onMultiplyTextSubmit={onMultiplyTextSubmit}
         canBeFocused={canBeFocusable && focusable}
         tintColor={tintColor}
@@ -125,6 +132,7 @@ export const KeyboardExtendedInput = React.forwardRef<
           editable={canBeFocusable && focusable}
           style={[style, componentFocusedStyle]}
           onSubmitEditing={onSubmitEditing}
+          submitBehavior={submitBehavior}
           {...props}
         />
         {focused && HoverComonent && (
