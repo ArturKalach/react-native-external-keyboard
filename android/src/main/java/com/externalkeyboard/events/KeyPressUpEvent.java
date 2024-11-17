@@ -5,7 +5,6 @@ import android.view.KeyEvent;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.Event;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 public class KeyPressUpEvent extends Event<KeyPressUpEvent> {
   public static String EVENT_NAME = "topKeyUpPress";

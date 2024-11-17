@@ -27,6 +27,10 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   const modalButtonRef = useRef<KeyboardFocus>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [textInput, setTextInput] = React.useState('Input here!');
+  const [multilineTextInput, setMultilineTextInput] = React.useState(
+    'Multiline input here!'
+  );
+
   const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
   const [showModal, setShowModal] = React.useState(false);
   const [dShow, setDShow] = React.useState(false);
@@ -83,11 +87,21 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       >
         <Text>Pressable: Focus Modal</Text>
       </Pressable>
-      <Text>Label: </Text>
+      <Text>Label: KeyboardExtendedInput </Text>
       <KeyboardExtendedInput
         focusable={true}
         value={textInput}
         onChangeText={setTextInput}
+        containerStyle={styles.doubleBottom}
+        style={styles.input}
+      />
+      <Text>Label: Multiline</Text>
+      <KeyboardExtendedInput
+        focusable={true}
+        value={multilineTextInput}
+        multiline
+        onSubmitEditing={() => console.log('OnSubmitEditing: multiline')}
+        onChangeText={setMultilineTextInput}
         containerStyle={styles.doubleBottom}
         style={styles.input}
       />
