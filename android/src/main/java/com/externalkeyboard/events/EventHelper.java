@@ -33,4 +33,13 @@ public class EventHelper {
       eventDispatcher.dispatchEvent(keyPressUpEvent);
     }
   }
+
+  public static void multiplyTextSubmit(ReactContext context, int id) {
+    int surfaceId = UIManagerHelper.getSurfaceId(context);
+    MultiplyTextSubmit event = new MultiplyTextSubmit(surfaceId, id);
+    EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
+    if (eventDispatcher != null) {
+      eventDispatcher.dispatchEvent(event);
+    }
+  }
 }

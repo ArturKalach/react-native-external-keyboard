@@ -166,6 +166,7 @@ containerStyle | Style for the container | StyleProp<ViewStyle>
 containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
 tintType?: | Tint behavior type | `'default' \\| 'hover' \\| 'background' \\| 'none'`
 FocusHoverComponent?: | Component displayed on focus | `\\| ReactElement  \\| FunctionComponent  \\| (() => ReactElement);`
+onSubmitEditing?: | Extended `onSubmitEditing` for mulitline input | `(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)`
 ...rest | Remaining TextInput props  | `TextInputProps`
 
 

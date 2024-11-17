@@ -15,12 +15,26 @@ RCT_EXPORT_MODULE(TextInputFocusWrapper)
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onFocusChange, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onMultiplyTextSubmit, RCTDirectEventBlock)
 
 RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVTextInputFocusWrapper)
 {
     BOOL value =  json ? [RCTConvert BOOL:json] : YES;
     [view setCanBeFocused: value];
 }
+
+RCT_CUSTOM_VIEW_PROPERTY(blurOnSubmit, BOOL, RNCEKVTextInputFocusWrapper)
+{
+    BOOL value =  json ? [RCTConvert BOOL:json] : YES;
+    [view setBlurOnSubmit: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(multiline, BOOL, RNCEKVTextInputFocusWrapper)
+{
+    BOOL value =  json ? [RCTConvert BOOL:json] : NO;
+    [view setMultiline: value];
+}
+
 
 RCT_CUSTOM_VIEW_PROPERTY(focusType, int, RNCEKVTextInputFocusWrapper)
 {

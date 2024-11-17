@@ -15,10 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 @property BOOL canBeFocused;
+@property BOOL blurOnSubmit;
 @property int focusType;
 @property int blurType;
+@property BOOL multiline;
 
 - (void)onFocusChange:(BOOL)isFocused;
+- (void)onMultiplyTextSubmitHandler;
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -36,8 +40,13 @@ NS_ASSUME_NONNULL_END
 @property BOOL canBeFocused;
 @property int focusType;
 @property int blurType;
+@property BOOL blurOnSubmit;
+@property BOOL multiline;
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
+@property (nonatomic, copy) RCTDirectEventBlock onMultiplyTextSubmit;
 
+- (void)onFocusChange:(BOOL)isFocused;
+- (void)onMultiplyTextSubmitHandler;
 @end
 
 

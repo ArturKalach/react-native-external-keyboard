@@ -8,9 +8,11 @@
 #import "RNCEKVUtils.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
+#import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
 #import <React/RCTTextInputComponentView.h>
 #else
 #import <React/RCTSinglelineTextInputView.h>
+#import <React/RCTMultilineTextInputView.h>
 #endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -86,6 +88,14 @@ static const NSInteger AUTO_BLUR = 2;
         [self setBlurType: newViewProps.blurType];
     }
     
+    if(oldViewProps.blurOnSubmit != newViewProps.blurOnSubmit) {
+        [self setBlurOnSubmit: newViewProps.blurOnSubmit];
+    }
+    
+    if(oldViewProps.multiline != newViewProps.multiline) {
+        [self setMultiline: newViewProps.multiline];
+    }
+
     if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
         BOOL haloState = newViewProps.haloEffect;
         if(![self.isHaloActive isEqual: @(haloState)]) {
@@ -120,12 +130,26 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     };
 }
 
+- (void)onMultiplyTextSubmitHandler {
+    if (_eventEmitter) {
+        auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
+        facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {};
+        viewEventEmitter->onMultiplyTextSubmit(data);
+    };
+}
+
 #else
 
 
 - (void)onFocusChange:(BOOL) isFocused {
     if(self.onFocusChange) {
         self.onFocusChange(@{ @"isFocused": @(isFocused) });
+    }
+}
+
+- (void)onMultiplyTextSubmitHandler {
+    if(self.onMultiplyTextSubmit) {
+        self.onMultiplyTextSubmit(@{});
     }
 }
 
@@ -173,6 +197,20 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     return isTextInput;
 }
 
+- (UIView*)getMultilineTextView: (UIView*)view {
+    UIView* textView = nil;
+#ifdef RCT_NEW_ARCH_ENABLED
+    if([view isKindOfClass: [RCTTextInputComponentView class]]) {
+        textView = ((RCTTextInputComponentView *)view).backedTextInputView;
+    }
+#else
+    if([view isKindOfClass: [RCTMultilineTextInputView class]]) {
+        textView = ((RCTMultilineTextInputView *)view).backedTextInputView;
+    }
+#endif
+    return textView;
+}
+
 - (void)updateHalo {
     if(self.subviews.count == 0) {
         return;
@@ -187,12 +225,38 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     }
 }
 
+
+- (void)pressesBegan:(NSSet<UIPress *> *)presses
+           withEvent:(UIPressesEvent *)event {
+    if (@available(iOS 13.4, *)) {
+        if(self.multiline) {
+            UIKey *key = presses.allObjects[0].key;
+            
+            BOOL isShiftPressed = (key.modifierFlags & UIKeyModifierShift) != 0;
+            BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
+            
+            UIView* textView = [self getMultilineTextView: self.subviews[0]];
+            if(textView && textView.isFirstResponder) {
+                if(!isShiftPressed && isEnter) {
+                    [self onMultiplyTextSubmitHandler];
+                    if(self.blurOnSubmit) {
+                        [textView resignFirstResponder];
+                    }
+                }
+            }
+        }
+    }
+    
+    [super pressesBegan:presses withEvent:event];
+}
+
 // ToDo, check if needed
 #ifndef RCT_NEW_ARCH_ENABLED
 - (void)didMoveToWindow {
     [self updateHalo];
 }
 #endif
+
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];

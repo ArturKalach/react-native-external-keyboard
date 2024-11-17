@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   View,
   TextInput,
@@ -6,6 +6,8 @@ import {
   StyleProp,
   ViewStyle,
   StyleSheet,
+  type NativeSyntheticEvent,
+  type TextInputSubmitEditingEventData,
 } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
@@ -43,6 +45,9 @@ export type KeyboardFocusViewProps = TextInputProps & {
   tintType?: TintType;
   containerFocusStyle?: FocusStyle;
   FocusHoverComponent?: RenderProp;
+  onSubmitEditing?: (
+    e?: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+  ) => void;
 };
 
 export const KeyboardExtendedInput = React.forwardRef<
@@ -64,6 +69,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       tintColor,
       tintType = 'default',
       FocusHoverComponent,
+      onSubmitEditing,
       ...props
     },
     ref
@@ -97,6 +103,10 @@ export const KeyboardExtendedInput = React.forwardRef<
       return undefined;
     }, [FocusHoverComponent, hoverColor, tintType]);
 
+    const onMultiplyTextSubmit = useCallback(
+      () => onSubmitEditing?.(),
+      [onSubmitEditing]
+    );
     return (
       <TextInputFocusWrapperNative
         onFocusChange={nativeFocusHandler}
@@ -104,6 +114,9 @@ export const KeyboardExtendedInput = React.forwardRef<
         blurType={blurMap[blurType]}
         style={[containerStyle, containerFocusedStyle]}
         haloEffect={withHaloEffect}
+        multiline={props.multiline}
+        blurOnSubmit={props.blurOnSubmit ?? true}
+        onMultiplyTextSubmit={onMultiplyTextSubmit}
         canBeFocused={canBeFocusable && focusable}
         tintColor={tintColor}
       >
@@ -111,6 +124,7 @@ export const KeyboardExtendedInput = React.forwardRef<
           ref={ref}
           editable={canBeFocusable && focusable}
           style={[style, componentFocusedStyle]}
+          onSubmitEditing={onSubmitEditing}
           {...props}
         />
         {focused && HoverComonent && (

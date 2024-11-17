@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.events.FocusChangeEvent;
+import com.externalkeyboard.events.MultiplyTextSubmit;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -68,6 +69,18 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     view.setBlurType(value);
   }
 
+  @Override
+  @ReactProp(name = "blurOnSubmit", defaultBoolean = true)
+  public void setBlurOnSubmit(TextInputFocusWrapper view, boolean value) {
+    view.setBlurOnSubmit(value);
+  }
+
+  @Override
+  @ReactProp(name = "multiline")
+  public void setMultiline(TextInputFocusWrapper view, boolean value) {
+    view.setMultiline(value);
+  }
+
 
   @Override
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
@@ -101,6 +114,7 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     }
 
     export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
+    export.put(MultiplyTextSubmit.EVENT_NAME, MapBuilder.of("registrationName", "onMultiplyTextSubmit"));
 
     return export;
   }
