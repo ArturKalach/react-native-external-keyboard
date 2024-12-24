@@ -29,6 +29,8 @@ using namespace facebook::react;
             .isCtrlPressed = [[dictionary valueForKey:@"isCtrlPressed"] boolValue],
             .isCapsLockOn = [[dictionary valueForKey:@"isCapsLockOn"] boolValue],
             .hasNoModifiers = [[dictionary valueForKey:@"hasNoModifiers"] boolValue],
+            .unicode = [[dictionary valueForKey:@"unicode"] intValue],
+            .unicodeChar = [[[dictionary valueForKey:@"unicodeChar"] stringValue] UTF8String],
         };
         viewEventEmitter->onKeyDownPress(data);
     };
@@ -46,6 +48,8 @@ using namespace facebook::react;
             .isCtrlPressed = [[dictionary valueForKey:@"isCtrlPressed"] boolValue],
             .isCapsLockOn = [[dictionary valueForKey:@"isCapsLockOn"] boolValue],
             .hasNoModifiers = [[dictionary valueForKey:@"hasNoModifiers"] boolValue],
+            .unicode = [[dictionary valueForKey:@"unicode"] intValue],
+            .unicodeChar = [[[dictionary valueForKey:@"unicodeChar"] stringValue] UTF8String],
         };
         viewEventEmitter->onKeyUpPress(data);
     };

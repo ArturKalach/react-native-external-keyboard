@@ -1,5 +1,6 @@
 import type { View, ViewProps, NativeSyntheticEvent } from 'react-native';
 import type { KeyPress } from '../nativeSpec/ExternalKeyboardViewNativeComponent';
+import type { RefObject } from 'react';
 
 export type OnKeyPress = NativeSyntheticEvent<KeyPress>;
 
@@ -7,6 +8,7 @@ export type OnKeyPressFn = (e: OnKeyPress) => void;
 export type KeyboardFocus = { focus: () => void };
 export type BaseKeyboardViewType = Partial<View> & KeyboardFocus;
 export type BaseKeyboardViewProps = ViewProps & {
+  viewRef?: RefObject<View>;
   group?: boolean;
   onFocusChange?: (isFocused: boolean, tag?: number) => void;
   onKeyUpPress?: OnKeyPressFn;
