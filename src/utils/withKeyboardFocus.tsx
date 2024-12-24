@@ -61,6 +61,7 @@ export const withKeyboardFocus = <K, T>(
           onBlur,
           containerFocusStyle,
           FocusHoverComponent,
+          viewRef,
           ...props
         },
         ref
@@ -110,6 +111,7 @@ export const withKeyboardFocus = <K, T>(
             <BaseKeyboardView
               style={[containerStyle, containerFocusedStyle]}
               ref={ref}
+              viewRef={viewRef}
               onKeyUpPress={onKeyUpPressHandler}
               onKeyDownPress={onKeyDownPressHandler}
               onFocus={onFocus}

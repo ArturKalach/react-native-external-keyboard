@@ -89,6 +89,8 @@ tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none
 FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
 group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
+ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
+viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
 ...rest | Remaining component props  | `Type of Component`
 
 

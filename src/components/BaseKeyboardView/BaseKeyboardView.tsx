@@ -1,10 +1,18 @@
-import React, { useCallback, useImperativeHandle, useRef } from 'react';
+import React, {
+  ComponentType,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type {
   BaseKeyboardViewProps,
   BaseKeyboardViewType,
 } from '../../types/BaseKeyboardView';
+import type { View } from 'react-native';
+
+type NativeRef = React.ElementRef<ComponentType>;
 
 export const BaseKeyboardView = React.memo(
   React.forwardRef<BaseKeyboardViewType, BaseKeyboardViewProps>(
@@ -20,19 +28,20 @@ export const BaseKeyboardView = React.memo(
         group = false,
         onFocus,
         onBlur,
+        viewRef,
         ...props
       },
       ref
     ) => {
-      const keyboardedRef = useRef(null);
+      const localRef = useRef<View>();
+      const targetRef = viewRef ?? localRef;
 
       useImperativeHandle(ref, () => ({
         focus: () => {
-          if (keyboardedRef.current) {
-            Commands.focus(keyboardedRef.current);
+          if (targetRef?.current) {
+            Commands.focus(targetRef.current as NativeRef);
           }
         },
-        ...(keyboardedRef.current ?? {}),
       }));
 
       const onFocusChangeHandler = useCallback(
@@ -56,7 +65,7 @@ export const BaseKeyboardView = React.memo(
         <ExternalKeyboardViewNative
           {...props}
           haloEffect={haloEffect ?? true}
-          ref={keyboardedRef}
+          ref={targetRef as NativeRef}
           canBeFocused={focusable && canBeFocused}
           autoFocus={autoFocus}
           onKeyDownPress={onKeyDownPress}
