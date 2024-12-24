@@ -3,7 +3,6 @@
 #import "RNCEKVTextInputFocusWrapperManager.h"
 #import "RNCEKVTextInputFocusWrapper.h"
 #import "RCTBridge.h"
-#import "RNCEKVUtils.h"
 
 @implementation RNCEKVTextInputFocusWrapperManager
 
@@ -61,12 +60,11 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVTextInputFocusWrapper)
     }
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(tintColor, NSString, RNCEKVTextInputFocusWrapper)
+RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVTextInputFocusWrapper)
 {
     if (json) {
-        NSString *tintColor = [RCTConvert NSString:json];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        [view setTintColor: resultColor];
+        UIColor *tintColor = [RCTConvert UIColor:json];
+        [view setTintColor: tintColor];
     }
 }
 

@@ -3,7 +3,6 @@
 #import <React/RCTViewManager.h>
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import "RNCEKVKeyboardFocusDelegate.h"
-#import "RNCEKVUtils.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -15,6 +14,7 @@
 
 #import "RCTFabricComponentsPlugins.h"
 #import "RNCEKVFabricEventHelper.h"
+#import <React/RCTConversions.h>
 
 using namespace facebook::react;
 
@@ -109,9 +109,7 @@ using namespace facebook::react;
     }
     
     if(oldViewProps.tintColor != newViewProps.tintColor) {
-        NSString* tintColor = [NSString stringWithUTF8String:newViewProps.tintColor.c_str()];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        self.tintColor = resultColor;
+        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     }
     
     if(oldViewProps.group != newViewProps.group) {

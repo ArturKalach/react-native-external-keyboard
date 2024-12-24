@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   StyleSheet,
+  type ColorValue,
   type NativeSyntheticEvent,
   type TextInputSubmitEditingEventData,
 } from 'react-native';
@@ -41,7 +42,7 @@ export type KeyboardFocusViewProps = TextInputProps & {
   haloEffect?: boolean;
   canBeFocusable?: boolean;
   focusable?: boolean;
-  tintColor?: string;
+  tintColor?: ColorValue;
   tintType?: TintType;
   containerFocusStyle?: FocusStyle;
   FocusHoverComponent?: RenderProp;

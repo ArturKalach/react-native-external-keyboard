@@ -1,4 +1,9 @@
-import type { View, ViewProps, NativeSyntheticEvent } from 'react-native';
+import type {
+  View,
+  ViewProps,
+  NativeSyntheticEvent,
+  ColorValue,
+} from 'react-native';
 import type { KeyPress } from '../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type { RefObject } from 'react';
 
@@ -20,5 +25,5 @@ export type BaseKeyboardViewProps = ViewProps & {
   focusable?: boolean;
   onFocus?: () => void;
   onBlur?: () => void;
-  tintColor?: string;
+  tintColor?: ColorValue;
 };

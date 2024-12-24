@@ -1,5 +1,5 @@
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
-import type { ViewProps } from 'react-native';
+import type { ViewProps, ColorValue } from 'react-native';
 import type {
   DirectEventHandler,
   Int32,
@@ -16,7 +16,7 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   blurType?: Int32;
   canBeFocused?: boolean;
   haloEffect?: boolean;
-  tintColor?: string;
+  tintColor?: ColorValue;
   blurOnSubmit?: boolean;
   multiline?: boolean;
 }

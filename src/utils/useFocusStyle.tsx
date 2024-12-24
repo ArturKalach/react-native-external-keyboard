@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Platform } from 'react-native';
+import { Platform, type ColorValue } from 'react-native';
 import type { FocusStyle } from '../types';
 import type { TintType } from '../types/WithKeyboardFocus';
 
@@ -25,7 +25,7 @@ export const useFocusStyle = ({
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
   onFocusChange?: (isFocused: boolean) => void;
-  tintColor?: string;
+  tintColor?: ColorValue;
   tintType?: TintType;
 }) => {
   const [focused, setFocusStatus] = useState(false);

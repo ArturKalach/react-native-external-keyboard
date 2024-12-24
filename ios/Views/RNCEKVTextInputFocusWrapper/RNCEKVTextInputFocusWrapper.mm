@@ -5,7 +5,6 @@
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
-#import "RNCEKVUtils.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -22,7 +21,7 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
-
+#import <React/RCTConversions.h>
 
 #import "RCTFabricComponentsPlugins.h"
 
@@ -104,9 +103,7 @@ static const NSInteger AUTO_BLUR = 2;
     }
     
     if(oldViewProps.tintColor != newViewProps.tintColor) {
-        NSString* tintColor = [NSString stringWithUTF8String:newViewProps.tintColor.c_str()];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        self.tintColor = resultColor;
+        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     }
 }
 
