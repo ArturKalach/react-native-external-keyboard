@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from 'react';
+import React, { type FunctionComponent, type ReactElement } from 'react';
 
 export type RenderProp =
   | ReactElement

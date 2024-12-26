@@ -1,5 +1,5 @@
 import React, {
-  ComponentType,
+  type ComponentType,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -45,7 +45,8 @@ export const BaseKeyboardView = React.memo(
       }));
 
       const onFocusChangeHandler = useCallback(
-        (e) => {
+        //ToDo update types
+        (e: { nativeEvent: { isFocused: boolean; target: number } }) => {
           onFocusChange?.(
             e.nativeEvent.isFocused,
             e?.nativeEvent?.target || undefined
@@ -68,9 +69,11 @@ export const BaseKeyboardView = React.memo(
           ref={targetRef as NativeRef}
           canBeFocused={focusable && canBeFocused}
           autoFocus={autoFocus}
-          onKeyDownPress={onKeyDownPress}
-          onKeyUpPress={onKeyUpPress}
-          onFocusChange={hasOnFocusChanged && onFocusChangeHandler}
+          onKeyDownPress={onKeyDownPress as undefined} //ToDo update types
+          onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
+          onFocusChange={
+            (hasOnFocusChanged && onFocusChangeHandler) as undefined
+          } //ToDo update types
           hasKeyDownPress={Boolean(onKeyDownPress)}
           hasKeyUpPress={Boolean(onKeyUpPress)}
           hasOnFocusChanged={Boolean(hasOnFocusChanged)}

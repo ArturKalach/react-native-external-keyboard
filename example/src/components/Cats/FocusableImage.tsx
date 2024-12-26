@@ -1,9 +1,15 @@
 import React from 'react';
-import { Image, ImageSourcePropType, Platform, StyleSheet } from 'react-native';
+import {
+  Image,
+  type ImageSourcePropType,
+  type DimensionValue,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import {
   Pressable,
-  KeyboardFocus,
-  TintType,
+  type KeyboardFocus,
+  type TintType,
 } from 'react-native-external-keyboard';
 
 const tinyType: TintType | undefined = Platform.select({
@@ -20,7 +26,10 @@ export const FocusableImage = React.forwardRef<
       ref={ref}
       tintType={tinyType}
       tintColor="#ffffff"
-      containerStyle={[styles.container, { width }]}
+      containerStyle={[
+        styles.container,
+        { width: width as DimensionValue | undefined },
+      ]}
     >
       <Image source={source} style={styles.image} />
     </Pressable>

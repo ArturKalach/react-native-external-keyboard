@@ -7,5 +7,5 @@ export {
   TextInputFocusWrapperNative,
   ExternalKeyboardViewNative,
   NativeKeyboardModule,
-  KeyPress,
+  type KeyPress,
 };

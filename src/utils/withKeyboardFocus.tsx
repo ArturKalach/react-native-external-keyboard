@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, StyleProp, ViewStyle, StyleSheet } from 'react-native';
+import { View, type StyleProp, type ViewStyle, StyleSheet } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type { FocusStyle, KeyboardFocusViewProps } from '../types';
 import type { KeyboardFocus, OnKeyPress } from '../types/BaseKeyboardView';

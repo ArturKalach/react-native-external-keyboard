@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback as RNTouchableWithoutFeedback,
 } from 'react-native';
 import {
-  NativeSyntheticEvent,
+  type NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   Text,
@@ -56,7 +56,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         }}
         onLongPress={() => console.log(11)}
         ref={ref}
-        style={styles.pressable}
+        style={styles.pressable as object} //ToDo updat type
         containerStyle={styles.pressableContainer}
       >
         <Text>TouchableOpacity</Text>
@@ -81,7 +81,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
       <Pressable
         // autoFocus
         containerStyle={styles.pressableContainer}
-        style={styles.pressable}
+        style={styles.pressable as object} //ToDo updat type
         onPress={() => modalButtonRef.current?.focus()}
         onLongPress={() => console.log(33)}
       >
@@ -93,7 +93,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         value={textInput}
         onChangeText={setTextInput}
         containerStyle={styles.doubleBottom}
-        style={styles.input}
+        style={styles.input as object} //ToDo updat type
       />
       <Text>Label: Multiline</Text>
       <KeyboardExtendedInput
@@ -103,21 +103,21 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         onSubmitEditing={() => console.log('OnSubmitEditing: multiline')}
         onChangeText={setMultilineTextInput}
         containerStyle={styles.doubleBottom}
-        style={styles.input}
+        style={styles.input as object} //ToDo updat type
       />
       <Text>Key tracker:</Text>
       <Pressable
         ref={modalButtonRef}
         onPress={() => setShowModal(true)}
         containerStyle={styles.pressableContainer}
-        style={styles.pressable}
+        style={styles.pressable as object} //ToDo updat type
       >
         <Text>Modal</Text>
       </Pressable>
       <KeyboardExtendedBaseView
         haloEffect={true}
-        onKeyDownPress={onKeyDownHandler}
-        onKeyUpPress={onKeyUpHandler}
+        onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
+        onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
         style={styles.keyHandler}
       >
         <View>

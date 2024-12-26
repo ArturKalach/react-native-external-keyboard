@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Color } from './Color/Color';
-import { KeyboardFocus, Pressable } from 'react-native-external-keyboard';
+import { type KeyboardFocus, Pressable } from 'react-native-external-keyboard';
 
 const colors: {
   background: string;
@@ -83,7 +83,7 @@ export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
           tintColor="#ff0000"
           tintType="hover"
           ref={index === 0 ? ref : undefined}
-          containerStyle={styles.item}
+          containerStyle={styles.item as object} //ToDo type
         >
           <Color
             color={item.color}

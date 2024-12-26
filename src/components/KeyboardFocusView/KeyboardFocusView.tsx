@@ -9,7 +9,7 @@ import type {
 import { A11yModule } from '../../services';
 import type { TintType } from '../../types/WithKeyboardFocus';
 import {
-  RenderProp,
+  type RenderProp,
   RenderPropComponent,
 } from '../RenderPropComponent/RenderPropComponent';
 import { useFocusStyle } from '../../utils/useFocusStyle';

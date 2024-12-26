@@ -2,9 +2,9 @@ import React, { useCallback, useMemo } from 'react';
 import {
   View,
   TextInput,
-  TextInputProps,
-  StyleProp,
-  ViewStyle,
+  type TextInputProps,
+  type StyleProp,
+  type ViewStyle,
   StyleSheet,
   type ColorValue,
   type NativeSyntheticEvent,
@@ -17,7 +17,7 @@ import { useFocusStyle } from '../../utils/useFocusStyle';
 import { focusEventMapper } from '../../utils/focusEventMapper';
 import type { TintType } from '../../types/WithKeyboardFocus';
 import {
-  RenderProp,
+  type RenderProp,
   RenderPropComponent,
 } from '../RenderPropComponent/RenderPropComponent';
 
@@ -113,11 +113,11 @@ export const KeyboardExtendedInput = React.forwardRef<
 
     const blurOnSubmit = submitBehavior
       ? submitBehavior === 'blurAndSubmit'
-      : props.blurOnSubmit ?? true;
+      : (props.blurOnSubmit ?? true);
 
     return (
       <TextInputFocusWrapperNative
-        onFocusChange={nativeFocusHandler}
+        onFocusChange={nativeFocusHandler as unknown as undefined} //ToDo update type
         focusType={focusMap[focusType]}
         blurType={blurMap[blurType]}
         style={[containerStyle, containerFocusedStyle]}

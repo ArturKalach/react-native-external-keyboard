@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LineButton } from '../../components/LineButton/LineButton';
 import type { KeyboardFocus } from 'react-native-external-keyboard';

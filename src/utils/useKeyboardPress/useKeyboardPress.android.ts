@@ -8,7 +8,7 @@ const MILISECOND_THRESHOLD = 20;
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
-  K extends (event?: any) => void
+  K extends (event?: any) => void,
 >({
   onKeyUpPress,
   onKeyDownPress,

@@ -1,5 +1,5 @@
-export {
+export type {
   KeyboardFocusViewProps,
   OnFocusChangeFn,
 } from './KeyboardFocusView.types';
-export { FocusStateCallbackType, FocusStyle } from './FocusStyle';
+export type { FocusStateCallbackType, FocusStyle } from './FocusStyle';

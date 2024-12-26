@@ -1,11 +1,13 @@
-import * as React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
 import { Button, SafeAreaView, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, NavigationProp } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  type NavigationProp,
+} from '@react-navigation/native';
 
 export function DetailsScreen() {
   return (

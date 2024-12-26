@@ -2,7 +2,7 @@ export { A11yKeyboardModule } from './NativeModules';
 export {
   ExternalKeyboardViewNative,
   TextInputFocusWrapperNative,
-  KeyPress,
+  type KeyPress,
 } from './nativeSpec';
 
 export type {
