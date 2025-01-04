@@ -17,6 +17,7 @@
 
 - (UIView*_Nonnull)getFocusingView;
 - (BOOL)canBecomeFocused;
+- (void)displayHalo;
 - (void)updateHalo;
 - (void)willMoveToSuperview:(nullable UIView *)newSuperview;
 - (nullable NSNumber*)isFocusChanged:(UIFocusUpdateContext *)context;

@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL hasOnPressDown;
 @property BOOL hasOnFocusChanged;
 @property BOOL isGroup;
+@property (nonatomic, assign) CGFloat haloCornerRadius;
+@property (nonatomic, assign) CGFloat haloExpendX;
+@property (nonatomic, assign) CGFloat haloExpendY;
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 @property BOOL autoFocus;
 
@@ -40,6 +43,9 @@ NS_ASSUME_NONNULL_END
 @property BOOL hasOnFocusChanged;
 @property BOOL isGroup;
 @property UIView* myPreferredFocusedView;
+@property (nonatomic, assign) CGFloat haloCornerRadius;
+@property (nonatomic, assign) CGFloat haloExpendX;
+@property (nonatomic, assign) CGFloat haloExpendY;
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
 @property (nonatomic, copy) RCTDirectEventBlock onContextMenuPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;

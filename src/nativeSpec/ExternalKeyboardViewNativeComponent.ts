@@ -2,6 +2,7 @@ import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNati
 import type { ColorValue, ViewProps } from 'react-native';
 import type {
   DirectEventHandler,
+  Float,
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
 import type { ComponentType } from 'react';
@@ -40,6 +41,9 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   hasOnFocusChanged?: boolean;
   autoFocus?: boolean;
   haloEffect?: boolean;
+  haloCornerRadius?: Float;
+  haloExpendX?: Float;
+  haloExpendY?: Float;
   tintColor?: ColorValue;
   group?: boolean;
 }

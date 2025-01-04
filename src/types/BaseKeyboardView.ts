@@ -26,4 +26,7 @@ export type BaseKeyboardViewProps = ViewProps & {
   onFocus?: () => void;
   onBlur?: () => void;
   tintColor?: ColorValue;
+  haloCornerRadius?: number;
+  haloExpendX?: number;
+  haloExpendY?: number;
 };

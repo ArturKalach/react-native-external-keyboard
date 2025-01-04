@@ -32,6 +32,11 @@ using namespace facebook::react;
     BOOL _isAttachedToController;
 }
 
+@synthesize haloCornerRadius = _haloCornerRadius;
+@synthesize haloExpendX = _haloExpendX;
+@synthesize haloExpendY = _haloExpendY;
+
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
@@ -56,6 +61,9 @@ using namespace facebook::react;
     _isAttachedToController = NO;
     _isAttachedToWindow = NO;
     _isHaloActive = @2; //ToDo RNCEKV-0
+    _haloExpendX = 0;
+    _haloExpendY = 0;
+    _haloCornerRadius = 0;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -123,6 +131,18 @@ using namespace facebook::react;
             [self setIsHaloActive: @(haloState)];
         }
     }
+    
+    if(oldViewProps.haloExpendX != newViewProps.haloExpendX) {
+        [self setHaloExpendX: newViewProps.haloExpendX];
+    }
+    
+    if(oldViewProps.haloExpendY != newViewProps.haloExpendY) {
+        [self setHaloExpendY: newViewProps.haloExpendY];
+    }
+    
+    if(oldViewProps.haloCornerRadius != newViewProps.haloCornerRadius) {
+        [self setHaloCornerRadius: newViewProps.haloCornerRadius];
+    }
 }
 
 - (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask {
@@ -171,7 +191,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)updateFocus: (UIViewController *) controller {
     UIView *focusingView = self; // [_keyboardFocusDelegate getFocusingView];
-    
     
     if (self.superview != nil && controller != nil) {
         controller.customFocusView = focusingView;
@@ -275,9 +294,30 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
     _isHaloActive = isHaloActive;
-    [_keyboardFocusDelegate updateHalo];
+    [_keyboardFocusDelegate displayHalo];
 }
 
+
+- (void)setHaloCornerRadius:(CGFloat)haloCornerRadius {
+    _haloCornerRadius = haloCornerRadius;
+    if(_isAttachedToWindow) {
+        [_keyboardFocusDelegate updateHalo];
+    }
+}
+
+- (void)setHaloExpendX:(CGFloat)haloExpendX {
+    _haloExpendX = haloExpendX;
+    if(_isAttachedToWindow) {
+        [_keyboardFocusDelegate updateHalo];
+    }
+}
+
+- (void)setHaloExpendY:(CGFloat)haloExpendY {
+    _haloExpendY = haloExpendY;
+    if(_isAttachedToWindow) {
+        [_keyboardFocusDelegate updateHalo];
+    }
+}
 
 - (void)didMoveToWindow {
     [super didMoveToWindow];
@@ -291,10 +331,23 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ViewControllerChangedNotification" object:nil];
     }
     
-    if(self.window && self.autoFocus && !_isAttachedToWindow) {
-        UIViewController *viewController = self.reactViewController;
-        [self updateFocus: viewController];
+    if(self.window && !_isAttachedToWindow) {
+        [self onViewAttached];
         _isAttachedToWindow = YES;
+    }
+}
+
+- (void)onViewAttached {
+    if(self.autoFocus) {
+        [self updateFocus: self.reactViewController];
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    // ToDo RNCEKV-7 add cache for halo update
+    if(self.bounds.size.width && self.bounds.size.height) {
+      [_keyboardFocusDelegate updateHalo];
     }
 }
 

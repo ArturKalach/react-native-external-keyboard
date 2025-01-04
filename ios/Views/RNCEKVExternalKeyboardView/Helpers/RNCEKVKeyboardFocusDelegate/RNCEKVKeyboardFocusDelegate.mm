@@ -47,10 +47,30 @@
     return [isHaloActive isEqual: @NO];
 }
 
--(void)updateHalo {
+-(void)displayHalo {
     if(@available(iOS 15.0, *)) {
-        UIFocusEffect *focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
-        [self getFocusingView].focusEffect = focusEffect;
+        UIView* focusingView = [self getFocusingView];
+        UIFocusEffect *focusEffect = nil;
+        if([self isHaloHidden]) {
+            [RNCEKVFocusEffectUtility emptyFocusEffect];
+        } else if(_delegate.haloExpendX || _delegate.haloExpendY || _delegate.haloCornerRadius) {
+            [RNCEKVFocusEffectUtility getFocusEffect: focusingView withExpandedX:_delegate.haloExpendX  withExpandedY:_delegate.haloExpendY withCornerRadius:_delegate.haloCornerRadius];
+        }
+        
+        focusingView.focusEffect = focusEffect;
+    }
+}
+
+-(void)updateHalo {
+    if([self isHaloHidden]) return;
+    if(@available(iOS 15.0, *)) {
+        BOOL shouldUpdate = _delegate.haloExpendX || _delegate.haloExpendY || _delegate.haloCornerRadius;
+        if(!shouldUpdate) return;
+        
+        UIView* focusingView = [self getFocusingView];
+        UIFocusEffect *focusEffect = [RNCEKVFocusEffectUtility getFocusEffect: focusingView withExpandedX:_delegate.haloExpendX  withExpandedY:_delegate.haloExpendY withCornerRadius:_delegate.haloCornerRadius];
+        
+        focusingView.focusEffect = focusEffect;
     }
 }
 
@@ -71,8 +91,6 @@
         }
     }
 }
-
-
 
 
 - (NSNumber*)isFocusChanged:(UIFocusUpdateContext *)context {

@@ -15,6 +15,10 @@
 - (NSString *)getFocusGroupIdentifier;
 - (BOOL)canBeFocused;
 - (BOOL)isGroup;
+- (CGFloat) haloCornerRadius;
+- (CGFloat) haloExpendX;
+- (CGFloat) haloExpendY;
+
 @end
 
 #endif /* RNCEKVKeyboardFocusProtocol_h */

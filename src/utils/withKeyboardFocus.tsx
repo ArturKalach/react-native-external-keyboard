@@ -62,6 +62,9 @@ export const withKeyboardFocus = <K, T>(
           containerFocusStyle,
           FocusHoverComponent,
           viewRef,
+          haloCornerRadius,
+          haloExpendX,
+          haloExpendY,
           ...props
         },
         ref
@@ -119,6 +122,9 @@ export const withKeyboardFocus = <K, T>(
               onFocusChange={onFocusChangeHandler}
               onContextMenuPress={onContextMenuHandler}
               haloEffect={withHaloEffect}
+              haloCornerRadius={haloCornerRadius}
+              haloExpendX={haloExpendX}
+              haloExpendY={haloExpendY}
               autoFocus={autoFocus}
               canBeFocused={canBeFocused}
               focusable={focusable}

@@ -63,14 +63,39 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
     if(json) {
         BOOL value = [RCTConvert BOOL:json];
-        if(view.isHaloActive == nil && !value) {
-            [view setIsHaloActive: @0];
-        }
-        if(view.isHaloActive != nil) {
+       if(view.isHaloActive == nil && !value) {
+           [view setIsHaloActive: @0];
+       }
+       if(view.isHaloActive != nil) {
             [view setIsHaloActive: @(value)];
-        }
+       }
     }
 }
+
+RCT_CUSTOM_VIEW_PROPERTY(haloCornerRadius, float, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        CGFloat value = [RCTConvert CGFloat:json];
+        [view setHaloCornerRadius: value];
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(haloExpendX, float, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        CGFloat value = [RCTConvert CGFloat:json];
+        [view setHaloExpendX: value];
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(haloExpendY, float, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        CGFloat value = [RCTConvert CGFloat:json];
+        [view setHaloExpendY: value];
+    }
+}
+
 
 RCT_CUSTOM_VIEW_PROPERTY(group, BOOL, RNCEKVExternalKeyboardView)
 {
