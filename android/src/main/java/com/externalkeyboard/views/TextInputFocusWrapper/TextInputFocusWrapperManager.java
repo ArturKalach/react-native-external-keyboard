@@ -94,7 +94,7 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
-  public void setTintColor(TextInputFocusWrapper view, @Nullable String value) {
+  public void setTintColor(TextInputFocusWrapper view, @Nullable Integer value) {
     //stub
   }
 

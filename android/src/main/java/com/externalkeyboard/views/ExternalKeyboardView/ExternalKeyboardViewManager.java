@@ -81,8 +81,8 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  public void setTintColor(ExternalKeyboardView view, @Nullable String value) {
-    //stub
+  public void setTintColor(ExternalKeyboardView view, @Nullable Integer value) {
+
   }
 
   @Override
