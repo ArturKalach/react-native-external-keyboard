@@ -18,11 +18,17 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
 
   public abstract void setAutoFocus(ExternalKeyboardView view, @Nullable boolean value);
 
-  public abstract void setTintColor(ExternalKeyboardView view, @Nullable String value);
+  public abstract void setTintColor(ExternalKeyboardView view, @Nullable Integer value);
 
   public abstract void setHasOnFocusChanged(ExternalKeyboardView view, boolean value);
 
   public abstract void setHaloEffect(ExternalKeyboardView view, boolean value);
 
   public abstract void setGroup(ExternalKeyboardView view, boolean value);
+
+  public abstract void setHaloCornerRadius(ExternalKeyboardView view, float value);
+
+  public abstract void setHaloExpendX(ExternalKeyboardView view, float value);
+
+  public abstract void setHaloExpendY(ExternalKeyboardView view, float value);
 }

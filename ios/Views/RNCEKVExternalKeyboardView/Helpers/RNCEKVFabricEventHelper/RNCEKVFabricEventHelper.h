@@ -8,7 +8,7 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #ifndef RNCEKVFabricEventHelper_h
 #define RNCEKVFabricEventHelper_h
-#import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
+#import "RNCEKVHeaders.h"
 
 using namespace facebook::react;
 

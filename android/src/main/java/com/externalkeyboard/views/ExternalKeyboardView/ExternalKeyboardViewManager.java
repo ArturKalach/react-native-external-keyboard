@@ -81,6 +81,25 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  @ReactProp(name = "haloCornerRadius")
+  public void setHaloCornerRadius(ExternalKeyboardView view, float value) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "haloExpendX")
+  public void setHaloExpendX(ExternalKeyboardView view, float value) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "haloExpendY")
+  public void setHaloExpendY(ExternalKeyboardView view, float value) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "tintColor")
   public void setTintColor(ExternalKeyboardView view, @Nullable Integer value) {
 
   }

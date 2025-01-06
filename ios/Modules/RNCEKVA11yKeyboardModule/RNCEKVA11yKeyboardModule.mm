@@ -17,7 +17,8 @@
 #import <React/RCTUIManager.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "RNExternalKeyboardViewSpec/RNExternalKeyboardViewSpec.h"
+#import "RNCEKVHeaders.h"
+
 using namespace facebook::react;
 
 #endif
