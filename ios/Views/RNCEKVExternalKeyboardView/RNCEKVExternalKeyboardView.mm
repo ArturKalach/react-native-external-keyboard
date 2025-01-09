@@ -223,6 +223,10 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [RNCEKVFabricEventHelper onContextMenuPressEventEmmiter:_eventEmitter];
 }
 
+- (void)onBubbledContextMenuPressHandler {
+    [RNCEKVFabricEventHelper onBubbledContextMenuPressEventEmmiter:_eventEmitter];
+}
+
 - (void)onFocusChangeHandler:(BOOL) isFocused {
     [RNCEKVFabricEventHelper onFocusChangeEventEmmiter:isFocused withEmitter:_eventEmitter];
 }
@@ -235,11 +239,24 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [RNCEKVFabricEventHelper onKeyUpPressEventEmmiter:eventInfo withEmitter:_eventEmitter];
 }
 
+- (void)onBubbledKeyDownPressHandler:(NSDictionary*) eventInfo{
+    [RNCEKVFabricEventHelper onBubbledKeyDownPressEventEmmiter:eventInfo withEmitter:_eventEmitter];
+}
+
+- (void)onBubbledKeyUpPressHandler:(NSDictionary*) eventInfo{
+    [RNCEKVFabricEventHelper onBubbledKeyUpPressEventEmmiter:eventInfo withEmitter:_eventEmitter];
+}
 #else
 
 - (void)onContextMenuPressHandler {
     if(self.onContextMenuPress) {
         self.onContextMenuPress(@{});
+    }
+}
+
+- (void)onBubbledContextMenuPressHandler {
+    if(self.onBubbledContextMenuPress) {
+        self.onBubbledContextMenuPress(@{});
     }
 }
 
@@ -255,19 +272,36 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
 }
 
+- (void)onBubbledKeyDownPressHandler:(NSDictionary*) eventInfo{
+    if(self.onBubbledKeyDownPress) {
+        self.onBubbledKeyDownPress(eventInfo);
+    }
+}
+
 - (void)onKeyUpPressHandler:(NSDictionary*) eventInfo{
     if(self.onKeyUpPress) {
         self.onKeyUpPress(eventInfo);
     }
 }
 
+- (void)onBubbledKeyUpPressHandler:(NSDictionary*) eventInfo{
+    if(self.onBubbledKeyUpPress) {
+        self.onBubbledKeyUpPress(eventInfo);
+    }
+}
+
+
 #endif
 
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
+    NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
+    if(_isFocused != nil && [_isFocused isEqual:@YES]) {
+        [self onBubbledKeyDownPressHandler: eventInfo];
+    }
+    
     if(self.hasOnPressUp || self.hasOnPressDown) {
-        NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
         [self onKeyDownPressHandler: eventInfo];
         
         return;
@@ -278,8 +312,12 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)pressesEnded:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
+    NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
+    if(_isFocused != nil && [_isFocused isEqual:@YES]) {
+        [self onBubbledKeyUpPressHandler: eventInfo];
+    }
+    
     if(self.hasOnPressUp || self.hasOnPressDown) {
-        NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
         [self onKeyUpPressHandler: eventInfo];
         
         return;
@@ -363,6 +401,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0)){
     if(_isFocused != nil && [_isFocused isEqual:@YES]) {
         [self onContextMenuPressHandler];
+        [self onBubbledContextMenuPressHandler];
     }
     return nil;
 }

@@ -11,6 +11,8 @@ import type {
   BaseKeyboardViewType,
 } from '../../types/BaseKeyboardView';
 import type { View } from 'react-native';
+import { KeyPressContext } from '../../context/BubbledKeyPressContext';
+import { useBubbledInfo } from './BaseKeyboardView.hooks';
 
 type NativeRef = React.ElementRef<ComponentType>;
 
@@ -21,6 +23,9 @@ export const BaseKeyboardView = React.memo(
         onFocusChange,
         onKeyUpPress,
         onKeyDownPress,
+        onBubbledKeyDownPress,
+        onBubbledKeyUpPress,
+        onBubbledContextMenuPress,
         haloEffect,
         autoFocus,
         canBeFocused = true,
@@ -44,6 +49,12 @@ export const BaseKeyboardView = React.memo(
         },
       }));
 
+      const bubbled = useBubbledInfo({
+        onBubbledKeyDownPress,
+        onBubbledKeyUpPress,
+        onBubbledContextMenuPress,
+      });
+
       const onFocusChangeHandler = useCallback(
         //ToDo update types
         (e: { nativeEvent: { isFocused: boolean; target: number } }) => {
@@ -63,22 +74,27 @@ export const BaseKeyboardView = React.memo(
       const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
 
       return (
-        <ExternalKeyboardViewNative
-          {...props}
-          haloEffect={haloEffect ?? true}
-          ref={targetRef as NativeRef}
-          canBeFocused={focusable && canBeFocused}
-          autoFocus={autoFocus}
-          onKeyDownPress={onKeyDownPress as undefined} //ToDo update types
-          onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
-          onFocusChange={
-            (hasOnFocusChanged && onFocusChangeHandler) as undefined
-          } //ToDo update types
-          hasKeyDownPress={Boolean(onKeyDownPress)}
-          hasKeyUpPress={Boolean(onKeyUpPress)}
-          hasOnFocusChanged={Boolean(hasOnFocusChanged)}
-          group={group}
-        />
+        <KeyPressContext.Provider value={bubbled.context}>
+          <ExternalKeyboardViewNative
+            {...props}
+            haloEffect={haloEffect ?? true}
+            ref={targetRef as NativeRef}
+            canBeFocused={focusable && canBeFocused}
+            autoFocus={autoFocus}
+            onKeyDownPress={onKeyDownPress as undefined} //ToDo update types
+            onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
+            onBubbledKeyDownPress={bubbled.keyDown}
+            onBubbledKeyUpPress={bubbled.keyUp}
+            onBubbledContextMenuPress={bubbled.contextMenu}
+            onFocusChange={
+              (hasOnFocusChanged && onFocusChangeHandler) as undefined
+            } //ToDo update types
+            hasKeyDownPress={Boolean(onKeyDownPress)}
+            hasKeyUpPress={Boolean(onKeyUpPress)}
+            hasOnFocusChanged={Boolean(hasOnFocusChanged)}
+            group={group}
+          />
+        </KeyPressContext.Provider>
       );
     }
   )

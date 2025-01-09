@@ -2,6 +2,7 @@ export { A11yKeyboardModule } from './NativeModules';
 export {
   ExternalKeyboardViewNative,
   TextInputFocusWrapperNative,
+  TintColor,
   type KeyPress,
 } from './nativeSpec';
 
@@ -30,5 +31,4 @@ export {
 } from './components/KeyboardExtendedInput/KeyboardExtendedInput';
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { A11yModule, KeyboardExtendedModule } from './services';
-
 export { useIsViewFocused } from './context/IsViewFocusedContext';

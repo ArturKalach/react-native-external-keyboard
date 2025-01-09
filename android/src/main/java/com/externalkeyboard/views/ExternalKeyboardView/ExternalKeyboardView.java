@@ -45,6 +45,14 @@ public class ExternalKeyboardView extends ReactViewGroup {
 
     KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
 
+    if(pressInfo.firePressDownEvent) {
+      EventHelper.bubbledPressDown((ReactContext) context, viewGroup.getId(), keyCode, keyEvent);
+    }
+
+    if(pressInfo.firePressUpEvent) {
+      EventHelper.bubbledPressUp((ReactContext) context, viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
+    }
+
     if (pressInfo.firePressDownEvent && viewGroup.hasKeyDownListener) {
       EventHelper.pressDown((ReactContext) context, viewGroup.getId(), keyCode, keyEvent);
       return true;

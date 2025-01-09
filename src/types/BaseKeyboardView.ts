@@ -7,7 +7,10 @@ import type {
 import type { KeyPress } from '../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type { RefObject } from 'react';
 
-export type OnKeyPress = NativeSyntheticEvent<KeyPress>;
+export type OnKeyPress = NativeSyntheticEvent<KeyPress> & {
+  nativeEvent?: { target?: number };
+  currentTarget?: { _nativeTag?: number };
+};
 
 export type OnKeyPressFn = (e: OnKeyPress) => void;
 export type KeyboardFocus = { focus: () => void };
@@ -19,6 +22,9 @@ export type BaseKeyboardViewProps = ViewProps & {
   onKeyUpPress?: OnKeyPressFn;
   onKeyDownPress?: OnKeyPressFn;
   onContextMenuPress?: () => void;
+  onBubbledKeyDownPress?: OnKeyPressFn;
+  onBubbledKeyUpPress?: OnKeyPressFn;
+  onBubbledContextMenuPress?: () => void;
   haloEffect?: boolean;
   autoFocus?: boolean;
   canBeFocused?: boolean;

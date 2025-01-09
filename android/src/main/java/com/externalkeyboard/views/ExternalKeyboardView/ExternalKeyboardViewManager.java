@@ -2,6 +2,8 @@ package com.externalkeyboard.views.ExternalKeyboardView;
 
 import androidx.annotation.Nullable;
 
+import com.externalkeyboard.events.BubbledKeyPressDownEvent;
+import com.externalkeyboard.events.BubbledKeyPressUpEvent;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
@@ -12,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.view.ReactViewGroup;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -30,17 +33,45 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     return new ExternalKeyboardView(context);
   }
 
+
+
+
+  public static Map<String, Object> buildDirectEventMap(String registrationName) {
+    Map<String, Object> eventMap = new HashMap<>();
+    eventMap.put("registrationName", registrationName);
+    return eventMap;
+  }
+
+  public static Map<String, String> buildPhasedRegistrationNames(String eventName) {
+    Map<String, String> phasedRegistrationNames = new HashMap<>();
+    phasedRegistrationNames.put("bubbled", eventName);
+    return phasedRegistrationNames;
+  }
+
+  public static Map<String, Object> buildEventMap(String eventName) {
+    Map<String, Object> eventMap = new HashMap<>();
+    eventMap.put("phasedRegistrationNames", buildPhasedRegistrationNames(eventName));
+    return eventMap;
+  }
+
+  @Override
+  public Map<String, Object> getExportedCustomBubblingEventTypeConstants() {
+    Map<String, Object> export = new HashMap<>();
+
+    export.put(BubbledKeyPressUpEvent.EVENT_NAME, buildEventMap("onBubbledKeyUpPress"));
+    export.put(BubbledKeyPressDownEvent.EVENT_NAME, buildEventMap("onBubbledKeyDownPress"));
+
+    return export;
+  }
+
   @Nullable
   @Override
   public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
-    Map<String, Object> export = MapBuilder.<String, Object>builder().build();
-    if (export == null) {
-      export = MapBuilder.newHashMap();
-    }
+    Map<String, Object> export = new HashMap<>();
 
-    export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
-    export.put(KeyPressUpEvent.EVENT_NAME, MapBuilder.of("registrationName", "onKeyUpPress"));
-    export.put(KeyPressDownEvent.EVENT_NAME, MapBuilder.of("registrationName", "onKeyDownPress"));
+    export.put(FocusChangeEvent.EVENT_NAME, buildDirectEventMap("onFocusChange"));
+    export.put(KeyPressUpEvent.EVENT_NAME, buildDirectEventMap("onKeyUpPress"));
+    export.put(KeyPressDownEvent.EVENT_NAME, buildDirectEventMap("onKeyDownPress"));
 
     return export;
   }

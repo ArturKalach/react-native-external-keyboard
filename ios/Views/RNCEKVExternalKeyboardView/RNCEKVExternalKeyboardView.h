@@ -48,8 +48,11 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, assign) CGFloat haloExpendY;
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
 @property (nonatomic, copy) RCTDirectEventBlock onContextMenuPress;
-@property (nonatomic, copy) RCTBubblingEventBlock onKeyUpPress;
-@property (nonatomic, copy) RCTBubblingEventBlock onKeyDownPress;
+@property (nonatomic, copy) RCTDirectEventBlock onKeyUpPress;
+@property (nonatomic, copy) RCTDirectEventBlock onKeyDownPress;
+@property (nonatomic, copy) RCTBubblingEventBlock onBubbledContextMenuPress;
+@property (nonatomic, copy) RCTBubblingEventBlock onBubbledKeyUpPress;
+@property (nonatomic, copy) RCTBubblingEventBlock onBubbledKeyDownPress;
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 - (void)focus;

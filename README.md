@@ -7,11 +7,9 @@ React Native library for enhanced external keyboard support.
 
 ## New Release Features
 
-- `withKeyboardFocus`: an HOC that adds focus capabilities to default pressable components (and some external ones).
-- Tint and halo effects for iOS.
-- Keyboard focus and autofocus support.
-
-- Renaming: Added aliases for components and modules. More [here](#component-aliases)
+- Introduced the `TintColor` component for managing the `tintColor` of components (e.g., `ScrollView`, `TextInput`).
+- Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpendX`, and `haloExpendY` for customizing the appearance of the `Halo Effect`.
+- Enhanced `KeyboardExtendedBaseView` with `onBubbledKeyDownPress`, `onBubbledKeyUpPress`, and `onBubbledContextMenuPress` to improve keyboard control.
 
 iOS | Android
 -- | --
@@ -287,15 +285,12 @@ export type OnKeyPress = NativeSyntheticEvent<{
 ```
 
 ## Roadmap
-- Update Readme.md
-- Update `focusable` and `disable` state for iOS and Android.
-- Update the example to the new version (0.75.x).
-- TintColor component for controlling the tint color of scrollable components on iOS.
-- Update events from direct to bubbling to improve control of keyboard functionality.
-- Add keyboard focus order. Check for the possibility of implementing a focus order to enhance navigation across components.
-- Add PreferableFocusEnvironment component. Managing focus on iOS can be tricky and relies on preferredFocusEnvironments; this component should help manage keyboard focus in uncommon cases.
+- Add functionality to control keyboard focus order.
+- Add `focusGroupIdentifier` for iOS. 
+- Verify and update `focusable` and `disabled` states for iOS and Android.
+- Update `Readme.md`.
 - Create the documentation.
-- iOS Halo effect config for customization.
+- Perfomance optimization
 
 ## Contributing
 Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas.

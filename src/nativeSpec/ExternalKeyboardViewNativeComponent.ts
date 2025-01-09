@@ -1,6 +1,7 @@
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 import type { ColorValue, ViewProps } from 'react-native';
 import type {
+  BubblingEventHandler,
   DirectEventHandler,
   Float,
   Int32,
@@ -35,6 +36,9 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   onKeyUpPress?: DirectEventHandler<KeyPress>;
   onKeyDownPress?: DirectEventHandler<KeyPress>;
   onContextMenuPress?: DirectEventHandler<{}>;
+  onBubbledKeyDownPress?: BubblingEventHandler<KeyPress>;
+  onBubbledKeyUpPress?: BubblingEventHandler<KeyPress>;
+  onBubbledContextMenuPress?: BubblingEventHandler<{}>;
   canBeFocused?: boolean;
   hasKeyDownPress?: boolean;
   hasKeyUpPress?: boolean;
