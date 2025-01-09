@@ -17,10 +17,10 @@ iOS | Android
 
 ## Features
 
-- Keyboard focus control and autofocus
-- Key press event handling
-- Focus control for `TextInput` and `Pressable` components
-- Halo effect and tint color customization for iOS
+- Keyboard focus management and autofocus capabilities.
+- Key press event handling.
+- Focus management for `TextInput` and `Pressable` components.
+- Customization of the `Halo Effect` and `tintColor` for iOS.
 
 ## Installation
 
@@ -89,6 +89,9 @@ group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
 ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
 viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
+onBubbledKeyDownPress | Handler for the bubbled key-down event | `(e: OnKeyPress) => void`
+onBubbledKeyUpPress | Handler for the bubbled key-up event | `(e: OnKeyPress) => void`
+onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 ...rest | Remaining component props  | `Type of Component`
 
 
@@ -127,6 +130,9 @@ onBlur?: | Handler called when the component loses focus | `() => void`
 onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean, tag?: number) => void`
 onKeyUpPress?: | Handler for the key-up event | `(e: OnKeyPress) => void`
 onKeyDownPress?: | Handler for the key-down event | `(e: OnKeyPress) => void`
+onBubbledKeyDownPress | Handler for the bubbled key-down event | `(e: OnKeyPress) => void`
+onBubbledKeyUpPress | Handler for the bubbled key-up event | `(e: OnKeyPress) => void`
+onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 autoFocus?: | Indicates if the component should automatically gain focus | `boolean | undefined`
 focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
 tintColor?: | Color used for tinting the component | `string`
@@ -195,11 +201,29 @@ onFocusChange | Handler called when the component is focused or blurred | `(isFo
 onKeyUpPress | Handler for the key-up event | `(e: OnKeyPress) => void`
 onKeyDownPress | Handler for the key-down event | `(e: OnKeyPress) => void`
 onContextMenuPress?: | Handler for long press events triggered by the context menu command (iOS only) | () => void;
+onBubbledKeyDownPress | Handler for the bubbled key-down event | `(e: OnKeyPress) => void`
+onBubbledKeyUpPress | Handler for the bubbled key-up event | `(e: OnKeyPress) => void`
+onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 haloEffect | Enables halo effect on focus (iOS only) | `boolean \| undefined`
 autoFocus | Indicates if the component should automatically gain focus | `boolean \| undefined`
 tintColor | Color used for tinting the component | `string`
 ref->focus | Command to programmatically focus the component | () => void;
 ...rest | Remaining View props | `View`
+
+### TintColor
+The `TintColor` is a View-based component that can be used for controlling the `tintColor` of child components.
+It can be useful for defining `tintColor` globally or for controlling `tintColor` on groups.
+
+```tsx
+  <TintColor tintColor="orange" style={{ flex: 1 }}>
+    <ScrollView
+      contentContainerStyle={styles.contentContainer}
+      style={styles.container}
+    >
+    ...
+    </ScrollView>
+  </TintColor>
+```
 
 
 # Migration 0.3.x to 0.4.0
