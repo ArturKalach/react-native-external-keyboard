@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property int focusType;
 @property int blurType;
 @property BOOL multiline;
+@property NSString* customGroupId;
 
 - (void)onFocusChange:(BOOL)isFocused;
 - (void)onMultiplyTextSubmitHandler;
@@ -44,6 +45,7 @@ NS_ASSUME_NONNULL_END
 @property BOOL multiline;
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
 @property (nonatomic, copy) RCTDirectEventBlock onMultiplyTextSubmit;
+@property NSString* customGroupId;
 
 - (void)onFocusChange:(BOOL)isFocused;
 - (void)onMultiplyTextSubmitHandler;

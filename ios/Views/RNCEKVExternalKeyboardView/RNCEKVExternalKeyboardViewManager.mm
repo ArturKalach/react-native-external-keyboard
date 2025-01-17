@@ -106,6 +106,13 @@ RCT_CUSTOM_VIEW_PROPERTY(group, BOOL, RNCEKVExternalKeyboardView)
     [view setIsGroup: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setCustomGroupId: value];
+}
+
+
 
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
 {

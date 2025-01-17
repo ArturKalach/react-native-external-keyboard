@@ -50,6 +50,7 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   haloExpendY?: Float;
   tintColor?: ColorValue;
   group?: boolean;
+  groupIdentifier?: string;
 }
 
 export interface NativeCommands {

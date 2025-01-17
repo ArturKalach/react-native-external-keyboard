@@ -65,6 +65,7 @@ export const withKeyboardFocus = <K, T>(
           haloCornerRadius,
           haloExpendX,
           haloExpendY,
+          groupIdentifier,
           ...props
         },
         ref
@@ -130,6 +131,7 @@ export const withKeyboardFocus = <K, T>(
               focusable={focusable}
               tintColor={tintColor}
               group={group}
+              groupIdentifier={groupIdentifier}
             >
               <Component
                 style={[style, componentFocusedStyle]}

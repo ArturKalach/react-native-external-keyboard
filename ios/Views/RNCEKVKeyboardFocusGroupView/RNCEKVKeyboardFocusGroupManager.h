@@ -1,5 +1,5 @@
 //
-//  RNCEKVTintColorViewManager.h
+//  RNCEKVKeyboardFocusGroupManager.h
 //  Pods
 //
 //  Created by Artur Kalach on 24/12/2024.
@@ -9,8 +9,8 @@
 #define RNCEKVTintColorViewManager_h
 
 #import <React/RCTViewManager.h>
-@interface RNCEKVTintColorViewManager : RCTViewManager
+@interface RNCEKVKeyboardFocusGroupManager : RCTViewManager
 @end
 
 
-#endif /* RNCEKVTintColorViewManager_h */
+#endif /* RNCEKVKeyboardFocusGroupManager_h */

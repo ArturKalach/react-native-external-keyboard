@@ -60,6 +60,8 @@ using namespace facebook::react;
     _haloExpendX = 0;
     _haloExpendY = 0;
     _haloCornerRadius = 0;
+    _customGroupId = nil;
+    self.focusGroupIdentifier = nil;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -120,6 +122,11 @@ using namespace facebook::react;
         [self setIsGroup: newViewProps.group];
     }
     
+    if(oldViewProps.groupIdentifier != newViewProps.groupIdentifier) {
+        NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
+        [self setCustomGroupId:newGroupId];
+    }
+    
     //ToDo RNCEKV-0, refactor, condition for halo effect has side effect, recycle is a question. The problem that we have to check the condition, (true means we skip, but when it was false we should reset) and recycle (view is reused and we need to double check whether a new place for view should be with or without halo)
     if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
         BOOL haloState = newViewProps.haloEffect;
@@ -175,11 +182,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     return [_keyboardFocusDelegate canBecomeFocused];
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    [super willMoveToSuperview:newSuperview];
-    [_keyboardFocusDelegate willMoveToSuperview:newSuperview];
-}
-
 - (void)focus {
     UIViewController *viewController = self.reactViewController;
     [self updateFocus: viewController];
@@ -200,8 +202,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     _isFocused = [_keyboardFocusDelegate isFocusChanged: context];
-    
-    
+
     if([self hasOnFocusChanged]) {
         if(_isFocused != nil) {
             _isAttachedToWindow = YES;
@@ -383,6 +384,12 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     if(self.bounds.size.width && self.bounds.size.height) {
       [_keyboardFocusDelegate updateHalo];
     }
+    
+    if (@available(iOS 14.0, *)) {
+        UIView* focusingView = [_keyboardFocusDelegate getFocusingView];
+        NSString* groupId = [self getFocusGroupIdentifier];
+        focusingView.focusGroupIdentifier = groupId;
+    }
 }
 
 - (void)viewControllerChanged:(NSNotification *)notification {
@@ -403,10 +410,14 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         [self onContextMenuPressHandler];
         [self onBubbledContextMenuPressHandler];
     }
+
     return nil;
 }
 
 - (NSString*) getFocusGroupIdentifier {
+    if(_customGroupId) {
+        return _customGroupId;
+    }
 #ifdef RCT_NEW_ARCH_ENABLED
     return  [NSString stringWithFormat:@"app.group.%ld", self.tag];
 #else

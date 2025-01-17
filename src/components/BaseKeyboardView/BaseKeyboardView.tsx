@@ -13,6 +13,7 @@ import type {
 import type { View } from 'react-native';
 import { KeyPressContext } from '../../context/BubbledKeyPressContext';
 import { useBubbledInfo } from './BaseKeyboardView.hooks';
+import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
 
 type NativeRef = React.ElementRef<ComponentType>;
 
@@ -34,12 +35,15 @@ export const BaseKeyboardView = React.memo(
         onFocus,
         onBlur,
         viewRef,
+        groupIdentifier,
         ...props
       },
       ref
     ) => {
       const localRef = useRef<View>();
       const targetRef = viewRef ?? localRef;
+
+      const contextIdentifier = useGroupIdentifierContext();
 
       useImperativeHandle(ref, () => ({
         focus: () => {
@@ -86,6 +90,7 @@ export const BaseKeyboardView = React.memo(
             onBubbledKeyDownPress={bubbled.keyDown}
             onBubbledKeyUpPress={bubbled.keyUp}
             onBubbledContextMenuPress={bubbled.contextMenu}
+            groupIdentifier={groupIdentifier ?? contextIdentifier}
             onFocusChange={
               (hasOnFocusChanged && onFocusChangeHandler) as undefined
             } //ToDo update types

@@ -20,6 +20,7 @@ import {
   type RenderProp,
   RenderPropComponent,
 } from '../RenderPropComponent/RenderPropComponent';
+import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
 
 const focusMap = {
   default: 0,
@@ -47,6 +48,7 @@ export type KeyboardFocusViewProps = TextInputProps & {
   containerFocusStyle?: FocusStyle;
   FocusHoverComponent?: RenderProp;
   submitBehavior?: string;
+  groupIdentifier?: string;
   onSubmitEditing?: (
     e?: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => void;
@@ -73,6 +75,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       FocusHoverComponent,
       onSubmitEditing,
       submitBehavior,
+      groupIdentifier,
       ...props
     },
     ref
@@ -90,6 +93,8 @@ export const KeyboardExtendedInput = React.forwardRef<
       containerFocusStyle,
       tintType,
     });
+
+    const contextIdentifier = useGroupIdentifierContext();
 
     const withHaloEffect = tintType === 'default' && haloEffect;
 
@@ -127,6 +132,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         onMultiplyTextSubmit={onMultiplyTextSubmit}
         canBeFocused={canBeFocusable && focusable}
         tintColor={tintColor}
+        groupIdentifier={groupIdentifier ?? contextIdentifier}
       >
         <TextInput
           ref={ref}

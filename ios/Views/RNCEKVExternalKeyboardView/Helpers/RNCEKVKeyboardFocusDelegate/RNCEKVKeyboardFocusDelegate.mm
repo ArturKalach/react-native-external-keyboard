@@ -74,16 +74,6 @@
     }
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    if (newSuperview) {
-        if (@available(iOS 14.0, *)) {
-            if(_delegate.focusGroupIdentifier == nil) {
-                _delegate.focusGroupIdentifier = [_delegate getFocusGroupIdentifier];
-            }
-        }
-    }
-}
-
 - (void)addSubview:(UIView *)view {
     if (@available(iOS 15.0, *)) {
         if([self isHaloHidden] && [view canBecomeFocused]) {

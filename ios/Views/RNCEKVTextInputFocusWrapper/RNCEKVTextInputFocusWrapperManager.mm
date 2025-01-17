@@ -22,6 +22,12 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVTextInputFocusWrapper)
     [view setCanBeFocused: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setCustomGroupId: value];
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(blurOnSubmit, BOOL, RNCEKVTextInputFocusWrapper)
 {
     BOOL value =  json ? [RCTConvert BOOL:json] : YES;

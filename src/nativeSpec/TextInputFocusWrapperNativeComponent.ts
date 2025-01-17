@@ -19,6 +19,7 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   tintColor?: ColorValue;
   blurOnSubmit?: boolean;
   multiline?: boolean;
+  groupIdentifier?: string;
 }
 
 export default codegenNativeComponent<TextInputFocusWrapperNativeComponent>(

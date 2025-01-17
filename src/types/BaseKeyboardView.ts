@@ -35,4 +35,5 @@ export type BaseKeyboardViewProps = ViewProps & {
   haloCornerRadius?: number;
   haloExpendX?: number;
   haloExpendY?: number;
+  groupIdentifier?: string;
 };

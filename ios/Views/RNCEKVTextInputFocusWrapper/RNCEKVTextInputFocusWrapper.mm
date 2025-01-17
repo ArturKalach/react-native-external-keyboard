@@ -251,6 +251,30 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 #endif
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    // ToDo RNCEKV-7 add cache for halo update
+    
+    if (@available(iOS 14.0, *)) {
+        if(self.subviews.count > 0 && self.subviews[0].subviews.count > 0) {
+            UIView* focusingView = self.subviews[0].subviews[0];
+            NSString* groupId = [self getFocusGroupIdentifier];
+            focusingView.focusGroupIdentifier = groupId;
+        }
+    }
+}
+
+- (NSString*) getFocusGroupIdentifier {
+    if(_customGroupId) {
+        return _customGroupId;
+    }
+#ifdef RCT_NEW_ARCH_ENABLED
+    return  [NSString stringWithFormat:@"app.group.%ld", self.tag];
+#else
+    return [NSString stringWithFormat:@"app.group.%@", self.reactTag];
+#endif
+}
+
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
