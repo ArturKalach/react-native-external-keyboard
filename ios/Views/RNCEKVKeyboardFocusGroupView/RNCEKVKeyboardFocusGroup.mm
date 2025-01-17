@@ -30,6 +30,7 @@ using namespace facebook::react;
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        _isGroupFocused = false;
 #ifdef RCT_NEW_ARCH_ENABLED
         static const auto defaultProps = std::make_shared<const KeyboardFocusGroupProps>();
         _props = defaultProps;
@@ -38,16 +39,51 @@ using namespace facebook::react;
     
     return self;
 }
+- (NSString *)getFocusGroupIdentifierForView:(UIView *)view {
+    id<UIFocusEnvironment> focusEnvironment = view;
+    while (focusEnvironment) {
+        if ([focusEnvironment respondsToSelector:@selector(focusGroupIdentifier)]) {
+            NSString *focusGroupIdentifier = [focusEnvironment focusGroupIdentifier];
+            if (focusGroupIdentifier) {
+                return focusGroupIdentifier;
+            }
+        }
+        focusEnvironment = focusEnvironment.parentFocusEnvironment;
+    }
+    return nil; // No focus group identifier found
+}
+
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     
     [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
-    [UIFocusDebugger focusGroupsForEnvironment: self];
-    
-    
-
+    UIView* focusView = context.nextFocusedView;
+    NSString* nextFocusGroup = context.nextFocusedView.focusGroupIdentifier;
+    NSString* testGroup = [self getFocusGroupIdentifierForView: focusView];
+    BOOL isFocused = [nextFocusGroup isEqual: _customGroupId];
+    if(_isGroupFocused != isFocused){
+        _isGroupFocused = isFocused;
+        [self onFocusChangeHandler: isFocused];
+    }
 }
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    if (@available(iOS 14.0, *)) {
+        if(_customGroupId) {
+            self.focusGroupIdentifier = _customGroupId;
+        }
+    }
+}
+
+- (void)onFocusChangeHandler:(BOOL) isFocused {
+    if(self.onGroupFocusChange) {
+        self.onGroupFocusChange(@{ @"isFocused": @(isFocused) });
+    }
+}
+
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
