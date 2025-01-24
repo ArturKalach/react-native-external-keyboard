@@ -15,19 +15,21 @@ const backgroundTintMap = Platform.select<Partial<Record<TintType, boolean>>>({
 
 const DEFAULT_BACKGROUND_TINT = '#dce3f9';
 
+type UseFocusStyleProps = {
+  focusStyle?: FocusStyle;
+  containerFocusStyle?: FocusStyle;
+  onFocusChange?: (isFocused: boolean) => void;
+  tintColor?: ColorValue;
+  tintType?: TintType;
+};
+
 export const useFocusStyle = ({
   focusStyle,
   onFocusChange,
   containerFocusStyle,
   tintColor,
   tintType = 'default',
-}: {
-  focusStyle?: FocusStyle;
-  containerFocusStyle?: FocusStyle;
-  onFocusChange?: (isFocused: boolean) => void;
-  tintColor?: ColorValue;
-  tintType?: TintType;
-}) => {
+}: UseFocusStyleProps) => {
   const [focused, setFocusStatus] = useState(false);
 
   const onFocusChangeHandler = useCallback(

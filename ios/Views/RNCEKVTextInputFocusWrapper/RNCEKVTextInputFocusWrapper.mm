@@ -5,6 +5,7 @@
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
+#import "RNCEKVGroupIdentifierDelegate.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -33,9 +34,22 @@ using namespace facebook::react;
 static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
-// ToDo RNCEKV-6 TintColor for TextInput
 @implementation RNCEKVTextInputFocusWrapper{
+  RNCEKVGroupIdentifierDelegate* _gIdDelegate;
+}
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+#ifdef RCT_NEW_ARCH_ENABLED
+        static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
+        _props = defaultProps;
+#endif
+      _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
+    }
     
+    return self;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -44,15 +58,7 @@ static const NSInteger AUTO_BLUR = 2;
     return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
-        _props = defaultProps;
-    }
-    
-    return self;
-}
+
 
 - (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
     _isHaloActive = isHaloActive;
@@ -251,28 +257,20 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 #endif
 
+
+- (UIView*)getFocusTargetView {
+  if(self.subviews.count > 0 && self.subviews[0].subviews.count > 0) {
+    UIView* focusingView = self.subviews[0].subviews[0];
+    return focusingView;
+  }
+  
+  return nil;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     // ToDo RNCEKV-7 add cache for halo update
-    
-    if (@available(iOS 14.0, *)) {
-        if(self.subviews.count > 0 && self.subviews[0].subviews.count > 0) {
-            UIView* focusingView = self.subviews[0].subviews[0];
-            NSString* groupId = [self getFocusGroupIdentifier];
-            focusingView.focusGroupIdentifier = groupId;
-        }
-    }
-}
-
-- (NSString*) getFocusGroupIdentifier {
-    if(_customGroupId) {
-        return _customGroupId;
-    }
-#ifdef RCT_NEW_ARCH_ENABLED
-    return  [NSString stringWithFormat:@"app.group.%ld", self.tag];
-#else
-    return [NSString stringWithFormat:@"app.group.%@", self.reactTag];
-#endif
+    [_gIdDelegate updateGroupIdentifier];
 }
 
 

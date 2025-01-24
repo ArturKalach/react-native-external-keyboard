@@ -16,25 +16,6 @@ public class EventHelper {
     }
   }
 
-  public static void bubbledPressDown(ReactContext context, int id, int keyCode, KeyEvent keyEvent) {
-    int surfaceId = UIManagerHelper.getSurfaceId(context);
-    BubbledKeyPressDownEvent keyPressDownEvent = new BubbledKeyPressDownEvent(surfaceId, id, keyCode, keyEvent);
-    EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
-    if (eventDispatcher != null) {
-      eventDispatcher.dispatchEvent(keyPressDownEvent);
-    }
-  }
-
-  public static void bubbledPressUp(ReactContext context, int id, int keyCode, KeyEvent keyEvent, boolean isLongPress) {
-    int surfaceId = UIManagerHelper.getSurfaceId(context);
-    BubbledKeyPressUpEvent keyPressUpEvent = new BubbledKeyPressUpEvent(surfaceId, id, keyCode, keyEvent, isLongPress);
-    EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
-    if (eventDispatcher != null) {
-      eventDispatcher.dispatchEvent(keyPressUpEvent);
-    }
-  }
-
-
   public static void pressDown(ReactContext context, int id, int keyCode, KeyEvent keyEvent) {
     int surfaceId = UIManagerHelper.getSurfaceId(context);
     KeyPressDownEvent keyPressDownEvent = new KeyPressDownEvent(surfaceId, id, keyCode, keyEvent);

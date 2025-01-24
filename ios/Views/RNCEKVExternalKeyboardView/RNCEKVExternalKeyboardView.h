@@ -2,7 +2,9 @@
 #define RNCEKVExternalKeyboardViewNativeComponent_h
 #import "RNCEKVKeyboardKeyPressHandler.h"
 #import <UIKit/UIKit.h>
-#import "RNCEKVKeyboardFocusProtocol.h"
+#import "RNCEKVFocusProtocol.h"
+#import "RNCEKVHaloProtocol.h"
+#import "RNCEKVGroupIdentifierProtocol.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -10,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate, RNCEKVKeyboardFocusProtocol>
+@interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate, RNCEKVHaloProtocol, RNCEKVFocusProtocol, RNCEKVGroupIdentifierProtocol>
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;
@@ -23,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 @property BOOL autoFocus;
 @property NSString* customGroupId;
+- (UIView*)getFocusTargetView;
 
 - (void)focus;
 
@@ -35,7 +38,7 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate, RNCEKVKeyboardFocusProtocol>
+@interface RNCEKVExternalKeyboardView : RCTView <UIContextMenuInteractionDelegate, RNCEKVHaloProtocol, RNCEKVFocusProtocol, RNCEKVGroupIdentifierProtocol>
 
 @property BOOL autoFocus;
 @property BOOL canBeFocused;
@@ -52,9 +55,8 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTDirectEventBlock onKeyUpPress;
 @property (nonatomic, copy) RCTDirectEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onBubbledContextMenuPress;
-@property (nonatomic, copy) RCTBubblingEventBlock onBubbledKeyUpPress;
-@property (nonatomic, copy) RCTBubblingEventBlock onBubbledKeyDownPress;
 @property NSString* customGroupId;
+- (UIView*)getFocusTargetView;
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 - (void)focus;

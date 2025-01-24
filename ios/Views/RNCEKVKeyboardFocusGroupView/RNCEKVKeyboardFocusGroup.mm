@@ -39,6 +39,7 @@ using namespace facebook::react;
     
     return self;
 }
+
 - (NSString *)getFocusGroupIdentifierForView:(UIView *)view {
     id<UIFocusEnvironment> focusEnvironment = view;
     while (focusEnvironment) {
@@ -52,7 +53,6 @@ using namespace facebook::react;
     }
     return nil; // No focus group identifier found
 }
-
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {

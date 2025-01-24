@@ -2,13 +2,10 @@ package com.externalkeyboard.views.ExternalKeyboardView;
 
 import androidx.annotation.Nullable;
 
-import com.externalkeyboard.events.BubbledKeyPressDownEvent;
-import com.externalkeyboard.events.BubbledKeyPressUpEvent;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
 import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -33,9 +30,6 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     return new ExternalKeyboardView(context);
   }
 
-
-
-
   public static Map<String, Object> buildDirectEventMap(String registrationName) {
     Map<String, Object> eventMap = new HashMap<>();
     eventMap.put("registrationName", registrationName);
@@ -52,16 +46,6 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     Map<String, Object> eventMap = new HashMap<>();
     eventMap.put("phasedRegistrationNames", buildPhasedRegistrationNames(eventName));
     return eventMap;
-  }
-
-  @Override
-  public Map<String, Object> getExportedCustomBubblingEventTypeConstants() {
-    Map<String, Object> export = new HashMap<>();
-
-    export.put(BubbledKeyPressUpEvent.EVENT_NAME, buildEventMap("onBubbledKeyUpPress"));
-    export.put(BubbledKeyPressDownEvent.EVENT_NAME, buildEventMap("onBubbledKeyDownPress"));
-
-    return export;
   }
 
   @Nullable
@@ -137,6 +121,11 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
 
   @Override
   public void setGroup(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
+  public void setGroupIdentifier(ExternalKeyboardView view, @Nullable String value) {
     //stub
   }
 

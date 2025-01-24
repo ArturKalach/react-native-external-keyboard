@@ -22,8 +22,6 @@ export type BaseKeyboardViewProps = ViewProps & {
   onKeyUpPress?: OnKeyPressFn;
   onKeyDownPress?: OnKeyPressFn;
   onContextMenuPress?: () => void;
-  onBubbledKeyDownPress?: OnKeyPressFn;
-  onBubbledKeyUpPress?: OnKeyPressFn;
   onBubbledContextMenuPress?: () => void;
   haloEffect?: boolean;
   autoFocus?: boolean;

@@ -1,9 +1,4 @@
-import React, {
-  type ComponentType,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-} from 'react';
+import React, { type ComponentType, useImperativeHandle, useRef } from 'react';
 import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type {
@@ -14,6 +9,7 @@ import type { View } from 'react-native';
 import { KeyPressContext } from '../../context/BubbledKeyPressContext';
 import { useBubbledInfo } from './BaseKeyboardView.hooks';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
+import { useOnFocusChange } from '../../utils/useOnFocusChange';
 
 type NativeRef = React.ElementRef<ComponentType>;
 
@@ -24,8 +20,6 @@ export const BaseKeyboardView = React.memo(
         onFocusChange,
         onKeyUpPress,
         onKeyDownPress,
-        onBubbledKeyDownPress,
-        onBubbledKeyUpPress,
         onBubbledContextMenuPress,
         haloEffect,
         autoFocus,
@@ -53,27 +47,13 @@ export const BaseKeyboardView = React.memo(
         },
       }));
 
-      const bubbled = useBubbledInfo({
-        onBubbledKeyDownPress,
-        onBubbledKeyUpPress,
-        onBubbledContextMenuPress,
-      });
+      const bubbled = useBubbledInfo(onBubbledContextMenuPress);
 
-      const onFocusChangeHandler = useCallback(
-        //ToDo update types
-        (e: { nativeEvent: { isFocused: boolean; target: number } }) => {
-          onFocusChange?.(
-            e.nativeEvent.isFocused,
-            e?.nativeEvent?.target || undefined
-          );
-          if (e.nativeEvent.isFocused) {
-            onFocus?.();
-          } else {
-            onBlur?.();
-          }
-        },
-        [onBlur, onFocus, onFocusChange]
-      );
+      const onFocusChangeHandler = useOnFocusChange({
+        onFocusChange,
+        onFocus,
+        onBlur,
+      });
 
       const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
 
@@ -87,8 +67,6 @@ export const BaseKeyboardView = React.memo(
             autoFocus={autoFocus}
             onKeyDownPress={onKeyDownPress as undefined} //ToDo update types
             onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
-            onBubbledKeyDownPress={bubbled.keyDown}
-            onBubbledKeyUpPress={bubbled.keyUp}
             onBubbledContextMenuPress={bubbled.contextMenu}
             groupIdentifier={groupIdentifier ?? contextIdentifier}
             onFocusChange={
