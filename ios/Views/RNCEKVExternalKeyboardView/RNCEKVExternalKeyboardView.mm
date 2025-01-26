@@ -288,8 +288,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     
     if(self.hasOnPressUp || self.hasOnPressDown) {
         [self onKeyDownPressHandler: eventInfo];
-        
-        return;
     }
     
     [super pressesBegan:presses withEvent:event];
@@ -301,8 +299,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
   
     if(self.hasOnPressUp || self.hasOnPressDown) {
         [self onKeyUpPressHandler: eventInfo];
-        
-        return;
     }
     
     [super pressesEnded:presses withEvent:event];

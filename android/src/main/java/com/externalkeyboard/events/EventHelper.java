@@ -34,9 +34,9 @@ public class EventHelper {
     }
   }
 
-  public static void multiplyTextSubmit(ReactContext context, int id) {
+  public static void multiplyTextSubmit(ReactContext context, int id, String text) {
     int surfaceId = UIManagerHelper.getSurfaceId(context);
-    MultiplyTextSubmit event = new MultiplyTextSubmit(surfaceId, id);
+    MultiplyTextSubmit event = new MultiplyTextSubmit(surfaceId, id, text);
     EventDispatcher eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(context, id);
     if (eventDispatcher != null) {
       eventDispatcher.dispatchEvent(event);

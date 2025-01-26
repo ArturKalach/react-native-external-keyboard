@@ -2,6 +2,7 @@ package com.externalkeyboard.views.TextInputFocusWrapper;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,7 +126,9 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
           if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && !event.isShiftPressed()) {
-           EventHelper.multiplyTextSubmit((ReactContext) context, getId());
+            Editable editableText = reactEditText.getText();
+            String text = editableText == null ? "" : String.valueOf(editableText);
+           EventHelper.multiplyTextSubmit((ReactContext) context, getId(), text);
             if(blurOnSubmit && v instanceof EditText) {
               v.clearFocus();
               return true;

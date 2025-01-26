@@ -9,9 +9,13 @@ export type FocusChange = Readonly<{
   isFocused: boolean;
 }>;
 
+export type MultiplyTextSubmit = Readonly<{
+  text: string;
+}>;
+
 export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   onFocusChange?: DirectEventHandler<FocusChange>;
-  onMultiplyTextSubmit?: DirectEventHandler<{}>;
+  onMultiplyTextSubmit?: DirectEventHandler<MultiplyTextSubmit>;
   focusType?: Int32;
   blurType?: Int32;
   canBeFocused?: boolean;

@@ -1,4 +1,5 @@
 import React, { type ComponentType, useImperativeHandle, useRef } from 'react';
+import { processColor, type ColorValue } from 'react-native';
 import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type {
@@ -30,6 +31,7 @@ export const BaseKeyboardView = React.memo(
         onBlur,
         viewRef,
         groupIdentifier,
+        tintColor,
         ...props
       },
       ref
@@ -57,6 +59,8 @@ export const BaseKeyboardView = React.memo(
 
       const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
 
+      const tintInt = processColor(tintColor);
+
       return (
         <KeyPressContext.Provider value={bubbled.context}>
           <ExternalKeyboardViewNative
@@ -69,6 +73,7 @@ export const BaseKeyboardView = React.memo(
             onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
             onBubbledContextMenuPress={bubbled.contextMenu}
             groupIdentifier={groupIdentifier ?? contextIdentifier}
+            tintColor={tintInt as ColorValue}
             onFocusChange={
               (hasOnFocusChanged && onFocusChangeHandler) as undefined
             } //ToDo update types

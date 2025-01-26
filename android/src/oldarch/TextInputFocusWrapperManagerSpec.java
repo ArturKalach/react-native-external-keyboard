@@ -21,4 +21,6 @@ public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> exte
   public abstract void setBlurOnSubmit(TextInputFocusWrapper view, boolean value);
 
   public abstract void setMultiline(TextInputFocusWrapper view, boolean value);
+
+  public abstract void setGroupIdentifier(TextInputFocusWrapper view, @Nullable String value);
 }

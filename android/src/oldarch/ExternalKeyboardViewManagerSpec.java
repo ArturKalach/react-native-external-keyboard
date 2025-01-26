@@ -31,4 +31,6 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
   public abstract void setHaloExpendX(ExternalKeyboardView view, float value);
 
   public abstract void setHaloExpendY(ExternalKeyboardView view, float value);
+
+  public abstract void setGroupIdentifier(ExternalKeyboardView view, @Nullable String value);
 }

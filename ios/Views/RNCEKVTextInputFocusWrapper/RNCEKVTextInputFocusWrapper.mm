@@ -130,10 +130,13 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     };
 }
 
-- (void)onMultiplyTextSubmitHandler {
+- (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView {
     if (_eventEmitter) {
+      NSString* text = textView != nil ? textView.attributedText.string : @"";
         auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
-        facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {};
+      facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {
+        .text = [text UTF8String]
+      };
         viewEventEmitter->onMultiplyTextSubmit(data);
     };
 }
@@ -147,9 +150,10 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     }
 }
 
-- (void)onMultiplyTextSubmitHandler {
+- (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView {
+    NSString* text = textView != nil ? textView.attributedText.string : @"";
     if(self.onMultiplyTextSubmit) {
-        self.onMultiplyTextSubmit(@{});
+      self.onMultiplyTextSubmit(@{ @"text": text });
     }
 }
 
@@ -238,7 +242,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
             UIView* textView = [self getMultilineTextView: self.subviews[0]];
             if(textView && textView.isFirstResponder) {
                 if(!isShiftPressed && isEnter) {
-                    [self onMultiplyTextSubmitHandler];
+                    [self onMultiplyTextSubmitHandler: textView];
                     if(self.blurOnSubmit) {
                         [textView resignFirstResponder];
                     }

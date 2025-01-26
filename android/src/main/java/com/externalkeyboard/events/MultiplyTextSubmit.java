@@ -6,10 +6,12 @@ import com.facebook.react.uimanager.events.Event;
 
 public class MultiplyTextSubmit extends Event<MultiplyTextSubmit> {
   public static String EVENT_NAME = "topMultiplyTextSubmit";
-  public WritableMap payload = Arguments.createMap();
+  public WritableMap payload;
 
-  public MultiplyTextSubmit(int surfaceId, int id) {
+  public MultiplyTextSubmit(int surfaceId, int id, String text) {
     super(surfaceId, id);
+    payload = Arguments.createMap();
+    payload.putString("text", text);
   }
 
   @Override

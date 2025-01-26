@@ -46,12 +46,10 @@ public class ExternalKeyboardView extends ReactViewGroup {
 
     if (pressInfo.firePressDownEvent && this.hasKeyDownListener) {
       EventHelper.pressDown((ReactContext) context, this.getId(), keyCode, keyEvent);
-      return super.dispatchKeyEvent(keyEvent);
     }
 
     if (pressInfo.firePressUpEvent && this.hasKeyUpListener) {
       EventHelper.pressUp((ReactContext) context, this.getId(), keyCode, keyEvent, pressInfo.isLongPress);
-      return super.dispatchKeyEvent(keyEvent);
     }
 
     return super.dispatchKeyEvent(keyEvent);

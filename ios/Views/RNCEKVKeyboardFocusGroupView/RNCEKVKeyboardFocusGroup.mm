@@ -40,27 +40,25 @@ using namespace facebook::react;
     return self;
 }
 
-- (NSString *)getFocusGroupIdentifierForView:(UIView *)view {
-    id<UIFocusEnvironment> focusEnvironment = view;
-    while (focusEnvironment) {
-        if ([focusEnvironment respondsToSelector:@selector(focusGroupIdentifier)]) {
-            NSString *focusGroupIdentifier = [focusEnvironment focusGroupIdentifier];
-            if (focusGroupIdentifier) {
-                return focusGroupIdentifier;
-            }
-        }
-        focusEnvironment = focusEnvironment.parentFocusEnvironment;
-    }
-    return nil; // No focus group identifier found
-}
+// - (NSString *)getFocusGroupIdentifierForView:(UIView *)view {
+//     id<UIFocusEnvironment> focusEnvironment = view;
+//     while (focusEnvironment) {
+//         if ([focusEnvironment respondsToSelector:@selector(focusGroupIdentifier)]) {
+//             NSString *focusGroupIdentifier = [focusEnvironment focusGroupIdentifier];
+//             if (focusGroupIdentifier) {
+//                 return focusGroupIdentifier;
+//             }
+//         }
+//         focusEnvironment = focusEnvironment.parentFocusEnvironment;
+//     }
+//     return nil; // No focus group identifier found
+// }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     
     [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
-    UIView* focusView = context.nextFocusedView;
     NSString* nextFocusGroup = context.nextFocusedView.focusGroupIdentifier;
-    NSString* testGroup = [self getFocusGroupIdentifierForView: focusView];
     BOOL isFocused = [nextFocusGroup isEqual: _customGroupId];
     if(_isGroupFocused != isFocused){
         _isGroupFocused = isFocused;
@@ -78,11 +76,25 @@ using namespace facebook::react;
     }
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+
+- (void)onFocusChangeHandler:(BOOL) isFocused {
+    if (_eventEmitter) {
+        auto viewEventEmitter = std::static_pointer_cast<KeyboardFocusGroupEventEmitter const>(_eventEmitter);
+        facebook::react::KeyboardFocusGroupEventEmitter::OnGroupFocusChange data = {
+            .isFocused = isFocused,
+        };
+        viewEventEmitter->onGroupFocusChange(data);
+    };
+}
+
+#else
 - (void)onFocusChangeHandler:(BOOL) isFocused {
     if(self.onGroupFocusChange) {
         self.onGroupFocusChange(@{ @"isFocused": @(isFocused) });
     }
 }
+#endif
 
 
 #ifdef RCT_NEW_ARCH_ENABLED
