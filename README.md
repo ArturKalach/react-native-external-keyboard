@@ -7,9 +7,9 @@ React Native library for enhanced external keyboard support.
 
 ## New Release Features
 
-- Introduced the `TintColor` component for managing the `tintColor` of components (e.g., `ScrollView`, `TextInput`).
-- Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpendX`, and `haloExpendY` for customizing the appearance of the `Halo Effect`.
-- Enhanced `KeyboardExtendedBaseView` with `onBubbledKeyDownPress`, `onBubbledKeyUpPress`, and `onBubbledContextMenuPress` to improve keyboard control.
+- Introduced an iOS-specific component: `KeyboardFocusGroup`, a component for managing the `tintColor`, `focusGroupIdentifier`, and group focus.
+- Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpandX`, and `haloExpandY` properties for customizing the appearance of the `Halo Effect`.
+- Enhanced `KeyboardExtendedBaseView` with `onBubbledContextMenuPress` and key press functionality. Key presses can be listened to for a group of components, screens, or pages
 
 iOS | Android
 -- | --
@@ -210,20 +210,44 @@ tintColor | Color used for tinting the component | `string`
 ref->focus | Command to programmatically focus the component | () => void;
 ...rest | Remaining View props | `View`
 
-### TintColor
-The `TintColor` is a View-based component that can be used for controlling the `tintColor` of child components.
-It can be useful for defining `tintColor` globally or for controlling `tintColor` on groups.
+### KeyboardFocusGroup
+The `KeyboardFocusGroup` is a View-based component developed based on the iOS API. It can be used for defining focus groups or setting the `tintColor` globally.
 
 ```tsx
-  <TintColor tintColor="orange" style={{ flex: 1 }}>
+  <KeyboardFocusGroup  
+    tintColor="orange">
     <ScrollView
       contentContainerStyle={styles.contentContainer}
       style={styles.container}
     >
     ...
     </ScrollView>
-  </TintColor>
+  </KeyboardFocusGroup>
+  <KeyboardFocusGroup 
+    focusStyle={{ backgroundColor: 'green' }}
+    onFocusChange={(e) => console.log('green', e)}
+    groupIdentifier="green"
+    tintColor="green"
+  >
+      <Button>
+  </KeyboardFocusGroup>
+  <KeyboardFocusGroup
+    focusStyle={{ backgroundColor: 'yellow' }}
+    onFocusChange={(e) => console.log('yellow', e)}
+    groupIdentifier="yellow"
+    tintColor="yellow"
+  >
+      <Button>
+  </KeyboardFocusGroup>
 ```
+
+Props | Description | Type
+-- | -- | --
+focusStyle? | Style applied to the inner component when it is focused | `FocusStyle`
+onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean) => void;`
+onFocus?: | Handler called when the component is focused  | `() => void`
+onBlur?: | Handler called when the component loses focus | `() => void`
+groupIdentifier?: | Relates to iOS `focusGroupIdentifier`: the identifier of the focus group to which this view belongs| `string`
 
 
 # Migration 0.3.x to 0.4.0

@@ -4,7 +4,7 @@ import { LineButton } from '../../components/LineButton/LineButton';
 import type { KeyboardFocus } from 'react-native-external-keyboard';
 import { Cats } from '../../components/Cats/Cats';
 import { ComponentsExample } from '../../components/ComponentsExample/ComponentsExample';
-import { ContrastColors } from '../../components/ContrastColors/ContrastColors';
+import { FocusGroupExample } from '../../components/ContrastColors/FocusGroupExample';
 
 const Divider = () => (
   <View style={styles.menuDivider}>
@@ -73,7 +73,7 @@ export const Home = () => {
       {selected === 'Components' && (
         <ComponentsExample ref={componentsExampleRef} />
       )}
-      {selected === 'Colors' && <ContrastColors ref={contrastColorsRef} />}
+      {selected === 'Colors' && <FocusGroupExample ref={contrastColorsRef} />}
       {selected === 'Cats' && <Cats ref={catsRef} />}
     </View>
   );

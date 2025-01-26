@@ -35,8 +35,8 @@
         UIFocusEffect *focusEffect = nil;
         if([self isHaloHidden]) {
             focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
-        } else if(_delegate.haloExpendX || _delegate.haloExpendY || _delegate.haloCornerRadius) {
-            [RNCEKVFocusEffectUtility getFocusEffect: focusingView withExpandedX:_delegate.haloExpendX  withExpandedY:_delegate.haloExpendY withCornerRadius:_delegate.haloCornerRadius];
+        } else if (_delegate.haloExpendX || _delegate.haloExpendY || _delegate.haloCornerRadius) {
+            focusEffect= [RNCEKVFocusEffectUtility getFocusEffect: focusingView withExpandedX:_delegate.haloExpendX  withExpandedY:_delegate.haloExpendY withCornerRadius:_delegate.haloCornerRadius];
         }
         
         focusingView.focusEffect = focusEffect;

@@ -7,7 +7,6 @@ import {
   type ViewStyle,
   StyleSheet,
   type ColorValue,
-  processColor,
 } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
@@ -111,8 +110,6 @@ export const KeyboardExtendedInput = React.forwardRef<
       ? submitBehavior === 'blurAndSubmit'
       : (props.blurOnSubmit ?? true);
 
-    const tintInt = processColor(tintColor);
-
     return (
       <TextInputFocusWrapperNative
         onFocusChange={nativeFocusHandler as unknown as undefined} //ToDo update type
@@ -124,7 +121,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         blurOnSubmit={blurOnSubmit}
         onMultiplyTextSubmit={onSubmitEditing}
         canBeFocused={canBeFocusable && focusable}
-        tintColor={tintInt as ColorValue}
+        tintColor={tintColor}
         groupIdentifier={groupIdentifier ?? contextIdentifier}
       >
         <TextInput

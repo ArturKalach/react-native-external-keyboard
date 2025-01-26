@@ -1,8 +1,12 @@
 import React, { forwardRef, useRef } from 'react';
 import {
+  Button,
   Modal,
   TouchableOpacity as RNTouchableOpacity,
   TouchableWithoutFeedback as RNTouchableWithoutFeedback,
+  Switch,
+  TextInput,
+  type TextInputSubmitEditingEventData,
 } from 'react-native';
 import {
   type NativeSyntheticEvent,
@@ -19,11 +23,14 @@ import {
   type KeyPress,
   withKeyboardFocus,
   KeyboardFocusGroup,
+  KeyboardExtendedView,
+  A11yModule,
 } from 'react-native-external-keyboard';
 
 const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 const TouchableWithoutFeedback = withKeyboardFocus(RNTouchableWithoutFeedback);
+
 export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   const modalButtonRef = useRef<KeyboardFocus>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
@@ -45,17 +52,149 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
     setKeyInfo(e.nativeEvent);
   };
 
-  const onKeyDownPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+  const onBubbledKeyDownPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
     console.log('down', e.nativeEvent.keyCode);
   };
 
-  const onKeyUpPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+  const onBubbledKeyUpPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
     console.log('up', e.nativeEvent.keyCode);
   };
 
   const onBubbledContextMenuPressHandler = () => {
     console.log('menu');
   };
+
+  // return (
+  //   <KeyboardExtendedView
+  //     haloEffect={false}
+  //     onBubbledContextMenuPress={() => console.log('bonc')}
+  //     onContextMenuPress={() => console.log('onc')}
+  //     onKeyDownPress={(e) => console.log('keyd', e.nativeEvent.keyCode)}
+  //     group
+  //   >
+  //     <TouchableWithoutFeedback
+  //       haloEffect={false}
+  //       onLongPress={() => console.log('lp')}
+  //       onContextMenuPress={() => console.log('asa')}
+  //       onKeyDownPress={(e) => console.log('key insd', e.nativeEvent.keyCode)}
+  //     >
+  //       <View style={styles.pressable}>
+  //         <Text>TouchableWithoutEffect</Text>
+  //       </View>
+  //     </TouchableWithoutFeedback>
+  //     <Button title="A" onPress={() => console.log('ABBA')} />
+  //     <Button title="B" onPress={() => console.log('BAAB')} />
+  //     <Switch />
+  //   </KeyboardExtendedView>
+  // );
+
+  // return (
+  //   <View style={{ flex: 1 }}>
+  //     <KeyboardFocusGroup
+  //       focusStyle={{ backgroundColor: 'green' }}
+  //       onFocusChange={(e) => console.log('green', e)}
+  //       groupIdentifier="green"
+  //       tintColor="green"
+  //     >
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //     </KeyboardFocusGroup>
+  //     <KeyboardFocusGroup
+  //       focusStyle={{ backgroundColor: 'orange' }}
+  //       onFocusChange={(e) => console.log('orange', e)}
+  //       groupIdentifier="orange"
+  //       tintColor="orange"
+  //     >
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //     </KeyboardFocusGroup>
+  //     <KeyboardFocusGroup
+  //       focusStyle={{ backgroundColor: 'red' }}
+  //       onFocusChange={(e) => console.log('red', e)}
+  //       groupIdentifier="red"
+  //       tintColor="red"
+  //     >
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <TouchableWithoutFeedback
+  //         containerStyle={styles.pressableContainer}
+  //         onPress={() => console.log(2)}
+  //         onLongPress={() => console.log(22)}
+  //       >
+  //         <View style={styles.pressable}>
+  //           <Text>TouchableWithoutEffect</Text>
+  //         </View>
+  //       </TouchableWithoutFeedback>
+  //       <KeyboardExtendedInput />
+  //     </KeyboardFocusGroup>
+  //   </View>
+  // );
 
   return (
     <KeyboardFocusGroup tintColor="orange" style={{ flex: 1 }}>
@@ -64,18 +203,18 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         style={styles.container}
       >
         <KeyboardExtendedBaseView
-          onKeyUpPress={onKeyUpPressHandler}
-          onKeyDownPress={onKeyDownPressHandler}
+          onKeyDownPress={onBubbledKeyDownPressHandler}
+          onKeyUpPress={onBubbledKeyUpPressHandler}
           onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
           style={styles.bubbledWrapper}
         >
           <TouchableOpacity
-            onPress={() => {
-              console.log(1);
+            onPress={(e) => {
+              console.log(1, e.nativeEvent);
               setDShow((v: boolean) => !v);
             }}
             haloExpendX={10}
-            onLongPress={() => console.log(11)}
+            onLongPress={(e) => console.log(11, e.nativeEvent)}
             ref={ref}
             style={styles.pressable as object} //ToDo updat type
             containerStyle={styles.pressableContainer}
@@ -115,6 +254,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             value={textInput}
             onChangeText={setTextInput}
             containerStyle={styles.doubleBottom}
+            multiline
+            onSubmitEditing={(e) => console.log('oNSBM', e.nativeEvent.text)}
             style={styles.input as object} //ToDo updat type
           />
           <Text>Label: Multiline</Text>
