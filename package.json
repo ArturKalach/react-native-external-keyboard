@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.5.0-rc4",
+  "version": "0.5.0-rc5",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -188,14 +188,6 @@
   "codegenConfig": {
     "name": "RNExternalKeyboardViewSpec",
     "type": "all",
-    "jsSrcsDir": "src/nativeSpec",
-    "outputDir": {
-      "ios": "ios/generated",
-      "android": "android/generated"
-    },
-    "android": {
-      "javaPackageName": "com.externalkeyboard"
-    },
-    "includesGeneratedCode": true
+    "jsSrcsDir": "src/nativeSpec"
   }
 }
