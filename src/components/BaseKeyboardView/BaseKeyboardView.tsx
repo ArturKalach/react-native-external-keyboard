@@ -1,4 +1,5 @@
 import React, { type ComponentType, useImperativeHandle, useRef } from 'react';
+import { Platform } from 'react-native';
 import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type {
@@ -12,6 +13,7 @@ import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext'
 import { useOnFocusChange } from '../../utils/useOnFocusChange';
 
 type NativeRef = React.ElementRef<ComponentType>;
+const isIOS = Platform.OS === 'ios';
 
 export const BaseKeyboardView = React.memo(
   React.forwardRef<BaseKeyboardViewType, BaseKeyboardViewProps>(
@@ -70,7 +72,7 @@ export const BaseKeyboardView = React.memo(
             onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
             onBubbledContextMenuPress={bubbled.contextMenu}
             groupIdentifier={groupIdentifier ?? contextIdentifier}
-            tintColor={tintColor}
+            tintColor={isIOS ? tintColor : undefined}
             onFocusChange={
               (hasOnFocusChanged && onFocusChangeHandler) as undefined
             } //ToDo update types

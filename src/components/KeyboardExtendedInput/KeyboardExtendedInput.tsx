@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import {
   View,
   TextInput,
+  Platform,
   type TextInputProps,
   type StyleProp,
   type ViewStyle,
@@ -19,6 +20,8 @@ import {
   RenderPropComponent,
 } from '../RenderPropComponent/RenderPropComponent';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
+
+const isIOS = Platform.OS === 'ios';
 
 const focusMap = {
   default: 0,
@@ -121,7 +124,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         blurOnSubmit={blurOnSubmit}
         onMultiplyTextSubmit={onSubmitEditing}
         canBeFocused={canBeFocusable && focusable}
-        tintColor={tintColor}
+        tintColor={isIOS ? tintColor : undefined}
         groupIdentifier={groupIdentifier ?? contextIdentifier}
       >
         <TextInput
