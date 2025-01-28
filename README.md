@@ -13,7 +13,7 @@ React Native library for enhanced external keyboard support.
 
 iOS | Android
 -- | --
-<img src="/.github/images/ios_example.gif" height="500" /> | <img src="/.github/images/android_example.gif" height="500" />
+<img src="/.github/images/rnek-ios-example" height="500" /> | <img src="/.github/images/rnek-android-example" height="500" />
 
 ## Features
 
