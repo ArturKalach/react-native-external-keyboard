@@ -98,10 +98,11 @@ export const withKeyboardFocus = <K, T>(
 
         const HoverComonent = useMemo(() => {
           if (FocusHoverComponent) return FocusHoverComponent;
-          if (tintType === 'hover')
+          if (tintType === 'hover') {
             return (
               <View style={[hoverColor, styles.absolute, styles.opacity]} />
             );
+          }
 
           return undefined;
         }, [FocusHoverComponent, hoverColor, tintType]);

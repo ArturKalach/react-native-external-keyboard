@@ -28,16 +28,16 @@ const Menu = ({
       />
       <Divider />
       <LineButton
-        onLongPress={() => onLongPress('Cats')}
-        onPress={() => onPress('Cats')}
-        title="Cats"
-      />
-      <Divider />
-      <LineButton
         autoFocus
         onLongPress={() => onLongPress('Colors')}
         onPress={() => onPress('Colors')}
         title="Colors"
+      />
+      <Divider />
+      <LineButton
+        onLongPress={() => onLongPress('Cats')}
+        onPress={() => onPress('Cats')}
+        title="Cats"
       />
     </View>
   );

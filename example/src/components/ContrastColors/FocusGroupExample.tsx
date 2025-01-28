@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
 import {
   Text,
   View,
@@ -9,47 +9,15 @@ import {
 import {
   KeyboardFocusGroup,
   withKeyboardFocus,
+  type KeyboardFocus,
 } from 'react-native-external-keyboard';
 import { Color } from './Color/Color';
 
 const Pressable = withKeyboardFocus(RNPressable);
 
-const OptionButton = ({ onPress, content }) => (
-  <Pressable
-    style={styles.optionButton}
-    onFocus={Platform.OS === 'ios' ? onPress : undefined}
-    onPress={onPress}
-    haloExpendX={5}
-    haloExpendY={5}
-    haloCornerRadius={15}
-  >
-    <Text>{content}</Text>
-  </Pressable>
-);
+type OptionButtonProps = { onPress: () => void; content: string | number };
 
-const FocusItem = ({ radius = 10, onPress, background, color, content }) => {
-  return (
-    <Pressable
-      tintColor={background}
-      haloExpendY={5}
-      haloExpendX={5}
-      onFocus={Platform.OS === 'ios' ? onPress : undefined}
-      onPress={onPress}
-      haloCornerRadius={radius}
-      containerStyle={[
-        styles.focusItemContainer,
-        {
-          borderRadius: radius,
-          backgroundColor: background,
-        },
-      ]}
-    >
-      <View style={styles.focusItemContent}>
-        <Text style={[styles.focusItemText, { color }]}>{content}</Text>
-      </View>
-    </Pressable>
-  );
-};
+const isIOS = Platform.OS === 'ios';
 
 const colors: {
   background: string;
@@ -119,7 +87,74 @@ const colors: {
   },
 ];
 
-export const FocusGroupExample = () => {
+const OptionButton = ({ onPress, content }: OptionButtonProps) => (
+  <Pressable
+    style={styles.optionButton}
+    focusStyle={isIOS ? undefined : styles.androidOption}
+    tintType={isIOS ? 'default' : 'none'}
+    onFocus={isIOS ? onPress : undefined}
+    onPress={onPress}
+    haloExpendX={5}
+    haloExpendY={5}
+    haloCornerRadius={15}
+  >
+    <Text>{content}</Text>
+  </Pressable>
+);
+
+type FocusItemProps = {
+  radius?: number;
+  onPress: () => void;
+  background: string;
+  color: string;
+  content: string;
+};
+
+const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
+  ({ radius = 10, onPress, background, color, content }, ref) => {
+    const hoverComponent = useMemo(() => {
+      if (isIOS) return undefined;
+      return (
+        <View
+          style={[
+            styles.androidHover,
+            {
+              borderRadius: radius + 5,
+              borderColor: background,
+            },
+          ]}
+        />
+      );
+    }, [background, radius]);
+
+    return (
+      <Pressable
+        ref={ref}
+        tintColor={background}
+        haloExpendY={5}
+        haloExpendX={5}
+        onFocus={isIOS ? onPress : undefined}
+        onPress={onPress}
+        haloCornerRadius={radius}
+        tintType={isIOS ? 'default' : 'hover'}
+        FocusHoverComponent={hoverComponent}
+        containerStyle={[
+          styles.focusItemContainer,
+          {
+            borderRadius: radius,
+            backgroundColor: background,
+          },
+        ]}
+      >
+        <View style={styles.focusItemContent}>
+          <Text style={[styles.focusItemText, { color }]}>{content}</Text>
+        </View>
+      </Pressable>
+    );
+  }
+);
+
+export const FocusGroupExample = forwardRef<KeyboardFocus>((_, ref) => {
   const [radius, setRadious] = useState(5);
   const [item, setItem] = useState(colors[0]);
   return (
@@ -135,9 +170,10 @@ export const FocusGroupExample = () => {
         </View>
       )}
       <KeyboardFocusGroup style={styles.colorsContainer} groupIdentifier="main">
-        {colors.map((item) => (
+        {colors.map((item, index) => (
           <FocusItem
-            key={item.background}
+            ref={index === 0 ? ref : undefined}
+            key={`${item.background}_${item.color}`}
             radius={radius}
             background={item.background}
             content={item.colorTag}
@@ -151,7 +187,6 @@ export const FocusGroupExample = () => {
           style={styles.optionGroup}
           focusStyle={styles.optionGroupFocus}
           groupIdentifier="additional"
-          tintColor="#FDE74C"
         >
           <OptionButton onPress={() => setRadious(5)} content={5} />
           <OptionButton onPress={() => setRadious(15)} content={15} />
@@ -160,7 +195,7 @@ export const FocusGroupExample = () => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   optionGroupContainer: {
@@ -176,8 +211,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   optionGroupFocus: {
-    borderColor: '#22a',
-    backgroundColor: 'rgba(52, 52, 52, 0.1)',
+    borderColor: '#106ae0',
+    backgroundColor: '#1573ed11',
   },
   colorsContainer: {
     padding: 10,
@@ -208,4 +243,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  androidHover: {
+    width: 70,
+    height: 70,
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: -5,
+    top: -5,
+    borderWidth: 2,
+  },
+  androidOption: { borderRadius: 15, backgroundColor: '#ddf' },
 });

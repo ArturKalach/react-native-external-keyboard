@@ -4,6 +4,7 @@ import type { UseKeyboardPressProps } from './useKeyboardPress.types';
 import type { OnKeyPress, OnKeyPressFn } from '../../types/BaseKeyboardView';
 
 export const ANDROID_SPACE_KEY_CODE = 62;
+const MILISECOND_THRESHOLD = 20;
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
@@ -16,7 +17,7 @@ export const useKeyboardPress = <
   onPress,
   onLongPress,
 }: UseKeyboardPressProps<T, K>) => {
-  const keyboardBased = useRef(false);
+  const tresholdTime = useRef(0);
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
       const {
@@ -26,33 +27,32 @@ export const useKeyboardPress = <
       onPressOut?.(e as unknown as GestureResponderEvent);
       onKeyUpPress?.(e);
 
-      if (onLongPress && keyCode === ANDROID_SPACE_KEY_CODE) {
+      if (keyCode === ANDROID_SPACE_KEY_CODE) {
+        tresholdTime.current = e?.timeStamp;
         if (isLongPress) {
           onLongPress?.({} as GestureResponderEvent);
         } else {
           onPress?.({} as GestureResponderEvent);
         }
       }
-      keyboardBased.current = false;
     },
     [onPressOut, onKeyUpPress, onLongPress, onPress]
   );
 
   const onKeyDownPressHandler = useMemo(() => {
-    if (!onPressIn && !onPress) return onKeyDownPress;
+    if (!onPressIn) return onKeyDownPress;
     return (e: OnKeyPress) => {
-      keyboardBased.current = true;
-
       onKeyDownPress?.(e);
       if (e.nativeEvent.keyCode === ANDROID_SPACE_KEY_CODE) {
         onPressIn?.(e as unknown as GestureResponderEvent);
       }
     };
-  }, [onKeyDownPress, onPress, onPressIn]);
+  }, [onKeyDownPress, onPressIn]);
 
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
-      if (!keyboardBased.current) {
+      const pressThreshold = (event?.timeStamp ?? 0) - tresholdTime.current;
+      if (pressThreshold > MILISECOND_THRESHOLD) {
         onPress?.(event);
       }
     },

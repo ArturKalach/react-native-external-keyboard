@@ -333,8 +333,8 @@ export type OnKeyPress = NativeSyntheticEvent<{
 ```
 
 ## Roadmap
+- Update `onPress` and `onLongPress` for `withKeyboardFocus`
 - Add functionality to control keyboard focus order.
-- Add `focusGroupIdentifier` for iOS. 
 - Verify and update `focusable` and `disabled` states for iOS and Android.
 - Update `Readme.md`.
 - Create the documentation.

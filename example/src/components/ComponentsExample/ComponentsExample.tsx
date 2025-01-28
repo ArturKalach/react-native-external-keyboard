@@ -74,7 +74,9 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
               console.log(1);
               setDShow((v: boolean) => !v);
             }}
-            haloExpendX={10}
+            haloExpendX={5}
+            haloExpendY={5}
+            haloCornerRadius={10}
             onLongPress={() => console.log(11)}
             ref={ref}
             style={styles.pressable as object} //ToDo updat type
@@ -91,7 +93,9 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           )}
           <TouchableWithoutFeedback
             autoFocus
-            haloExpendY={10}
+            haloExpendX={-5}
+            haloExpendY={-5}
+            haloCornerRadius={5}
             containerStyle={styles.pressableContainer}
             onPress={() => console.log(2)}
             onLongPress={() => console.log(22)}
