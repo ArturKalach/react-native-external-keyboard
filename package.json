@@ -44,8 +44,7 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "release": "release-it",
-    "release-no-increment": "release-it --no-increment",
-    "postinstall": "patch-package"
+    "release-no-increment": "release-it --no-increment"
   },
   "keywords": [
     "react-native",
@@ -92,8 +91,7 @@
     "typescript": "^5.2.2"
   },
   "resolutions": {
-    "@types/react": "^18.2.44",
-    "react-native-builder-bob@^0.35.2": "patch:react-native-builder-bob@npm%3A0.35.2#./.yarn/patches/react-native-builder-bob-npm-0.35.2-4e84215963.patch"
+    "@types/react": "^18.2.44"
   },
   "peerDependencies": {
     "react": "*",
