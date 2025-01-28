@@ -89,8 +89,6 @@ group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
 ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
 viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
-onBubbledKeyDownPress | Handler for the bubbled key-down event | `(e: OnKeyPress) => void`
-onBubbledKeyUpPress | Handler for the bubbled key-up event | `(e: OnKeyPress) => void`
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 ...rest | Remaining component props  | `Type of Component`
 
@@ -130,8 +128,6 @@ onBlur?: | Handler called when the component loses focus | `() => void`
 onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean, tag?: number) => void`
 onKeyUpPress?: | Handler for the key-up event | `(e: OnKeyPress) => void`
 onKeyDownPress?: | Handler for the key-down event | `(e: OnKeyPress) => void`
-onBubbledKeyDownPress | Handler for the bubbled key-down event | `(e: OnKeyPress) => void`
-onBubbledKeyUpPress | Handler for the bubbled key-up event | `(e: OnKeyPress) => void`
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 autoFocus?: | Indicates if the component should automatically gain focus | `boolean | undefined`
 focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
@@ -201,8 +197,6 @@ onFocusChange | Handler called when the component is focused or blurred | `(isFo
 onKeyUpPress | Handler for the key-up event | `(e: OnKeyPress) => void`
 onKeyDownPress | Handler for the key-down event | `(e: OnKeyPress) => void`
 onContextMenuPress?: | Handler for long press events triggered by the context menu command (iOS only) | () => void;
-onBubbledKeyDownPress | Handler for the bubbled key-down event | `(e: OnKeyPress) => void`
-onBubbledKeyUpPress | Handler for the bubbled key-up event | `(e: OnKeyPress) => void`
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 haloEffect | Enables halo effect on focus (iOS only) | `boolean \| undefined`
 autoFocus | Indicates if the component should automatically gain focus | `boolean \| undefined`
