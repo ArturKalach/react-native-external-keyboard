@@ -18,7 +18,11 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 
 #include <string>
-#import "RNCEKVHeaders.h"
+#import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
+#import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
+#import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
+#import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
+
 #import <React/RCTConversions.h>
 
 #import "RCTFabricComponentsPlugins.h"

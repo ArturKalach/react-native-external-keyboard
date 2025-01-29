@@ -1,12 +1,12 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.5.0-rc9",
+  "version": "0.5.0-rc8",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "source": "src/index.tsx",
   "main": "lib/commonjs/index.js",
   "react-native": "src/index.tsx",
   "module": "lib/module/index.js",
-  "types": "lib/typescript/module/src/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "files": [
     "src",
     "lib",
@@ -75,14 +75,13 @@
     "prettier": "^3.0.3",
     "react": "18.3.1",
     "react-native": "0.76.5",
-    "react-native-builder-bob": "^0.36.0",
+    "react-native-builder-bob": "^0.29.1",
     "release-it": "^17.10.0",
     "turbo": "^1.10.7",
     "typescript": "^5.2.2"
   },
   "resolutions": {
-    "@types/react": "^18.2.44",
-    "react-native-builder-bob": "^0.36.0"
+    "@types/react": "^18.2.44"
   },
   "peerDependencies": {
     "react": "*",
@@ -153,24 +152,12 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "codegen",
-      [
-        "commonjs",
-        {
-          "esm": true
-        }
-      ],
-      [
-        "module",
-        {
-          "esm": true
-        }
-      ],
+      "commonjs",
+      "module",
       [
         "typescript",
         {
-          "project": "tsconfig.build.json",
-          "esm": true
+          "project": "tsconfig.build.json"
         }
       ]
     ]
