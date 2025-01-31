@@ -43,20 +43,6 @@ using namespace facebook::react;
     return self;
 }
 
-// - (NSString *)getFocusGroupIdentifierForView:(UIView *)view {
-//     id<UIFocusEnvironment> focusEnvironment = view;
-//     while (focusEnvironment) {
-//         if ([focusEnvironment respondsToSelector:@selector(focusGroupIdentifier)]) {
-//             NSString *focusGroupIdentifier = [focusEnvironment focusGroupIdentifier];
-//             if (focusGroupIdentifier) {
-//                 return focusGroupIdentifier;
-//             }
-//         }
-//         focusEnvironment = focusEnvironment.parentFocusEnvironment;
-//     }
-//     return nil; // No focus group identifier found
-// }
-
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     

@@ -133,8 +133,10 @@ using namespace facebook::react;
     if(oldViewProps.group != newViewProps.group) {
         [self setIsGroup: newViewProps.group];
     }
-    
-    if(oldViewProps.groupIdentifier != newViewProps.groupIdentifier) {
+  
+    BOOL isNewGroup = oldViewProps.groupIdentifier != newViewProps.groupIdentifier;
+    BOOL recoverGroup = !self.customGroupId && !(newViewProps.groupIdentifier.empty());
+    if(isNewGroup || recoverGroup) {
         NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
         [self setCustomGroupId:newGroupId];
     }
@@ -359,6 +361,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
 }
 
+// ToDo RNCEKV-8 review and find better place for halo calculation
 - (void)layoutSubviews {
     [super layoutSubviews];
     [_haloDelegate displayHalo];
