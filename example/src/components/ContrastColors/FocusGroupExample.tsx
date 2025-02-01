@@ -156,16 +156,16 @@ const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
 
 export const FocusGroupExample = forwardRef<KeyboardFocus>((_, ref) => {
   const [radius, setRadious] = useState(5);
-  const [item, setItem] = useState(colors[0]);
+  const [currentItem, setCurrentItem] = useState(colors[0]);
   return (
     <View style={styles.container}>
-      {item && (
+      {currentItem && (
         <View style={styles.colorExample}>
           <Color
-            color={item.color}
-            backround={item.background}
-            colorTag={item.colorTag}
-            contrast={item.contrast}
+            color={currentItem.color}
+            backround={currentItem.background}
+            colorTag={currentItem.colorTag}
+            contrast={currentItem.contrast}
           />
         </View>
       )}
@@ -178,7 +178,7 @@ export const FocusGroupExample = forwardRef<KeyboardFocus>((_, ref) => {
             background={item.background}
             content={item.colorTag}
             color={item.color}
-            onPress={() => setItem(item)}
+            onPress={() => setCurrentItem(item)}
           />
         ))}
       </KeyboardFocusGroup>
