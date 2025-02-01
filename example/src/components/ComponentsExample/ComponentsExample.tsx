@@ -58,7 +58,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   };
 
   return (
-    <KeyboardFocusGroup tintColor="orange" style={{ flex: 1 }}>
+    <KeyboardFocusGroup tintColor="orange" style={styles.flex}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         style={styles.container}
@@ -86,14 +86,13 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             <Text>TouchableOpacity</Text>
           </TouchableOpacity>
           {dShow && (
-            <Pressable autoFocus>
+            <Pressable>
               <View>
                 <Text>Display</Text>
               </View>
             </Pressable>
           )}
           <TouchableWithoutFeedback
-            autoFocus
             haloExpendX={-5}
             haloExpendY={-5}
             haloCornerRadius={5}
@@ -186,6 +185,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 10 },
   bubbledWrapper: { flex: 1 },
+  flex: { flex: 1 },
   contentContainer: {
     backgroundColor: '#ffffff',
     flex: 1,
