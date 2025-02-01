@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property int focusType;
 @property int blurType;
 @property BOOL multiline;
-@property NSString* customGroupId;
+@property (nonatomic, strong, nullable) NSString *customGroupId;
 - (UIView*)getFocusTargetView;
 
 - (void)onFocusChange:(BOOL)isFocused;

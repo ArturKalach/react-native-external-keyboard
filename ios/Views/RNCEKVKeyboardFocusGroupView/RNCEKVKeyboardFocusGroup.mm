@@ -105,14 +105,21 @@ using namespace facebook::react;
     const auto &newViewProps = *std::static_pointer_cast<KeyboardFocusGroupProps const>(props);
     [super updateProps
      :props oldProps:oldProps];
-    
-    if(oldViewProps.tintColor != newViewProps.tintColor) {
-        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  
+    UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+    BOOL renewColor = newColor != nil && self.tintColor == nil;
+    BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+    if(isColorChanged || renewColor) {
+        self.tintColor = newColor;
     }
     
-    if(oldViewProps.groupIdentifier != newViewProps.groupIdentifier) {
+    if(oldViewProps.groupIdentifier != newViewProps.groupIdentifier || !self.customGroupId) {
+      if(newViewProps.groupIdentifier.empty()) {
+        [self setCustomGroupId:nil];
+      } else {
         NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
         [self setCustomGroupId:newGroupId];
+      }
     }
     
 }

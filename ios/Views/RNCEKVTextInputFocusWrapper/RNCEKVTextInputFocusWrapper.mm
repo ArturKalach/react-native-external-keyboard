@@ -56,6 +56,7 @@ static const NSInteger AUTO_BLUR = 2;
     return self;
 }
 
+
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
@@ -73,6 +74,13 @@ static const NSInteger AUTO_BLUR = 2;
 {
     [super prepareForRecycle];
     [self cleanReferences];
+}
+
+- (void)willRemoveSubview:(UIView *)subview {
+    [super willRemoveSubview:subview];
+    if(_customGroupId && _gIdDelegate) {
+      [_gIdDelegate clear];
+    }
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
@@ -109,9 +117,25 @@ static const NSInteger AUTO_BLUR = 2;
         }
     }
     
-    if(oldViewProps.tintColor != newViewProps.tintColor) {
-        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  
+  UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  BOOL renewColor = newColor != nil && self.tintColor == nil;
+  BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+  if(isColorChanged || renewColor) {
+      self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  }
+  
+  BOOL isNewGroup = oldViewProps.groupIdentifier != newViewProps.groupIdentifier;
+  BOOL recoverCustomGroup = !self.customGroupId && !newViewProps.groupIdentifier.empty();
+  if(isNewGroup || recoverCustomGroup) {
+    if(newViewProps.groupIdentifier.empty() && self.customGroupId != nil) {
+      self.customGroupId = nil;
     }
+    if(!newViewProps.groupIdentifier.empty()) {
+      NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
+      [self setCustomGroupId:newGroupId];
+    }
+  }
 }
 
 Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
@@ -189,6 +213,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)cleanReferences{
     _textField = nil;
+    _customGroupId = nil;
 }
 
 -(BOOL)isHaloHidden {

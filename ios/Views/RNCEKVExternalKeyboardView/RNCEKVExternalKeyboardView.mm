@@ -89,6 +89,12 @@ using namespace facebook::react;
     [self cleanReferences];
 }
 
+- (void)willRemoveSubview:(UIView *)subview {
+    [super willRemoveSubview:subview];
+    if(_customGroupId && _gIdDelegate) {
+      [_gIdDelegate clear];
+    }
+}
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
     NSString *FOCUS = @"focus";
@@ -126,7 +132,11 @@ using namespace facebook::react;
         [self setAutoFocus: hasAutoFocus];
     }
     
-    if(oldViewProps.tintColor != newViewProps.tintColor) {
+  
+    UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+    BOOL renewColor = newColor != nil && self.tintColor == nil;
+    BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+    if(isColorChanged || renewColor) {
         self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     }
     
@@ -135,10 +145,15 @@ using namespace facebook::react;
     }
   
     BOOL isNewGroup = oldViewProps.groupIdentifier != newViewProps.groupIdentifier;
-    BOOL recoverGroup = !self.customGroupId && !(newViewProps.groupIdentifier.empty());
-    if(isNewGroup || recoverGroup) {
+    BOOL recoverCustomGroup = !self.customGroupId && !newViewProps.groupIdentifier.empty();
+    if(isNewGroup || recoverCustomGroup) {
+      if(newViewProps.groupIdentifier.empty() && self.customGroupId != nil) {
+        self.customGroupId = nil;
+      }
+      if(!newViewProps.groupIdentifier.empty()) {
         NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
         [self setCustomGroupId:newGroupId];
+      }
     }
     
     //ToDo RNCEKV-0, refactor, condition for halo effect has side effect, recycle is a question. The problem that we have to check the condition, (true means we skip, but when it was false we should reset) and recycle (view is reused and we need to double check whether a new place for view should be with or without halo)

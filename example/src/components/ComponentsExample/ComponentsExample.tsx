@@ -67,6 +67,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           onKeyUpPress={onKeyUpPressHandler}
           onKeyDownPress={onKeyDownPressHandler}
           onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
+          focusable={false}
           style={styles.bubbledWrapper}
         >
           <TouchableOpacity

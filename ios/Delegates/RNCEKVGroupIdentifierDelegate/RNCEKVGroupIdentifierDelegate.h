@@ -17,7 +17,7 @@
 
 - (NSString*_Nonnull) getFocusGroupIdentifier;
 - (void)updateGroupIdentifier;
-
+- (void)clear;
 @end
 
 

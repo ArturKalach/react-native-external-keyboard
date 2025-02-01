@@ -23,8 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat haloExpendX;
 @property (nonatomic, assign) CGFloat haloExpendY;
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
+@property (nonatomic, strong, nullable) NSString *customGroupId;
 @property BOOL autoFocus;
-@property NSString* customGroupId;
+
 - (UIView*)getFocusTargetView;
 
 - (void)focus;
@@ -55,7 +56,8 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTDirectEventBlock onKeyUpPress;
 @property (nonatomic, copy) RCTDirectEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onBubbledContextMenuPress;
-@property NSString* customGroupId;
+@property (nonatomic, strong, nullable) NSString *customGroupId;
+
 - (UIView*)getFocusTargetView;
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
