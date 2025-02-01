@@ -34,4 +34,5 @@ export type BaseKeyboardViewProps = ViewProps & {
   haloExpendX?: number;
   haloExpendY?: number;
   groupIdentifier?: string;
+  ignoreGroupFocusHint?: boolean;
 };

@@ -33,6 +33,7 @@ export const BaseKeyboardView = React.memo(
         viewRef,
         groupIdentifier,
         tintColor,
+        ignoreGroupFocusHint,
         ...props
       },
       ref
@@ -59,6 +60,7 @@ export const BaseKeyboardView = React.memo(
       });
 
       const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
+      const ignoreFocusHint = Platform.OS !== 'ios' || !ignoreGroupFocusHint;
 
       return (
         <KeyPressContext.Provider value={bubbled.context}>
@@ -66,7 +68,7 @@ export const BaseKeyboardView = React.memo(
             {...props}
             haloEffect={haloEffect ?? true}
             ref={targetRef as NativeRef}
-            canBeFocused={focusable && canBeFocused}
+            canBeFocused={ignoreFocusHint && focusable && canBeFocused}
             autoFocus={autoFocus}
             onKeyDownPress={onKeyDownPress as undefined} //ToDo update types
             onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
