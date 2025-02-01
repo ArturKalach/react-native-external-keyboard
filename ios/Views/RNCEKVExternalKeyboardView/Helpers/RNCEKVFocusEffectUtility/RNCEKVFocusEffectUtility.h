@@ -13,6 +13,10 @@
 @interface RNCEKVFocusEffectUtility : NSObject
 
 + (UIFocusEffect *)emptyFocusEffect API_AVAILABLE(ios(15.0));
++ (UIFocusEffect *)getFocusEffect:(UIView *)effectView
+                    withExpandedX:(CGFloat)expandedX
+                    withExpandedY:(CGFloat)expandedY
+                    withCornerRadius:(CGFloat)cornerRadius API_AVAILABLE(ios(15.0));
 
 @end
 

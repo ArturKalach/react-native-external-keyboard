@@ -1,5 +1,4 @@
-import React from 'react';
-import { StyleSheet, Text, ViewStyle } from 'react-native';
+import { StyleSheet, Text, type ViewStyle } from 'react-native';
 import { Pressable } from 'react-native-external-keyboard';
 
 export type LineButtonProps = {
@@ -25,7 +24,7 @@ export const LineButton = ({
     <Pressable
       onFocus={onFocus}
       onBlur={onBlur}
-      containerStyle={[styles.container, style]}
+      containerStyle={[styles.container, style as undefined]} //Update type
       onPress={onPress}
       autoFocus={autoFocus}
       style={styles.content}

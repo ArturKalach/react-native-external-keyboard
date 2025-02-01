@@ -8,12 +8,12 @@ import {
 } from 'react-native';
 import {
   KeyboardExtendedBaseView,
-  KeyPress,
+  type KeyPress,
   KeyboardExtendedInput,
   KeyboardExtendedView,
   KeyboardExtendedPressable,
-  KeyboardExtendedViewType,
-  OnKeyPress,
+  type KeyboardExtendedViewType,
+  type OnKeyPress,
   withKeyboardFocus,
 } from 'react-native-external-keyboard';
 

@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LineButton } from '../../components/LineButton/LineButton';
 import type { KeyboardFocus } from 'react-native-external-keyboard';
 import { Cats } from '../../components/Cats/Cats';
 import { ComponentsExample } from '../../components/ComponentsExample/ComponentsExample';
-import { ContrastColors } from '../../components/ContrastColors/ContrastColors';
+import { FocusGroupExample } from '../../components/ContrastColors/FocusGroupExample';
 
 const Divider = () => (
   <View style={styles.menuDivider}>
@@ -28,16 +28,16 @@ const Menu = ({
       />
       <Divider />
       <LineButton
-        onLongPress={() => onLongPress('Cats')}
-        onPress={() => onPress('Cats')}
-        title="Cats"
-      />
-      <Divider />
-      <LineButton
         autoFocus
         onLongPress={() => onLongPress('Colors')}
         onPress={() => onPress('Colors')}
         title="Colors"
+      />
+      <Divider />
+      <LineButton
+        onLongPress={() => onLongPress('Cats')}
+        onPress={() => onPress('Cats')}
+        title="Cats"
       />
     </View>
   );
@@ -73,7 +73,7 @@ export const Home = () => {
       {selected === 'Components' && (
         <ComponentsExample ref={componentsExampleRef} />
       )}
-      {selected === 'Colors' && <ContrastColors ref={contrastColorsRef} />}
+      {selected === 'Colors' && <FocusGroupExample ref={contrastColorsRef} />}
       {selected === 'Cats' && <Cats ref={catsRef} />}
     </View>
   );

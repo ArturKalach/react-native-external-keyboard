@@ -81,6 +81,11 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     view.setMultiline(value);
   }
 
+  @Override
+  public void setGroupIdentifier(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
+  }
+
 
   @Override
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
@@ -94,7 +99,7 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
-  public void setTintColor(TextInputFocusWrapper view, @Nullable String value) {
+  public void setTintColor(TextInputFocusWrapper view, @Nullable Integer value) {
     //stub
   }
 

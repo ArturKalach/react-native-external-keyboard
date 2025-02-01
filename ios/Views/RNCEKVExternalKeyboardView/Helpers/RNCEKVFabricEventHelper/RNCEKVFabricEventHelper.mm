@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #import "RNCEKVFabricEventHelper.h"
+
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
@@ -70,6 +71,14 @@ using namespace facebook::react;
         auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
         facebook::react::ExternalKeyboardViewEventEmitter::OnContextMenuPress data = {};
         viewEventEmitter->onContextMenuPress(data);
+    };
+}
+
++ (void)onBubbledContextMenuPressEventEmmiter:(facebook::react::SharedViewEventEmitter) _eventEmitter {
+    if (_eventEmitter) {
+        auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
+        facebook::react::ExternalKeyboardViewEventEmitter::OnBubbledContextMenuPress data = {};
+        viewEventEmitter->onBubbledContextMenuPress(data);
     };
 }
 

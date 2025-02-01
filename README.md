@@ -7,22 +7,21 @@ React Native library for enhanced external keyboard support.
 
 ## New Release Features
 
-- `withKeyboardFocus`: an HOC that adds focus capabilities to default pressable components (and some external ones).
-- Tint and halo effects for iOS.
-- Keyboard focus and autofocus support.
-
-- Renaming: Added aliases for components and modules. More [here](#component-aliases)
+- Introduced an iOS-specific component: `KeyboardFocusGroup`, a component for managing the `tintColor`, `focusGroupIdentifier`, and group focus.
+- Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpandX`, and `haloExpandY` properties for customizing the appearance of the `Halo Effect`.
+- Enhanced `KeyboardExtendedBaseView` with `onBubbledContextMenuPress`, key press functionality has been also enhanced. Key presses can be listened to for a group of components, screens, or pages.
+- Added the `ignoreGroupFocusHint` prop to `KeyboardExtendedBaseView` to support key press listening without focusing the container.
 
 iOS | Android
 -- | --
-<img src="/.github/images/ios_example.gif" height="500" /> | <img src="/.github/images/android_example.gif" height="500" />
+<img src="/.github/images/rnek-ios-example.gif" height="500" /> | <img src="/.github/images/rnek-android-example.gif" height="500" />
 
 ## Features
 
-- Keyboard focus control and autofocus
-- Key press event handling
-- Focus control for `TextInput` and `Pressable` components
-- Halo effect and tint color customization for iOS
+- Keyboard focus management and autofocus capabilities.
+- Key press event handling.
+- Focus management for `TextInput` and `Pressable` components.
+- Customization of the `Halo Effect` and `tintColor` for iOS.
 
 ## Installation
 
@@ -91,6 +90,7 @@ group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
 ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
 viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
+onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 ...rest | Remaining component props  | `Type of Component`
 
 
@@ -129,6 +129,7 @@ onBlur?: | Handler called when the component loses focus | `() => void`
 onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean, tag?: number) => void`
 onKeyUpPress?: | Handler for the key-up event | `(e: OnKeyPress) => void`
 onKeyDownPress?: | Handler for the key-down event | `(e: OnKeyPress) => void`
+onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 autoFocus?: | Indicates if the component should automatically gain focus | `boolean | undefined`
 focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
 tintColor?: | Color used for tinting the component | `string`
@@ -197,11 +198,51 @@ onFocusChange | Handler called when the component is focused or blurred | `(isFo
 onKeyUpPress | Handler for the key-up event | `(e: OnKeyPress) => void`
 onKeyDownPress | Handler for the key-down event | `(e: OnKeyPress) => void`
 onContextMenuPress?: | Handler for long press events triggered by the context menu command (iOS only) | () => void;
+onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 haloEffect | Enables halo effect on focus (iOS only) | `boolean \| undefined`
 autoFocus | Indicates if the component should automatically gain focus | `boolean \| undefined`
 tintColor | Color used for tinting the component | `string`
 ref->focus | Command to programmatically focus the component | () => void;
 ...rest | Remaining View props | `View`
+
+### KeyboardFocusGroup
+The `KeyboardFocusGroup` is a View-based component developed based on the iOS API. It can be used for defining focus groups or setting the `tintColor` globally.
+
+```tsx
+  <KeyboardFocusGroup  
+    tintColor="orange">
+    <ScrollView
+      contentContainerStyle={styles.contentContainer}
+      style={styles.container}
+    >
+    ...
+    </ScrollView>
+  </KeyboardFocusGroup>
+  <KeyboardFocusGroup 
+    focusStyle={{ backgroundColor: 'green' }}
+    onFocusChange={(e) => console.log('green', e)}
+    groupIdentifier="green"
+    tintColor="green"
+  >
+      <Button>
+  </KeyboardFocusGroup>
+  <KeyboardFocusGroup
+    focusStyle={{ backgroundColor: 'yellow' }}
+    onFocusChange={(e) => console.log('yellow', e)}
+    groupIdentifier="yellow"
+    tintColor="yellow"
+  >
+      <Button>
+  </KeyboardFocusGroup>
+```
+
+Props | Description | Type
+-- | -- | --
+focusStyle? | Style applied to the inner component when it is focused | `FocusStyle`
+onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean) => void;`
+onFocus?: | Handler called when the component is focused  | `() => void`
+onBlur?: | Handler called when the component loses focus | `() => void`
+groupIdentifier?: | Relates to iOS `focusGroupIdentifier`: the identifier of the focus group to which this view belongs| `string`
 
 
 # Migration 0.3.x to 0.4.0
@@ -287,15 +328,12 @@ export type OnKeyPress = NativeSyntheticEvent<{
 ```
 
 ## Roadmap
-- Update Readme.md
-- Update `focusable` and `disable` state for iOS and Android.
-- Update the example to the new version (0.75.x).
-- TintColor component for controlling the tint color of scrollable components on iOS.
-- Update events from direct to bubbling to improve control of keyboard functionality.
-- Add keyboard focus order. Check for the possibility of implementing a focus order to enhance navigation across components.
-- Add PreferableFocusEnvironment component. Managing focus on iOS can be tricky and relies on preferredFocusEnvironments; this component should help manage keyboard focus in uncommon cases.
+- Update `onPress` and `onLongPress` for `withKeyboardFocus`
+- Add functionality to control keyboard focus order.
+- Verify and update `focusable` and `disabled` states for iOS and Android.
+- Update `Readme.md`.
 - Create the documentation.
-- iOS Halo effect config for customization.
+- Perfomance optimization
 
 ## Contributing
 Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas.

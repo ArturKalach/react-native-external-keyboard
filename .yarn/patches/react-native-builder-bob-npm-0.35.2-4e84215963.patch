@@ -1,0 +1,31 @@
+diff --git a/lib/utils/patchCodegenAndroidPackage.js b/lib/utils/patchCodegenAndroidPackage.js
+index 2c5165815c37daa008ff6a7c246a44d51ba5f963..9ac208c458f517274d1e4f3d5c2cb9f034b2afa5 100644
+--- a/lib/utils/patchCodegenAndroidPackage.js
++++ b/lib/utils/patchCodegenAndroidPackage.js
+@@ -57,8 +57,22 @@ packageJson, report) {
+     const newFilePath = _path.default.resolve(newPackagePath, file);
+     await _fsExtra.default.rename(filePath, newFilePath);
+   }));
+-  await _fsExtra.default.rm(_path.default.resolve(codegenAndroidPath, 'java/com/facebook'), {
+-    recursive: true
+-  });
++  if (
++    await _fsExtra.default.pathExists(
++      _path.default.resolve(codegenAndroidPath, 'java/com/facebook/react/viewmanagers')
++    )
++  ) {
++    // Keep the view managers
++    await _fsExtra.default.rm(
++      _path.default.resolve(codegenAndroidPath, 'java/com/facebook/fbreact'),
++      { recursive: true }
++    );
++  } else {
++    // Delete the entire facebook namespace
++    await _fsExtra.default.rm(
++      _path.default.resolve(codegenAndroidPath, 'java/com/facebook'),
++      { recursive: true }
++    );
++  }
+ }
+ //# sourceMappingURL=patchCodegenAndroidPackage.js.map
+\ No newline at end of file

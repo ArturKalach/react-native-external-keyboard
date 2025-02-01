@@ -2,9 +2,10 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
 #import "RNCEKVKeyboardKeyPressHandler.h"
-#import "RNCEKVKeyboardFocusDelegate.h"
-#import "RNCEKVUtils.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVHaloDelegate.h"
+#import "RNCEKVFocusDelegate.h"
+#import "RNCEKVGroupIdentifierDelegate.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
@@ -15,6 +16,7 @@
 
 #import "RCTFabricComponentsPlugins.h"
 #import "RNCEKVFabricEventHelper.h"
+#import <React/RCTConversions.h>
 
 using namespace facebook::react;
 
@@ -26,11 +28,19 @@ using namespace facebook::react;
 
 @implementation RNCEKVExternalKeyboardView {
     RNCEKVKeyboardKeyPressHandler* _keyboardKeyPressHandler;
-    RNCEKVKeyboardFocusDelegate* _keyboardFocusDelegate;
+    RNCEKVHaloDelegate* _haloDelegate;
+    RNCEKVFocusDelegate* _focusDelegate;
+    RNCEKVGroupIdentifierDelegate* _gIdDelegate;
+  
     NSNumber* _isFocused;
     BOOL _isAttachedToWindow;
     BOOL _isAttachedToController;
 }
+
+@synthesize haloCornerRadius = _haloCornerRadius;
+@synthesize haloExpendX = _haloExpendX;
+@synthesize haloExpendY = _haloExpendY;
+
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -42,7 +52,10 @@ using namespace facebook::react;
         _isAttachedToController = NO;
         _isAttachedToWindow = NO;
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
-        _keyboardFocusDelegate =  [[RNCEKVKeyboardFocusDelegate alloc] initWithView:self];
+        _haloDelegate = [[RNCEKVHaloDelegate alloc] initWithView:self];
+        _focusDelegate = [[RNCEKVFocusDelegate alloc] initWithView:self];
+        _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
+      
         if (@available(iOS 13.0, *)) {
             UIContextMenuInteraction *interaction = [[UIContextMenuInteraction alloc] initWithDelegate: self];
             [self addInteraction: interaction];
@@ -56,6 +69,11 @@ using namespace facebook::react;
     _isAttachedToController = NO;
     _isAttachedToWindow = NO;
     _isHaloActive = @2; //ToDo RNCEKV-0
+    _haloExpendX = 0;
+    _haloExpendY = 0;
+    _haloCornerRadius = 0;
+    _customGroupId = nil;
+    self.focusGroupIdentifier = nil;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -71,6 +89,12 @@ using namespace facebook::react;
     [self cleanReferences];
 }
 
+- (void)willRemoveSubview:(UIView *)subview {
+    [super willRemoveSubview:subview];
+    if(_customGroupId && _gIdDelegate) {
+      [_gIdDelegate clear];
+    }
+}
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
     NSString *FOCUS = @"focus";
@@ -108,14 +132,28 @@ using namespace facebook::react;
         [self setAutoFocus: hasAutoFocus];
     }
     
-    if(oldViewProps.tintColor != newViewProps.tintColor) {
-        NSString* tintColor = [NSString stringWithUTF8String:newViewProps.tintColor.c_str()];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        self.tintColor = resultColor;
+  
+    UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+    BOOL renewColor = newColor != nil && self.tintColor == nil;
+    BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+    if(isColorChanged || renewColor) {
+        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     }
     
     if(oldViewProps.group != newViewProps.group) {
         [self setIsGroup: newViewProps.group];
+    }
+  
+    BOOL isNewGroup = oldViewProps.groupIdentifier != newViewProps.groupIdentifier;
+    BOOL recoverCustomGroup = !self.customGroupId && !newViewProps.groupIdentifier.empty();
+    if(isNewGroup || recoverCustomGroup) {
+      if(newViewProps.groupIdentifier.empty() && self.customGroupId != nil) {
+        self.customGroupId = nil;
+      }
+      if(!newViewProps.groupIdentifier.empty()) {
+        NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
+        [self setCustomGroupId:newGroupId];
+      }
     }
     
     //ToDo RNCEKV-0, refactor, condition for halo effect has side effect, recycle is a question. The problem that we have to check the condition, (true means we skip, but when it was false we should reset) and recycle (view is reused and we need to double check whether a new place for view should be with or without halo)
@@ -125,12 +163,17 @@ using namespace facebook::react;
             [self setIsHaloActive: @(haloState)];
         }
     }
-}
-
-- (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask {
-    [super finalizeUpdates: updateMask];
-    if(self.subviews.count > 0) {
-        [_keyboardFocusDelegate addSubview: self.subviews[0]];
+    
+    if(oldViewProps.haloExpendX != newViewProps.haloExpendX) {
+        [self setHaloExpendX: newViewProps.haloExpendX];
+    }
+    
+    if(oldViewProps.haloExpendY != newViewProps.haloExpendY) {
+        [self setHaloExpendY: newViewProps.haloExpendY];
+    }
+    
+    if(oldViewProps.haloCornerRadius != newViewProps.haloCornerRadius) {
+        [self setHaloCornerRadius: newViewProps.haloCornerRadius];
     }
 }
 
@@ -158,12 +201,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (BOOL)canBecomeFocused {
     if(!_canBeFocused) NO;
-    return [_keyboardFocusDelegate canBecomeFocused];
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    [super willMoveToSuperview:newSuperview];
-    [_keyboardFocusDelegate willMoveToSuperview:newSuperview];
+    return [_focusDelegate canBecomeFocused];
 }
 
 - (void)focus {
@@ -171,9 +209,13 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     [self updateFocus: viewController];
 }
 
+- (UIView*)getFocusTargetView {
+  return [_focusDelegate getFocusingView];
+}
+
+
 - (void)updateFocus: (UIViewController *) controller {
-    UIView *focusingView = self; // [_keyboardFocusDelegate getFocusingView];
-    
+    UIView *focusingView = self; // [_focusDelegate getFocusingView];
     
     if (self.superview != nil && controller != nil) {
         controller.customFocusView = focusingView;
@@ -186,9 +228,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-    _isFocused = [_keyboardFocusDelegate isFocusChanged: context];
-    
-    
+    _isFocused = [_focusDelegate isFocusChanged: context];
+
     if([self hasOnFocusChanged]) {
         if(_isFocused != nil) {
             _isAttachedToWindow = YES;
@@ -208,6 +249,10 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)onContextMenuPressHandler {
     [RNCEKVFabricEventHelper onContextMenuPressEventEmmiter:_eventEmitter];
+}
+
+- (void)onBubbledContextMenuPressHandler {
+    [RNCEKVFabricEventHelper onBubbledContextMenuPressEventEmmiter:_eventEmitter];
 }
 
 - (void)onFocusChangeHandler:(BOOL) isFocused {
@@ -230,6 +275,12 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
 }
 
+- (void)onBubbledContextMenuPressHandler {
+    if(self.onBubbledContextMenuPress) {
+        self.onBubbledContextMenuPress(@{});
+    }
+}
+
 - (void)onFocusChangeHandler:(BOOL) isFocused {
     if(self.onFocusChange) {
         self.onFocusChange(@{ @"isFocused": @(isFocused) });
@@ -248,16 +299,16 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
 }
 
+
 #endif
 
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
+    NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
+    
     if(self.hasOnPressUp || self.hasOnPressDown) {
-        NSDictionary *eventInfo = [_keyboardKeyPressHandler actionDownHandler:presses withEvent:event];
         [self onKeyDownPressHandler: eventInfo];
-        
-        return;
     }
     
     [super pressesBegan:presses withEvent:event];
@@ -265,11 +316,10 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)pressesEnded:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
+    NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
+  
     if(self.hasOnPressUp || self.hasOnPressDown) {
-        NSDictionary *eventInfo = [_keyboardKeyPressHandler actionUpHandler:presses withEvent:event];
         [self onKeyUpPressHandler: eventInfo];
-        
-        return;
     }
     
     [super pressesEnded:presses withEvent:event];
@@ -277,9 +327,30 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 - (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
     _isHaloActive = isHaloActive;
-    [_keyboardFocusDelegate updateHalo];
+    [_haloDelegate displayHalo];
 }
 
+
+- (void)setHaloCornerRadius:(CGFloat)haloCornerRadius {
+    _haloCornerRadius = haloCornerRadius;
+    if(_isAttachedToWindow) {
+        [_haloDelegate updateHalo];
+    }
+}
+
+- (void)setHaloExpendX:(CGFloat)haloExpendX {
+    _haloExpendX = haloExpendX;
+    if(_isAttachedToWindow) {
+        [_haloDelegate updateHalo];
+    }
+}
+
+- (void)setHaloExpendY:(CGFloat)haloExpendY {
+    _haloExpendY = haloExpendY;
+    if(_isAttachedToWindow) {
+        [_haloDelegate updateHalo];
+    }
+}
 
 - (void)didMoveToWindow {
     [super didMoveToWindow];
@@ -293,11 +364,28 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"ViewControllerChangedNotification" object:nil];
     }
     
-    if(self.window && self.autoFocus && !_isAttachedToWindow) {
-        UIViewController *viewController = self.reactViewController;
-        [self updateFocus: viewController];
+    if(self.window && !_isAttachedToWindow) {
+        [self onViewAttached];
         _isAttachedToWindow = YES;
     }
+}
+
+- (void)onViewAttached {
+    if(self.autoFocus) {
+        [self updateFocus: self.reactViewController];
+    }
+}
+
+// ToDo RNCEKV-8 review and find better place for halo calculation
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [_haloDelegate displayHalo];
+    // ToDo RNCEKV-7 add cache for halo update
+    if(self.bounds.size.width && self.bounds.size.height) {
+      [_haloDelegate updateHalo];
+    }
+  
+   [_gIdDelegate updateGroupIdentifier];
 }
 
 - (void)viewControllerChanged:(NSNotification *)notification {
@@ -308,27 +396,14 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
     }
 }
 
-- (void)addSubview:(UIView *)view {
-    [super addSubview:view];
-    [_keyboardFocusDelegate addSubview: view];
-}
-
 - (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0)){
     if(_isFocused != nil && [_isFocused isEqual:@YES]) {
         [self onContextMenuPressHandler];
+        [self onBubbledContextMenuPressHandler];
     }
+
     return nil;
 }
-
-- (NSString*) getFocusGroupIdentifier {
-#ifdef RCT_NEW_ARCH_ENABLED
-    return  [NSString stringWithFormat:@"app.group.%ld", self.tag];
-#else
-    return [NSString stringWithFormat:@"app.group.%@", self.reactTag];
-#endif
-}
-
-
 
 @end
 

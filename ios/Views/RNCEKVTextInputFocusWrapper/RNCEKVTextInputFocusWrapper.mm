@@ -5,7 +5,7 @@
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
-#import "RNCEKVUtils.h"
+#import "RNCEKVGroupIdentifierDelegate.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -23,6 +23,7 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
 
+#import <React/RCTConversions.h>
 
 #import "RCTFabricComponentsPlugins.h"
 
@@ -37,10 +38,24 @@ using namespace facebook::react;
 static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
-// ToDo RNCEKV-6 TintColor for TextInput
 @implementation RNCEKVTextInputFocusWrapper{
-    
+  RNCEKVGroupIdentifierDelegate* _gIdDelegate;
 }
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+#ifdef RCT_NEW_ARCH_ENABLED
+        static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
+        _props = defaultProps;
+#endif
+      _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
+    }
+    
+    return self;
+}
+
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -48,15 +63,7 @@ static const NSInteger AUTO_BLUR = 2;
     return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame]) {
-        static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
-        _props = defaultProps;
-    }
-    
-    return self;
-}
+
 
 - (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
     _isHaloActive = isHaloActive;
@@ -67,6 +74,13 @@ static const NSInteger AUTO_BLUR = 2;
 {
     [super prepareForRecycle];
     [self cleanReferences];
+}
+
+- (void)willRemoveSubview:(UIView *)subview {
+    [super willRemoveSubview:subview];
+    if(_customGroupId && _gIdDelegate) {
+      [_gIdDelegate clear];
+    }
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
@@ -103,11 +117,25 @@ static const NSInteger AUTO_BLUR = 2;
         }
     }
     
-    if(oldViewProps.tintColor != newViewProps.tintColor) {
-        NSString* tintColor = [NSString stringWithUTF8String:newViewProps.tintColor.c_str()];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        self.tintColor = resultColor;
+  
+  UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  BOOL renewColor = newColor != nil && self.tintColor == nil;
+  BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+  if(isColorChanged || renewColor) {
+      self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  }
+  
+  BOOL isNewGroup = oldViewProps.groupIdentifier != newViewProps.groupIdentifier;
+  BOOL recoverCustomGroup = !self.customGroupId && !newViewProps.groupIdentifier.empty();
+  if(isNewGroup || recoverCustomGroup) {
+    if(newViewProps.groupIdentifier.empty() && self.customGroupId != nil) {
+      self.customGroupId = nil;
     }
+    if(!newViewProps.groupIdentifier.empty()) {
+      NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
+      [self setCustomGroupId:newGroupId];
+    }
+  }
 }
 
 Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
@@ -130,10 +158,13 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     };
 }
 
-- (void)onMultiplyTextSubmitHandler {
+- (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView {
     if (_eventEmitter) {
+      NSString* text = textView != nil ? textView.attributedText.string : @"";
         auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
-        facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {};
+      facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {
+        .text = [text UTF8String]
+      };
         viewEventEmitter->onMultiplyTextSubmit(data);
     };
 }
@@ -147,9 +178,10 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     }
 }
 
-- (void)onMultiplyTextSubmitHandler {
+- (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView {
+    NSString* text = textView != nil ? textView.attributedText.string : @"";
     if(self.onMultiplyTextSubmit) {
-        self.onMultiplyTextSubmit(@{});
+      self.onMultiplyTextSubmit(@{ @"text": text });
     }
 }
 
@@ -181,6 +213,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)cleanReferences{
     _textField = nil;
+    _customGroupId = nil;
 }
 
 -(BOOL)isHaloHidden {
@@ -238,7 +271,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
             UIView* textView = [self getMultilineTextView: self.subviews[0]];
             if(textView && textView.isFirstResponder) {
                 if(!isShiftPressed && isEnter) {
-                    [self onMultiplyTextSubmitHandler];
+                    [self onMultiplyTextSubmitHandler: textView];
                     if(self.blurOnSubmit) {
                         [textView resignFirstResponder];
                     }
@@ -256,6 +289,22 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     [self updateHalo];
 }
 #endif
+
+
+- (UIView*)getFocusTargetView {
+  if(self.subviews.count > 0 && self.subviews[0].subviews.count > 0) {
+    UIView* focusingView = self.subviews[0].subviews[0];
+    return focusingView;
+  }
+  
+  return nil;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    // ToDo RNCEKV-7 add cache for halo update
+    [_gIdDelegate updateGroupIdentifier];
+}
 
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {

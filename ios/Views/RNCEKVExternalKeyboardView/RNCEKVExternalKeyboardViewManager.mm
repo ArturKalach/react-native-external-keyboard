@@ -3,7 +3,6 @@
 #import "RNCEKVExternalKeyboardViewManager.h"
 #import "RNCEKVExternalKeyboardView.h"
 #import "RCTBridge.h"
-#import "RNCEKVUtils.h"
 
 @implementation RNCEKVExternalKeyboardViewManager
 
@@ -16,6 +15,7 @@ RCT_EXPORT_MODULE(ExternalKeyboardView)
 
 RCT_EXPORT_VIEW_PROPERTY(onFocusChange, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onContextMenuPress, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onBubbledContextMenuPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onKeyUpPress, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onKeyDownPress, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(myPreferredFocusedView, UIView)
@@ -26,12 +26,11 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVExternalKeyboardView)
     [view setCanBeFocused: value];
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(tintColor, NSString, RNCEKVExternalKeyboardView)
+RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVExternalKeyboardView)
 {
     if (json) {
-        NSString *tintColor = [RCTConvert NSString:json];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        [view setTintColor: resultColor];
+        UIColor *tintColor = [RCTConvert UIColor:json];
+        [view setTintColor: tintColor];
     }
 }
 
@@ -65,20 +64,52 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
     if(json) {
         BOOL value = [RCTConvert BOOL:json];
-        if(view.isHaloActive == nil && !value) {
-            [view setIsHaloActive: @0];
-        }
-        if(view.isHaloActive != nil) {
+       if(view.isHaloActive == nil && !value) {
+           [view setIsHaloActive: @0];
+       }
+       if(view.isHaloActive != nil) {
             [view setIsHaloActive: @(value)];
-        }
+       }
     }
 }
+
+RCT_CUSTOM_VIEW_PROPERTY(haloCornerRadius, float, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        CGFloat value = [RCTConvert CGFloat:json];
+        [view setHaloCornerRadius: value];
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(haloExpendX, float, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        CGFloat value = [RCTConvert CGFloat:json];
+        [view setHaloExpendX: value];
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(haloExpendY, float, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        CGFloat value = [RCTConvert CGFloat:json];
+        [view setHaloExpendY: value];
+    }
+}
+
 
 RCT_CUSTOM_VIEW_PROPERTY(group, BOOL, RNCEKVExternalKeyboardView)
 {
     BOOL value = json ? [RCTConvert BOOL:json] : NO;
     [view setIsGroup: value];
 }
+
+RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setCustomGroupId: value];
+}
+
 
 
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)

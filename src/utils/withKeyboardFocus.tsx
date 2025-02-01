@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, StyleProp, ViewStyle, StyleSheet } from 'react-native';
+import { View, type StyleProp, type ViewStyle, StyleSheet } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type { FocusStyle, KeyboardFocusViewProps } from '../types';
 import type { KeyboardFocus, OnKeyPress } from '../types/BaseKeyboardView';
@@ -62,6 +62,10 @@ export const withKeyboardFocus = <K, T>(
           containerFocusStyle,
           FocusHoverComponent,
           viewRef,
+          haloCornerRadius,
+          haloExpendX,
+          haloExpendY,
+          groupIdentifier,
           ...props
         },
         ref
@@ -94,10 +98,11 @@ export const withKeyboardFocus = <K, T>(
 
         const HoverComonent = useMemo(() => {
           if (FocusHoverComponent) return FocusHoverComponent;
-          if (tintType === 'hover')
+          if (tintType === 'hover') {
             return (
               <View style={[hoverColor, styles.absolute, styles.opacity]} />
             );
+          }
 
           return undefined;
         }, [FocusHoverComponent, hoverColor, tintType]);
@@ -119,11 +124,15 @@ export const withKeyboardFocus = <K, T>(
               onFocusChange={onFocusChangeHandler}
               onContextMenuPress={onContextMenuHandler}
               haloEffect={withHaloEffect}
+              haloCornerRadius={haloCornerRadius}
+              haloExpendX={haloExpendX}
+              haloExpendY={haloExpendY}
               autoFocus={autoFocus}
               canBeFocused={canBeFocused}
               focusable={focusable}
               tintColor={tintColor}
               group={group}
+              groupIdentifier={groupIdentifier}
             >
               <Component
                 style={[style, componentFocusedStyle]}

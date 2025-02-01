@@ -3,7 +3,6 @@
 #import "RNCEKVTextInputFocusWrapperManager.h"
 #import "RNCEKVTextInputFocusWrapper.h"
 #import "RCTBridge.h"
-#import "RNCEKVUtils.h"
 
 @implementation RNCEKVTextInputFocusWrapperManager
 
@@ -21,6 +20,12 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVTextInputFocusWrapper)
 {
     BOOL value =  json ? [RCTConvert BOOL:json] : YES;
     [view setCanBeFocused: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setCustomGroupId: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(blurOnSubmit, BOOL, RNCEKVTextInputFocusWrapper)
@@ -61,12 +66,11 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVTextInputFocusWrapper)
     }
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(tintColor, NSString, RNCEKVTextInputFocusWrapper)
+RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVTextInputFocusWrapper)
 {
     if (json) {
-        NSString *tintColor = [RCTConvert NSString:json];
-        UIColor* resultColor = tintColor ? colorFromHexString(tintColor) : nil;
-        [view setTintColor: resultColor];
+        UIColor *tintColor = [RCTConvert UIColor:json];
+        [view setTintColor: tintColor];
     }
 }
 

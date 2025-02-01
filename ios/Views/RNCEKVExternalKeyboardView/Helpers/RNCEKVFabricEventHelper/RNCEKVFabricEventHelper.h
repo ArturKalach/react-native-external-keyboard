@@ -18,9 +18,15 @@ using namespace facebook::react;
 
 + (void)onKeyUpPressEventEmmiter:(NSDictionary*) dictionary withEmitter:(facebook::react::SharedViewEventEmitter) emitter;
 
++ (void)onBubbledKeyDownPressEventEmmiter:(NSDictionary*) dictionary withEmitter:(facebook::react::SharedViewEventEmitter) emitter;
+
++ (void)onBubbledKeyUpPressEventEmmiter:(NSDictionary*) dictionary withEmitter:(facebook::react::SharedViewEventEmitter) emitter;
+
 + (void)onFocusChangeEventEmmiter:(BOOL)isFocused withEmitter:(facebook::react::SharedViewEventEmitter) emitter;
 
 + (void)onContextMenuPressEventEmmiter:(facebook::react::SharedViewEventEmitter) emitter;
+
++ (void)onBubbledContextMenuPressEventEmmiter:(facebook::react::SharedViewEventEmitter) emitter;
 
 @end
 

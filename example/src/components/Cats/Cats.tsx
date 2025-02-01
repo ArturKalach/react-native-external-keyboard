@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import type { KeyboardFocus } from 'react-native-external-keyboard';
 import { FocusableImage } from './FocusableImage';

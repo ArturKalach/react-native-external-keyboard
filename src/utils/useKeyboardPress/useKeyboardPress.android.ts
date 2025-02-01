@@ -8,7 +8,7 @@ const MILISECOND_THRESHOLD = 20;
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
-  K extends (event?: any) => void
+  K extends (event?: any) => void,
 >({
   onKeyUpPress,
   onKeyDownPress,
@@ -28,15 +28,13 @@ export const useKeyboardPress = <
       onKeyUpPress?.(e);
 
       if (keyCode === ANDROID_SPACE_KEY_CODE) {
-        tresholdTime.current = e?.timeStamp;
         if (isLongPress) {
+          tresholdTime.current = e?.timeStamp;
           onLongPress?.({} as GestureResponderEvent);
-        } else {
-          onPress?.({} as GestureResponderEvent);
         }
       }
     },
-    [onPressOut, onKeyUpPress, onLongPress, onPress]
+    [onPressOut, onKeyUpPress, onLongPress]
   );
 
   const onKeyDownPressHandler = useMemo(() => {

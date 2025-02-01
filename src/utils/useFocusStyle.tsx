@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Platform } from 'react-native';
+import { Platform, type ColorValue } from 'react-native';
 import type { FocusStyle } from '../types';
 import type { TintType } from '../types/WithKeyboardFocus';
 
@@ -15,19 +15,21 @@ const backgroundTintMap = Platform.select<Partial<Record<TintType, boolean>>>({
 
 const DEFAULT_BACKGROUND_TINT = '#dce3f9';
 
+type UseFocusStyleProps = {
+  focusStyle?: FocusStyle;
+  containerFocusStyle?: FocusStyle;
+  onFocusChange?: (isFocused: boolean) => void;
+  tintColor?: ColorValue;
+  tintType?: TintType;
+};
+
 export const useFocusStyle = ({
   focusStyle,
   onFocusChange,
   containerFocusStyle,
   tintColor,
   tintType = 'default',
-}: {
-  focusStyle?: FocusStyle;
-  containerFocusStyle?: FocusStyle;
-  onFocusChange?: (isFocused: boolean) => void;
-  tintColor?: string;
-  tintType?: TintType;
-}) => {
+}: UseFocusStyleProps) => {
   const [focused, setFocusStatus] = useState(false);
 
   const onFocusChangeHandler = useCallback(

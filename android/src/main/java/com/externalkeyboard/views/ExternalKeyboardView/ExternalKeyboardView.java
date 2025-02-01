@@ -1,6 +1,7 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,34 +31,29 @@ public class ExternalKeyboardView extends ReactViewGroup {
     this.keyboardKeyPressHandler = new KeyboardKeyPressHandler();
   }
 
-
-  private boolean onKeyPressHandler(ReactViewGroup reactViewGroup, int keyCode, KeyEvent keyEvent, ThemedReactContext reactContext) {
-    if (!(reactViewGroup instanceof ExternalKeyboardView)) return false;
-    ExternalKeyboardView viewGroup = (ExternalKeyboardView) reactViewGroup;
-
-    if (!viewGroup.hasKeyUpListener && !viewGroup.hasKeyDownListener) {
-      return false;
+  @Override
+  public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+    if (!this.hasKeyUpListener && !this.hasKeyDownListener) {
+      return super.dispatchKeyEvent(keyEvent);
     }
 
+    int keyCode = keyEvent.getKeyCode();
     if (keyCode == KeyEvent.KEYCODE_TAB) {
-      return false;
+      return super.dispatchKeyEvent(keyEvent); //?
     }
 
     KeyboardKeyPressHandler.PressInfo pressInfo = keyboardKeyPressHandler.getEventsFromKeyPress(keyCode, keyEvent);
 
-    if (pressInfo.firePressDownEvent && viewGroup.hasKeyDownListener) {
-      EventHelper.pressDown((ReactContext) context, viewGroup.getId(), keyCode, keyEvent);
-      return true;
+    if (pressInfo.firePressDownEvent && this.hasKeyDownListener) {
+      EventHelper.pressDown((ReactContext) context, this.getId(), keyCode, keyEvent);
     }
 
-    if (pressInfo.firePressUpEvent && viewGroup.hasKeyUpListener) {
-      EventHelper.pressUp((ReactContext) context, viewGroup.getId(), keyCode, keyEvent, pressInfo.isLongPress);
-      return true;
+    if (pressInfo.firePressUpEvent && this.hasKeyUpListener) {
+      EventHelper.pressUp((ReactContext) context, this.getId(), keyCode, keyEvent, pressInfo.isLongPress);
     }
 
-    return false;
+    return super.dispatchKeyEvent(keyEvent);
   }
-
 
   @Override
   protected void onAttachedToWindow() {
@@ -69,8 +65,6 @@ public class ExternalKeyboardView extends ReactViewGroup {
     this.listeningView.setOnFocusChangeListener((focusedView, hasFocus) -> {
       EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);
     });
-
-    this.listeningView.setOnKeyListener((View v, int keyCode, KeyEvent keyEvent) -> onKeyPressHandler(this, keyCode, keyEvent, (ThemedReactContext) context));
 
     if (autoFocus && !hasBeenFocused) {
       this.autoFocusOnDraw();

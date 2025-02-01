@@ -2,6 +2,7 @@
 #define RNCEKVTextInputFocusWrapper_h
 #import <UIKit/UIKit.h>
 #import <React/RCTUITextField.h>
+#import "RNCEKVGroupIdentifierProtocol.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -9,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVTextInputFocusWrapper : RCTViewComponentView{
+@interface RNCEKVTextInputFocusWrapper : RCTViewComponentView <RNCEKVGroupIdentifierProtocol>{
     RCTUITextField* _textField;
 }
 
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property int focusType;
 @property int blurType;
 @property BOOL multiline;
+@property (nonatomic, strong, nullable) NSString *customGroupId;
+- (UIView*)getFocusTargetView;
 
 - (void)onFocusChange:(BOOL)isFocused;
 - (void)onMultiplyTextSubmitHandler;
@@ -32,7 +35,7 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface RNCEKVTextInputFocusWrapper : RCTView{
+@interface RNCEKVTextInputFocusWrapper : RCTView <RNCEKVGroupIdentifierProtocol>{
     RCTUITextField* _textField;
 }
 
@@ -44,6 +47,8 @@ NS_ASSUME_NONNULL_END
 @property BOOL multiline;
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
 @property (nonatomic, copy) RCTDirectEventBlock onMultiplyTextSubmit;
+@property NSString* customGroupId;
+- (UIView*)getFocusTargetView;
 
 - (void)onFocusChange:(BOOL)isFocused;
 - (void)onMultiplyTextSubmitHandler;
