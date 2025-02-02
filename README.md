@@ -13,7 +13,7 @@ React Native library for enhanced external keyboard support.
 - Added the `ignoreGroupFocusHint` prop to `KeyboardExtendedBaseView` to support key press listening without focusing the container.
 
 ## Breaking Changes !!!
-The Keyboard Module (A11yModule, KeyboardExtendedModule) has been removed. This API was deprecated and did not work properly with the new architecture. You can refer to the migration guide to update it.
+> The Keyboard Module (`A11yModule`, `KeyboardExtendedModule`) has been removed. This API was deprecated and did not work properly with the new architecture. You can refer to the migration guide to update it.
 
 iOS | Android
 -- | --
