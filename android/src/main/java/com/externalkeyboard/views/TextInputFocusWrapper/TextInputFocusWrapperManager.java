@@ -14,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.textinput.ReactEditText;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -110,17 +111,20 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     super.onDropViewInstance(viewGroup);
   }
 
+  private Map<String, Object> createEventMap(String registrationName) {
+    Map<String, Object> eventMap = new HashMap<>();
+    eventMap.put("registrationName", registrationName);
+    return eventMap;
+  }
+
   @Nullable
   @Override
   public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
-    Map<String, Object> export = MapBuilder.<String, Object>builder().build();
-    if (export == null) {
-      export = MapBuilder.newHashMap();
-    }
+    Map<String, Object> export = new HashMap<>();
 
-    export.put(FocusChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFocusChange"));
-    export.put(MultiplyTextSubmit.EVENT_NAME, MapBuilder.of("registrationName", "onMultiplyTextSubmit"));
-
+    export.put(FocusChangeEvent.EVENT_NAME, createEventMap("onFocusChange"));
+    export.put(MultiplyTextSubmit.EVENT_NAME, createEventMap("onMultiplyTextSubmit"));
+    
     return export;
   }
 }

@@ -1,12 +1,13 @@
 package com.externalkeyboard;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardViewManager;
 import com.externalkeyboard.views.KeyboardFocusGroup.KeyboardFocusGroupManager;
 import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapperManager;
-import com.facebook.react.TurboReactPackage;
+import com.facebook.react.BaseReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;
@@ -20,7 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ExternalKeyboardViewPackage extends TurboReactPackage {
+public class ExternalKeyboardViewPackage extends BaseReactPackage {
+  @Nullable
+  @Override
+  public NativeModule getModule(@NonNull String s, @NonNull ReactApplicationContext reactApplicationContext) {
+    return null;
+  }
+
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     List<ViewManager> viewManagers = new ArrayList<>();
@@ -31,7 +38,7 @@ public class ExternalKeyboardViewPackage extends TurboReactPackage {
   }
 
   @Override
-  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    return Collections.emptyList();
+  public ReactModuleInfoProvider getReactModuleInfoProvider() {
+    return null;
   }
 }
