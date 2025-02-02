@@ -5,15 +5,16 @@ React Native library for enhanced external keyboard support.
 - ⚡️ The New Architecture is supported
 - ⚡️ Bridgeless
 
-## New Release Features
 
+## Breaking Changes !!!
+> The Keyboard Module (`A11yModule`, `KeyboardExtendedModule`) has been removed. This API was deprecated and did not work properly with the new architecture. You can refer to the migration guide to update it.
+
+
+## New Release Features
 - Introduced an iOS-specific component: `KeyboardFocusGroup`, a component for managing the `tintColor`, `focusGroupIdentifier`, and group focus.
 - Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpandX`, and `haloExpandY` properties for customizing the appearance of the `Halo Effect`.
 - Enhanced `KeyboardExtendedBaseView` with `onBubbledContextMenuPress`, key press functionality has been also enhanced. Key presses can be listened to for a group of components, screens, or pages.
 - Added the `ignoreGroupFocusHint` prop to `KeyboardExtendedBaseView` to support key press listening without focusing the container.
-
-## Breaking Changes !!!
-> The Keyboard Module (`A11yModule`, `KeyboardExtendedModule`) has been removed. This API was deprecated and did not work properly with the new architecture. You can refer to the migration guide to update it.
 
 iOS | Android
 -- | --
