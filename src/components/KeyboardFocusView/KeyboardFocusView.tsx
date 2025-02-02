@@ -1,12 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
-import { View, Platform, StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, StyleSheet } from 'react-native';
 import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
 import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
 import type {
   BaseKeyboardViewType,
   KeyboardFocus,
 } from '../../types/BaseKeyboardView';
-import { A11yModule } from '../../services';
 import type { TintType } from '../../types/WithKeyboardFocus';
 import {
   type RenderProp,
@@ -15,10 +14,6 @@ import {
 import { useFocusStyle } from '../../utils/useFocusStyle';
 import { useKeyboardPress } from '../../utils/useKeyboardPress/useKeyboardPress';
 import { IsViewFocusedContext } from '../../context/IsViewFocusedContext';
-//ToDo RNCEKV-DEPRICATED-0
-const setCurrentFocusTag = (tag: number | undefined) => {
-  A11yModule.currentFocusedTag = tag;
-};
 
 export const KeyboardFocusView = React.forwardRef<
   BaseKeyboardViewType | KeyboardFocus,
@@ -51,24 +46,9 @@ export const KeyboardFocusView = React.forwardRef<
     },
     ref
   ) => {
-    //ToDo RNCEKV-DEPRICATED-0
-    const onIOSFocusHandler = useCallback(
-      (isFocused: boolean, tag?: number) => {
-        setCurrentFocusTag(tag);
-        onFocusChange?.(isFocused);
-      },
-      [onFocusChange]
-    );
-
-    //ToDo RNCEKV-DEPRICATED-0
-    const onFocusHandler = Platform.select({
-      ios: onIOSFocusHandler,
-      android: onFocusChange,
-    });
-
     const { focused, containerFocusedStyle, onFocusChangeHandler, hoverColor } =
       useFocusStyle({
-        onFocusChange: onFocusHandler,
+        onFocusChange,
         tintColor,
         containerFocusStyle: focusStyle,
         tintType,

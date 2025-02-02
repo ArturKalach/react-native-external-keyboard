@@ -1,4 +1,3 @@
-export { A11yKeyboardModule } from './NativeModules';
 export {
   ExternalKeyboardViewNative,
   TextInputFocusWrapperNative,
@@ -30,5 +29,4 @@ export {
 } from './components/KeyboardExtendedInput/KeyboardExtendedInput';
 export { KeyboardFocusGroup } from './components/KeyboardFocusGroup/KeyboardFocusGroup';
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
-export { A11yModule, KeyboardExtendedModule } from './services';
 export { useIsViewFocused } from './context/IsViewFocusedContext';
