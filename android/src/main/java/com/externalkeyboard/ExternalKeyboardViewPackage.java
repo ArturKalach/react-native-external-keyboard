@@ -21,31 +21,6 @@ import java.util.Map;
 
 
 public class ExternalKeyboardViewPackage extends TurboReactPackage {
-  @Nullable
-  @Override
-  public NativeModule getModule(String name, ReactApplicationContext reactContext) {
-    if (name.equals(A11yKeyboardModule.NAME)) {
-      return new A11yKeyboardModule(reactContext);
-    } else {
-      return null;
-    }
-  }
-
-  @Override
-  public ReactModuleInfoProvider getReactModuleInfoProvider() {
-    return () -> {
-      final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
-      boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
-      moduleInfos.put(A11yKeyboardModule.NAME, new ReactModuleInfo(A11yKeyboardModule.NAME, A11yKeyboardModule.NAME, false, // canOverrideExistingModule
-        false, // needsEagerInit
-        true, // hasConstants
-        false, // isCxxModule
-        isTurboModule // isTurboModule
-      ));
-      return moduleInfos;
-    };
-  }
-
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     List<ViewManager> viewManagers = new ArrayList<>();
