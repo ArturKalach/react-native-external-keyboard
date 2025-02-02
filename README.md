@@ -12,6 +12,9 @@ React Native library for enhanced external keyboard support.
 - Enhanced `KeyboardExtendedBaseView` with `onBubbledContextMenuPress`, key press functionality has been also enhanced. Key presses can be listened to for a group of components, screens, or pages.
 - Added the `ignoreGroupFocusHint` prop to `KeyboardExtendedBaseView` to support key press listening without focusing the container.
 
+## Breaking Changes !!!
+The Keyboard Module (A11yModule, KeyboardExtendedModule) has been removed. This API was deprecated and did not work properly with the new architecture. You can refer to the migration guide to update it.
+
 iOS | Android
 -- | --
 <img src="/.github/images/rnek-ios-example.gif" height="500" /> | <img src="/.github/images/rnek-android-example.gif" height="500" />
