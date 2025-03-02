@@ -1,5 +1,10 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Platform, type ColorValue } from 'react-native';
+import {
+  Platform,
+  type ColorValue,
+  type PressableProps,
+  Pressable,
+} from 'react-native';
 import type { FocusStyle } from '../types';
 import type { TintType } from '../types/WithKeyboardFocus';
 
@@ -21,6 +26,9 @@ type UseFocusStyleProps = {
   onFocusChange?: (isFocused: boolean) => void;
   tintColor?: ColorValue;
   tintType?: TintType;
+  style?: PressableProps['style'];
+  Component?: React.ComponentType;
+  withPressedStyle?: boolean;
 };
 
 export const useFocusStyle = ({
@@ -29,6 +37,9 @@ export const useFocusStyle = ({
   containerFocusStyle,
   tintColor,
   tintType = 'default',
+  style,
+  Component,
+  withPressedStyle = false,
 }: UseFocusStyleProps) => {
   const [focused, setFocusStatus] = useState(false);
 
@@ -69,7 +80,28 @@ export const useFocusStyle = ({
     return focused ? specificStyle : undefined;
   }, [containerFocusStyle, focused, tintColor, tintType]);
 
+  const dafaultComponentStyle = useMemo(
+    () => [style, componentFocusedStyle],
+    [style, componentFocusedStyle]
+  );
+  const styleHandlerPressable = useCallback(
+    ({ pressed }: { pressed: boolean }) => {
+      if (typeof style === 'function') {
+        return [style({ pressed }), componentFocusedStyle];
+      } else {
+        return [style, componentFocusedStyle];
+      }
+    },
+    [componentFocusedStyle, style]
+  );
+
+  const componentStyleViewStyle =
+    Component === Pressable || withPressedStyle
+      ? styleHandlerPressable
+      : dafaultComponentStyle;
+
   return {
+    componentStyleViewStyle,
     componentFocusedStyle,
     containerFocusedStyle,
     onFocusChangeHandler,

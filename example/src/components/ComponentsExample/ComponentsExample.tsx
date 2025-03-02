@@ -105,9 +105,12 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             </View>
           </TouchableWithoutFeedback>
           <Pressable
-            // autoFocus
+            autoFocus
             containerStyle={styles.pressableContainer}
-            style={styles.pressable as object} //ToDo updat type
+            style={({ pressed }) => ({
+              backgroundColor: pressed ? 'red' : 'green',
+              ...styles.pressable,
+            })} //ToDo updat type
             onPress={() => modalButtonRef.current?.focus()}
             onLongPress={() => console.log(33)}
           >
