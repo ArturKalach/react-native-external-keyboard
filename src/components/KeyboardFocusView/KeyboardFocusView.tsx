@@ -42,7 +42,6 @@ export const KeyboardFocusView = React.forwardRef<
       onBlur,
       FocusHoverComponent,
       children,
-      withPressedStyle = false,
       ...props
     },
     ref
@@ -53,7 +52,6 @@ export const KeyboardFocusView = React.forwardRef<
         tintColor,
         containerFocusStyle: focusStyle,
         tintType,
-        withPressedStyle,
       });
 
     const withHaloEffect = tintType === 'default' && haloEffect;

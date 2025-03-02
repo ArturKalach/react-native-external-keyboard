@@ -14,7 +14,6 @@ export type FocusStateCallbackType = {
 
 export type KeyboardFocusViewProps = BaseKeyboardViewProps & {
   focusStyle?: FocusStyle;
-  withPressedStyle?: boolean;
   onPress?: (e: GestureResponderEvent | OnKeyPress) => void;
   onLongPress?: (e?: GestureResponderEvent | OnKeyPress) => void;
   onFocus?: () => void;
