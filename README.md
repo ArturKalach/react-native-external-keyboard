@@ -76,7 +76,8 @@ onPress?: | Default `onPress` or keyboard-handled `onPress` | `((event: GestureR
 onLongPress?: | Default `onLongPress` or keyboard-handled `onLongPress` (`Tab+M` for iOS). | `((event: GestureResponderEvent) => void) \| null \| undefined`
 onPressIn:? | Default `onPressIn` or keyboard-handled `onPressIn` | `((event: GestureResponderEvent) => void) \| null \| undefined`
 onPressOut:? | Default `onPressOut` or keyboard-handled `onPressOut` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-style?: | Style for the inner component | `StyleProp<ViewStyle>`
+style?: | Styles the inner component | `StyleProp<ViewStyle>; for Pressable: PressableProps['style']`
+withPressedStyle?: | Enables the pressed style handler for custom components; always true for the standard Pressable. | `boolean \| undefined`, false by default
 focusStyle?: | Style applied to the inner component when focused | `FocusStyle`
 containerStyle?: | Style for the container | StyleProp<ViewStyle>;
 containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
