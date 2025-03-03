@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, type StyleProp, type ViewStyle, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  type StyleProp,
+  type ViewStyle,
+  type PressableProps,
+} from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type { FocusStyle, KeyboardFocusViewProps } from '../types';
 import type { KeyboardFocus, OnKeyPress } from '../types/BaseKeyboardView';
@@ -31,11 +37,13 @@ export const withKeyboardFocus = <K, T>(
         onPressIn?: K | ((e?: OnKeyPress) => void);
         onPressOut?: K | ((e?: OnKeyPress) => void);
         disabled?: boolean;
-      } & Omit<KeyboardFocusViewProps, 'onPress' | 'onLongPress'> & {
+        withPressedStyle?: boolean;
+      } & Omit<KeyboardFocusViewProps, 'onPress' | 'onLongPress' | 'style'> & {
           containerStyle?: StyleProp<ViewStyle>;
           containerFocusStyle?: FocusStyle;
           tintType?: TintType;
           FocusHoverComponent?: RenderProp;
+          style?: PressableProps['style'];
         }
     >(
       (
@@ -66,6 +74,7 @@ export const withKeyboardFocus = <K, T>(
           haloExpendX,
           haloExpendY,
           groupIdentifier,
+          withPressedStyle = false,
           ...props
         },
         ref
@@ -73,7 +82,7 @@ export const withKeyboardFocus = <K, T>(
         const {
           focused,
           containerFocusedStyle,
-          componentFocusedStyle,
+          componentStyleViewStyle,
           onFocusChangeHandler,
           hoverColor,
         } = useFocusStyle({
@@ -82,6 +91,9 @@ export const withKeyboardFocus = <K, T>(
           focusStyle,
           containerFocusStyle,
           tintType,
+          style,
+          withPressedStyle,
+          Component,
         });
 
         const withHaloEffect = tintType === 'default' && haloEffect;
@@ -135,7 +147,7 @@ export const withKeyboardFocus = <K, T>(
               groupIdentifier={groupIdentifier}
             >
               <Component
-                style={[style, componentFocusedStyle]}
+                style={componentStyleViewStyle}
                 onPress={onPressHandler as T}
                 onLongPress={onLongPress as T}
                 onPressIn={onPressIn as K}
