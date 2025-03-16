@@ -15,7 +15,8 @@ export type OnKeyPress = NativeSyntheticEvent<KeyPress> & {
 export type OnKeyPressFn = (e: OnKeyPress) => void;
 export type KeyboardFocus = { focus: () => void };
 export type BaseKeyboardViewType = Partial<View> & KeyboardFocus;
-export type BaseKeyboardViewProps = ViewProps & {
+
+export type BaseFocusViewProps = {
   viewRef?: RefObject<View>;
   group?: boolean;
   onFocusChange?: (isFocused: boolean, tag?: number) => void;
@@ -36,3 +37,5 @@ export type BaseKeyboardViewProps = ViewProps & {
   groupIdentifier?: string;
   ignoreGroupFocusHint?: boolean;
 };
+
+export type BaseKeyboardViewProps = ViewProps & BaseFocusViewProps;

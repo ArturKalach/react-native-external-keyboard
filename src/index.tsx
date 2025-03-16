@@ -30,3 +30,5 @@ export {
 export { KeyboardFocusGroup } from './components/KeyboardFocusGroup/KeyboardFocusGroup';
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { useIsViewFocused } from './context/IsViewFocusedContext';
+import * as Keyboard from './modules/Keyboard';
+export { Keyboard };

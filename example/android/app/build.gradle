@@ -129,9 +129,9 @@ if (isNewArchitectureEnabled()) {
       def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
 
       if (isWindows) {
-        commandLine 'cmd', '/c', 'npx bob build --target codegen'
+        commandLine 'cmd', '/c', 'npx bob build'
       } else {
-        commandLine 'sh', '-c', 'npx bob build --target codegen'
+        commandLine 'sh', '-c', 'npx bob build'
       }
     }
     preBuild.dependsOn invokeLibraryCodegen

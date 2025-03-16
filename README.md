@@ -11,6 +11,7 @@ React Native library for enhanced external keyboard support.
 
 
 ## New Release Features
+- Added `Keyboard.dismiss` functionality for Android.
 - Introduced an iOS-specific component: `KeyboardFocusGroup`, a component for managing the `tintColor`, `focusGroupIdentifier`, and group focus.
 - Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpandX`, and `haloExpandY` properties for customizing the appearance of the `Halo Effect`.
 - Enhanced `KeyboardExtendedBaseView` with `onBubbledContextMenuPress`, key press functionality has been also enhanced. Key presses can be listened to for a group of components, screens, or pages.
@@ -249,6 +250,18 @@ onFocus?: | Handler called when the component is focused  | `() => void`
 onBlur?: | Handler called when the component loses focus | `() => void`
 groupIdentifier?: | Relates to iOS `focusGroupIdentifier`: the identifier of the focus group to which this view belongs| `string`
 
+### Keyboard
+Keyboard module to support soft keyboard dismissal.
+
+```tsx
+import { Keyboard } from 'react-native-external-keyboard';
+
+...
+  Keyboard.dismiss();
+...
+```
+
+This is needed for hiding the soft keyboard using a hardware keyboard. Additionally, the soft keyboard can be hidden from the settings or by pressing `Alt + K`.
 
 # Migration 0.3.x to 0.4.0
 

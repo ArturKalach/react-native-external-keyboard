@@ -1242,7 +1242,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-external-keyboard (0.5.1):
+  - react-native-external-keyboard (0.5.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1913,7 +1913,7 @@ SPEC CHECKSUMS:
   React-logger: 697873f06b8ba436e3cddf28018ab4741e8071b6
   React-Mapbuffer: c174e11bdea12dce07df8669d6c0dc97eb0c7706
   React-microtasksnativemodule: 8a80099ad7391f4e13a48b12796d96680f120dc6
-  react-native-external-keyboard: cab5e7d0e6b274e1ba7b5f67bddc51629f8ad18c
+  react-native-external-keyboard: ff6129ab940e6bb571df873281511161d9580b40
   react-native-safe-area-context: cbadf383376f589bb611c8ae0280c1d4b7b447e9
   React-nativeconfig: f7ab6c152e780b99a8c17448f2d99cf5f69a2311
   React-NativeModulesApple: 70600f7edfc2c2a01e39ab13a20fd59f4c60df0b
@@ -1947,6 +1947,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: fcc198acd4a55599b3468cfb6ebc526baff5f06e
 
-PODFILE CHECKSUM: da3435fd0238a05043abf0fa88b420ba9ea4e965
+PODFILE CHECKSUM: 60fd2791380dbcec1be1a39c520a7d54b593cb12
 
 COCOAPODS: 1.15.2

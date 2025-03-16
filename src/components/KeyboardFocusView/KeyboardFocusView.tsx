@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
 import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
 import type {
@@ -20,6 +20,7 @@ export const KeyboardFocusView = React.forwardRef<
   KeyboardFocusViewProps & {
     tintType?: TintType;
     FocusHoverComponent?: RenderProp;
+    withView?: boolean;
   }
 >(
   (
@@ -37,11 +38,13 @@ export const KeyboardFocusView = React.forwardRef<
       haloEffect = true,
       canBeFocused = true,
       focusable = true,
+      withView = true, //ToDo RNCEKV-9 update and rename Discussion #63
       tintColor,
       onFocus,
       onBlur,
       FocusHoverComponent,
       children,
+      accessible,
       ...props
     },
     ref
@@ -71,6 +74,13 @@ export const KeyboardFocusView = React.forwardRef<
       return undefined;
     }, [FocusHoverComponent, hoverColor, tintType]);
 
+    const a11y = useMemo(() => {
+      return (
+        (Platform.OS === 'android' && withView && accessible !== false) ||
+        accessible
+      );
+    }, [accessible, withView]);
+
     return (
       <IsViewFocusedContext.Provider value={focused}>
         <BaseKeyboardView
@@ -88,6 +98,7 @@ export const KeyboardFocusView = React.forwardRef<
           focusable={focusable}
           tintColor={tintColor}
           group={group}
+          accessible={a11y}
           {...props}
         >
           {children}

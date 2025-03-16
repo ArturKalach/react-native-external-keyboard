@@ -20,18 +20,18 @@ const backgroundTintMap = Platform.select<Partial<Record<TintType, boolean>>>({
 
 const DEFAULT_BACKGROUND_TINT = '#dce3f9';
 
-type UseFocusStyleProps = {
+type UseFocusStyleProps<C> = {
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
   onFocusChange?: (isFocused: boolean) => void;
   tintColor?: ColorValue;
   tintType?: TintType;
   style?: PressableProps['style'];
-  Component?: React.ComponentType;
+  Component?: React.ComponentType<C>;
   withPressedStyle?: boolean;
 };
 
-export const useFocusStyle = ({
+export const useFocusStyle = <C extends {}>({
   focusStyle,
   onFocusChange,
   containerFocusStyle,
@@ -40,7 +40,7 @@ export const useFocusStyle = ({
   style,
   Component,
   withPressedStyle = false,
-}: UseFocusStyleProps) => {
+}: UseFocusStyleProps<C>) => {
   const [focused, setFocusStatus] = useState(false);
 
   const onFocusChangeHandler = useCallback(
