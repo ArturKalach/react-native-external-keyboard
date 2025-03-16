@@ -1,19 +1,15 @@
 package com.externalkeyboard.modules;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.FocusFinder;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
-import com.externalkeyboard.NativeExternalKeyboardModuleSpec;
-import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapper;
+import com.externalkeyboard.ExternalKeyboardModuleSpec;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactMethod;
 
-public class ExternalKeyboardModule extends NativeExternalKeyboardModuleSpec {
+public class ExternalKeyboardModule extends ExternalKeyboardModuleSpec {
   public static final String NAME = "ExternalKeyboardModule";
   private static View focusedView = null;
   private final ReactApplicationContext context;
@@ -48,6 +44,7 @@ public class ExternalKeyboardModule extends NativeExternalKeyboardModuleSpec {
   }
 
   @Override
+  @ReactMethod
   public void dismissKeyboard(Promise promise) {
     boolean result = dismiss();
     promise.resolve(result);
