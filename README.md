@@ -261,9 +261,7 @@ import { Keyboard } from 'react-native-external-keyboard';
 ...
 ```
 
-This is need for hiding the soft keybord using hardware keyboard.
-
-
+This is needed for hiding the soft keyboard using a hardware keyboard. Additionally, the soft keyboard can be hidden from the settings or by pressing `Alt + K`.
 
 # Migration 0.3.x to 0.4.0
 
