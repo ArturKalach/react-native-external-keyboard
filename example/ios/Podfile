@@ -32,7 +32,7 @@ target 'ExternalKeyboardExample' do
 
 
   pre_install do |installer|
-    system("cd ../../ && npx bob build --target codegen")
+    system("cd ../../ && npx bob build")
   end
 
   post_install do |installer|

@@ -19,6 +19,7 @@ import {
   type KeyPress,
   withKeyboardFocus,
   KeyboardFocusGroup,
+  Keyboard,
 } from 'react-native-external-keyboard';
 
 const Pressable = withKeyboardFocus(RNPressable);
@@ -110,6 +111,9 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             style={styles.pressable as object} //ToDo updat type
             onPress={() => modalButtonRef.current?.focus()}
             onLongPress={() => console.log(33)}
+            onFocus={() => {
+              Keyboard.dismiss();
+            }}
           >
             <Text>Pressable: Focus Modal</Text>
           </Pressable>
@@ -134,6 +138,9 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           <Text>Key tracker:</Text>
           <Pressable
             ref={modalButtonRef}
+            onFocus={() => {
+              Keyboard.dismiss();
+            }}
             onPress={() => setShowModal(true)}
             containerStyle={styles.pressableContainer}
             style={styles.pressable as object} //ToDo updat type
