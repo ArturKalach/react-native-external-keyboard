@@ -152,6 +152,7 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     }
     if (keyCode == KeyEvent.KEYCODE_SPACE) {
       this.handleTextInputFocus();
+      return true;
     }
     return super.onKeyDown(keyCode, event);
   }
