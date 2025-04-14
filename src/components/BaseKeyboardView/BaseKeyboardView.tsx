@@ -1,5 +1,5 @@
 import React, { type ComponentType, useImperativeHandle, useRef } from 'react';
-import { Platform } from 'react-native';
+import { Platform, AccessibilityInfo, findNodeHandle } from 'react-native';
 import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type {
@@ -47,6 +47,10 @@ export const BaseKeyboardView = React.memo(
         focus: () => {
           if (targetRef?.current) {
             Commands.focus(targetRef.current as NativeRef);
+            const reactTag = findNodeHandle(targetRef.current);
+            if (reactTag) {
+              AccessibilityInfo.setAccessibilityFocus(reactTag);
+            }
           }
         },
       }));
