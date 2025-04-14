@@ -49,6 +49,21 @@ export const BaseKeyboardView = React.memo(
             Commands.focus(targetRef.current as NativeRef);
           }
         },
+        blur: () => {
+          targetRef.current?.blur();
+        },
+        measure: (...args: Parameters<View['measure']>) => {
+          targetRef.current?.measure(...args);
+        },
+        measureInWindow: (...args: Parameters<View['measureInWindow']>) => {
+          targetRef.current?.measureInWindow(...args);
+        },
+        measureLayout: (...args: Parameters<View['measureLayout']>) => {
+          targetRef.current?.measureLayout(...args);
+        },
+        setNativeProps: (...args: Parameters<View['setNativeProps']>) => {
+          targetRef.current?.setNativeProps(...args);
+        },
       }));
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
