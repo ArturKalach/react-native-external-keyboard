@@ -43,13 +43,17 @@ export const BaseKeyboardView = React.memo(
 
       const contextIdentifier = useGroupIdentifierContext();
 
-      useImperativeHandle(ref, () => ({
-        focus: () => {
-          if (targetRef?.current) {
-            Commands.focus(targetRef.current as NativeRef);
-          }
-        },
-      }), []);
+      useImperativeHandle(
+        ref,
+        () => ({
+          focus: () => {
+            if (targetRef?.current) {
+              Commands.focus(targetRef.current as NativeRef);
+            }
+          },
+        }),
+        [targetRef]
+      );
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
 
