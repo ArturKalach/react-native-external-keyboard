@@ -49,7 +49,7 @@ export const BaseKeyboardView = React.memo(
             Commands.focus(targetRef.current as NativeRef);
           }
         },
-      }));
+      }), []);
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
 
