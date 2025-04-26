@@ -4,7 +4,16 @@ import type { UseKeyboardPressProps } from './useKeyboardPress.types';
 import type { OnKeyPress, OnKeyPressFn } from '../../types/BaseKeyboardView';
 
 export const ANDROID_SPACE_KEY_CODE = 62;
-const MILISECOND_THRESHOLD = 20;
+export const ANDROID_DPAD_CENTER_CODE = 23;
+export const ANDROID_ENTER_CODE = 66;
+
+export const ANDROID_TRIGGER_CODES = [
+  ANDROID_SPACE_KEY_CODE,
+  ANDROID_DPAD_CENTER_CODE,
+  ANDROID_ENTER_CODE,
+];
+
+const MILLISECOND_THRESHOLD = 20;
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
@@ -16,8 +25,9 @@ export const useKeyboardPress = <
   onPressOut,
   onPress,
   onLongPress,
+  triggerCodes = ANDROID_TRIGGER_CODES,
 }: UseKeyboardPressProps<T, K>) => {
-  const tresholdTime = useRef(0);
+  const thresholdTime = useRef(0);
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
       const {
@@ -27,30 +37,30 @@ export const useKeyboardPress = <
       onPressOut?.(e as unknown as GestureResponderEvent);
       onKeyUpPress?.(e);
 
-      if (keyCode === ANDROID_SPACE_KEY_CODE) {
+      if (triggerCodes.includes(keyCode)) {
         if (isLongPress) {
-          tresholdTime.current = e?.timeStamp;
+          thresholdTime.current = e?.timeStamp;
           onLongPress?.({} as GestureResponderEvent);
         }
       }
     },
-    [onPressOut, onKeyUpPress, onLongPress]
+    [onPressOut, onKeyUpPress, triggerCodes, onLongPress]
   );
 
   const onKeyDownPressHandler = useMemo(() => {
     if (!onPressIn) return onKeyDownPress;
     return (e: OnKeyPress) => {
       onKeyDownPress?.(e);
-      if (e.nativeEvent.keyCode === ANDROID_SPACE_KEY_CODE) {
+      if (triggerCodes.includes(e.nativeEvent.keyCode)) {
         onPressIn?.(e as unknown as GestureResponderEvent);
       }
     };
-  }, [onKeyDownPress, onPressIn]);
+  }, [onKeyDownPress, onPressIn, triggerCodes]);
 
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
-      const pressThreshold = (event?.timeStamp ?? 0) - tresholdTime.current;
-      if (pressThreshold > MILISECOND_THRESHOLD) {
+      const pressThreshold = (event?.timeStamp ?? 0) - thresholdTime.current;
+      if (pressThreshold > MILLISECOND_THRESHOLD) {
         onPress?.(event);
       }
     },

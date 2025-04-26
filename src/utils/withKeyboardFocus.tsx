@@ -76,6 +76,7 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           haloExpendY,
           groupIdentifier,
           withPressedStyle = false,
+          triggerCodes,
           ...props
         },
         ref
@@ -107,6 +108,7 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
             onLongPress: onLongPress as (e?: OnKeyPress) => void,
             onPressIn: onPressIn as (e?: OnKeyPress) => void,
             onPressOut: onPressOut as (e?: OnKeyPress) => void,
+            triggerCodes,
           });
 
         const HoverComonent = useMemo(() => {
