@@ -49,6 +49,9 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   tintColor?: ColorValue;
   group?: boolean;
   groupIdentifier?: string;
+  enableA11yFocus?: boolean;
+  screenAutoA11yFocus?: boolean;
+  screenAutoA11yFocusDelay?: Int32;
 }
 
 export interface NativeCommands {

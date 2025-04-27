@@ -51,6 +51,7 @@ using namespace facebook::react;
 #endif
         _isAttachedToController = NO;
         _isAttachedToWindow = NO;
+        _enableA11yFocus = NO;
         _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
         _haloDelegate = [[RNCEKVHaloDelegate alloc] initWithView:self];
         _focusDelegate = [[RNCEKVFocusDelegate alloc] initWithView:self];
@@ -73,6 +74,7 @@ using namespace facebook::react;
     _haloExpendY = 0;
     _haloCornerRadius = 0;
     _customGroupId = nil;
+    _enableA11yFocus = NO;
     self.focusGroupIdentifier = nil;
 }
 
@@ -130,6 +132,10 @@ using namespace facebook::react;
     if(oldViewProps.autoFocus != newViewProps.autoFocus) {
         BOOL hasAutoFocus = newViewProps.autoFocus;
         [self setAutoFocus: hasAutoFocus];
+    }
+
+     if(_enableA11yFocus != newViewProps.enableA11yFocus) {
+        [self setEnableA11yFocus: newViewProps.enableA11yFocus];
     }
     
   
@@ -222,6 +228,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
         dispatch_async(dispatch_get_main_queue(), ^{
             [controller setNeedsFocusUpdate];
             [controller updateFocusIfNeeded];
+            [self a11yFocus];
         });
     }
 }
@@ -302,6 +309,11 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void)
 
 #endif
 
+- (void)a11yFocus {
+    if(!_enableA11yFocus) return;
+    UIView *focusView = [self getFocusTargetView];
+    UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, focusView);
+} 
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {

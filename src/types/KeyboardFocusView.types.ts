@@ -17,6 +17,7 @@ export type FocusStateCallbackType = {
 };
 
 export type FocusViewProps = {
+  exposeMethods?: string[];
   triggerCodes?: number[];
   focusStyle?: FocusStyle;
   onPress?: (e: GestureResponderEvent | OnKeyPress) => void;

@@ -77,6 +77,10 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           groupIdentifier,
           withPressedStyle = false,
           triggerCodes,
+          exposeMethods,
+          enableA11yFocus,
+          screenAutoA11yFocus,
+          screenAutoA11yFocusDelay = 300,
           ...props
         },
         ref
@@ -148,6 +152,10 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
               tintColor={tintColor}
               group={group}
               groupIdentifier={groupIdentifier}
+              exposeMethods={exposeMethods}
+              enableA11yFocus={enableA11yFocus}
+              screenAutoA11yFocus={screenAutoA11yFocus}
+              screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             >
               <Component
                 ref={componentRef}
