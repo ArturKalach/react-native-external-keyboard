@@ -17,6 +17,7 @@
 
 - (void)displayHalo;
 - (void)updateHalo;
+- (void)clear;
 
 @end
 

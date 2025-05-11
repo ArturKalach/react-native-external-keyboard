@@ -115,7 +115,7 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
             triggerCodes,
           });
 
-        const HoverComonent = useMemo(() => {
+        const HoverComponent = useMemo(() => {
           if (FocusHoverComponent) return FocusHoverComponent;
           if (tintType === 'hover') {
             return (
@@ -166,8 +166,8 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
                 onPressOut={onPressOut as K}
                 {...(props as unknown as C)}
               />
-              {focused && HoverComonent && (
-                <RenderPropComponent render={HoverComonent} />
+              {focused && HoverComponent && (
+                <RenderPropComponent render={HoverComponent} />
               )}
             </BaseKeyboardView>
           </IsViewFocusedContext.Provider>

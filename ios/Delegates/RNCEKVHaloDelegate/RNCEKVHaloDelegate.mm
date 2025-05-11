@@ -17,6 +17,7 @@
   CGFloat _prevHaloExpendY;
   CGFloat _prevHaloCornerRadius;
   CGRect _prevBounds;
+  BOOL _recycled;
 }
 
 - (instancetype _Nonnull)initWithView:
@@ -29,6 +30,7 @@
     _prevHaloExpendX = 0;
     _prevHaloExpendY = 0;
     _prevHaloCornerRadius = 0;
+    _recycled = true;
   }
   return self;
 }
@@ -72,8 +74,9 @@
                                   withCornerRadius:_delegate.haloCornerRadius];
     }
 
-    if (_focusEffect != nil && prevEffect != _focusEffect &&
-        focusingView.focusEffect != _focusEffect) {
+    if ((_focusEffect == nil && _recycled) || (_focusEffect != nil && prevEffect != _focusEffect &&
+        focusingView.focusEffect != _focusEffect)) {
+      _recycled = false;
       focusingView.focusEffect = _focusEffect;
     }
   }
@@ -97,6 +100,17 @@
 
     focusingView.focusEffect = focusEffect;
   }
+}
+
+- (void) clear {
+  UIView *focusingView = [_delegate getFocusTargetView];
+  focusingView.focusEffect = nil;
+  _focusEffect = nil;
+  _recycled = true;
+  _prevBounds = CGRect();
+  _prevHaloExpendX = 0;
+  _prevHaloExpendY = 0;
+  _prevHaloCornerRadius = 0;
 }
 
 @end

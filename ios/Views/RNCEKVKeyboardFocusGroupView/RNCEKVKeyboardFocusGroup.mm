@@ -106,10 +106,12 @@ using namespace facebook::react;
     [super updateProps
      :props oldProps:oldProps];
   
+  
     UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+    BOOL isDifferentColor = ![newColor isEqual: self.tintColor];
     BOOL renewColor = newColor != nil && self.tintColor == nil;
     BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
-    if(isColorChanged || renewColor) {
+    if(isColorChanged || renewColor || isDifferentColor) {
         self.tintColor = newColor;
     }
     

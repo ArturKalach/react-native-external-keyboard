@@ -75,6 +75,8 @@ using namespace facebook::react;
   _haloCornerRadius = 0;
   _customGroupId = nil;
   _enableA11yFocus = NO;
+  [_haloDelegate clear];
+  [_gIdDelegate clear];
   self.focusGroupIdentifier = nil;
 }
 
@@ -174,15 +176,15 @@ using namespace facebook::react;
     }
   }
 
-  if (oldViewProps.haloExpendX != newViewProps.haloExpendX) {
+  if (_haloExpendX != newViewProps.haloExpendX) {
     [self setHaloExpendX:newViewProps.haloExpendX];
   }
 
-  if (oldViewProps.haloExpendY != newViewProps.haloExpendY) {
+  if (_haloExpendY != newViewProps.haloExpendY) {
     [self setHaloExpendY:newViewProps.haloExpendY];
   }
 
-  if (oldViewProps.haloCornerRadius != newViewProps.haloCornerRadius) {
+  if (_haloCornerRadius != newViewProps.haloCornerRadius) {
     [self setHaloCornerRadius:newViewProps.haloCornerRadius];
   }
 }
@@ -400,10 +402,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 - (void)layoutSubviews {
   [super layoutSubviews];
   [_haloDelegate displayHalo];
-  // ToDo RNCEKV-7 add cache for halo update
-  if (self.bounds.size.width && self.bounds.size.height) {
-    [_haloDelegate updateHalo];
-  }
 
   [_gIdDelegate updateGroupIdentifier];
 }

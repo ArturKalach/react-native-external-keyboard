@@ -51,6 +51,7 @@
 }
 
 - (void) clear {
+  _tagId = nil;
   if (@available(iOS 14.0, *)) {
     UIView* focusView = [_delegate getFocusTargetView];
     if(focusView) {
