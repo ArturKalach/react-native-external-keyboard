@@ -21,7 +21,7 @@
 }
 
 - (instancetype _Nonnull)initWithView:
-    (UIView<RNCEKVHaloProtocol> *_Nonnull)delegate {
+(UIView<RNCEKVHaloProtocol> *_Nonnull)delegate {
   self = [super init];
   if (self) {
     _delegate = delegate;
@@ -38,6 +38,13 @@
 - (BOOL)isHaloHidden {
   NSNumber *isHaloActive = [_delegate isHaloActive];
   return [isHaloActive isEqual:@NO];
+}
+
+- (void)displayHalo:(BOOL)force {
+  _focusEffect = nil;
+  _recycled = true;
+  
+  [self displayHalo];
 }
 
 - (void)displayHalo {

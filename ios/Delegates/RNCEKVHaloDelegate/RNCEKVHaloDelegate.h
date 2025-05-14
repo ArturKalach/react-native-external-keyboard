@@ -15,6 +15,7 @@
 
 - (instancetype _Nonnull )initWithView:(UIView<RNCEKVHaloProtocol> *_Nonnull)view;
 
+- (void)displayHalo:(BOOL)force;
 - (void)displayHalo;
 - (void)updateHalo;
 - (void)clear;

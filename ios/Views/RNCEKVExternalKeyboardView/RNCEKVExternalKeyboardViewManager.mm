@@ -62,7 +62,7 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, BOOL, RNCEKVExternalKeyboardView)
 
 RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
-    if(json) {
+   if(json) {
         BOOL value = [RCTConvert BOOL:json];
        if(view.isHaloActive == nil && !value) {
            [view setIsHaloActive: @0];

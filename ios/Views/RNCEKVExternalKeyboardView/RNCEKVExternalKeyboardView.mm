@@ -393,6 +393,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 }
 
 - (void)onViewAttached {
+  [_haloDelegate displayHalo: true];
   if (self.autoFocus) {
     [self updateFocus:self.reactViewController];
   }
