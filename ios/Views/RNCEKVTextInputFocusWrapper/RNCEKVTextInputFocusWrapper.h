@@ -3,6 +3,7 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTUITextField.h>
 #import "RNCEKVGroupIdentifierProtocol.h"
+#import <React/RCTUITextView.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -12,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RNCEKVTextInputFocusWrapper : RCTViewComponentView <RNCEKVGroupIdentifierProtocol>{
     RCTUITextField* _textField;
+    RCTUITextView* _textView;
 }
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
@@ -37,6 +39,7 @@ NS_ASSUME_NONNULL_END
 #import <React/RCTView.h>
 @interface RNCEKVTextInputFocusWrapper : RCTView <RNCEKVGroupIdentifierProtocol>{
     RCTUITextField* _textField;
+    RCTUITextView* _textView;
 }
 
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;

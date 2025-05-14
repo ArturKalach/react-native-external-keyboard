@@ -195,24 +195,47 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
     BOOL isTextInputFocus = [context.nextFocusedView isKindOfClass: [RCTUITextField class]];
-    if(isTextInputFocus && (_textField == nil || _textField == context.nextFocusedView)) {
-        [self onFocusChange: YES];
-        if(_textField == nil) {
-            _textField = (RCTUITextField *)context.nextFocusedView;
+    BOOL isTextInputView = [context.nextFocusedView isKindOfClass: [RCTUITextView class]];
+  
+    if(isTextInputFocus && _textField == nil) {
+      _textField = (RCTUITextField *)context.nextFocusedView;
+    }
+  
+    if(isTextInputView && _textView == nil) {
+      _textView = (RCTUITextView *)context.nextFocusedView;
+    }
+    
+    BOOL isNext = context.nextFocusedView == _textField || context.nextFocusedView == _textView;
+    BOOL isPrev = context.previouslyFocusedView == _textField || context.previouslyFocusedView == _textView;
+
+    if(isNext) {
+      [self onFocusChange: YES];
+      if(self.focusType == AUTO_FOCUS) {
+        if(_textField != nil) {
+          [_textField reactFocus];
         }
-        if(self.focusType == AUTO_FOCUS) {
-            [_textField reactFocus];
+        if(_textView != nil) {
+          [_textView reactFocus];
         }
-    } else if (context.previouslyFocusedView == _textField) {
-        [self onFocusChange: NO];
-        if(self.blurType == AUTO_BLUR) {
-            [_textField reactBlur];
+      }
+    }
+      
+    if(isPrev) {
+      [self onFocusChange: NO];
+      if(self.blurType == AUTO_BLUR) {
+        if(_textField != nil) {
+          [_textField reactBlur];
         }
+        if(_textView != nil) {
+          [_textView reactBlur];
+        }
+      }
     }
 }
 
 - (void)cleanReferences{
     _textField = nil;
+    _textView = nil;
     _customGroupId = nil;
 }
 
@@ -262,11 +285,23 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
     if (@available(iOS 13.4, *)) {
+        UIKey *key = presses.allObjects[0].key;
+        BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
+      
+        if(isEnter && !_textView.isFirstResponder && !_textField.isFirstResponder) {
+          if(_textView) {
+            [_textView reactFocus];
+          }
+          
+          if(_textField) {
+            [_textField reactFocus];
+          }
+          
+          return;
+        }
+      
         if(self.multiline) {
-            UIKey *key = presses.allObjects[0].key;
-            
             BOOL isShiftPressed = (key.modifierFlags & UIKeyModifierShift) != 0;
-            BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
             
             UIView* textView = [self getMultilineTextView: self.subviews[0]];
             if(textView && textView.isFirstResponder) {
