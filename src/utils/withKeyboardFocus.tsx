@@ -80,7 +80,7 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           exposeMethods,
           enableA11yFocus,
           screenAutoA11yFocus,
-          screenAutoA11yFocusDelay = 300,
+          screenAutoA11yFocusDelay = 300, // ToDo align with BaseKeyboardView
           ...props
         },
         ref
