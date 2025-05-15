@@ -67,6 +67,24 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  @ReactProp(name = "enableA11yFocus", defaultBoolean = false)
+  public void setEnableA11yFocus(ExternalKeyboardView wrapper, boolean enableA11yFocus) {
+    wrapper.enableA11yFocus = enableA11yFocus;
+  }
+
+  @Override
+  @ReactProp(name = "screenAutoA11yFocus", defaultBoolean = false)
+  public void setScreenAutoA11yFocus(ExternalKeyboardView wrapper, boolean enableA11yFocus) {
+    wrapper.screenAutoA11yFocus = enableA11yFocus;
+  }
+
+  @Override
+  @ReactProp(name = "screenAutoA11yFocusDelay", defaultInt = 500)
+  public void setScreenAutoA11yFocusDelay(ExternalKeyboardView wrapper, int value) {
+    wrapper.screenAutoA11yFocusDelay = value;
+  }
+
+  @Override
   @ReactProp(name = "hasKeyDownPress")
   public void setHasKeyDownPress(ExternalKeyboardView view, boolean value) {
     view.hasKeyDownListener = value;

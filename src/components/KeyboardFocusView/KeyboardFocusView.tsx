@@ -45,6 +45,7 @@ export const KeyboardFocusView = React.forwardRef<
       FocusHoverComponent,
       children,
       accessible,
+      triggerCodes,
       ...props
     },
     ref
@@ -64,6 +65,7 @@ export const KeyboardFocusView = React.forwardRef<
       onKeyDownPress,
       onPress,
       onLongPress,
+      triggerCodes,
     });
 
     const HoverComonent = useMemo(() => {

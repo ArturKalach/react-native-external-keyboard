@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL hasOnPressDown;
 @property BOOL hasOnFocusChanged;
 @property BOOL isGroup;
+@property BOOL enableA11yFocus;
 @property (nonatomic, assign) CGFloat haloCornerRadius;
 @property (nonatomic, assign) CGFloat haloExpendX;
 @property (nonatomic, assign) CGFloat haloExpendY;
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_END
 @property BOOL hasOnPressDown;
 @property BOOL hasOnFocusChanged;
 @property BOOL isGroup;
+@property BOOL enableA11yFocus;
 @property UIView* myPreferredFocusedView;
 @property (nonatomic, assign) CGFloat haloCornerRadius;
 @property (nonatomic, assign) CGFloat haloExpendX;

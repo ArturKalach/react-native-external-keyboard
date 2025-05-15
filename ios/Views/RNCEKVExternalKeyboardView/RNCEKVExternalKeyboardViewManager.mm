@@ -62,7 +62,7 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocus, BOOL, RNCEKVExternalKeyboardView)
 
 RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
-    if(json) {
+   if(json) {
         BOOL value = [RCTConvert BOOL:json];
        if(view.isHaloActive == nil && !value) {
            [view setIsHaloActive: @0];
@@ -71,6 +71,24 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
             [view setIsHaloActive: @(value)];
        }
     }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(enableA11yFocus, BOOL, RNCEKVExternalKeyboardView)
+{
+    if(json) {
+        BOOL value = json ? [RCTConvert BOOL:json] : NO;
+        [view setEnableA11yFocus: value];
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(screenAutoA11yFocus, BOOL, RNCEKVExternalKeyboardView)
+{
+    //stub
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(screenAutoA11yFocusDelay, int, RNCEKVExternalKeyboardView)
+{
+    //stub
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(haloCornerRadius, float, RNCEKVExternalKeyboardView)

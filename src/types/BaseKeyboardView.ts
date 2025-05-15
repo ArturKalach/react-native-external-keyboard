@@ -36,6 +36,10 @@ export type BaseFocusViewProps = {
   haloExpendY?: number;
   groupIdentifier?: string;
   ignoreGroupFocusHint?: boolean;
+  exposeMethods?: string[];
+  enableA11yFocus?: boolean;
+  screenAutoA11yFocus?: boolean;
+  screenAutoA11yFocusDelay?: number;
 };
 
 export type BaseKeyboardViewProps = ViewProps & BaseFocusViewProps;

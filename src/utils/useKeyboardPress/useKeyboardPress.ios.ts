@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { UseKeyboardPressProps } from './useKeyboardPress.types';
 import type { OnKeyPress } from '../../types/BaseKeyboardView';
+import type { GestureResponderEvent } from 'react-native';
 
 const IOS_SPACE_KEY = 44;
 const IOS_RETURN_OR_ENTER = 40;
@@ -16,17 +17,23 @@ export const useKeyboardPress = <
   onPress,
   onPressIn,
   onPressOut,
+  onLongPress,
   triggerCodes = IOS_TRIGGER_CODES,
 }: UseKeyboardPressProps<T, K>) => {
   const onKeyUpPressHandler = useMemo(() => {
-    if (!onPressOut) return onKeyUpPress;
     return (e: OnKeyPress) => {
       onKeyUpPress?.(e);
+
       if (triggerCodes.includes(e.nativeEvent.keyCode)) {
         onPressOut?.(e);
+        if (e.nativeEvent.isLongPress) {
+          onLongPress?.({} as GestureResponderEvent);
+        } else {
+          onPress?.({} as GestureResponderEvent);
+        }
       }
     };
-  }, [onKeyUpPress, onPressOut, triggerCodes]);
+  }, [onKeyUpPress, onLongPress, onPress, onPressOut, triggerCodes]);
 
   const onKeyDownPressHandler = useMemo(() => {
     if (!onPressIn) return onKeyDownPress;

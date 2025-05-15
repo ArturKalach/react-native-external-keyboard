@@ -76,6 +76,11 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           haloExpendY,
           groupIdentifier,
           withPressedStyle = false,
+          triggerCodes,
+          exposeMethods,
+          enableA11yFocus,
+          screenAutoA11yFocus,
+          screenAutoA11yFocusDelay = 300, // ToDo align with BaseKeyboardView
           ...props
         },
         ref
@@ -107,9 +112,10 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
             onLongPress: onLongPress as (e?: OnKeyPress) => void,
             onPressIn: onPressIn as (e?: OnKeyPress) => void,
             onPressOut: onPressOut as (e?: OnKeyPress) => void,
+            triggerCodes,
           });
 
-        const HoverComonent = useMemo(() => {
+        const HoverComponent = useMemo(() => {
           if (FocusHoverComponent) return FocusHoverComponent;
           if (tintType === 'hover') {
             return (
@@ -146,6 +152,10 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
               tintColor={tintColor}
               group={group}
               groupIdentifier={groupIdentifier}
+              exposeMethods={exposeMethods}
+              enableA11yFocus={enableA11yFocus}
+              screenAutoA11yFocus={screenAutoA11yFocus}
+              screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             >
               <Component
                 ref={componentRef}
@@ -156,8 +166,8 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
                 onPressOut={onPressOut as K}
                 {...(props as unknown as C)}
               />
-              {focused && HoverComonent && (
-                <RenderPropComponent render={HoverComonent} />
+              {focused && HoverComponent && (
+                <RenderPropComponent render={HoverComponent} />
               )}
             </BaseKeyboardView>
           </IsViewFocusedContext.Provider>
