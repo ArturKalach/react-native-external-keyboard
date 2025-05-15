@@ -97,6 +97,11 @@ haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
 ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
 viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
+triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
+enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
+screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
+`screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
+`exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
 ...rest | Remaining component props  | `Type of Component`
 
 
@@ -143,6 +148,11 @@ tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none
 FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
 group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
+triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
+enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
+screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
+`screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
+`exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
 ...rest | Remaining View props  | `View`
 
 
