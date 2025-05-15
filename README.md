@@ -362,7 +362,9 @@ It has been a long journey since the first release of the `react-native-external
 With that, I would like to thank the contributors, those who created issues, and the followers, because achieving these results wouldn't have been possible without you.
 
 Thanks to the initial authors: [Andrii Koval](https://github.com/ZioVio), [Michail Chavkin](https://github.com/mchavkin), [Dzmitry Khamitsevich](https://github.com/bulletxenus).
+
 Thanks to the contributors: [João Mosmann](https://github.com/JoaoMosmann), [Stéphane](https://github.com/stephane-r).
+
 Thanks to those who created issues:  [Stéphane](https://github.com/stephane-r), [proohit](https://github.com/proohit), [Rananjaya Bandara](https://github.com/Rananjaya), [SteveHoneckPGE](https://github.com/SteveHoneckPGE), [Wes](https://github.com/mrpoodestump)
 
 I really appreciate your help; it has truly helped me move forward!
