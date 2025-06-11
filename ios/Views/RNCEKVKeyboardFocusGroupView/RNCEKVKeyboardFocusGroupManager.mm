@@ -36,6 +36,12 @@ RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVKeyboardFocusGroup)
    [view setCustomGroupId: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(orderGroup, NSString, RNCEKVKeyboardFocusGroup)
+{
+   NSString* value = json ? [RCTConvert NSString:json] : nil;
+   [view setOrderGroup: value];
+}
+
 
 
 @end

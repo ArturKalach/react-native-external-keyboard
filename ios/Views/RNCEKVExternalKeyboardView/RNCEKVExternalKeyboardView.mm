@@ -17,6 +17,8 @@
 #import "RCTFabricComponentsPlugins.h"
 #import "RNCEKVFabricEventHelper.h"
 #import <React/RCTConversions.h>
+#import <stdlib.h>
+#import "RNAOA11yOrderLinking.h"
 
 using namespace facebook::react;
 
@@ -35,6 +37,19 @@ using namespace facebook::react;
   NSNumber *_isFocused;
   BOOL _isAttachedToWindow;
   BOOL _isAttachedToController;
+  BOOL _isLinked;
+}
+
+- (void)linkIndex:(UIView *)subview {
+    if(_orderPosition != nil && _orderGroup != nil && !_isLinked) {
+        [[RNAOA11yOrderLinking sharedInstance] add: _orderPosition withOrderKey: _orderGroup withObject:self];
+        _isLinked = YES;
+    }
+}
+
+- (void)didAddSubview:(UIView *)subview {
+    [super didAddSubview:subview];
+    [self linkIndex:subview];
 }
 
 @synthesize haloCornerRadius = _haloCornerRadius;
@@ -77,8 +92,24 @@ using namespace facebook::react;
   _enableA11yFocus = NO;
   [_haloDelegate clear];
   [_gIdDelegate clear];
+  _isLinked = NO;
   self.focusGroupIdentifier = nil;
 }
+
+
+- (void)updateOrderPosition:(NSNumber *)position {
+   if(_orderPosition != nil || _orderPosition != position) {
+     if(_orderGroup != nil && self.subviews.count > 0 && _isLinked) {
+       [[RNAOA11yOrderLinking sharedInstance] update:position lastPosition:_orderPosition withOrderKey: _orderGroup withView: self];
+        }
+     _orderPosition = position;
+    }
+    
+    if(_orderPosition == nil && _orderPosition != position) {
+      _orderPosition = position;
+    }
+}
+
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider {
@@ -93,6 +124,11 @@ using namespace facebook::react;
 
 - (void)willRemoveSubview:(UIView *)subview {
   [super willRemoveSubview:subview];
+  
+  if(_orderPosition != nil && _orderGroup != nil) {
+      [[RNAOA11yOrderLinking sharedInstance] remove:_orderPosition withOrderKey:_orderGroup];
+  }
+
   if (_customGroupId && _gIdDelegate) {
     [_gIdDelegate clear];
   }
@@ -103,6 +139,13 @@ using namespace facebook::react;
   if ([commandName isEqual:FOCUS]) {
     [self focus];
   }
+}
+
+- (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask {
+    [super finalizeUpdates:updateMask];
+    if(self.subviews.count > 0) {
+        [self linkIndex: self.subviews[0]];
+    }
 }
 
 - (void)updateProps:(Props::Shared const &)props
@@ -117,6 +160,10 @@ using namespace facebook::react;
     [self setHasOnFocusChanged:newViewProps.hasOnFocusChanged];
   }
 
+  if (oldViewProps.lockFocus != newViewProps.lockFocus) {
+    [self setLockFocus: @(newViewProps.lockFocus)];
+  }
+  
   if (oldViewProps.canBeFocused != newViewProps.canBeFocused) {
     [self setCanBeFocused:newViewProps.canBeFocused];
   }
@@ -132,6 +179,17 @@ using namespace facebook::react;
   if (oldViewProps.autoFocus != newViewProps.autoFocus) {
     BOOL hasAutoFocus = newViewProps.autoFocus;
     [self setAutoFocus:hasAutoFocus];
+  }
+  
+  
+  BOOL isIndexChanged = oldViewProps.orderIndex != newViewProps.orderIndex || _orderPosition == nil;
+  if(isIndexChanged) {
+    [self updateOrderPosition: @(newViewProps.orderIndex)];
+  }
+  
+  BOOL isOrderGroupChanged = oldViewProps.orderGroup != newViewProps.orderGroup || _orderGroup == nil;
+  if(isOrderGroupChanged) {
+     [self setOrderGroup: [NSString stringWithUTF8String:newViewProps.orderGroup.c_str()]];
   }
 
   if (_enableA11yFocus != newViewProps.enableA11yFocus) {
@@ -278,6 +336,31 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
                                         withEmitter:_eventEmitter];
 }
 
+// - (void)setupLayout {
+//   self.focusGuide = [[UIFocusGuide alloc] init];
+//   UIFocusGuide *focusGuide2 = [[UIFocusGuide alloc] init];
+//   [self addLayoutGuide:self.focusGuide];
+//   [self addLayoutGuide: focusGuide2];
+//   self.focusGuide.preferredFocusEnvironments = @[self];
+//   focusGuide2.preferredFocusEnvironments = @[self];
+
+//    // Activate constraints for the focus guide to "bridge" Button A and Button C
+//    [NSLayoutConstraint activateConstraints:@[
+//         [self.focusGuide.widthAnchor constraintEqualToAnchor: self.widthAnchor],
+//         [self.focusGuide.heightAnchor constraintEqualToAnchor: self.heightAnchor],
+//         [self.focusGuide.topAnchor constraintEqualToAnchor: self.bottomAnchor],
+//         [self.focusGuide.leftAnchor constraintEqualToAnchor: self.leftAnchor]
+//    ]];
+  
+//   [NSLayoutConstraint activateConstraints:@[
+//        [focusGuide2.widthAnchor constraintEqualToAnchor: self.widthAnchor],
+//        [focusGuide2.heightAnchor constraintEqualToAnchor: self.heightAnchor],
+//        [focusGuide2.leftAnchor constraintEqualToAnchor: self.rightAnchor],
+//        [focusGuide2.topAnchor constraintEqualToAnchor: self.topAnchor]
+//   ]];
+  
+// }
+
 #else
 
 - (void)onContextMenuPressHandler {
@@ -405,6 +488,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   [_haloDelegate displayHalo];
 
   [_gIdDelegate updateGroupIdentifier];
+//  [self setupLayout];
 }
 
 - (void)viewControllerChanged:(NSNotification *)notification {

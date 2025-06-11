@@ -10,6 +10,7 @@ export interface KeyboardFocusGroupNativeComponentProps extends ViewProps {
   onGroupFocusChange?: DirectEventHandler<FocusChange>;
   tintColor?: ColorValue;
   groupIdentifier?: string;
+  orderGroup?: string;
 }
 
 export default codegenNativeComponent<KeyboardFocusGroupNativeComponentProps>(

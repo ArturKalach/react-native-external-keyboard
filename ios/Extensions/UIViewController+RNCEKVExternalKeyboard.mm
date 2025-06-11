@@ -74,5 +74,4 @@ static char kCustomFocusViewKey;
     return focusEnvironments;
 }
 
-
 @end
