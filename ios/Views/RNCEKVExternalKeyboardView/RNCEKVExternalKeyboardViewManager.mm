@@ -129,6 +129,28 @@ RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)
 }
 
 
+RCT_CUSTOM_VIEW_PROPERTY(orderGroup, NSString, RNCEKVExternalKeyboardView)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderGroup: value];
+}
+
+
+RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSNumber, RNCEKVExternalKeyboardView)
+{
+  if(json){
+    NSNumber* value = [RCTConvert NSNumber:json];
+    [view setOrderPosition: value];
+  }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(lockFocus, NSNumber, RNCEKVExternalKeyboardView)
+{
+  if(json){
+    NSNumber* value = [RCTConvert NSNumber:json];
+    [view setLockFocus: value];
+  }
+}
 
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
 {

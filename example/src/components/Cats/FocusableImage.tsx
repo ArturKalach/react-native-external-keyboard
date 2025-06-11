@@ -5,6 +5,7 @@ import {
   type DimensionValue,
   Platform,
   StyleSheet,
+  Text,
 } from 'react-native';
 import {
   Pressable,
@@ -25,18 +26,18 @@ export const FocusableImage = React.forwardRef<
     <Pressable
       ref={ref}
       tintType={tinyType}
-      tintColor="#ffffff"
+      tintColor="red"
       containerStyle={[
         styles.container,
-        { width: width as DimensionValue | undefined },
+        // { width: width as DimensionValue | undefined },
       ]}
     >
-      <Image source={source} style={styles.image} />
+      <Text>1232313</Text>
     </Pressable>
   );
 });
 
 const styles = StyleSheet.create({
-  container: { height: 150, padding: 1 },
+  container: { height: 50 },
   image: { width: '100%', height: 150 },
 });

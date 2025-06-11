@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RNCEKVKeyboardFocusGroup : RCTViewComponentView
 @property (nonatomic, strong, nullable) NSString *customGroupId;
+@property (nonatomic, strong, nullable) NSString *orderGroup;
 @property BOOL isGroupFocused;
 @end
 
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_END
 #import <React/RCTView.h>
 @interface RNCEKVKeyboardFocusGroup : RCTView
 @property (nonatomic, strong, nullable) NSString *customGroupId;
+@property (nonatomic, strong, nullable) NSString *orderGroup;
 @property BOOL isGroupFocused;
 @property (nonatomic, copy) RCTDirectEventBlock onGroupFocusChange;
 @end

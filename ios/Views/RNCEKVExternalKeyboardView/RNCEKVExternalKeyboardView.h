@@ -26,6 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 @property (nonatomic, strong, nullable) NSString *customGroupId;
 @property BOOL autoFocus;
+@property (nonatomic, strong) UIFocusGuide *focusGuide;
+@property NSNumber* orderPosition;
+@property NSNumber* lockFocus;
+@property NSString* orderGroup;
+@property BOOL isLinked;
 
 - (UIView*)getFocusTargetView;
 
@@ -59,6 +64,10 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTDirectEventBlock onKeyDownPress;
 @property (nonatomic, copy) RCTBubblingEventBlock onBubbledContextMenuPress;
 @property (nonatomic, strong, nullable) NSString *customGroupId;
+@property NSNumber* orderPosition;
+@property NSNumber* lockFocus;
+@property NSString* orderGroup;
+@property BOOL isLinked;
 
 - (UIView*)getFocusTargetView;
 

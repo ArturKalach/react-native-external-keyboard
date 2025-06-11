@@ -8,6 +8,7 @@
 #import "RNCEKVKeyboardFocusGroup.h"
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
+#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
@@ -16,10 +17,12 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
 
+#import "RNAOA11yOrderLinking.h"
 #import "RCTFabricComponentsPlugins.h"
 #import "RNCEKVFabricEventHelper.h"
+#import "RNAOA11yRelashioship.h"
 #import <React/RCTConversions.h>
-
+#import "RNCEKVExternalKeyboardView.h"
 using namespace facebook::react;
 
 @interface RNCEKVKeyboardFocusGroup () <RCTKeyboardFocusGroupViewProtocol>
@@ -28,12 +31,18 @@ using namespace facebook::react;
 
 #endif
 
-@implementation RNCEKVKeyboardFocusGroup
+@implementation RNCEKVKeyboardFocusGroup {
+  UIView* _entry;
+  UIView* _exit;
+  UIView* _lock;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         _isGroupFocused = false;
+        _entry = nil;
+        _exit = nil;
 #ifdef RCT_NEW_ARCH_ENABLED
         static const auto defaultProps = std::make_shared<const KeyboardFocusGroupProps>();
         _props = defaultProps;
@@ -42,6 +51,7 @@ using namespace facebook::react;
     
     return self;
 }
+
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
@@ -86,6 +96,149 @@ using namespace facebook::react;
 #endif
 
 
+#pragma mark - Focus Get Order Info
+- (NSArray<UIView *> *)getOrder {
+  RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];
+  return [orderRelationship getArray];
+}
+
+
+#pragma mark - Focus Find Index
+- (int)findOrderIndex:(NSArray *)order element:(UIView*)el  {
+  int resultIndex = -1;
+
+  for (int i = 0; i < order.count; i++) {
+    UIView *element = order[i];
+      if (element.subviews[0] == el) { //ToDo focus element
+        resultIndex = i;
+        break;
+      }
+  }
+  
+  return resultIndex;
+}
+
+
+#pragma mark - Next Focus Handling
+- (void)handleNextFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
+  NSArray<UIView *> * order = [self getOrder];
+  
+  BOOL isEntry = _entry == current;
+  if (isEntry) {
+    UIView* firstElement = order[0];
+    if ([firstElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)firstElement focus];
+    }
+  }
+  
+  BOOL isLast = currentIndex == order.count - 1 && _exit;
+  if (isLast) {
+    [self updateFocus: _exit];
+  }
+  
+  BOOL inOrderRange = currentIndex >= 0 && currentIndex < order.count - 1;
+  if (inOrderRange) {
+    UIView* nextElement = order[currentIndex + 1];
+    if ([nextElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)nextElement focus];
+    }
+  }
+}
+
+#pragma mark - Prev Focus Handling
+- (void)handlePrevFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
+  NSArray<UIView *> * order = [self getOrder];
+  
+  BOOL isExit = _exit == current;
+  if (isExit) {
+    UIView* lastElement = order[order.count - 1];
+    if ([lastElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)lastElement focus];
+    }
+  }
+  
+  BOOL isFirst = currentIndex == 0 && _entry;
+  if (isFirst) {
+    [self updateFocus: _entry];
+  }
+  
+  BOOL inRange = currentIndex > 0 && currentIndex <= order.count - 1;
+  if (inRange) {
+    UIView* prevElement = order[currentIndex - 1];
+    if ([prevElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)prevElement focus];
+    }
+  }
+}
+
+#pragma mark - Focus Order Handler
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
+    UIView *next = (UIView *)context.nextFocusedItem;
+    UIView *current = (UIView *)context.previouslyFocusedItem;
+    UIFocusHeading movementHint = context.focusHeading;
+
+  UIView* rnkv = current.superview; //ToDo Create a map for RNKV <-> Target relations
+  if ([rnkv isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      NSUInteger rawFocusLockValue = [((RNCEKVExternalKeyboardView *)rnkv).lockFocus unsignedIntegerValue];
+
+      BOOL isDirectionLock = (rawFocusLockValue & movementHint) != 0;
+      if (isDirectionLock) {
+          return NO;
+      }
+  }
+  
+  if(_orderGroup) {
+    RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];
+    NSArray *order = [orderRelationship getArray];
+    if(order.count == 0) {
+      return YES;
+    }
+    
+    int currentIndex = [self findOrderIndex:order element:current];
+    int nextIndex = [self findOrderIndex:order element:next];
+
+    BOOL isEntryElement = _entry == nil && currentIndex == -1 && movementHint == UIFocusHeadingNext;
+    if(isEntryElement) {
+      _entry = current;
+    }
+    
+    BOOL isExit = _exit == nil && nextIndex == -1 && movementHint == UIFocusHeadingNext;
+    if(isExit) {
+      _exit = next;
+    }
+    
+    if(context.focusHeading == UIFocusHeadingNext) {
+      [self handleNextFocus:current currentIndex: currentIndex];
+      return YES;
+    }
+    
+    
+    if(context.focusHeading == UIFocusHeadingPrevious) {
+      [self handlePrevFocus:current currentIndex: currentIndex];
+      return YES;
+    }
+    
+    //ToDo add sides focus handlers
+  }
+  
+  return YES;
+}
+
+- (void)updateFocus:(UIView *)focusingView {
+  UIViewController *controller = self.reactViewController;
+
+  if (controller != nil) {
+    controller.customFocusView = focusingView;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [controller setNeedsFocusUpdate];
+      [controller updateFocusIfNeeded];
+    });
+  }
+}
+
+
+
+
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
@@ -123,9 +276,12 @@ using namespace facebook::react;
         [self setCustomGroupId:newGroupId];
       }
     }
-    
-}
+  
+  if(oldViewProps.orderGroup != newViewProps.orderGroup) {
+    _orderGroup = [NSString stringWithUTF8String:newViewProps.orderGroup.c_str()];
+  }
 
+}
 
 Class<RCTComponentViewProtocol> KeyboardFocusGroupCls(void)
 {
