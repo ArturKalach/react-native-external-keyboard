@@ -1,5 +1,8 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
+import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.events.FocusChangeEvent;
@@ -25,9 +28,29 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     return NAME;
   }
 
+//  @Override
+//  public ExternalKeyboardView createViewInstance(ThemedReactContext context) {
+//    return new ExternalKeyboardView(context);
+//  }
+
+
+  @NonNull
   @Override
-  public ExternalKeyboardView createViewInstance(ThemedReactContext context) {
-    return new ExternalKeyboardView(context);
+  public ExternalKeyboardView createViewInstance(@NonNull ThemedReactContext context) {
+    ExternalKeyboardView viewGroup = new ExternalKeyboardView(context);
+
+    viewGroup.setOnHierarchyChangeListener(new ExternalKeyboardView.OnHierarchyChangeListener() {
+      @Override
+      public void onChildViewAdded(View parent, View child) {
+        viewGroup.linkAddView(child);
+      }
+
+      @Override
+      public void onChildViewRemoved(View parent, View child) {
+        viewGroup.linkRemoveView(child);
+      }
+    });
+    return viewGroup;
   }
 
   public static Map<String, Object> buildDirectEventMap(String registrationName) {
@@ -138,8 +161,68 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  @ReactProp(name = "orderGroup")
+  public void setOrderGroup(ExternalKeyboardView view, @Nullable String value) {
+    view.setOrderGroup(value);
+  }
+
+  @Override
+  @ReactProp(name = "orderIndex")
+  public void setOrderIndex(ExternalKeyboardView view, int value) {
+    view.setOrderIndex(value);
+  }
+
+  @Override
+  @ReactProp(name = "lockFocus")
+  public void setLockFocus(ExternalKeyboardView view, int value) {
+    view.lockFocus = value;
+  }
+
+  @Override
+  @ReactProp(name = "orderId")
+  public void setOrderId(ExternalKeyboardView view, @Nullable String value) {
+    view.orderId = value;
+  }
+
+  @Override
+  @ReactProp(name = "orderLeft")
+  public void setOrderLeft(ExternalKeyboardView view, @Nullable String value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "orderRight")
+  public void setOrderRight(ExternalKeyboardView view, @Nullable String value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "orderUp")
+  public void setOrderUp(ExternalKeyboardView view, @Nullable String value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "orderDown")
+  public void setOrderDown(ExternalKeyboardView view, @Nullable String value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "orderForward")
+  public void setOrderForward(ExternalKeyboardView view, @Nullable String value) {
+    view.orderForward = value;
+  }
+
+  @Override
+  @ReactProp(name = "orderBackward")
+  public void setOrderBackward(ExternalKeyboardView view, @Nullable String value) {
+    view.orderBackward = value;
+  }
+
+  @Override
   public void setGroup(ExternalKeyboardView view, boolean value) {
-    //stub
+
   }
 
   @Override

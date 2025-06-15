@@ -12,6 +12,7 @@
 
 @implementation RNAOA11yOrderLinking {
     NSMutableDictionary *_relationships;
+    NSMapTable *_weakMap;
 }
 
 + (instancetype)sharedInstance {
@@ -31,9 +32,24 @@
 - (id)init {
   if (self = [super init]) {
       _relationships = [NSMutableDictionary dictionary];
+      _weakMap = [NSMapTable strongToWeakObjectsMapTable];
   }
    
   return self;
+}
+
+- (void)add:(NSString*)orderKey withEntry:(UIView*)entry {
+  RNAOA11yRelashioship* relashioship = [_relationships objectForKey: orderKey];
+  if(relashioship != nil) {
+    relashioship.entry = entry;
+  }
+}
+
+- (void)add:(NSString*)orderKey withExit:(UIView*)exit {
+  RNAOA11yRelashioship* relashioship = [_relationships objectForKey: orderKey];
+  if(relashioship != nil) {
+    relashioship.exit = exit;
+  }
 }
 
 - (void)add:(NSNumber*)position withOrderKey:(NSString*)orderKey withObject:(NSObject*)obj {
@@ -82,6 +98,20 @@
     
     return nil;
 }
+
+- (void)storeOrderId:(NSString*)orderId withView:(UIView*) view {
+  [_weakMap setObject:view forKey:orderId];
+}
+
+- (UIView*)getOrderView:(NSString*)orderId {
+  UIView *view = [_weakMap objectForKey:orderId];
+  return view;
+};
+
+- (void)cleanOrderId:(NSString*)orderId {
+  [_weakMap removeObjectForKey:orderId];
+};
+
 
 
 @end

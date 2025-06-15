@@ -15,12 +15,18 @@
 
 + (instancetype)sharedInstance;
 
+- (void)add:(NSString*)orderKey withEntry:(UIView*)entry;
+- (void)add:(NSString*)orderKey withExit:(UIView*)exit;
 - (void)add:(NSNumber*)position withOrderKey:(NSString*)orderKey withObject:(NSObject*)obj;
 - (void)remove:(NSNumber*)position withOrderKey:(NSString*)orderKey;
 - (void)setContainer:(NSString*)orderKey withView:(UIView*) view;
 - (void)removeContainer:(NSString*)orderKey;
 - (void)update:(NSNumber*)position lastPosition:(NSNumber*)_position withOrderKey:(NSString*)_orderKey withView:(UIView*) view;
 - (RNAOA11yRelashioship*)getInfo:(NSString*)orderGroup;
+- (void)storeOrderId:(NSString*)orderId withView:(UIView*) view;
+- (UIView*)getOrderView:(NSString*)orderId;
+- (void)cleanOrderId:(NSString*)orderId;
+
 @end
 
 #endif /* RNAOA11yOrderLinking_h */

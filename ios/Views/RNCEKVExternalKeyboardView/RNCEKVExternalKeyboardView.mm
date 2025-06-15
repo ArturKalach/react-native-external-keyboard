@@ -14,6 +14,7 @@
 #import <react/renderer/components/RNExternalKeyboardViewSpec/RCTComponentViewHelpers.h>
 #include <string>
 
+#import "RNCEKVPropHelper.h"
 #import "RCTFabricComponentsPlugins.h"
 #import "RNCEKVFabricEventHelper.h"
 #import <React/RCTConversions.h>
@@ -33,23 +34,28 @@ using namespace facebook::react;
   RNCEKVHaloDelegate *_haloDelegate;
   RNCEKVFocusDelegate *_focusDelegate;
   RNCEKVGroupIdentifierDelegate *_gIdDelegate;
-
+  
   NSNumber *_isFocused;
   BOOL _isAttachedToWindow;
   BOOL _isAttachedToController;
   BOOL _isLinked;
+  BOOL _isIdLinked;
 }
 
 - (void)linkIndex:(UIView *)subview {
-    if(_orderPosition != nil && _orderGroup != nil && !_isLinked) {
-        [[RNAOA11yOrderLinking sharedInstance] add: _orderPosition withOrderKey: _orderGroup withObject:self];
-        _isLinked = YES;
-    }
+  if(_orderPosition != nil && _orderGroup != nil && !_isLinked) {
+    [[RNAOA11yOrderLinking sharedInstance] add: _orderPosition withOrderKey: _orderGroup withObject:self];
+    _isLinked = YES;
+  }
+  if(_orderId != nil && !_isIdLinked) {
+    [[RNAOA11yOrderLinking sharedInstance] storeOrderId:_orderId withView: self];
+    _isIdLinked = YES;
+  }
 }
 
 - (void)didAddSubview:(UIView *)subview {
-    [super didAddSubview:subview];
-    [self linkIndex:subview];
+  [super didAddSubview:subview];
+  [self linkIndex:subview];
 }
 
 @synthesize haloCornerRadius = _haloCornerRadius;
@@ -60,7 +66,7 @@ using namespace facebook::react;
   if (self = [super initWithFrame:frame]) {
 #ifdef RCT_NEW_ARCH_ENABLED
     static const auto defaultProps =
-        std::make_shared<const ExternalKeyboardViewProps>();
+    std::make_shared<const ExternalKeyboardViewProps>();
     _props = defaultProps;
 #endif
     _isAttachedToController = NO;
@@ -70,14 +76,14 @@ using namespace facebook::react;
     _haloDelegate = [[RNCEKVHaloDelegate alloc] initWithView:self];
     _focusDelegate = [[RNCEKVFocusDelegate alloc] initWithView:self];
     _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
-
+    
     if (@available(iOS 13.0, *)) {
       UIContextMenuInteraction *interaction =
-          [[UIContextMenuInteraction alloc] initWithDelegate:self];
+      [[UIContextMenuInteraction alloc] initWithDelegate:self];
       [self addInteraction:interaction];
     }
   }
-
+  
   return self;
 }
 
@@ -96,6 +102,172 @@ using namespace facebook::react;
   self.focusGroupIdentifier = nil;
 }
 
+#pragma mark - Get Focus Order Info
+- (NSArray<UIView *> *)getOrder {
+  RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];
+  return [orderRelationship getArray];
+}
+
+
+#pragma mark - Focus Find Index
+- (int)findOrderIndex:(NSArray *)order element:(UIView*)el  {
+  int resultIndex = -1;
+
+  for (int i = 0; i < order.count; i++) {
+    UIView *element = order[i];
+      if (element.subviews[0] == el) { //ToDo focus element
+        resultIndex = i;
+        break;
+      }
+  }
+  
+  return resultIndex;
+}
+
+
+#pragma mark - Next Focus Handling
+- (void)handleNextFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
+  NSArray<UIView *> * order = [self getOrder];
+  RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];
+  UIView* _entry = orderRelationship.entry;
+  UIView* _exit = orderRelationship.exit;
+  
+  BOOL isEntry = _entry == current;
+  if (isEntry) {
+    UIView* firstElement = order[0];
+    if ([firstElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)firstElement focus];
+    }
+  }
+  
+  BOOL isLast = currentIndex == order.count - 1 && _exit;
+  if (isLast) {
+    [self updateSideFocus: _exit];
+  }
+  
+  BOOL inOrderRange = currentIndex >= 0 && currentIndex < order.count - 1;
+  if (inOrderRange) {
+    UIView* nextElement = order[currentIndex + 1];
+    if ([nextElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)nextElement focus];
+    }
+  }
+}
+
+#pragma mark - Prev Focus Handling
+- (void)handlePrevFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
+  NSArray<UIView *> * order = [self getOrder];
+  RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];
+
+  UIView* _exit = orderRelationship.exit;
+  UIView* _entry = orderRelationship.entry;
+  
+  BOOL isExit = _exit == current;
+  if (isExit) {
+    UIView* lastElement = order[order.count - 1];
+    if ([lastElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)lastElement focus];
+    }
+  }
+  
+  BOOL isFirst = currentIndex == 0 && _entry;
+  if (isFirst) {
+    [self updateSideFocus: _entry];
+  }
+  
+  BOOL inRange = currentIndex > 0 && currentIndex <= order.count - 1;
+  if (inRange) {
+    UIView* prevElement = order[currentIndex - 1];
+    if ([prevElement isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      [(RNCEKVExternalKeyboardView*)prevElement focus];
+    }
+  }
+}
+
+
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
+  UIFocusHeading movementHint = context.focusHeading;
+  if(_orderLeft != nil && movementHint == UIFocusHeadingLeft) {
+   UIView* leftview = [[RNAOA11yOrderLinking sharedInstance] getOrderView: _orderLeft];
+    NSLog(@"Left");
+  }
+  
+  if(_orderRight != nil && movementHint == UIFocusHeadingRight) {
+    RNCEKVExternalKeyboardView* rightview = [[RNAOA11yOrderLinking sharedInstance] getOrderView: _orderRight];
+    [rightview focus];
+    return YES;
+    NSLog(@"Right");
+  }
+  
+  if(!_orderGroup && !_orderPosition && !_lockFocus) {
+    return [super shouldUpdateFocusInContext: context];
+  }
+  
+  
+  UIView *next = (UIView *)context.nextFocusedItem;
+  UIView *current = (UIView *)context.previouslyFocusedItem;
+//  UIFocusHeading movementHint = context.focusHeading;
+  UIView* targetView = [self getFocusTargetView];
+  
+  if (current == targetView) {
+      NSUInteger rawFocusLockValue = [self.lockFocus unsignedIntegerValue];
+
+      BOOL isDirectionLock = (rawFocusLockValue & movementHint) != 0;
+      if (isDirectionLock) {
+          return NO;
+      }
+  }
+  
+  if(_orderGroup && _orderPosition != nil) {
+    RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];
+    NSArray *order = [orderRelationship getArray];
+    if(order.count == 0) {
+      return [super shouldUpdateFocusInContext: context];
+    }
+    
+    UIView* _exit = orderRelationship.exit;
+    UIView* _entry = orderRelationship.entry;
+    int currentIndex = [self findOrderIndex:order element:current];
+    int nextIndex = [self findOrderIndex:order element:next];
+
+    BOOL isEntryElement = _entry == nil && currentIndex == -1 && movementHint == UIFocusHeadingNext;
+
+    if(isEntryElement) {
+      orderRelationship.entry = current;
+    }
+    
+    BOOL isExit = _exit == nil && nextIndex == -1 && movementHint == UIFocusHeadingNext;
+    if(isExit) {
+      orderRelationship.exit = next;
+    }
+    
+    if(context.focusHeading == UIFocusHeadingNext) {
+      [self handleNextFocus:current currentIndex: currentIndex];
+      return YES;
+    }
+    
+    
+    if(context.focusHeading == UIFocusHeadingPrevious) {
+      [self handlePrevFocus:current currentIndex: currentIndex];
+      return YES;
+    }
+  }
+  
+  return [super shouldUpdateFocusInContext: context];
+}
+
+
+- (void)updateSideFocus:(UIView *)focusingView {
+  UIViewController *controller = self.reactViewController;
+
+  if (controller != nil) {
+    controller.customFocusView = focusingView;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [controller setNeedsFocusUpdate];
+      [controller updateFocusIfNeeded];
+    });
+  }
+}
 
 - (void)updateOrderPosition:(NSNumber *)position {
    if(_orderPosition != nil || _orderPosition != position) {
@@ -147,6 +319,30 @@ using namespace facebook::react;
         [self linkIndex: self.subviews[0]];
     }
 }
+//
+//- (BOOL)shouldUpdateStringProp:(NSString *)prop newValue:(std::string)newValue {
+//    NSString *value = newValue.empty() ? @"" : [NSString stringWithUTF8String:newValue.c_str()];
+//    
+//    if(prop == nil && value.length == 0) {
+//      return false;
+//    }
+//
+//    return (prop == nil || value.length == 0 || ![prop isEqualToString:value]);
+//}
+//
+//- (BOOL)shouldUpdateIntProp:(NSNumber *)prop value:(int)value {
+//    if (prop == nil && value == -1) {
+//        return NO;
+//    }
+//
+//  return (prop == nil || value == -1 || prop.intValue != value);
+//}
+//
+//- (NSString*)unwrapValue:(std::string)newValue {
+//    NSString *value = newValue.empty() ? nil : [NSString stringWithUTF8String:newValue.c_str()];
+//    return value.length > 0 ? value : nil;
+//}
+
 
 - (void)updateProps:(Props::Shared const &)props
            oldProps:(Props::Shared const &)oldProps {
@@ -182,16 +378,21 @@ using namespace facebook::react;
   }
   
   
-  BOOL isIndexChanged = oldViewProps.orderIndex != newViewProps.orderIndex || _orderPosition == nil;
+  BOOL isIndexChanged = [RNCEKVPropHelper isPropChanged:_orderPosition intValue: newViewProps.orderIndex];
   if(isIndexChanged) {
-    [self updateOrderPosition: @(newViewProps.orderIndex)];
+    NSNumber* position = [RNCEKVPropHelper unwrapIntValue: newViewProps.orderIndex];
+    [self updateOrderPosition: position];
   }
   
-  BOOL isOrderGroupChanged = oldViewProps.orderGroup != newViewProps.orderGroup || _orderGroup == nil;
-  if(isOrderGroupChanged) {
-     [self setOrderGroup: [NSString stringWithUTF8String:newViewProps.orderGroup.c_str()]];
-  }
-
+  RKNA_PROP_UPDATE(orderGroup, setOrderGroup, newViewProps);
+  RKNA_PROP_UPDATE(orderId, setOrderId, newViewProps);
+  RKNA_PROP_UPDATE(orderLeft, setOrderLeft, newViewProps);
+  RKNA_PROP_UPDATE(orderRight, setOrderRight, newViewProps);
+  RKNA_PROP_UPDATE(orderUp, setOrderUp, newViewProps);
+  RKNA_PROP_UPDATE(orderDown, setOrderDown, newViewProps);
+  RKNA_PROP_UPDATE(orderForward, setOrderForward, newViewProps);
+  RKNA_PROP_UPDATE(orderBackward, setOrderBackward, newViewProps);
+  
   if (_enableA11yFocus != newViewProps.enableA11yFocus) {
     [self setEnableA11yFocus:newViewProps.enableA11yFocus];
   }

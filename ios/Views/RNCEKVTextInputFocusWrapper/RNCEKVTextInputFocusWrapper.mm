@@ -299,10 +299,8 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
         UIKey *key = presses.allObjects[0].key;
         BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
       
-        if(isEnter && !_textField.isFirstResponder) {
-          if(_textField) {
-            [_textField reactFocus];
-          }
+        if(isEnter && _textField && !_textField.isFirstResponder) {
+          [_textField reactFocus];
           
           return;
         }

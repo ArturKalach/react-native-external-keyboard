@@ -20,6 +20,8 @@
     if (self) {
         _positions = [[RNAOSortedMap alloc] init];
         _container = nil;
+        _entry = nil;
+        _exit = nil;
     }
     return self;
 }

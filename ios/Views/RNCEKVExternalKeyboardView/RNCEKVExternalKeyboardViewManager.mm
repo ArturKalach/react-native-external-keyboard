@@ -128,12 +128,16 @@ RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)
     [view setCustomGroupId: value];
 }
 
+RCTK_SIMPLE_PROP(setOrderGroup, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderId, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderLeft, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderRight, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderUp, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderDown, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderForward, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(setOrderBackward, NSString, RNCEKVExternalKeyboardView)
 
-RCT_CUSTOM_VIEW_PROPERTY(orderGroup, NSString, RNCEKVExternalKeyboardView)
-{
-    NSString* value = json ? [RCTConvert NSString:json] : nil;
-    [view setOrderGroup: value];
-}
+
 
 
 RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSNumber, RNCEKVExternalKeyboardView)
