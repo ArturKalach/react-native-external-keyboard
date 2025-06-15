@@ -187,17 +187,16 @@ using namespace facebook::react;
 
 - (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
   UIFocusHeading movementHint = context.focusHeading;
-  if(_orderLeft != nil && movementHint == UIFocusHeadingLeft) {
-   UIView* leftview = [[RNAOA11yOrderLinking sharedInstance] getOrderView: _orderLeft];
-    NSLog(@"Left");
-  }
-  
-  if(_orderRight != nil && movementHint == UIFocusHeadingRight) {
-    RNCEKVExternalKeyboardView* rightview = [[RNAOA11yOrderLinking sharedInstance] getOrderView: _orderRight];
-    [rightview focus];
-    return YES;
-    NSLog(@"Right");
-  }
+//  if(_orderLeft != nil && movementHint == UIFocusHeadingLeft) {
+//   UIView* leftview = [[RNAOA11yOrderLinking sharedInstance] getOrderView: _orderLeft];
+//    NSLog(@"Left");
+//  }
+//  
+//  if(_orderRight != nil && movementHint == UIFocusHeadingRight) {
+//    RNCEKVExternalKeyboardView* rightview = [[RNAOA11yOrderLinking sharedInstance] getOrderView: _orderRight];
+//    [rightview focus];
+//    return YES;
+//  }
   
   if(!_orderGroup && !_orderPosition && !_lockFocus) {
     return [super shouldUpdateFocusInContext: context];
