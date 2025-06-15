@@ -9,8 +9,12 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
 
-
 NS_ASSUME_NONNULL_BEGIN
+
+#define RKNA_PROP_UPDATE(prop, setter, newProps) \
+if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
+    [self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
+}
 
 @interface RNCEKVExternalKeyboardView : RCTViewComponentView <UIContextMenuInteractionDelegate, RNCEKVHaloProtocol, RNCEKVFocusProtocol, RNCEKVGroupIdentifierProtocol>
 @property (nonatomic, strong, nullable) NSNumber *isHaloActive;
@@ -30,6 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSNumber* orderPosition;
 @property NSNumber* lockFocus;
 @property NSString* orderGroup;
+@property NSString* orderId;
+@property NSString* orderLeft;
+@property NSString* orderRight;
+@property NSString* orderUp;
+@property NSString* orderDown;
+@property NSString* orderForward;
+@property NSString* orderBackward;
 @property BOOL isLinked;
 
 - (UIView*)getFocusTargetView;
@@ -67,6 +78,13 @@ NS_ASSUME_NONNULL_END
 @property NSNumber* orderPosition;
 @property NSNumber* lockFocus;
 @property NSString* orderGroup;
+@property NSString* orderId;
+@property NSString* orderLeft;
+@property NSString* orderRight;
+@property NSString* orderUp;
+@property NSString* orderDown;
+@property NSString* orderForward;
+@property NSString* orderBackward;
 @property BOOL isLinked;
 
 - (UIView*)getFocusTargetView;

@@ -9,6 +9,12 @@
 #ifndef RNCEKVExternalKeyboardViewManager_h
 #define RNCEKVExternalKeyboardViewManager_h
 
+#define RCTK_SIMPLE_PROP(propName, propType, viewClass) \
+RCT_CUSTOM_VIEW_PROPERTY(propName, propType, viewClass) { \
+    propType *value = json ? [RCTConvert propType:json] : nil; \
+    [view propName: value]; \
+}
+
 #import <React/RCTViewManager.h>
 @interface RNCEKVExternalKeyboardViewManager : RCTViewManager
 @end

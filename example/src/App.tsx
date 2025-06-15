@@ -1,4 +1,7 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  TextInput,
+} from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
 import { Button, SafeAreaView, StyleSheet } from 'react-native';
@@ -8,7 +11,12 @@ import {
   NavigationContainer,
   type NavigationProp,
 } from '@react-navigation/native';
-import { KeyboardFocusGroup, Pressable } from 'react-native-external-keyboard';
+import {
+  KeyboardExtendedInput,
+  KeyboardFocusGroup,
+  Pressable,
+} from 'react-native-external-keyboard';
+import { useState } from 'react';
 
 export function DetailsScreen() {
   return (
@@ -23,66 +31,40 @@ export function DetailsScreen() {
 const Stack = createNativeStackNavigator();
 
 function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const [v, setV] = useState('1234123');
   return (
-    <View style={styles.home}>
-      <Text>Home Screen</Text>
-      <Button title="Go" onPress={() => navigation.navigate('Details')} />
-      <KeyboardFocusGroup orderGroup="relax">
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-            <Pressable
-              style={{ width: 100, height: 100, backgroundColor: 'yellow' }}
-              lockFocus={['down', 'forward', 'last']}
-            >
-              <Text>right</Text>
-            </Pressable>
-            <Pressable
-              style={{ width: 100, height: 100, backgroundColor: 'green' }}
-              lockFocus={['left', 'forward', 'backward', 'first']}
-            >
-              <Text>down</Text>
-            </Pressable>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Pressable
-              style={{ width: 100, height: 100, backgroundColor: 'blue' }}
-              lockFocus={['right', 'backward', 'first']}
-            >
-              <Text>top</Text>
-            </Pressable>
-            <Pressable
-              style={{ width: 100, height: 100, backgroundColor: 'orange' }}
-              lockFocus={['up', 'backward', 'first']}
-            >
-              <Text>left</Text>
-            </Pressable>
-          </View>
-          {/* <Pressable
-            lockFocus={['up', 'down']}
-            orderGroup="relax"
-            orderIndex={2}
-          >
-            <Text>Third</Text>
-          </Pressable>
-          <Pressable orderGroup="relax" orderIndex={0}>
-            <Text>First</Text>
-          </Pressable>
-          <Pressable orderGroup="relax" orderIndex={1}>
-            <Text>Second</Text>
-          </Pressable>
-          <Pressable orderGroup="relax" orderIndex={4}>
-            <Text>Fifth</Text>
-          </Pressable>
-          <Pressable orderGroup="relax" orderIndex={3}>
-            <Text>Fourth</Text>
-          </Pressable>
-          <Pressable /> */}
-        </View>
-      </KeyboardFocusGroup>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
+    <View style={[styles.home, { flexDirection: "row" }]}>
+      <Pressable orderId="start" orderForward="almost_end">
+        <Text>Start</Text>
+      </Pressable>
+      {/* <KeyboardFocusGroup orderGroup="relax"> */}
+      <Pressable orderGroup="relax" orderIndex={1}>
+        <Text>Second</Text>
+      </Pressable>
+      <Pressable
+        // lockFocus={['up', 'backward']}
+        orderGroup="relax"
+        orderIndex={0}
+      >
+        <Text>First</Text>
+      </Pressable>
+      <Pressable
+        // lockFocus={['up', 'backward']}
+        orderGroup="relax"
+        orderIndex={3}
+      >
+        <Text>Fourth</Text>
+      </Pressable>
+      <Pressable orderGroup="relax" orderIndex={2}>
+        <Text>Third</Text>
+      </Pressable>
+      {/* </KeyboardFocusGroup> */}
+      <Pressable orderId="almost_end" orderBackward="start">
+        <Text>Almost End</Text>
+      </Pressable>
+      <Pressable orderId="end">
+        <Text>End</Text>
+      </Pressable>
     </View>
   );
 }

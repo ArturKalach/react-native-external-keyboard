@@ -55,6 +55,13 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   orderGroup?: string;
   orderIndex?: Int32;
   lockFocus?: Int32;
+  orderId?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderForward?: string;
+  orderBackward?: string;
 }
 
 export interface NativeCommands {

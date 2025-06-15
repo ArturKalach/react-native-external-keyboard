@@ -83,6 +83,7 @@ export const BaseKeyboardView = React.memo(
         enableA11yFocus = false,
         screenAutoA11yFocusDelay = 500,
         lockFocus,
+        orderIndex,
         ...props
       },
       ref
@@ -149,6 +150,7 @@ export const BaseKeyboardView = React.memo(
             hasKeyUpPress={Boolean(onKeyUpPress)}
             hasOnFocusChanged={Boolean(hasOnFocusChanged)}
             group={group}
+            orderIndex={orderIndex ?? -1}
             enableA11yFocus={enableA11yFocus}
             screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             lockFocus={lockFocusValue}

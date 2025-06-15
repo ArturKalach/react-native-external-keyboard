@@ -177,15 +177,15 @@ using namespace facebook::react;
     UIView *current = (UIView *)context.previouslyFocusedItem;
     UIFocusHeading movementHint = context.focusHeading;
 
-  UIView* rnkv = current.superview; //ToDo Create a map for RNKV <-> Target relations
-  if ([rnkv isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
-      NSUInteger rawFocusLockValue = [((RNCEKVExternalKeyboardView *)rnkv).lockFocus unsignedIntegerValue];
-
-      BOOL isDirectionLock = (rawFocusLockValue & movementHint) != 0;
-      if (isDirectionLock) {
-          return NO;
-      }
-  }
+//  UIView* rnkv = current.superview; //ToDo Create a map for RNKV <-> Target relations
+//  if ([rnkv isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+//      NSUInteger rawFocusLockValue = [((RNCEKVExternalKeyboardView *)rnkv).lockFocus unsignedIntegerValue];
+//
+//      BOOL isDirectionLock = (rawFocusLockValue & movementHint) != 0;
+//      if (isDirectionLock) {
+//          return NO;
+//      }
+//  }
   
   if(_orderGroup) {
     RNAOA11yRelashioship* orderRelationship = [[RNAOA11yOrderLinking sharedInstance] getInfo:_orderGroup];

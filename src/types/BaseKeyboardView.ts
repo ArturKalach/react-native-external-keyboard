@@ -57,6 +57,13 @@ export type BaseFocusViewProps = {
   orderGroup?: string;
   orderIndex?: Int32;
   lockFocus?: LockFocusType[];
+  orderId?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderForward?: string;
+  orderBackward?: string;
 };
 
 export type BaseKeyboardViewProps = ViewProps & BaseFocusViewProps;
