@@ -96,13 +96,12 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
       this.reactEditText = editText;
       boolean is80 = getIs80Version();
       if(is80) {
-        onMultiplyBlurSubmitHandle();
-        return;
+        this.setFocusable(false);
       }
 
       this.reactEditText.addOnAttachStateChangeListener(getOnAttachListener());
       if (focusType == FOCUS_BY_PRESS) {
-        this.reactEditText.setFocusable(false);
+        this.reactEditText.setFocusable(is80);
       }
       OnFocusChangeListener reactListener = this.reactEditText.getOnFocusChangeListener();
       this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
@@ -117,8 +116,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
           ExternalKeyboardModule.setFocusedTextInput(textInput);
         }
         if (!hasTextEditFocus) {
-          this.setFocusable(true);
-          this.reactEditText.setFocusable(false);
+          this.setFocusable(!is80);
+          this.reactEditText.setFocusable(is80);
         }
       });
       onMultiplyBlurSubmitHandle();
@@ -151,7 +150,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     this.context = context;
 
     if (keyboardFocusable) {
-      setFocusable(true);
+      boolean is80 = getIs80Version();
+      setFocusable(!is80);
     }
   }
 
