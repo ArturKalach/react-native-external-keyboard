@@ -5,9 +5,11 @@ React Native library for enhanced external keyboard support.
 - ⚡️ The New Architecture is supported
 - ⚡️ Bridgeless
 
-
-## Breaking Changes !!!
-> The Keyboard Module (`A11yModule`, `KeyboardExtendedModule`) has been removed. This API was deprecated and did not work properly with the new architecture. You can refer to the migration guide to update it.
+> [!NOTE]
+> React Native `0.80.0` includes a fix for `TextInput` focus on Android.
+> `TextInput`: Can now focus TextInput with keyboard ([e00028f6bb](https://github.com/facebook/react-native/commit/e00028f6bb6c19de861f9a25f377295755f3671b) by [@joevilches](https://github.com/joevilches))
+>
+> This means that there is no need to use the workaround with `KeyboardExtendedInput`, and it is recommended to use the default `TextInput` instead. Additionally, because of changes in `TextInput`, `focusType="press"` for `KeyboardExtendedInput`  no longer works on Android.
 
 
 ## New Release Features
