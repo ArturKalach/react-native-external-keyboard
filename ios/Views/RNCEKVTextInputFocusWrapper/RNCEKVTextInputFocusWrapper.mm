@@ -299,21 +299,18 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
         UIKey *key = presses.allObjects[0].key;
         BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
       
-        if(isEnter && !_textField.isFirstResponder) {
-          if(_textField) {
+        RCTUITextField* textView = _textField != nil ? _textField : [self getTextFieldComponent];
+        if(isEnter && textView && !textView.isFirstResponder) {
             [_textField reactFocus];
-          }
-          
-          return;
+            return;
         }
       
         if(self.multiline) {
             BOOL isShiftPressed = (key.modifierFlags & UIKeyModifierShift) != 0;
             
-            UIView* textView = _textField;
-            if(textView && _textField.isFirstResponder) {
+            if(textView && textView.isFirstResponder) {
                 if(!isShiftPressed && isEnter) {
-                    [self onMultiplyTextSubmitHandler: textView];
+                    [self onMultiplyTextSubmitHandler: (UIView*)textView];
                     if(self.blurOnSubmit) {
                         [textView resignFirstResponder];
                     }

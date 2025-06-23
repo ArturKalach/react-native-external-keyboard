@@ -15,6 +15,8 @@ import com.externalkeyboard.modules.ExternalKeyboardModule;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.views.textinput.ReactEditText;
 
+import java.lang.reflect.Field;
+
 public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChangeListener {
   private final Context context;
   public static final byte FOCUS_BY_PRESS = 1;
@@ -26,9 +28,24 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private boolean multiline = false;
   private boolean keyboardFocusable = true;
   private static View focusedView = null;
-
+  private static Boolean is80Version = null;
   public boolean getIsFocusByPress() {
     return focusType == FOCUS_BY_PRESS;
+  }
+
+  private boolean getIs80Version () {
+    if (is80Version != null) {
+      return is80Version;
+    }
+
+    try {
+      Field field = (ReactEditText.class).getDeclaredField("dragAndDropFilter");
+      is80Version = true;
+    } catch (NoSuchFieldException e) {
+      is80Version = false;
+    }
+
+    return is80Version;
   }
 
   public void setKeyboardFocusable(boolean canBeFocusable) {
@@ -40,7 +57,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
 
     this.setFocusable(keyboardFocusable);
     if (this.reactEditText != null) {
-      this.reactEditText.setFocusable(false);
+      boolean is80 = getIs80Version();
+      this.reactEditText.setFocusable(is80);
     }
   }
 
@@ -49,7 +67,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
       onAttachListener = new View.OnAttachStateChangeListener() {
         @Override
         public void onViewAttachedToWindow(@NonNull View view) {
-          view.setFocusable(false);
+          boolean is80 = getIs80Version();
+          view.setFocusable(is80);
         }
 
         @Override
@@ -75,9 +94,14 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   public void setEditText(ReactEditText editText) {
     if (editText != null) {
       this.reactEditText = editText;
+      boolean is80 = getIs80Version();
+      if(is80) {
+        this.setFocusable(false);
+      }
+
       this.reactEditText.addOnAttachStateChangeListener(getOnAttachListener());
       if (focusType == FOCUS_BY_PRESS) {
-        this.reactEditText.setFocusable(false);
+        this.reactEditText.setFocusable(is80);
       }
       OnFocusChangeListener reactListener = this.reactEditText.getOnFocusChangeListener();
       this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
@@ -92,8 +116,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
           ExternalKeyboardModule.setFocusedTextInput(textInput);
         }
         if (!hasTextEditFocus) {
-          this.setFocusable(true);
-          this.reactEditText.setFocusable(false);
+          this.setFocusable(!is80);
+          this.reactEditText.setFocusable(is80);
         }
       });
       onMultiplyBlurSubmitHandle();
@@ -126,7 +150,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     this.context = context;
 
     if (keyboardFocusable) {
-      setFocusable(true);
+      boolean is80 = getIs80Version();
+      setFocusable(!is80);
     }
   }
 
@@ -152,6 +177,10 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   }
 
   public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
+    boolean is80 = getIs80Version();
+    if(is80) {
+      return super.requestFocus(direction, previouslyFocusedRect);
+    }
     if ((direction == View.FOCUS_FORWARD || direction == View.FOCUS_BACKWARD) && focusType != FOCUS_BY_PRESS) {
       this.handleTextInputFocus();
       return true;
