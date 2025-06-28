@@ -10,6 +10,7 @@ export type KeyboardFocusGroupProps = PropsWithChildren<
     onBlur?: () => void;
     onFocusChange?: (isFocused: boolean) => void;
     focusStyle?: FocusStyle;
+    orderGroup?: string;
   }
 >;
 

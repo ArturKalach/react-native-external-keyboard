@@ -6,6 +6,7 @@ import type {
 } from 'react-native';
 import type { KeyPress } from '../nativeSpec/ExternalKeyboardViewNativeComponent';
 import type { RefObject } from 'react';
+import type { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 export type OnKeyPress = NativeSyntheticEvent<KeyPress> & {
   nativeEvent?: { target?: number };
@@ -15,6 +16,19 @@ export type OnKeyPress = NativeSyntheticEvent<KeyPress> & {
 export type OnKeyPressFn = (e: OnKeyPress) => void;
 export type KeyboardFocus = { focus: () => void };
 export type BaseKeyboardViewType = Partial<View> & KeyboardFocus;
+
+export enum LockFocusEnum {
+  Up = 'up',
+  Down = 'down',
+  Right = 'right',
+  Left = 'left',
+  Forward = 'forward',
+  Backward = 'backward',
+  First = 'first',
+  Last = 'last',
+}
+
+export type LockFocusType = `${LockFocusEnum}`;
 
 export type BaseFocusViewProps = {
   viewRef?: RefObject<View>;
@@ -40,6 +54,18 @@ export type BaseFocusViewProps = {
   enableA11yFocus?: boolean;
   screenAutoA11yFocus?: boolean;
   screenAutoA11yFocusDelay?: number;
+  orderGroup?: string;
+  orderIndex?: Int32;
+  lockFocus?: LockFocusType[];
+  orderId?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderForward?: string;
+  orderBackward?: string;
+  orderFirst?: string | null;
+  orderLast?: string | null;
 };
 
 export type BaseKeyboardViewProps = ViewProps & BaseFocusViewProps;

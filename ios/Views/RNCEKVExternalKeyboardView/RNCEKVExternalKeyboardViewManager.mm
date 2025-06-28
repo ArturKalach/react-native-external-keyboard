@@ -10,7 +10,7 @@ RCT_EXPORT_MODULE(ExternalKeyboardView)
 
 - (UIView *)view
 {
-    return [[RNCEKVExternalKeyboardView alloc] init];
+  return [[RNCEKVExternalKeyboardView alloc] init];
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onFocusChange, RCTDirectEventBlock)
@@ -22,124 +22,149 @@ RCT_EXPORT_VIEW_PROPERTY(myPreferredFocusedView, UIView)
 
 RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVExternalKeyboardView)
 {
-    BOOL value =  json ? [RCTConvert BOOL:json] : YES;
-    [view setCanBeFocused: value];
+  BOOL value =  json ? [RCTConvert BOOL:json] : YES;
+  [view setCanBeFocused: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVExternalKeyboardView)
 {
-    if (json) {
-        UIColor *tintColor = [RCTConvert UIColor:json];
-        [view setTintColor: tintColor];
-    }
+  if (json) {
+    UIColor *tintColor = [RCTConvert UIColor:json];
+    [view setTintColor: tintColor];
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(hasOnFocusChanged, BOOL, RNCEKVExternalKeyboardView)
 {
-    BOOL value = json ? [RCTConvert BOOL:json] : NO;
-    [view setHasOnFocusChanged: value];
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setHasOnFocusChanged: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(hasKeyDownPress, BOOL, RNCEKVExternalKeyboardView)
 {
-    BOOL value = json ? [RCTConvert BOOL:json] : NO;
-    [view setHasOnPressDown: value];
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setHasOnPressDown: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(hasKeyUpPress, BOOL, RNCEKVExternalKeyboardView)
 {
-    BOOL value = json ? [RCTConvert BOOL:json] : NO;
-    [view setHasOnPressUp: value];
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setHasOnPressUp: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(autoFocus, BOOL, RNCEKVExternalKeyboardView)
 {
-    if (json) {
-        BOOL value = [RCTConvert BOOL:json];
-        [view setAutoFocus: value];
-    }
+  if (json) {
+    BOOL value = [RCTConvert BOOL:json];
+    [view setAutoFocus: value];
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
-   if(json) {
-        BOOL value = [RCTConvert BOOL:json];
-       if(view.isHaloActive == nil && !value) {
-           [view setIsHaloActive: @0];
-       }
-       if(view.isHaloActive != nil) {
-            [view setIsHaloActive: @(value)];
-       }
+  if(json) {
+    BOOL value = [RCTConvert BOOL:json];
+    if(view.isHaloActive == nil && !value) {
+      [view setIsHaloActive: @0];
     }
+    if(view.isHaloActive != nil) {
+      [view setIsHaloActive: @(value)];
+    }
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(enableA11yFocus, BOOL, RNCEKVExternalKeyboardView)
 {
-    if(json) {
-        BOOL value = json ? [RCTConvert BOOL:json] : NO;
-        [view setEnableA11yFocus: value];
-    }
+  if(json) {
+    BOOL value = json ? [RCTConvert BOOL:json] : NO;
+    [view setEnableA11yFocus: value];
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(screenAutoA11yFocus, BOOL, RNCEKVExternalKeyboardView)
 {
-    //stub
+  //stub
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(screenAutoA11yFocusDelay, int, RNCEKVExternalKeyboardView)
 {
-    //stub
+  //stub
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(haloCornerRadius, float, RNCEKVExternalKeyboardView)
 {
-    if(json) {
-        CGFloat value = [RCTConvert CGFloat:json];
-        [view setHaloCornerRadius: value];
-    }
+  if(json) {
+    CGFloat value = [RCTConvert CGFloat:json];
+    [view setHaloCornerRadius: value];
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(haloExpendX, float, RNCEKVExternalKeyboardView)
 {
-    if(json) {
-        CGFloat value = [RCTConvert CGFloat:json];
-        [view setHaloExpendX: value];
-    }
+  if(json) {
+    CGFloat value = [RCTConvert CGFloat:json];
+    [view setHaloExpendX: value];
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(haloExpendY, float, RNCEKVExternalKeyboardView)
 {
-    if(json) {
-        CGFloat value = [RCTConvert CGFloat:json];
-        [view setHaloExpendY: value];
-    }
+  if(json) {
+    CGFloat value = [RCTConvert CGFloat:json];
+    [view setHaloExpendY: value];
+  }
 }
 
 
 RCT_CUSTOM_VIEW_PROPERTY(group, BOOL, RNCEKVExternalKeyboardView)
 {
-    BOOL value = json ? [RCTConvert BOOL:json] : NO;
-    [view setIsGroup: value];
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setIsGroup: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)
 {
-    NSString* value = json ? [RCTConvert NSString:json] : nil;
-    [view setCustomGroupId: value];
+  NSString* value = json ? [RCTConvert NSString:json] : nil;
+  [view setCustomGroupId: value];
 }
 
+RCTK_SIMPLE_PROP(orderGroup, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderId, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderLeft, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderRight, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderUp, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderDown, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderForward, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderBackward, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderLast, NSString, RNCEKVExternalKeyboardView)
+RCTK_SIMPLE_PROP(orderFirst, NSString, RNCEKVExternalKeyboardView)
 
+RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSNumber, RNCEKVExternalKeyboardView)
+{
+  if(json){
+    NSNumber* value = [RCTConvert NSNumber:json];
+    [view setOrderPosition: value];
+  }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(lockFocus, NSNumber, RNCEKVExternalKeyboardView)
+{
+  if(json){
+    NSNumber* value = [RCTConvert NSNumber:json];
+    [view setLockFocus: value];
+  }
+}
 
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
 {
-    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-        UIView *view = viewRegistry[reactTag];
-        if (!view || ![view isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
-            return;
-        }
-        RNCEKVExternalKeyboardView *keyboardView = (RNCEKVExternalKeyboardView*)view;
-        [keyboardView focus];
-    }];
+  [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+    UIView *view = viewRegistry[reactTag];
+    if (!view || ![view isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      return;
+    }
+    RNCEKVExternalKeyboardView *keyboardView = (RNCEKVExternalKeyboardView*)view;
+    [keyboardView focus];
+  }];
 }
 
 @end

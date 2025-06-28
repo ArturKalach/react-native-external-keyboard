@@ -32,4 +32,10 @@ public class KeyboardFocusGroupManager extends com.externalkeyboard.KeyboardFocu
   public void setGroupIdentifier(KeyboardFocusGroup wrapper, String groupIdentifier) {
     //stub
   }
+
+  @Override
+  @ReactProp(name = "orderGroup")
+  public void setOrderGroup(KeyboardFocusGroup view, @Nullable String value) {
+    //stub
+  }
 }

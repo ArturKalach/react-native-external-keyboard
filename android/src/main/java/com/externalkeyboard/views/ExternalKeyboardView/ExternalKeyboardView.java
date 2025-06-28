@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.externalkeyboard.delegates.FocusOrderDelegate;
 import com.externalkeyboard.events.EventHelper;
 
 import com.externalkeyboard.helper.FocusHelper;
@@ -28,16 +29,142 @@ public class ExternalKeyboardView extends ReactViewGroup {
   public boolean enableA11yFocus = false;
   public boolean screenAutoA11yFocus = false;
   public int screenAutoA11yFocusDelay = 500;
+  public int lockFocus = 0;
+  public String orderForward;
+  public String orderBackward;
+  public String orderId;
+
+
+  private FocusOrderDelegate focusOrderDelegate = null;
   private EventDispatcher a11yViewAppearDispatcher = null;
   private EventDispatcherListener eventA11yViewAppearListener = null;
   private final KeyboardKeyPressHandler keyboardKeyPressHandler;
   private final Context context;
   private View listeningView;
 
+  private Integer orderIndex;
+  private String orderGroup;
+  private View firstChild;
+
+  private String orderUp;
+  private String orderDown;
+  private String orderLeft;
+
+  public String getOrderRight() {
+    return orderRight;
+  }
+
+  public void setOrderRight(String orderRight) {
+    focusOrderDelegate.refreshRight(this.orderRight, orderRight);
+    this.orderRight = orderRight;
+  }
+
+  public String getOrderLeft() {
+    return orderLeft;
+  }
+
+  public void setOrderLeft(String orderLeft) {
+    focusOrderDelegate.refreshLeft(this.orderLeft, orderLeft);
+    this.orderLeft = orderLeft;
+  }
+
+  public String getOrderDown() {
+    return orderDown;
+  }
+
+  public void setOrderDown(String orderDown) {
+    focusOrderDelegate.refreshDown(this.orderDown, orderDown);
+    this.orderDown = orderDown;
+  }
+
+  public String getOrderUp() {
+    return orderUp;
+  }
+
+  public void setOrderUp(String orderUp) {
+    focusOrderDelegate.refreshUp(this.orderUp, orderUp);
+    this.orderUp = orderUp;
+  }
+
+  private String orderRight;
+
   public ExternalKeyboardView(Context context) {
     super(context);
     this.context = context;
+    this.focusOrderDelegate = new FocusOrderDelegate(this);
     this.keyboardKeyPressHandler = new KeyboardKeyPressHandler();
+  }
+
+  public View getFirstChild() {
+    return this.firstChild;
+  }
+
+  public String getOrderGroup() {
+    return this.orderGroup;
+  }
+
+  public String getOrderId() {
+    return this.orderId;
+  }
+
+  public void setOrderGroup(String orderGroup) {
+    focusOrderDelegate.updateOrderGroup(this.orderGroup, orderGroup);
+    this.orderGroup = orderGroup;
+  }
+
+  public Integer getOrderIndex() {
+    return this.orderIndex;
+  }
+
+  public void setOrderIndex(int orderIndex) {
+    if (this.orderIndex == null) {
+      this.orderIndex = orderIndex;
+    } else {
+      this.orderIndex = orderIndex;
+      focusOrderDelegate.refreshOrder();
+    }
+  }
+
+  public void linkAddView(View child) {
+    if (firstChild == null) {
+      firstChild = child;
+      focusOrderDelegate.link();
+    }
+  }
+
+  public void linkRemoveView(View view) {
+    if (view == firstChild) {
+      firstChild = null;
+      focusOrderDelegate.unlink(view);
+    }
+  }
+
+  @Override
+  public View focusSearch(View focused, int direction) {
+    if (lockFocus == 0 && orderGroup == null && orderIndex == null && orderForward == null && orderBackward == null) {
+      return super.focusSearch(focused, direction);
+    }
+
+    boolean isLocked = FocusHelper.isLocked(direction, lockFocus);
+    if (isLocked) {
+      return this;
+    }
+
+    if (direction == FOCUS_FORWARD && orderForward != null) {
+      View nextView = this.focusOrderDelegate.getLink(orderForward);
+      if (nextView != null) {
+        return nextView;
+      }
+    }
+
+    if (direction == FOCUS_BACKWARD && orderBackward != null) {
+      View prevView = this.focusOrderDelegate.getLink(orderBackward);
+      if (prevView != null) {
+        return prevView;
+      }
+    }
+
+    return super.focusSearch(focused, direction);
   }
 
   @Override
@@ -141,6 +268,8 @@ public class ExternalKeyboardView extends ReactViewGroup {
     if (this.listeningView != null) {
       this.listeningView.setOnFocusChangeListener(null);
     }
+
+    this.focusOrderDelegate.clear(firstChild);
   }
 
   private View getFocusingView() {
