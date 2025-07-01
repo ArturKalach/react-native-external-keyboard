@@ -65,6 +65,10 @@
   RNCEKVRelashioship* relashioship = [_relationships objectForKey: orderKey];
   if(relashioship != nil) {
     [relashioship remove:position];
+    if([relashioship isEmpty]) {
+      [relashioship clear];
+      [_relationships removeObjectForKey: orderKey];
+    }
   }
 }
 
@@ -109,7 +113,6 @@
   RNCEKVRelashioship* relashioship = [_relationships objectForKey: orderKey];
   if(relashioship != nil) {
     [_relationships removeObjectForKey:orderKey];
-    [relashioship clear];
   }
 }
 

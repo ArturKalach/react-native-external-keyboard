@@ -269,7 +269,7 @@ public class ExternalKeyboardView extends ReactViewGroup {
       this.listeningView.setOnFocusChangeListener(null);
     }
 
-    this.focusOrderDelegate.clear(firstChild);
+//    this.focusOrderDelegate.clear(firstChild); // ToDO check how to clean
   }
 
   private View getFocusingView() {

@@ -19,7 +19,6 @@
 
 - (void)linkId;
 - (void)refreshId:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
-- (void)removeId;
 - (void)setIsFocused:(BOOL)value;
 
 - (void)refreshLeft:(NSString*_Nullable)prev next:(NSString*_Nullable)next;

@@ -31,7 +31,7 @@ public class FocusOrderDelegate {
     Integer orderIndex = delegate.getOrderIndex();
     String orderId = delegate.getOrderId();
 
-    if (child != null && orderGroup != null && delegate.getOrderIndex() != null) {
+    if (child != null && orderGroup != null && orderIndex != null) {
       A11yOrderLinking.getInstance().addViewRelationship(child, orderGroup, orderIndex);
     }
 
@@ -80,6 +80,10 @@ public class FocusOrderDelegate {
     FocusLinkObserver observer = FocusLinkObserverSingleton.getInstance();
     if (prev != null && leftUpdated != null && leftRemoved != null) {
       observer.unsubscribe(prev, leftUpdated, leftRemoved);
+      View child = delegate.getFirstChild();
+      if(child != null) {
+        child.setNextFocusLeftId(View.NO_ID);
+      }
     }
 
     View child = delegate.getFirstChild();
@@ -94,10 +98,14 @@ public class FocusOrderDelegate {
     FocusLinkObserver observer = FocusLinkObserverSingleton.getInstance();
     if (rightUpdated != null && rightRemoved != null) {
       observer.unsubscribe(prev, rightUpdated, rightRemoved);
+      View child = delegate.getFirstChild();
+      if(child != null) {
+        child.setNextFocusRightId(View.NO_ID);
+      }
     }
 
     View child = delegate.getFirstChild();
-    if (prev != null && next != null && child != null) {
+    if (next != null && child != null) {
       rightUpdated = link -> child.setNextFocusRightId(link.getId());
       rightRemoved = () -> child.setNextFocusRightId(View.NO_ID);
       observer.subscribe(next, rightUpdated, rightRemoved);
@@ -108,6 +116,11 @@ public class FocusOrderDelegate {
     FocusLinkObserver observer = FocusLinkObserverSingleton.getInstance();
     if (prev != null && upUpdated != null && upRemoved != null) {
       observer.unsubscribe(prev, upUpdated, upRemoved);
+
+      View child = delegate.getFirstChild();
+      if(child != null) {
+        child.setNextFocusUpId(View.NO_ID);
+      }
     }
 
     View child = delegate.getFirstChild();
@@ -131,6 +144,11 @@ public class FocusOrderDelegate {
     FocusLinkObserver observer = FocusLinkObserverSingleton.getInstance();
     if (prev != null && downUpdated != null && downRemoved != null) {
       observer.unsubscribe(prev, downUpdated, downRemoved);
+
+      View child = delegate.getFirstChild();
+      if(child != null) {
+        child.setNextFocusDownId(View.NO_ID);
+      }
     }
 
     View child = delegate.getFirstChild();

@@ -36,7 +36,6 @@
   if ([_links objectForKey:identifier]) {
     [_links removeObjectForKey:identifier];
     [self emitLinkRemovedForId:identifier];
-    [_subscribers removeObjectForKey:identifier];
   }
 }
 

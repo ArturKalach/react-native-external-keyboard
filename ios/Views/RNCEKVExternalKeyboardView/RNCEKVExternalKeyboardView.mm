@@ -45,22 +45,49 @@ using namespace facebook::react;
   BOOL _isIdLinked;
 }
 
-- (void)linkIndex:(UIView *)subview {
+- (void)link:(UIView *)subview {
   if(_orderPosition != nil && _orderGroup != nil && !_isLinked) {
     [[RNCEKVOrderLinking sharedInstance] add: _orderPosition withOrderKey: _orderGroup withObject:self];
     _isLinked = YES;
   }
-  if(_orderId != nil && !_isIdLinked) {
+  if(_orderId != nil) {
     [[RNCEKVOrderLinking sharedInstance] storeOrderId:_orderId withView: self];
     [_focusOrderDelegate linkId];
     _isIdLinked = YES;
   }
 }
 
-- (void)didAddSubview:(UIView *)subview {
-  [super didAddSubview:subview];
-  [self linkIndex:subview];
+- (void)unkink{
+  if(_orderPosition != nil && _orderGroup != nil && _isLinked) {
+    [[RNCEKVOrderLinking sharedInstance] remove:_orderPosition withOrderKey: _orderGroup];
+  }
+  
+  if(_orderId != nil) {
+    [[RNCEKVOrderLinking sharedInstance] cleanOrderId:_orderId];
+    [_focusOrderDelegate clear];
+  }
+  
+  if (_customGroupId && _gIdDelegate) {
+    [_gIdDelegate clear];
+  }
+  
+  _isLinked = NO;
+  _isIdLinked = NO;
 }
+
+
+- (void)onAttached
+{
+  if(self.subviews.count > 0) {
+    [self link: self.subviews[0]];
+  }
+}
+
+- (void)onDetached
+{
+  [self unkink];
+}
+
 
 @synthesize haloCornerRadius = _haloCornerRadius;
 @synthesize haloExpendX = _haloExpendX;
@@ -115,6 +142,9 @@ using namespace facebook::react;
 }
 
 - (void)cleanReferences {
+  [_focusOrderDelegate clear];
+  [_haloDelegate clear];
+  [_gIdDelegate clear];
   _isAttachedToController = NO;
   _isAttachedToWindow = NO;
   _isHaloActive = @2; // ToDo RNCEKV-0
@@ -131,9 +161,6 @@ using namespace facebook::react;
   _lockFocus = nil;
   _customGroupId = nil;
   _enableA11yFocus = NO;
-  [_haloDelegate clear];
-  [_gIdDelegate clear];
-  [_focusOrderDelegate clear];
   _isLinked = NO;
   self.focusGroupIdentifier = nil;
 }
@@ -180,23 +207,6 @@ using namespace facebook::react;
   }
 }
 
-- (void)willRemoveSubview:(UIView *)subview {
-  [super willRemoveSubview:subview];
-  
-  if(_orderPosition != nil && _orderGroup != nil) {
-    [[RNCEKVOrderLinking sharedInstance] remove:_orderPosition withOrderKey:_orderGroup];
-  }
-  
-  if(_orderId != nil) {
-    [_focusOrderDelegate removeId];
-  }
-  
-  if (_customGroupId && _gIdDelegate) {
-    [_gIdDelegate clear];
-  }
-}
-
-
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider {
   return concreteComponentDescriptorProvider<
@@ -213,13 +223,6 @@ using namespace facebook::react;
   NSString *FOCUS = @"focus";
   if ([commandName isEqual:FOCUS]) {
     [self focus];
-  }
-}
-
-- (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask {
-  [super finalizeUpdates:updateMask];
-  if(self.subviews.count > 0) {
-    [self linkIndex: self.subviews[0]];
   }
 }
 
@@ -522,11 +525,13 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
      selector:@selector(viewControllerChanged:)
      name:@"ViewControllerChangedNotification"
      object:nil];
+    [self onAttached];
   } else {
     [[NSNotificationCenter defaultCenter]
      removeObserver:self
      name:@"ViewControllerChangedNotification"
      object:nil];
+    [self onDetached];
   }
   
   if (self.window && !_isAttachedToWindow) {
@@ -570,5 +575,6 @@ API_AVAILABLE(ios(13.0)) {
   
   return nil;
 }
+
 
 @end
