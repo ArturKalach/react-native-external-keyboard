@@ -169,6 +169,13 @@ public class ExternalKeyboardView extends ReactViewGroup {
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+    if(lockFocus != 0) {
+      int keyCode = keyEvent.getKeyCode();
+      boolean isLocked = FocusHelper.isKeyLocked(keyCode, lockFocus);
+      if(isLocked) {
+        return true;
+      }
+    }
     if (!this.hasKeyUpListener && !this.hasKeyDownListener) {
       return super.dispatchKeyEvent(keyEvent);
     }
