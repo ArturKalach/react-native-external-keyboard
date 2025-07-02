@@ -225,6 +225,14 @@ enableA11yFocus?: | Can be used to move the screen reader focus within the keybo
 screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
 `screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
 `exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
+orderId? | A unique ID used for link target identification. | `string`
+orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
+orderForward? | ID of the target for forward navigation with "Tab". | `string`
+orderLeft? | ID of the target for navigation to the left. | `string`
+orderRight? | ID of the target for navigation to the right. | `string`
+orderUp? | ID of the target for navigation upward. | `string`
+orderDown? | ID of the target for navigation downward. | `string`
+lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining component props  | `Type of Component`
 
 
