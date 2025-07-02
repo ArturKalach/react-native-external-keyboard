@@ -617,13 +617,13 @@ export type OnKeyPress = NativeSyntheticEvent<{
 ```
 
 ## Roadmap
-- [] Refactor and Performance optimization
-- [] Update `focusGroupIdentifier` and implement `KeyboardNavigationCluster` functionality
-- [] Update `onPress` and `onLongPress` for `withKeyboardFocus`
+- [ ] Refactor and Performance optimization
+- [ ] Update `focusGroupIdentifier` and implement `KeyboardNavigationCluster` functionality
+- [ ] Update `onPress` and `onLongPress` for `withKeyboardFocus`
 - [x] Add functionality to control keyboard focus order.
-- [] Verify and update `focusable` and `disabled` states for iOS and Android.
-- [] Update `Readme.md`.
-- [] Create the documentation.
+- [ ] Verify and update `focusable` and `disabled` states for iOS and Android.
+- [ ] Update `Readme.md`.
+- [ ] Create the documentation.
 
 
 ## Contributing
