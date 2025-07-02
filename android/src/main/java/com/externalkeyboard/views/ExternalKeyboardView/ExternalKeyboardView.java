@@ -1,6 +1,7 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
 import android.content.Context;
+import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import com.externalkeyboard.delegates.FocusOrderDelegate;
 import com.externalkeyboard.events.EventHelper;
 
 import com.externalkeyboard.helper.FocusHelper;
+import com.externalkeyboard.helper.ReactNativeVersionChecker;
 import com.externalkeyboard.services.KeyboardKeyPressHandler;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.UIManagerHelper;
@@ -161,6 +163,12 @@ public class ExternalKeyboardView extends ReactViewGroup {
       View prevView = this.focusOrderDelegate.getLink(orderBackward);
       if (prevView != null) {
         return prevView;
+      }
+    }
+
+    if(ReactNativeVersionChecker.isReactNative80OrLater()) {
+      if(orderGroup != null && orderIndex != null && (direction == FOCUS_FORWARD || direction == FOCUS_BACKWARD)){
+        return FocusFinder.getInstance().findNextFocus((ViewGroup) this.getParent(), focused, direction);
       }
     }
 

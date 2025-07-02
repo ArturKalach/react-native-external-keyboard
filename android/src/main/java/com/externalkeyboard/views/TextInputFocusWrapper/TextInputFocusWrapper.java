@@ -11,6 +11,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.externalkeyboard.events.EventHelper;
+import com.externalkeyboard.helper.ReactNativeVersionChecker;
 import com.externalkeyboard.modules.ExternalKeyboardModule;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.views.textinput.ReactEditText;
@@ -28,24 +29,12 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private boolean multiline = false;
   private boolean keyboardFocusable = true;
   private static View focusedView = null;
-  private static Boolean is80Version = null;
   public boolean getIsFocusByPress() {
     return focusType == FOCUS_BY_PRESS;
   }
 
   private boolean getIs80Version () {
-    if (is80Version != null) {
-      return is80Version;
-    }
-
-    try {
-      Field field = (ReactEditText.class).getDeclaredField("dragAndDropFilter");
-      is80Version = true;
-    } catch (NoSuchFieldException e) {
-      is80Version = false;
-    }
-
-    return is80Version;
+    return ReactNativeVersionChecker.isReactNative80OrLater();
   }
 
   public void setKeyboardFocusable(boolean canBeFocusable) {
