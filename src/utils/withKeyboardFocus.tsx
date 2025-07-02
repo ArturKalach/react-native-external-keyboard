@@ -81,6 +81,18 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           enableA11yFocus,
           screenAutoA11yFocus,
           screenAutoA11yFocusDelay = 300, // ToDo align with BaseKeyboardView
+          orderIndex,
+          orderGroup,
+          orderId,
+          orderLeft,
+          orderRight,
+          orderUp,
+          orderDown,
+          orderForward,
+          orderBackward,
+          orderFirst,
+          orderLast,
+          lockFocus,
           ...props
         },
         ref
@@ -156,6 +168,18 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
               enableA11yFocus={enableA11yFocus}
               screenAutoA11yFocus={screenAutoA11yFocus}
               screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
+              orderIndex={orderIndex}
+              orderGroup={orderGroup}
+              lockFocus={lockFocus}
+              orderId={orderId}
+              orderLeft={orderLeft}
+              orderRight={orderRight}
+              orderUp={orderUp}
+              orderDown={orderDown}
+              orderForward={orderForward}
+              orderBackward={orderBackward}
+              orderFirst={orderFirst}
+              orderLast={orderLast}
             >
               <Component
                 ref={componentRef}
