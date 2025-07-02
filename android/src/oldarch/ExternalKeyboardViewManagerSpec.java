@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
+import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.view.ReactViewManager;
 
 public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> extends ReactViewManager {
@@ -39,4 +40,28 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
   public abstract void setScreenAutoA11yFocus(ExternalKeyboardView wrapper, boolean enableA11yFocus);
 
   public abstract void setScreenAutoA11yFocusDelay(ExternalKeyboardView wrapper, int value);
+
+  public abstract void setOrderGroup(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderIndex(ExternalKeyboardView view, int value);
+
+  public abstract void setLockFocus(ExternalKeyboardView view, int value);
+
+  public abstract void setOrderId(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderLeft(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderRight(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderUp(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderDown(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderForward(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderBackward(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderFirst(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setOrderLast(ExternalKeyboardView view, @Nullable String value);
 }

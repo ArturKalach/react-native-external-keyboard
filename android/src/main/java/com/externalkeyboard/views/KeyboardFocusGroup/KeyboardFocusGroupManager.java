@@ -20,16 +20,20 @@ public class KeyboardFocusGroupManager extends com.externalkeyboard.KeyboardFocu
     return new KeyboardFocusGroup(context);
   }
 
-
   @Override
-  @ReactProp(name = "tintColor")
-  public void setTintColor(KeyboardFocusGroup view, @Nullable Integer value) {
+  public void setTintColor(KeyboardFocusGroup view, Integer value) {
     //stub
   }
 
   @Override
   @ReactProp(name = "groupIdentifier")
   public void setGroupIdentifier(KeyboardFocusGroup wrapper, String groupIdentifier) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "orderGroup")
+  public void setOrderGroup(KeyboardFocusGroup view, @Nullable String value) {
     //stub
   }
 }

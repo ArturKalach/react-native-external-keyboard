@@ -12,12 +12,132 @@ React Native library for enhanced external keyboard support.
 > This means that there is no need to use the workaround with `KeyboardExtendedInput`, and it is recommended to use the default `TextInput` instead. Additionally, because of changes in `TextInput`, `focusType="press"` for `KeyboardExtendedInput`  no longer works on Android.
 
 
-## New Release Features
-- Added `Keyboard.dismiss` functionality for Android.
-- Introduced an iOS-specific component: `KeyboardFocusGroup`, a component for managing the `tintColor`, `focusGroupIdentifier`, and group focus.
-- Enhanced `KeyboardExtendedBaseView` with `haloCornerRadius`, `haloExpandX`, and `haloExpandY` properties for customizing the appearance of the `Halo Effect`.
-- Enhanced `KeyboardExtendedBaseView` with `onBubbledContextMenuPress`, key press functionality has been also enhanced. Key presses can be listened to for a group of components, screens, or pages.
-- Added the `ignoreGroupFocusHint` prop to `KeyboardExtendedBaseView` to support key press listening without focusing the container.
+## New Release: Focus Lock and Focus Order Release
+Improved keyboard focus control with features like focus order, ordered links, and focus lock.
+
+|Android| iOS|
+|-|-|
+| <image alt="Android Focus Order Example" src="https://github.com/user-attachments/assets/8bae353e-cf4b-41f7-8796-fd1cceae5df5" height="400" />|  <image alt="iOS Focus Order Example" src="https://github.com/user-attachments/assets/51850cc6-9573-4ccb-b69c-14deefbb4b65" height="400"/> |
+
+<details>
+  <summary>More Information</summary>
+  
+Advanced focus order functionality for Android and iOS, plus focus lock!
+
+It can be really challenging to manage focus in React Native, but fortunately, there are tools available to simplify the process. 
+
+## Link Focus Order
+
+`Linking` components could be the most logical way to define focus order. By using properties such as `orderId` and `orderBackward`, `orderForward`, `orderLeft`, `orderRight`, `orderUp`, and `orderDown`, you can customize the focus order according to your needs.
+
+```tsx
+<View>
+  <Pressable
+    onPress={onPress}
+    orderId="0_0"
+    orderForward="0_2"
+  >
+    <Text>1</Text>
+  </Pressable>
+  <Pressable
+    onPress={onPress}
+    orderId="0_2"
+    orderBackward="0_1"
+  >
+    <Text>3</Text>
+  </Pressable>
+  <Pressable
+    onPress={onPress}
+    orderId="0_1"
+    orderForward="0_2"
+    orderBackward="0_0"
+  >
+    <Text>2</Text>
+  </Pressable>
+</View>
+```
+
+You can find more examples here: [Focus Link Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusLinkOrder.tsx), [DPad Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusDPadOrder.tsx)
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| orderId? | A unique ID used for link target identification. | `string` |
+| orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string` |
+| orderForward? | ID of the target for forward navigation with "Tab". | `string` |
+| orderLeft? | ID of the target for navigation to the left. | `string` |
+| orderRight? | ID of the target for navigation to the right. | `string` |
+| orderUp? | ID of the target for navigation upward. | `string` |
+| orderDown? | ID of the target for navigation downward. | `string` |
+
+## Indexes Focus Order
+
+Linking is one of the best ways to set up focus order. However, there may be cases where you need to define the order of multiple elements, such as groups. As an alternative solution, you can use Indexes.
+
+```tsx
+<KeyboardOrderFocusGroup>
+  <View>
+    <Pressable
+      onPress={onPress}
+      orderIndex={0}
+    >
+      <Text>First</Text>
+    </Pressable>
+    <Pressable
+      onPress={onPress}
+      orderIndex={2}
+    >
+      <Text>Third</Text>
+    </Pressable>
+    <Pressable
+      onPress={onPress}
+      orderIndex={1}
+    >
+      <Text>Second</Text>
+    </Pressable>
+  </View>
+</KeyboardOrderFocusGroup>
+```
+Indexing requres `orderGroup` param for proper order set,  you can use `KeyboardOrderFocusGroup` or provide `orderGroup` to the component.
+
+```tsx
+ <Pressable
+      orderGroup="main"
+      onPress={onPress}
+      orderIndex={2}
+    >
+      <Text>Back</Text>
+  </Pressable>
+```
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| orderGroup? | The name of the group containing ordered elements. | `string` |
+| orderIndex? | The order index of the element within the group. | `number` |
+
+
+You can find more examples here: [Focus Order via indexes](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusOrder.tsx)
+
+## Focus Lock
+
+Finally, you can lock focus to specific directions. 
+
+```tsx
+ <Pressable
+  lockFocus={['down', 'right']}
+>
+  <Text>Lock Example</Text>
+</Pressable>
+```
+
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| lockFocus? | An array of directions to lock focus. | Array of 'left' | 'right' | 'up' | 'down' | 'forward' | 'backward' | 'first' | 'last' |
+
+> [!NOTE]  
+> `first` and `last` are specific to `iOS`. When focus is blocked for `forward` and `backward` on iOS, it checks for the `last` and `first` elements to focus.
+</details>
+
 
 iOS | Android
 -- | --
@@ -29,6 +149,7 @@ iOS | Android
 - Key press event handling.
 - Focus management for `TextInput` and `Pressable` components.
 - Customization of the `Halo Effect` and `tintColor` for iOS.
+- Keyboard focus order.
 
 ## Installation
 
@@ -104,6 +225,14 @@ enableA11yFocus?: | Can be used to move the screen reader focus within the keybo
 screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
 `screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
 `exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
+orderId? | A unique ID used for link target identification. | `string`
+orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
+orderForward? | ID of the target for forward navigation with "Tab". | `string`
+orderLeft? | ID of the target for navigation to the left. | `string`
+orderRight? | ID of the target for navigation to the right. | `string`
+orderUp? | ID of the target for navigation upward. | `string`
+orderDown? | ID of the target for navigation downward. | `string`
+lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining component props  | `Type of Component`
 
 
@@ -155,6 +284,14 @@ enableA11yFocus?: | Can be used to move the screen reader focus within the keybo
 screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
 `screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
 `exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
+orderId? | A unique ID used for link target identification. | `string`
+orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
+orderForward? | ID of the target for forward navigation with "Tab". | `string`
+orderLeft? | ID of the target for navigation to the left. | `string`
+orderRight? | ID of the target for navigation to the right. | `string`
+orderUp? | ID of the target for navigation upward. | `string`
+orderDown? | ID of the target for navigation downward. | `string`
+lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining View props  | `View`
 
 
@@ -221,6 +358,14 @@ haloEffect | Enables halo effect on focus (iOS only) | `boolean \| undefined`
 autoFocus | Indicates if the component should automatically gain focus | `boolean \| undefined`
 tintColor | Color used for tinting the component | `string`
 ref->focus | Command to programmatically focus the component | () => void;
+orderId? | A unique ID used for link target identification. | `string`
+orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
+orderForward? | ID of the target for forward navigation with "Tab". | `string`
+orderLeft? | ID of the target for navigation to the left. | `string`
+orderRight? | ID of the target for navigation to the right. | `string`
+orderUp? | ID of the target for navigation upward. | `string`
+orderDown? | ID of the target for navigation downward. | `string`
+lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining View props | `View`
 
 ### KeyboardFocusGroup
@@ -274,6 +419,120 @@ import { Keyboard } from 'react-native-external-keyboard';
 ```
 
 This is needed for hiding the soft keyboard using a hardware keyboard. Additionally, the soft keyboard can be hidden from the settings or by pressing `Alt + K`.
+
+## Focus order features
+
+## Link Focus Order
+
+`Linking` components could be the most logical way to define focus order. By using properties such as `orderId` and `orderBackward`, `orderForward`, `orderLeft`, `orderRight`, `orderUp`, and `orderDown`, you can customize the focus order according to your needs.
+
+```tsx
+<View>
+  <Pressable
+    onPress={onPress}
+    orderId="0_0"
+    orderForward="0_2"
+  >
+    <Text>1</Text>
+  </Pressable>
+  <Pressable
+    onPress={onPress}
+    orderId="0_2"
+    orderBackward="0_1"
+  >
+    <Text>3</Text>
+  </Pressable>
+  <Pressable
+    onPress={onPress}
+    orderId="0_1"
+    orderForward="0_2"
+    orderBackward="0_0"
+  >
+    <Text>2</Text>
+  </Pressable>
+</View>
+```
+
+You can find more examples here: [Focus Link Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusLinkOrder.tsx), [DPad Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusDPadOrder.tsx)
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| orderId? | A unique ID used for link target identification. | `string` |
+| orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string` |
+| orderForward? | ID of the target for forward navigation with "Tab". | `string` |
+| orderLeft? | ID of the target for navigation to the left. | `string` |
+| orderRight? | ID of the target for navigation to the right. | `string` |
+| orderUp? | ID of the target for navigation upward. | `string` |
+| orderDown? | ID of the target for navigation downward. | `string` |
+
+## Indexes Focus Order
+
+Linking is one of the best ways to set up focus order. However, there may be cases where you need to define the order of multiple elements, such as groups. As an alternative solution, you can use Indexes.
+
+```tsx
+<KeyboardOrderFocusGroup>
+  <View>
+    <Pressable
+      onPress={onPress}
+      orderIndex={0}
+    >
+      <Text>First</Text>
+    </Pressable>
+    <Pressable
+      onPress={onPress}
+      orderIndex={2}
+    >
+      <Text>Third</Text>
+    </Pressable>
+    <Pressable
+      onPress={onPress}
+      orderIndex={1}
+    >
+      <Text>Second</Text>
+    </Pressable>
+  </View>
+</KeyboardOrderFocusGroup>
+```
+Indexing requres `orderGroup` param for proper order set,  you can use `KeyboardOrderFocusGroup` or provide `orderGroup` to the component.
+
+```tsx
+ <Pressable
+      orderGroup="main"
+      onPress={onPress}
+      orderIndex={2}
+    >
+      <Text>Back</Text>
+  </Pressable>
+```
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| orderGroup? | The name of the group containing ordered elements. | `string` |
+| orderIndex? | The order index of the element within the group. | `number` |
+
+
+You can find more examples here: [Focus Order via indexes](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusOrder.tsx)
+
+## Focus Lock
+
+Finally, you can lock focus to specific directions. 
+
+```tsx
+ <Pressable
+  lockFocus={['down', 'right']}
+>
+  <Text>Lock Example</Text>
+</Pressable>
+```
+
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last' |
+
+> [!NOTE]  
+> `first` and `last` are specific to `iOS`. When focus is blocked for `forward` and `backward` on iOS, it checks for the `last` and `first` elements to focus.
+
 
 # Migration 0.3.x to 0.4.0
 

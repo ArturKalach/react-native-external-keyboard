@@ -2,12 +2,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
 import { Button, SafeAreaView, StyleSheet } from 'react-native';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   NavigationContainer,
   type NavigationProp,
 } from '@react-navigation/native';
+import { FocusOrderScreen } from './components/FocusOrderExample/FocusOrderScreen';
 
 export function DetailsScreen() {
   return (
@@ -24,10 +25,10 @@ const Stack = createNativeStackNavigator();
 function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   return (
     <View style={styles.home}>
-      <Text>Home Screen</Text>
+      <Button title="Details" onPress={() => navigation.navigate('Details')} />
       <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
+        title="Focus Order"
+        onPress={() => navigation.navigate('FocusOrder')}
       />
     </View>
   );
@@ -40,6 +41,7 @@ export function App() {
         <Stack.Navigator>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
+          <Stack.Screen name="FocusOrder" component={FocusOrderScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
@@ -54,5 +56,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f4f4f4',
   },
-  home: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  home: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
 });

@@ -52,6 +52,18 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   enableA11yFocus?: boolean;
   screenAutoA11yFocus?: boolean;
   screenAutoA11yFocusDelay?: Int32;
+  orderGroup?: string;
+  orderIndex?: Int32;
+  lockFocus?: Int32;
+  orderId?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderForward?: string;
+  orderBackward?: string;
+  orderFirst?: string;
+  orderLast?: string;
 }
 
 export interface NativeCommands {
