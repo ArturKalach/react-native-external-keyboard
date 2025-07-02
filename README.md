@@ -12,7 +12,7 @@ React Native library for enhanced external keyboard support.
 > This means that there is no need to use the workaround with `KeyboardExtendedInput`, and it is recommended to use the default `TextInput` instead. Additionally, because of changes in `TextInput`, `focusType="press"` for `KeyboardExtendedInput`  no longer works on Android.
 
 
-## New Release: Focus Lock and Focus Order Release
+## New Release: Focus Lock and Focus Order
 Improved keyboard focus control with features like focus order, ordered links, and focus lock.
 
 |Android| iOS|
@@ -617,12 +617,14 @@ export type OnKeyPress = NativeSyntheticEvent<{
 ```
 
 ## Roadmap
-- Update `onPress` and `onLongPress` for `withKeyboardFocus`
-- Add functionality to control keyboard focus order.
-- Verify and update `focusable` and `disabled` states for iOS and Android.
-- Update `Readme.md`.
-- Create the documentation.
-- Perfomance optimization
+- [] Refactor and Performance optimization
+- [] Update `focusGroupIdentifier` and implement `KeyboardNavigationCluster` functionality
+- [] Update `onPress` and `onLongPress` for `withKeyboardFocus`
+- [x] Add functionality to control keyboard focus order.
+- [] Verify and update `focusable` and `disabled` states for iOS and Android.
+- [] Update `Readme.md`.
+- [] Create the documentation.
+
 
 ## Contributing
 Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas.
