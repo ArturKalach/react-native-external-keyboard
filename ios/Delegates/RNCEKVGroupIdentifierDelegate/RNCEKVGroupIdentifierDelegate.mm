@@ -59,4 +59,13 @@
     }
   }
 }
+
+- (void)clearSubview: (UIView*_Nullable)view {
+  if (@available(iOS 14.0, *)) {
+    _tagId = nil;
+    if(view.focusGroupIdentifier != nil) {
+      view.focusGroupIdentifier = nil;
+    }
+  }
+}
 @end
