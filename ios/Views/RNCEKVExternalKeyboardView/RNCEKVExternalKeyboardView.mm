@@ -57,7 +57,7 @@ using namespace facebook::react;
   }
 }
 
-- (void)unkink{
+- (void)unlink{
   if(_orderPosition != nil && _orderGroup != nil && _isLinked) {
     [[RNCEKVOrderLinking sharedInstance] remove:_orderPosition withOrderKey: _orderGroup];
   }
@@ -85,7 +85,7 @@ using namespace facebook::react;
 
 - (void)onDetached
 {
-  [self unkink];
+  [self unlink];
 }
 
 
@@ -458,6 +458,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 
 #endif
 
+
 - (void)a11yFocus {
   if (!_enableA11yFocus)
     return;
@@ -554,6 +555,15 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   
   [_gIdDelegate updateGroupIdentifier];
   //  [self setupLayout];
+}
+
+- (void)subviewRecycle: (UIView *)subview {
+  [_gIdDelegate clearSubview: subview];
+}
+
+- (void)willRemoveSubview:(UIView *)subview {
+  [super willRemoveSubview:subview];
+  [self subviewRecycle: subview];
 }
 
 - (void)viewControllerChanged:(NSNotification *)notification {
