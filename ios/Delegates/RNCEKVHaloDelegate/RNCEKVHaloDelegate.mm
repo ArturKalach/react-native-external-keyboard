@@ -51,38 +51,38 @@
   if (@available(iOS 15.0, *)) {
     UIView *focusingView = [_delegate getFocusTargetView];
     UIFocusEffect *prevEffect = _focusEffect;
-
+    
     BOOL isHidden = [self isHaloHidden];
-
+    
     if (isHidden) {
       _focusEffect = [RNCEKVFocusEffectUtility emptyFocusEffect];
     }
-
+    
     BOOL hasHaloSettings = _delegate.haloExpendX || _delegate.haloExpendY ||
-                           _delegate.haloCornerRadius;
+    _delegate.haloCornerRadius;
     BOOL isDifferentBounds =
-        !CGRectEqualToRect(_prevBounds, focusingView.bounds);
+    !CGRectEqualToRect(_prevBounds, focusingView.bounds);
     BOOL isDifferent = _prevHaloExpendX != _delegate.haloExpendX ||
-                       _prevHaloExpendY != _delegate.haloExpendY ||
-                       _prevHaloCornerRadius != _delegate.haloCornerRadius ||
-                       isDifferentBounds;
-
+    _prevHaloExpendY != _delegate.haloExpendY ||
+    _prevHaloCornerRadius != _delegate.haloCornerRadius ||
+    isDifferentBounds;
+    
     // ToDo refactor for better halo setup RNCEKV-7, RNCEKV-8
     if (!isHidden && hasHaloSettings && isDifferent) {
       _prevHaloExpendX = _delegate.haloExpendX;
       _prevHaloExpendY = _delegate.haloExpendY;
       _prevHaloCornerRadius = _delegate.haloCornerRadius;
       _prevBounds = focusingView.bounds;
-
+      
       _focusEffect =
-          [RNCEKVFocusEffectUtility getFocusEffect:focusingView
-                                     withExpandedX:_delegate.haloExpendX
-                                     withExpandedY:_delegate.haloExpendY
-                                  withCornerRadius:_delegate.haloCornerRadius];
+      [RNCEKVFocusEffectUtility getFocusEffect:focusingView
+                                 withExpandedX:_delegate.haloExpendX
+                                 withExpandedY:_delegate.haloExpendY
+                              withCornerRadius:_delegate.haloCornerRadius];
     }
-
+    
     if ((_focusEffect == nil && _recycled) || (_focusEffect != nil && prevEffect != _focusEffect &&
-        focusingView.focusEffect != _focusEffect)) {
+                                               focusingView.focusEffect != _focusEffect)) {
       _recycled = false;
       focusingView.focusEffect = _focusEffect;
     }
@@ -94,24 +94,26 @@
     return;
   if (@available(iOS 15.0, *)) {
     BOOL shouldUpdate = _delegate.haloExpendX || _delegate.haloExpendY ||
-                        _delegate.haloCornerRadius;
+    _delegate.haloCornerRadius;
     if (!shouldUpdate)
       return;
-
+    
     UIView *focusingView = [_delegate getFocusTargetView];
     UIFocusEffect *focusEffect =
-        [RNCEKVFocusEffectUtility getFocusEffect:focusingView
-                                   withExpandedX:_delegate.haloExpendX
-                                   withExpandedY:_delegate.haloExpendY
-                                withCornerRadius:_delegate.haloCornerRadius];
-
+    [RNCEKVFocusEffectUtility getFocusEffect:focusingView
+                               withExpandedX:_delegate.haloExpendX
+                               withExpandedY:_delegate.haloExpendY
+                            withCornerRadius:_delegate.haloCornerRadius];
+    
     focusingView.focusEffect = focusEffect;
   }
 }
 
 - (void) clear {
   UIView *focusingView = [_delegate getFocusTargetView];
-  focusingView.focusEffect = nil;
+  if (@available(iOS 15.0, *)) {
+    focusingView.focusEffect = nil;
+  }
   _focusEffect = nil;
   _recycled = true;
   _prevBounds = CGRect();

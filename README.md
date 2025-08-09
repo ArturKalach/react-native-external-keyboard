@@ -6,7 +6,7 @@ React Native library for enhanced external keyboard support.
 - ⚡️ Bridgeless
 
 > [!NOTE]
-> React Native `0.80.0` includes a fix for `TextInput` focus on Android.
+> React Native `0.80.0` (`0.79.0`) includes a fix for `TextInput` focus on Android.
 > `TextInput`: Can now focus TextInput with keyboard ([e00028f6bb](https://github.com/facebook/react-native/commit/e00028f6bb6c19de861f9a25f377295755f3671b) by [@joevilches](https://github.com/joevilches))
 >
 > This means that there is no need to use the workaround with `KeyboardExtendedInput`, and it is recommended to use the default `TextInput` instead. Additionally, because of changes in `TextInput`, `focusType="press"` for `KeyboardExtendedInput`  no longer works on Android.
@@ -21,10 +21,10 @@ Improved keyboard focus control with features like focus order, ordered links, a
 
 <details>
   <summary>More Information</summary>
-  
+
 Advanced focus order functionality for Android and iOS, plus focus lock!
 
-It can be really challenging to manage focus in React Native, but fortunately, there are tools available to simplify the process. 
+It can be really challenging to manage focus in React Native, but fortunately, there are tools available to simplify the process.
 
 ## Link Focus Order
 
@@ -119,7 +119,7 @@ You can find more examples here: [Focus Order via indexes](https://github.com/Ar
 
 ## Focus Lock
 
-Finally, you can lock focus to specific directions. 
+Finally, you can lock focus to specific directions.
 
 ```tsx
  <Pressable
@@ -134,7 +134,7 @@ Finally, you can lock focus to specific directions.
 | :-- | :-- | :-- |
 | lockFocus? | An array of directions to lock focus. | Array of 'left' | 'right' | 'up' | 'down' | 'forward' | 'backward' | 'first' | 'last' |
 
-> [!NOTE]  
+> [!NOTE]
 > `first` and `last` are specific to `iOS`. When focus is blocked for `forward` and `backward` on iOS, it checks for the `last` and `first` elements to focus.
 </details>
 
@@ -191,7 +191,7 @@ const KeybardedButton = withKeyboardFocus(Button);
 </TouchableOpacity>
 ```
 
-After wrapping a `Pressable` or `Touchable` with `withKeyboardFocus`, you will be able to handle `focus` and `blur` events, control the `tint color`, apply focus and container focus styles, `focus` the component using a `ref`, or configure `autoFocus`. 
+After wrapping a `Pressable` or `Touchable` with `withKeyboardFocus`, you will be able to handle `focus` and `blur` events, control the `tint color`, apply focus and container focus styles, `focus` the component using a `ref`, or configure `autoFocus`.
 
 
 Props | Description | Type
@@ -372,7 +372,7 @@ lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' 
 The `KeyboardFocusGroup` is a View-based component developed based on the iOS API. It can be used for defining focus groups or setting the `tintColor` globally.
 
 ```tsx
-  <KeyboardFocusGroup  
+  <KeyboardFocusGroup
     tintColor="orange">
     <ScrollView
       contentContainerStyle={styles.contentContainer}
@@ -381,7 +381,7 @@ The `KeyboardFocusGroup` is a View-based component developed based on the iOS AP
     ...
     </ScrollView>
   </KeyboardFocusGroup>
-  <KeyboardFocusGroup 
+  <KeyboardFocusGroup
     focusStyle={{ backgroundColor: 'green' }}
     onFocusChange={(e) => console.log('green', e)}
     groupIdentifier="green"
@@ -515,7 +515,7 @@ You can find more examples here: [Focus Order via indexes](https://github.com/Ar
 
 ## Focus Lock
 
-Finally, you can lock focus to specific directions. 
+Finally, you can lock focus to specific directions.
 
 ```tsx
  <Pressable
@@ -530,7 +530,7 @@ Finally, you can lock focus to specific directions.
 | :-- | :-- | :-- |
 | lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last' |
 
-> [!NOTE]  
+> [!NOTE]
 > `first` and `last` are specific to `iOS`. When focus is blocked for `forward` and `backward` on iOS, it checks for the `last` and `first` elements to focus.
 
 
@@ -547,7 +547,7 @@ import { KeyboardExtendedModule } from 'react-native-external-keyboard';
 KeyboardExtendedModule.setKeyboardFocus(ref); //or A11yModule.setKeyboardFocus(ref);
 ```
 
-Updated: 
+Updated:
 ```
 import { KeyboardExtendedPressable, type KeyboardFocus } from 'react-native-external-keyboard';
 ...
