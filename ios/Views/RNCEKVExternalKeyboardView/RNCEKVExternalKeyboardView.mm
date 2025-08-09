@@ -157,6 +157,10 @@ using namespace facebook::react;
   _orderRight = nil;
   _orderUp = nil;
   _orderDown = nil;
+  _orderForward = nil;
+  _orderBackward = nil;
+  _orderLast = nil;
+  _orderFirst = nil;
   _orderId = nil;
   _lockFocus = nil;
   _customGroupId = nil;
@@ -559,6 +563,9 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 
 - (void)subviewRecycle: (UIView *)subview {
   [_gIdDelegate clearSubview: subview];
+  if (@available(iOS 15.0, *)) {
+    subview.focusEffect = nil;
+  }
 }
 
 - (void)willRemoveSubview:(UIView *)subview {
