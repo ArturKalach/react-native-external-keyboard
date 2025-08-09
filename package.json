@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.6.2-rc",
+  "version": "0.6.2",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
