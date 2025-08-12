@@ -5,7 +5,6 @@
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
-#import "RNCEKVGroupIdentifierDelegate.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -38,9 +37,7 @@ using namespace facebook::react;
 static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
-@implementation RNCEKVTextInputFocusWrapper{
-  RNCEKVGroupIdentifierDelegate* _gIdDelegate;
-}
+@implementation RNCEKVTextInputFocusWrapper
 
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -50,9 +47,8 @@ static const NSInteger AUTO_BLUR = 2;
         static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
         _props = defaultProps;
 #endif
-      _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
     }
-    
+
     return self;
 }
 
@@ -76,36 +72,29 @@ static const NSInteger AUTO_BLUR = 2;
     [self cleanReferences];
 }
 
-- (void)willRemoveSubview:(UIView *)subview {
-    [super willRemoveSubview:subview];
-    if(_customGroupId && _gIdDelegate) {
-      [_gIdDelegate clear];
-    }
-}
-
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
     const auto &oldViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(_props);
     const auto &newViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(props);
     [super updateProps
      :props oldProps:oldProps];
-    
+
     if(oldViewProps.canBeFocused != newViewProps.canBeFocused) {
         [self setCanBeFocused: newViewProps.canBeFocused];
     }
-    
+
     if(oldViewProps.focusType != newViewProps.focusType) {
         [self setFocusType: newViewProps.focusType];
     }
-    
+
     if(oldViewProps.blurType != newViewProps.blurType) {
         [self setBlurType: newViewProps.blurType];
     }
-    
+
     if(oldViewProps.blurOnSubmit != newViewProps.blurOnSubmit) {
         [self setBlurOnSubmit: newViewProps.blurOnSubmit];
     }
-    
+
     if(oldViewProps.multiline != newViewProps.multiline) {
         [self setMultiline: newViewProps.multiline];
     }
@@ -116,25 +105,13 @@ static const NSInteger AUTO_BLUR = 2;
             [self setIsHaloActive: @(haloState)];
         }
     }
-    
-  
+
+
   UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
   BOOL renewColor = newColor != nil && self.tintColor == nil;
   BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
   if(isColorChanged || renewColor) {
       self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
-  }
-  
-  BOOL isNewGroup = oldViewProps.groupIdentifier != newViewProps.groupIdentifier;
-  BOOL recoverCustomGroup = !self.customGroupId && !newViewProps.groupIdentifier.empty();
-  if(isNewGroup || recoverCustomGroup) {
-    if(newViewProps.groupIdentifier.empty() && self.customGroupId != nil) {
-      self.customGroupId = nil;
-    }
-    if(!newViewProps.groupIdentifier.empty()) {
-      NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
-      [self setCustomGroupId:newGroupId];
-    }
   }
 }
 
@@ -194,11 +171,11 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-  
+
     if(_textField == nil) {
       _textField = [self getTextFieldComponent];
     }
-  
+
     BOOL isNext = context.nextFocusedView == _textField;
     BOOL isPrev = context.previouslyFocusedView == _textField;
 
@@ -210,7 +187,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
         }
       }
     }
-      
+
     if(isPrev) {
       [self onFocusChange: NO];
       if(self.blurType == AUTO_BLUR) {
@@ -225,7 +202,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
   @try{
     UIView* input = self.subviews[0];
     UIView* backedTextInputView = nil;
-  
+
     #ifdef RCT_NEW_ARCH_ENABLED
         if([input isKindOfClass: [RCTTextInputComponentView class]]) {
           backedTextInputView = ((RCTTextInputComponentView *)input).backedTextInputView;
@@ -237,7 +214,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
           backedTextInputView = ((RCTSinglelineTextInputView *)input).backedTextInputView;
         }
     #endif
-    
+
     return backedTextInputView;
   } @catch (NSException *ex) {
     return nil;
@@ -282,7 +259,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     if(self.subviews.count == 0) {
         return;
     }
-    
+
     UIView* view = self.subviews[0];
     if (@available(iOS 15.0, *)) {
         BOOL isTextInput = [self getIsTextInputView: view];
@@ -298,16 +275,16 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     if (@available(iOS 13.4, *)) {
         UIKey *key = presses.allObjects[0].key;
         BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
-      
+
         RCTUITextField* textView = _textField != nil ? _textField : [self getTextFieldComponent];
         if(isEnter && textView && !textView.isFirstResponder) {
             [_textField reactFocus];
             return;
         }
-      
+
         if(self.multiline) {
             BOOL isShiftPressed = (key.modifierFlags & UIKeyModifierShift) != 0;
-            
+
             if(textView && textView.isFirstResponder) {
                 if(!isShiftPressed && isEnter) {
                     [self onMultiplyTextSubmitHandler: (UIView*)textView];
@@ -318,7 +295,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
             }
         }
     }
-    
+
     [super pressesBegan:presses withEvent:event];
 }
 
@@ -335,20 +312,13 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     UIView* focusingView = self.subviews[0].subviews[0];
     return focusingView;
   }
-  
+
   return nil;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    // ToDo RNCEKV-7 add cache for halo update
-    [_gIdDelegate updateGroupIdentifier];
-}
-
-
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     [super willMoveToSuperview:newSuperview];
-    
+
     if (newSuperview == nil) {
         [self cleanReferences];
     }
