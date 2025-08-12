@@ -18,7 +18,6 @@ static const void *RNCEKVCustomGroupKey = &RNCEKVCustomGroupKey;
     return objc_getAssociatedObject(self, RNCEKVCustomGroupKey);
 }
 
-// Setter for `rctekvCustomGroup`
 - (void)setRncekvCustomGroup:(NSString *)rncekvCustomGroup {
     objc_setAssociatedObject(self, RNCEKVCustomGroupKey, rncekvCustomGroup, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
