@@ -5,6 +5,8 @@
 //  Created by Artur Kalach on 12/08/2025.
 //
 
+#ifdef RCT_NEW_ARCH_ENABLED
+
 #import <Foundation/Foundation.h>
 
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
@@ -31,3 +33,5 @@ static const void *RNCEKVCustomGroupKey = &RNCEKVCustomGroupKey;
 }
 
 @end
+
+#endif

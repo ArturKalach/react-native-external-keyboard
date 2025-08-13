@@ -8,6 +8,8 @@
 #ifndef UIView_RNCEKVExternalKeyboard_h
 #define UIView_RNCEKVExternalKeyboard_h
 
+#ifdef RCT_NEW_ARCH_ENABLED
+
 #import <React/RCTViewComponentView.h>
 
 @interface RCTViewComponentView (RNCEKVExternalKeyboard)
@@ -16,5 +18,6 @@
 
 @end
 
+#endif
 
 #endif /* UIView_RNCEKVExternalKeyboard_h */
