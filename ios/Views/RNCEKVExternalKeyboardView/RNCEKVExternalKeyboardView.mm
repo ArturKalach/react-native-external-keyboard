@@ -565,15 +565,23 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   if (@available(iOS 15.0, *)) {
     subview.focusEffect = nil;
   }
-  
+
   [super willRemoveSubview:subview];
 }
 
 - (void)viewControllerChanged:(NSNotification *)notification {
-  UIViewController *viewController = notification.object;
-  if (self.autoFocus && !_isAttachedToController) {
-    _isAttachedToController = YES;
-    [self updateFocus:viewController];
+  UIViewController *viewController = self.reactViewController;
+  UIViewController *shownController = notification.object;
+  if(viewController != shownController) return;
+  if (self.autoFocus) {
+    if(!_isAttachedToController) {
+      UIWindow *window = RCTKeyWindow();
+      if (window) {
+        [self updateFocus:window.rootViewController];
+      } else {
+        [self updateFocus:viewController];
+      }
+    }
   }
 }
 
