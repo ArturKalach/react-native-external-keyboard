@@ -24,6 +24,7 @@
 
 #import <React/RCTConversions.h>
 
+#import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 #import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
@@ -264,11 +265,19 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     if (@available(iOS 15.0, *)) {
         BOOL isTextInput = [self getIsTextInputView: view];
         if(isTextInput) {
-            view.subviews[0].focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
+          UIFocusEffect* focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
+          #ifdef RCT_NEW_ARCH_ENABLED
+          if([view.subviews[0] isKindOfClass: RCTViewComponentView.class]) {
+            ((RCTViewComponentView*)view.subviews[0]).rncekvCustomFocusEffect = focusEffect;
+          } else {
+            view.subviews[0].focusEffect = focusEffect;
+          }
+          #else
+          view.subviews[0].focusEffect = focusEffect;
+          #endif
         }
     }
 }
-
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {

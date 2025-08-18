@@ -563,7 +563,15 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 - (void)willRemoveSubview:(UIView *)subview {
   [_gIdDelegate clearSubview: subview];
   if (@available(iOS 15.0, *)) {
+#ifdef RCT_NEW_ARCH_ENABLED
+    if([subview isKindOfClass: RCTViewComponentView.class]) {
+      ((RCTViewComponentView*)subview).rncekvCustomFocusEffect = nil;
+    } else {
+      subview.focusEffect = nil;
+    }
+#else
     subview.focusEffect = nil;
+#endif
   }
 
   [super willRemoveSubview:subview];

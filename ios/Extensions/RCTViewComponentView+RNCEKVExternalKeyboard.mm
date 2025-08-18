@@ -13,6 +13,7 @@
 
 #import <objc/runtime.h>
 static const void *RNCEKVCustomGroupKey = &RNCEKVCustomGroupKey;
+static const void *RNCEKVCustomFocusEffect = &RNCEKVCustomFocusEffect;
 
 @implementation RCTViewComponentView (RNCEKVExternalKeyboard)
 
@@ -24,12 +25,30 @@ static const void *RNCEKVCustomGroupKey = &RNCEKVCustomGroupKey;
     objc_setAssociatedObject(self, RNCEKVCustomGroupKey, rncekvCustomGroup, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (NSString *)rncekvCustomFocusEffect {
+    return objc_getAssociatedObject(self, RNCEKVCustomFocusEffect);
+}
+
+- (void)setRncekvCustomFocusEffect:(NSString *)rncekvCustomFocusEffect {
+    objc_setAssociatedObject(self, RNCEKVCustomFocusEffect, rncekvCustomFocusEffect, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (NSString *)focusGroupIdentifier {
   NSString* rncekv = [self rncekvCustomGroup];
   if(rncekv) {
     return rncekv;
   }
   return [super focusGroupIdentifier];
+}
+
+
+- (UIFocusEffect*)focusEffect {
+  UIFocusEffect* rncekv = [self rncekvCustomFocusEffect];
+  if(rncekv) {
+    return rncekv;
+  }
+  
+  return [super focusEffect];
 }
 
 @end

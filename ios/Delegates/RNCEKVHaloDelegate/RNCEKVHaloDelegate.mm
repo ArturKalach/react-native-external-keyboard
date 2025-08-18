@@ -10,6 +10,10 @@
 #import "RNCEKVFocusEffectUtility.h"
 #import "RNCEKVHaloDelegate.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
+#endif
+
 @implementation RNCEKVHaloDelegate {
   UIView<RNCEKVHaloProtocol> *_delegate;
   UIFocusEffect *_focusEffect;
@@ -84,7 +88,7 @@
     if ((_focusEffect == nil && _recycled) || (_focusEffect != nil && prevEffect != _focusEffect &&
                                                focusingView.focusEffect != _focusEffect)) {
       _recycled = false;
-      focusingView.focusEffect = _focusEffect;
+      [self setFocusEffect: _focusEffect];
     }
   }
 }
@@ -104,16 +108,27 @@
                                withExpandedX:_delegate.haloExpendX
                                withExpandedY:_delegate.haloExpendY
                             withCornerRadius:_delegate.haloCornerRadius];
-    
+    [self setFocusEffect: focusEffect];
+  }
+}
+
+- (void)setFocusEffect: (UIFocusEffect*) focusEffect {
+  UIView *focusingView = [_delegate getFocusTargetView];
+  if (@available(iOS 15.0, *)) {
+#ifdef RCT_NEW_ARCH_ENABLED
+    if([focusingView isKindOfClass: RCTViewComponentView.class]) {
+      ((RCTViewComponentView*)focusingView).rncekvCustomFocusEffect = focusEffect;
+    } else {
+      focusingView.focusEffect = focusEffect;
+    }
+#else
     focusingView.focusEffect = focusEffect;
+#endif
   }
 }
 
 - (void) clear {
-  UIView *focusingView = [_delegate getFocusTargetView];
-  if (@available(iOS 15.0, *)) {
-    focusingView.focusEffect = nil;
-  }
+  [self setFocusEffect: nil];
   _focusEffect = nil;
   _recycled = true;
   _prevBounds = CGRect();
