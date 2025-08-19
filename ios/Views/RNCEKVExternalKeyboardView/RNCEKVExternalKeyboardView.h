@@ -8,7 +8,7 @@
 #import "RNCEKVGroupIdentifierProtocol.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <React/RCTViewComponentView.h>
+#import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

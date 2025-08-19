@@ -18,7 +18,9 @@
 - (NSString*_Nonnull) getFocusGroupIdentifier;
 - (void)updateGroupIdentifier;
 - (void)clear;
-- (void)clearSubview: (UIView*_Nullable)view;
+- (void)clearSubview:(UIView*_Nullable)subview;
+- (void)syncCustomGroupId;
+
 @end
 
 
