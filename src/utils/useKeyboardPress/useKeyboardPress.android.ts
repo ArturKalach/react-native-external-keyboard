@@ -13,8 +13,6 @@ export const ANDROID_TRIGGER_CODES = [
   ANDROID_ENTER_CODE,
 ];
 
-const MILLISECOND_THRESHOLD = 20;
-
 export const useKeyboardPress = <
   T extends (event?: any) => void,
   K extends (event?: any) => void,
@@ -27,7 +25,28 @@ export const useKeyboardPress = <
   onLongPress,
   triggerCodes = ANDROID_TRIGGER_CODES,
 }: UseKeyboardPressProps<T, K>) => {
-  const thresholdTime = useRef(0);
+  const pressInRef = useRef<number | undefined>(undefined);
+
+  const onPressHandler = useCallback(
+    (event: GestureResponderEvent) => {
+      if (!onLongPress || !pressInRef.current) {
+        onPress?.(event);
+      }
+    },
+    [onLongPress, onPress]
+  );
+
+  const onKeyDownPressHandler = useMemo(() => {
+    if (!onPressIn && !onLongPress) return onKeyDownPress;
+    return (e: OnKeyPress) => {
+      pressInRef.current = new Date().getTime();
+      onKeyDownPress?.(e);
+      if (triggerCodes.includes(e.nativeEvent.keyCode)) {
+        onPressIn?.(e as unknown as GestureResponderEvent);
+      }
+    };
+  }, [onKeyDownPress, onLongPress, onPressIn, triggerCodes]);
+
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
       const {
@@ -39,38 +58,19 @@ export const useKeyboardPress = <
 
       if (triggerCodes.includes(keyCode)) {
         if (isLongPress) {
-          thresholdTime.current = e?.timeStamp;
           onLongPress?.({} as GestureResponderEvent);
+        } else {
+          onPress?.();
         }
       }
+      pressInRef.current = undefined;
     },
-    [onPressOut, onKeyUpPress, triggerCodes, onLongPress]
+    [onPressOut, onKeyUpPress, triggerCodes, onLongPress, onPress]
   );
 
-  const onKeyDownPressHandler = useMemo(() => {
-    if (!onPressIn) return onKeyDownPress;
-    return (e: OnKeyPress) => {
-      onKeyDownPress?.(e);
-      if (triggerCodes.includes(e.nativeEvent.keyCode)) {
-        onPressIn?.(e as unknown as GestureResponderEvent);
-      }
-    };
-  }, [onKeyDownPress, onPressIn, triggerCodes]);
-
-  const onPressHandler = useCallback(
-    (event: GestureResponderEvent) => {
-      const pressThreshold = (event?.timeStamp ?? 0) - thresholdTime.current;
-      if (pressThreshold > MILLISECOND_THRESHOLD) {
-        onPress?.(event);
-      }
-    },
-    [onPress]
-  );
-
-  const hasHandler = onPressOut || onKeyUpPress || onLongPress || onPress;
   return {
-    onKeyUpPressHandler: hasHandler && onKeyUpPressHandler,
+    onPressHandler: onPress && onLongPress ? onPressHandler : onPress,
     onKeyDownPressHandler,
-    onPressHandler: onPress && onPressHandler,
+    onKeyUpPressHandler,
   };
 };
