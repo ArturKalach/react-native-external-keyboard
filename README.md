@@ -97,7 +97,7 @@ Linking is one of the best ways to set up focus order. However, there may be cas
   </View>
 </KeyboardOrderFocusGroup>
 ```
-Indexing requres `orderGroup` param for proper order set,  you can use `KeyboardOrderFocusGroup` or provide `orderGroup` to the component.
+Indexing requires `orderGroup` param for proper order set,  you can use `KeyboardOrderFocusGroup` or provide `orderGroup` to the component.
 
 ```tsx
  <Pressable
@@ -324,7 +324,7 @@ containerStyle | Style for the container | StyleProp<ViewStyle>
 containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
 tintType?: | Tint behavior type | `'default' \\| 'hover' \\| 'background' \\| 'none'`
 FocusHoverComponent?: | Component displayed on focus | `\\| ReactElement  \\| FunctionComponent  \\| (() => ReactElement);`
-onSubmitEditing?: | Extended `onSubmitEditing` for mulitline input | `(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)`
+onSubmitEditing?: | Extended `onSubmitEditing` for multiline input | `(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)`
 ...rest | Remaining TextInput props  | `TextInputProps`
 
 
@@ -336,7 +336,7 @@ import { KeyboardExtendedBaseView } from 'react-native-external-keyboard';
   <KeyboardExtendedBaseView
     onKeyDownPress={...}
     onKeyUpPress={...}
-    focussable
+    focusable
   >
     <Text>Content</Text>
   </KeyboardExtendedBaseView>
