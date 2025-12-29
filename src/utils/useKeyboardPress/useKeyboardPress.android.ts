@@ -13,6 +13,22 @@ export const ANDROID_TRIGGER_CODES = [
   ANDROID_ENTER_CODE,
 ];
 
+const useDebouncedCallback = <T extends (...args: any[]) => void>(
+  callback: T,
+  delay: number
+) => {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  return useCallback(
+    (...args: Parameters<T>) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+};
+
 export const useKeyboardPress = <
   T extends (event?: any) => void,
   K extends (event?: any) => void,
@@ -25,27 +41,19 @@ export const useKeyboardPress = <
   onLongPress,
   triggerCodes = ANDROID_TRIGGER_CODES,
 }: UseKeyboardPressProps<T, K>) => {
-  const pressInRef = useRef<number | undefined>(undefined);
+  const isLongPressRef = useRef(false);
 
-  const onPressHandler = useCallback(
-    (event: GestureResponderEvent) => {
-      if (!onLongPress || !pressInRef.current) {
+  const debouncedOnPress = useDebouncedCallback(
+    (event?: GestureResponderEvent) => {
+      if (isLongPressRef.current) {
+        onLongPress?.();
+      } else {
         onPress?.(event);
       }
+      isLongPressRef.current = false;
     },
-    [onLongPress, onPress]
+    40
   );
-
-  const onKeyDownPressHandler = useMemo(() => {
-    if (!onPressIn && !onLongPress) return onKeyDownPress;
-    return (e: OnKeyPress) => {
-      pressInRef.current = new Date().getTime();
-      onKeyDownPress?.(e);
-      if (triggerCodes.includes(e.nativeEvent.keyCode)) {
-        onPressIn?.(e as unknown as GestureResponderEvent);
-      }
-    };
-  }, [onKeyDownPress, onLongPress, onPressIn, triggerCodes]);
 
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
@@ -58,19 +66,35 @@ export const useKeyboardPress = <
 
       if (triggerCodes.includes(keyCode)) {
         if (isLongPress) {
-          onLongPress?.({} as GestureResponderEvent);
-        } else {
-          onPress?.();
+          isLongPressRef.current = true;
+          debouncedOnPress();
         }
       }
-      pressInRef.current = undefined;
     },
-    [onPressOut, onKeyUpPress, triggerCodes, onLongPress, onPress]
+    [onPressOut, onKeyUpPress, triggerCodes, debouncedOnPress]
   );
 
+  const onKeyDownPressHandler = useMemo(() => {
+    if (!onPressIn) return onKeyDownPress;
+    return (e: OnKeyPress) => {
+      onKeyDownPress?.(e);
+      if (triggerCodes.includes(e.nativeEvent.keyCode)) {
+        onPressIn?.(e as unknown as GestureResponderEvent);
+      }
+    };
+  }, [onKeyDownPress, onPressIn, triggerCodes]);
+
+  const onPressHandler = useCallback(
+    (event: GestureResponderEvent) => {
+      debouncedOnPress(event);
+    },
+    [debouncedOnPress]
+  );
+
+  const hasHandler = onPressOut || onKeyUpPress || onLongPress || onPress;
   return {
-    onPressHandler: onPress && onLongPress ? onPressHandler : onPress,
+    onKeyUpPressHandler: hasHandler ? onKeyUpPressHandler : undefined,
     onKeyDownPressHandler,
-    onKeyUpPressHandler,
+    onPressHandler: onPress ? onPressHandler : undefined,
   };
 };
