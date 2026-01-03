@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { forwardRef, useRef } from 'react';
 import {
   Modal,
@@ -25,7 +26,9 @@ import {
 const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 const TouchableWithoutFeedback = withKeyboardFocus(RNTouchableWithoutFeedback);
+
 export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
+  const navigation = useNavigation();
   const modalButtonRef = useRef<KeyboardFocus>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [textInput, setTextInput] = React.useState('Input here!');
@@ -98,11 +101,13 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             haloExpendY={-5}
             haloCornerRadius={5}
             containerStyle={styles.pressableContainer}
-            onPress={() => console.log(2)}
-            onLongPress={() => console.log(22)}
+            onPress={() => {
+              navigation.navigate('PressableTest' as never);
+            }}
+            onLongPress={() => navigation.navigate('ListTest' as never)}
           >
             <View style={styles.pressable}>
-              <Text>TouchableWithoutEffect</Text>
+              <Text>Pressable\List Test</Text>
             </View>
           </TouchableWithoutFeedback>
           <Pressable

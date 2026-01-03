@@ -9,6 +9,8 @@ import {
   type NavigationProp,
 } from '@react-navigation/native';
 import { FocusOrderScreen } from './components/FocusOrderExample/FocusOrderScreen';
+import { PressableTest } from './components/Pressables/PressableTest';
+import { ListsTest } from './components/Lists/ListsText';
 
 export function DetailsScreen() {
   return (
@@ -42,6 +44,8 @@ export function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
           <Stack.Screen name="FocusOrder" component={FocusOrderScreen} />
+          <Stack.Screen name="PressableTest" component={PressableTest} />
+          <Stack.Screen name="ListTest" component={ListsTest} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
