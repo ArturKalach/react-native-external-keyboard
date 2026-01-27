@@ -169,7 +169,8 @@
       "componentProvider": {
         "ExternalKeyboardView": "RNCEKVExternalKeyboardView",
         "KeyboardFocusGroup": "RNCEKVKeyboardFocusGroup",
-        "TextInputFocusWrapper": "RNCEKVTextInputFocusWrapper"
+        "TextInputFocusWrapper": "RNCEKVTextInputFocusWrapper",
+        "ExternalKeyboardLockView": "RNCEKVExternalKeyboardLockView"
       }
     }
   }
