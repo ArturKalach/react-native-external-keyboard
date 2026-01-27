@@ -14,8 +14,10 @@
 #import "RNCEKVOrderLinking.h"
 #import "RNCEKVExternalKeyboardView.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
-#import "RNCEKVFocusLinkObserverManager.h"
 #import "RNCEKVOrderSubscriber.h"
+#import "RNCEKVFocusLinkObserver.h"
+#import "RNCEKVFocusGuideHelper.h"
+#import "RNCEKVFocusGuideDelegate.h"
 
 static NSNumber *const FOCUS_DEFAULT = nil;
 static NSNumber *const FOCUS_LOCK = @0;
@@ -27,50 +29,66 @@ static NSNumber *const FOCUS_UPDATE = @1;
   UIView* _entry;
   UIView* _exit;
   UIView* _lock;
-  LinkUpdatedCallback _leftLinkUpdated;
-  LinkRemovedCallback _leftLinkRemoved;
-  LinkUpdatedCallback _rightLinkUpdated;
-  LinkRemovedCallback _rightLinkRemoved;
-  LinkUpdatedCallback _upLinkUpdated;
-  LinkRemovedCallback _upLinkRemoved;
-  LinkUpdatedCallback _downLinkUpdated;
-  LinkRemovedCallback _downLinkRemoved;
   
-  UIFocusGuide *_leftFocusGuide;
-  UIFocusGuide *_rightFocusGuide;
-  UIFocusGuide *_upFocusGuide;
-  UIFocusGuide *_downFocusGuide;
+  RNCEKVFocusGuideDelegate *_focusGuideDelegate;
+  NSMutableDictionary<NSNumber *, id> *_updateLinks;
+  NSMutableDictionary<NSNumber *, id> *_removeLinks;
+
 }
 
 - (instancetype _Nonnull )initWithView:(UIView<RNCEKVFocusOrderProtocol> *_Nonnull)delegate{
   self = [super init];
   if (self) {
     _delegate = delegate;
+    _focusGuideDelegate = [[RNCEKVFocusGuideDelegate alloc] initWithView:delegate];
+    _subscribers = [NSMutableDictionary dictionary];
     _isFocused = false;
   }
   return self;
 }
 
-#pragma mark - Get Order Focus List
-- (NSArray<UIView *> *)getOrder {
-  RNCEKVRelashioship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
-  return [orderRelationship getArray];
-}
-
-
-#pragma mark - Find Index of Focus Order Element
-- (int)findOrderIndex:(NSArray *)order element:(UIView*)el  {
-  int resultIndex = -1;
-  
-  for (int i = 0; i < order.count; i++) {
-    UIView *element = order[i];
-    if (element.subviews[0] == el) { //ToDo focus element
-      resultIndex = i;
-      break;
-    }
+- (void)subscribeToDirection:(RNCEKVFocusGuideDirection)direction
+                      linkId:(NSString *)linkId {
+  if (!linkId) {
+    return;
   }
   
-  return resultIndex;
+  if(_subscribers[@(direction)]) {
+    [self clearDirection: direction];
+  }
+  
+  __typeof(self) __weak weakSelf = self;
+  RNCEKVFocusGuideDirection capturedDirection = direction;
+  
+  LinkUpdatedCallback onLinkUpdated = ^(UIView *link) {
+    [self->_focusGuideDelegate setGuideFor:capturedDirection withView: link];
+  };
+  
+  LinkRemovedCallback onLinkRemoved = ^{
+    [self->_focusGuideDelegate removeGuideFor: capturedDirection];
+  };
+  
+  RNCEKVOrderSubscriber* subscriber = [[RNCEKVFocusLinkObserver sharedManager] subscribe:linkId
+                                                                           onLinkUpdated:onLinkUpdated
+                                                                           onLinkRemoved:onLinkRemoved];
+  self.subscribers[@(direction)] = subscriber;
+}
+
+- (void)clearDirection:(RNCEKVFocusGuideDirection)direction {
+  if (!self.subscribers[@(direction)]) {
+    return;
+  }
+  
+  [[RNCEKVFocusLinkObserver sharedManager] unsubscribe:self.subscribers[@(direction)]];
+  self.subscribers[@(direction)] = nil;
+  [_focusGuideDelegate removeGuideFor: direction];
+}
+
+- (void)refreshDirection:(RNCEKVFocusGuideDirection)direction
+                  prevId:(NSString *)prevId
+                  nextId:(NSString *)nextId {
+  [self clearDirection:direction];
+  [self subscribeToDirection:direction linkId:nextId];
 }
 
 - (void)keyboardedViewFocus:(UIView *)view {
@@ -83,7 +101,7 @@ static NSNumber *const FOCUS_UPDATE = @1;
   UIViewController *controller = _delegate.reactViewController;
   
   if (controller != nil) {
-    controller.customFocusView = view;
+    controller.rncekvCustomFocusView = view;
     dispatch_async(dispatch_get_main_queue(), ^{
       [controller setNeedsFocusUpdate];
       [controller updateFocusIfNeeded];
@@ -94,25 +112,24 @@ static NSNumber *const FOCUS_UPDATE = @1;
 
 #pragma mark - Next Focus Handling
 - (void)handleNextFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
-  NSArray<UIView *> * order = [self getOrder];
-  RNCEKVRelashioship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
+  RNCEKVOrderRelationship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
   UIView* _entry = orderRelationship.entry;
   UIView* _exit = orderRelationship.exit;
   
   BOOL isEntry = _entry == current;
   if (isEntry) {
-    UIView* firstElement = order[0];
+    UIView* firstElement = [orderRelationship getItem: 0];
     [self keyboardedViewFocus: firstElement];
   }
   
-  BOOL isLast = currentIndex == order.count - 1 && _exit;
+  BOOL isLast = currentIndex == orderRelationship.count - 1 && _exit;
   if (isLast) {
     [self defaultViewFocus: _exit];
   }
   
-  BOOL inOrderRange = currentIndex >= 0 && currentIndex < order.count - 1;
+  BOOL inOrderRange = currentIndex >= 0 && currentIndex < orderRelationship.count - 1;
   if (inOrderRange) {
-    UIView* nextElement = order[currentIndex + 1];
+    UIView* nextElement = [orderRelationship getItem: currentIndex + 1];
     [self keyboardedViewFocus: nextElement];
   }
 }
@@ -120,15 +137,15 @@ static NSNumber *const FOCUS_UPDATE = @1;
 
 #pragma mark - Prev Focus Handling
 - (void)handlePrevFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
-  NSArray<UIView *> * order = [self getOrder];
-  RNCEKVRelashioship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
+  RNCEKVOrderRelationship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
   
   UIView* _exit = orderRelationship.exit;
   UIView* _entry = orderRelationship.entry;
   
   BOOL isExit = _exit == current;
+  int orderCount = [orderRelationship count];
   if (isExit) {
-    UIView* lastElement = order[order.count - 1];
+    UIView* lastElement = [orderRelationship getItem: orderCount - 1];
     [self keyboardedViewFocus: lastElement];
   }
   
@@ -137,9 +154,9 @@ static NSNumber *const FOCUS_UPDATE = @1;
     [self defaultViewFocus: _entry];
   }
   
-  BOOL inRange = currentIndex > 0 && currentIndex <= order.count - 1;
+  BOOL inRange = currentIndex > 0 && currentIndex <= orderCount - 1;
   if (inRange) {
-    UIView* prevElement = order[currentIndex - 1];
+    UIView* prevElement =  [orderRelationship getItem: currentIndex - 1];
     [self keyboardedViewFocus: prevElement];
   }
 }
@@ -186,7 +203,7 @@ static NSNumber *const FOCUS_UPDATE = @1;
   }
   
   if(_delegate.orderGroup && _delegate.orderPosition != nil) {
-    RNCEKVRelashioship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
+    RNCEKVOrderRelationship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
     NSArray *order = [orderRelationship getArray];
     if(order.count == 0) {
       return FOCUS_DEFAULT;
@@ -194,8 +211,12 @@ static NSNumber *const FOCUS_UPDATE = @1;
     
     UIView* _exit = orderRelationship.exit;
     UIView* _entry = orderRelationship.entry;
-    int currentIndex = [self findOrderIndex:order element:current];
-    int nextIndex = [self findOrderIndex:order element:next];
+    
+    int currentIndex = [orderRelationship getItemIndex:current];
+    int nextIndex = [orderRelationship getItemIndex:next];
+    //    [self findOrderIndex:order element:current];
+    
+    //    [self findOrderIndex:order element:next];
     
     BOOL isEntryElement = _entry == nil && currentIndex == -1 && movementHint == UIFocusHeadingNext;
     
@@ -223,225 +244,8 @@ static NSNumber *const FOCUS_UPDATE = @1;
   return FOCUS_DEFAULT;
 }
 
-
-
-- (void)setLeftGuide:(UIView *)view {
-  if (!view) {
-    return;
-  }
-  
-  [self removeLeftGuide];
-  
-  _leftFocusGuide = [[UIFocusGuide alloc] init];
-  [_delegate addLayoutGuide:_leftFocusGuide];
-  
-  [NSLayoutConstraint activateConstraints:@[
-    [_leftFocusGuide.topAnchor constraintEqualToAnchor:_delegate.topAnchor],
-    [_leftFocusGuide.bottomAnchor constraintEqualToAnchor:_delegate.bottomAnchor],
-    [_leftFocusGuide.rightAnchor constraintEqualToAnchor:_delegate.leftAnchor],
-    [_leftFocusGuide.widthAnchor constraintEqualToConstant:1]
-  ]];
-  
-  _leftFocusGuide.preferredFocusEnvironments = @[view];
-  
-  _leftFocusGuide.enabled = _isFocused;
-}
-
-- (void)setRightGuide:(UIView *)view {
-  if (!view) return;
-  
-  [self removeRightGuide];
-  
-  _rightFocusGuide = [[UIFocusGuide alloc] init];
-  [_delegate addLayoutGuide: _rightFocusGuide];
-  
-  [NSLayoutConstraint activateConstraints:@[
-    [_rightFocusGuide.topAnchor constraintEqualToAnchor: _delegate.topAnchor],
-    [_rightFocusGuide.bottomAnchor constraintEqualToAnchor: _delegate.bottomAnchor],
-    [_rightFocusGuide.leftAnchor constraintEqualToAnchor: _delegate.rightAnchor],
-    [_rightFocusGuide.widthAnchor constraintEqualToConstant: 1]
-  ]];
-  
-  _rightFocusGuide.preferredFocusEnvironments = @[view];
-  
-  _rightFocusGuide.enabled = _isFocused;
-}
-
-- (void)setUpGuide:(UIView *)view {
-  if (!view) return;
-  
-  [self removeUpGuide];
-  
-  _upFocusGuide = [[UIFocusGuide alloc] init];
-  [_delegate addLayoutGuide: _upFocusGuide];
-  
-  [NSLayoutConstraint activateConstraints:@[
-    [_upFocusGuide.leftAnchor constraintEqualToAnchor:_delegate.leftAnchor],
-    [_upFocusGuide.rightAnchor constraintEqualToAnchor:_delegate.rightAnchor],
-    [_upFocusGuide.bottomAnchor constraintEqualToAnchor:_delegate.topAnchor],
-    [_upFocusGuide.heightAnchor constraintEqualToConstant:1]
-  ]];
-  
-  _upFocusGuide.preferredFocusEnvironments = @[view];
-  
-  _upFocusGuide.enabled = _isFocused;
-}
-
-- (void)setDownGuide:(UIView *)view {
-  if (!view) return;
-  
-  [self removeDownGuide];
-  
-  _downFocusGuide = [[UIFocusGuide alloc] init];
-  [_delegate addLayoutGuide:_downFocusGuide];
-  
-  [NSLayoutConstraint activateConstraints:@[
-    [_downFocusGuide.leftAnchor constraintEqualToAnchor:_delegate.leftAnchor],
-    [_downFocusGuide.rightAnchor constraintEqualToAnchor:_delegate.rightAnchor],
-    [_downFocusGuide.topAnchor constraintEqualToAnchor:_delegate.bottomAnchor],
-    [_downFocusGuide.heightAnchor constraintEqualToConstant:1]
-  ]];
-  
-  _downFocusGuide.preferredFocusEnvironments = @[view];
-  
-  _downFocusGuide.enabled = _isFocused;
-}
-
-- (void)setIsFocused:(BOOL)value {
-  _isFocused = value;
-  
-  if(_leftFocusGuide != nil) {
-    _leftFocusGuide.enabled = value;
-  }
-  
-  if(_rightFocusGuide != nil) {
-    _rightFocusGuide.enabled = value;
-  }
-  
-  if(_upFocusGuide != nil) {
-    _upFocusGuide.enabled = value;
-  }
-  
-  if(_downFocusGuide != nil) {
-    _downFocusGuide.enabled = value;
-  }
-}
-
-- (void)removeLeftGuide {
-  if (_leftFocusGuide) {
-    [_delegate removeLayoutGuide: _leftFocusGuide];
-    _leftFocusGuide = nil;
-  }
-}
-
-- (void)removeRightGuide {
-  if (_rightFocusGuide) {
-    [_delegate removeLayoutGuide: _rightFocusGuide];
-    _rightFocusGuide = nil;
-  }
-}
-
-- (void)removeUpGuide {
-  if (_upFocusGuide) {
-    [_delegate removeLayoutGuide:_upFocusGuide];
-    _upFocusGuide = nil;
-  }
-}
-
-- (void)removeDownGuide {
-  if (_downFocusGuide) {
-    [_delegate removeLayoutGuide:_downFocusGuide];
-    _downFocusGuide = nil;
-  }
-}
-
-- (void)orderLeftLink:(NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && !_leftLinkUpdated && !_leftLinkRemoved) {
-    __typeof(self) __weak weakSelf = self;
-    
-    _leftLinkUpdated = ^(UIView *link) {
-      if (!weakSelf) return;
-      [weakSelf setLeftGuide:link];
-    };
-    
-    _leftLinkRemoved = ^{
-      if (!weakSelf) return;
-      [weakSelf removeLeftGuide];
-    };
-    
-    [focusLinkObserver subscribeWithId: linkId
-                         onLinkUpdated:_leftLinkUpdated
-                         onLinkRemoved:_leftLinkRemoved];
-  }
-}
-
--(void)orderUpLink:(NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && !_upLinkUpdated && !_upLinkRemoved) {
-    __typeof(self) __weak weakSelf = self;
-    _upLinkUpdated = ^(UIView *link) {
-      if (!weakSelf) return;
-      [weakSelf setUpGuide: link];
-    };
-    _upLinkRemoved = ^{
-      if (!weakSelf) return;
-      [weakSelf removeUpGuide];
-    };
-    [focusLinkObserver subscribeWithId: linkId
-                         onLinkUpdated:_upLinkUpdated
-                         onLinkRemoved:_upLinkRemoved];
-  }
-}
-
--(void)orderDownLink:(NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && !_downLinkUpdated && !_downLinkRemoved) {
-    __typeof(self) __weak weakSelf = self;
-    _downLinkUpdated = ^(UIView *link) {
-      if (!weakSelf) return;
-      [weakSelf setDownGuide: link];
-    };
-    _downLinkRemoved = ^{
-      if (!weakSelf) return;
-      [weakSelf removeDownGuide];
-    };
-    [focusLinkObserver subscribeWithId: linkId
-                         onLinkUpdated:_downLinkUpdated
-                         onLinkRemoved:_downLinkRemoved];
-  }
-}
-
--(void)orderRightLink: (NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  
-  if(linkId != nil && !_rightLinkUpdated && !_rightLinkRemoved) {
-    __typeof(self) __weak weakSelf = self;
-    _rightLinkUpdated = ^(UIView *link) {
-      if (!weakSelf) return;
-      [weakSelf setRightGuide: link];
-    };
-    _rightLinkRemoved = ^{
-      if (!weakSelf) return;
-      [weakSelf removeRightGuide];
-    };
-    [focusLinkObserver subscribeWithId: linkId
-                         onLinkUpdated:_rightLinkUpdated
-                         onLinkRemoved:_rightLinkRemoved];
-  }
-}
-
 - (void)linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
+  RNCEKVFocusLinkObserver *focusLinkObserver = [RNCEKVFocusLinkObserver sharedManager];
   
   NSString* orderId = _delegate.orderId;
   UIView* view = [_delegate getFocusTargetView];
@@ -450,23 +254,30 @@ static NSNumber *const FOCUS_UPDATE = @1;
     [focusLinkObserver emitWithId:orderId link:view];
   }
   
+  [self subscribeToDirection:RNCEKVFocusGuideDirectionLeft
+                      linkId:_delegate.orderLeft];
   
+  [self subscribeToDirection:RNCEKVFocusGuideDirectionRight
+                      linkId:_delegate.orderRight
+  ];
   
-  [self orderLeftLink: _delegate.orderLeft];
-  [self orderRightLink: _delegate.orderRight];
-  [self orderUpLink: _delegate.orderUp];
-  [self orderDownLink: _delegate.orderDown];
+  [self subscribeToDirection:RNCEKVFocusGuideDirectionUp
+                      linkId:_delegate.orderUp
+  ];
+  
+  [self subscribeToDirection:RNCEKVFocusGuideDirectionDown
+                      linkId:_delegate.orderDown
+  ];
 }
 
 - (void)refreshId: (NSString*)prev next:(NSString*)next {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
+  RNCEKVFocusLinkObserver *focusLinkObserver = [RNCEKVFocusLinkObserver sharedManager];
   UIView* view = [_delegate getFocusTargetView];
   
   
   if(prev != nil) {
-    [[RNCEKVOrderLinking sharedInstance] cleanOrderId: prev];
     [focusLinkObserver emitRemoveWithId: prev];
+    [[RNCEKVOrderLinking sharedInstance] cleanOrderId: prev];
   }
   
   if(next != nil && view != nil) {
@@ -475,103 +286,41 @@ static NSNumber *const FOCUS_UPDATE = @1;
   }
 };
 
-- (void) clearLeftLink: (NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && _leftLinkUpdated != nil && _leftLinkRemoved != nil) {
-    [focusLinkObserver unsubscribeWithId:linkId
-                           onLinkUpdated:_leftLinkUpdated
-                           onLinkRemoved:_leftLinkRemoved];
-    _leftLinkUpdated = nil;
-    _leftLinkRemoved = nil;
-    [self removeLeftGuide];
-  }
-}
-
--(void)clearRightLink: (NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && _rightLinkUpdated != nil && _rightLinkRemoved != nil) {
-    [focusLinkObserver unsubscribeWithId:linkId
-                           onLinkUpdated:_rightLinkUpdated
-                           onLinkRemoved:_rightLinkRemoved];
-    
-    _rightLinkUpdated = nil;
-    _rightLinkRemoved = nil;
-    [self removeRightGuide];
-  }
-}
-
--(void)clearUpLink: (NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && _upLinkUpdated != nil && _upLinkRemoved != nil) {
-    [focusLinkObserver unsubscribeWithId:linkId
-                           onLinkUpdated:_upLinkUpdated
-                           onLinkRemoved:_upLinkRemoved];
-    _upLinkUpdated = nil;
-    _upLinkRemoved = nil;
-
-    [self removeUpGuide];
-  }
-}
-
--(void)clearDownLink: (NSString*) linkId {
-  RNCEKVFocusLinkObserverManager *manager = [RNCEKVFocusLinkObserverManager sharedManager];
-  RNCEKVFocusLinkObserver *focusLinkObserver = manager.focusLinkObserver;
-  
-  if(linkId != nil && _downLinkUpdated != nil && _downLinkRemoved != nil) {
-    [focusLinkObserver unsubscribeWithId:linkId
-                           onLinkUpdated:_downLinkUpdated
-                           onLinkRemoved:_downLinkRemoved];
-
-    _downLinkUpdated = nil;
-    _downLinkRemoved = nil;
-    
-    [self removeDownGuide];
-  }
-  
+- (void)setIsFocused:(BOOL)value {
+  return [_focusGuideDelegate setIsFocused: value];
 }
 
 - (void)refreshLeft:(NSString*)prev next:(NSString*)next {
-  [self clearLeftLink: prev];
-  [self orderLeftLink: next];
+  [self refreshDirection:RNCEKVFocusGuideDirectionLeft
+                  prevId:prev
+                  nextId:next];
 }
 
 - (void)refreshRight:(NSString*)prev next:(NSString*)next{
-  
-  [self clearRightLink: prev];
-  [self orderRightLink: next];
+  [self refreshDirection:RNCEKVFocusGuideDirectionRight
+                  prevId:prev
+                  nextId:next];
 }
 
 - (void)refreshUp:(NSString*)prev next:(NSString*)next{
-  [self clearUpLink: prev];
-  [self orderUpLink: next];
+  [self refreshDirection:RNCEKVFocusGuideDirectionUp
+                  prevId:prev
+                  nextId:next];
 }
 
 - (void)refreshDown:(NSString*)prev next:(NSString*)next{
-  [self clearDownLink: prev];
-  [self orderDownLink: next];
+  [self refreshDirection:RNCEKVFocusGuideDirectionDown
+                  prevId:prev
+                  nextId:next];
 }
 
 - (void)clear {
-  NSString* orderId = _delegate.orderId;
-  if(orderId != nil) {
-    [[RNCEKVOrderLinking sharedInstance] cleanOrderId: orderId];
-  }
- 
-  [self clearLeftLink: _delegate.orderLeft];
-  [self clearRightLink: _delegate.orderRight];
-  [self clearUpLink: _delegate.orderUp];
-  [self clearDownLink: _delegate.orderDown];
+  [self clearDirection:RNCEKVFocusGuideDirectionLeft];
+  [self clearDirection:RNCEKVFocusGuideDirectionRight];
+  [self clearDirection:RNCEKVFocusGuideDirectionUp];
+  [self clearDirection:RNCEKVFocusGuideDirectionDown];
   
   [self refreshId: _delegate.orderId next:nil];
-
 }
-
-
 
 @end

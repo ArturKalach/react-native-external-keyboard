@@ -37,7 +37,7 @@ using namespace facebook::react;
   RNCEKVFocusDelegate *_focusDelegate;
   RNCEKVGroupIdentifierDelegate *_gIdDelegate;
   RNCEKVFocusOrderDelegate *_focusOrderDelegate;
-  
+
   NSNumber *_isFocused;
   BOOL _isAttachedToWindow;
   BOOL _isAttachedToController;
@@ -371,7 +371,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   UIView *focusingView = self; // [_focusDelegate getFocusingView];
 
   if (self.superview != nil && controller != nil) {
-    controller.customFocusView = focusingView;
+    controller.rncekvCustomFocusView = focusingView;
     dispatch_async(dispatch_get_main_queue(), ^{
       [controller setNeedsFocusUpdate];
       [controller updateFocusIfNeeded];

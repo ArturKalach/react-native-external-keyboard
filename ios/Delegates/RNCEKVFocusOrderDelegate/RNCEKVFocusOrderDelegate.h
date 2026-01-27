@@ -10,12 +10,26 @@
 
 #import <Foundation/Foundation.h>
 #import "RNCEKVFocusOrderProtocol.h"
+#import "RNCEKVFocusGuideDelegate.h"
+#import "RNCEKVOrderSubscriber.h"
+
+typedef NS_ENUM(NSUInteger, RNCEKVLinkDirection) {
+    RNCEKVLinkDirectionLeft,
+    RNCEKVLinkDirectionRight,
+    RNCEKVLinkDirectionUp,
+    RNCEKVLinkDirectionDown
+};
+
+
+
 
 @interface RNCEKVFocusOrderDelegate : NSObject
 
 - (instancetype _Nonnull)initWithView:(UIView<RNCEKVFocusOrderProtocol> *_Nonnull)view;
 
 - (NSNumber*_Nullable)shouldUpdateFocusInContext:(UIFocusUpdateContext *_Nonnull)context;
+
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, RNCEKVOrderSubscriber*> * _Nonnull subscribers;
 
 - (void)linkId;
 - (void)refreshId:(NSString*_Nullable)prev next:(NSString*_Nullable)next;

@@ -206,7 +206,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
     #ifdef RCT_NEW_ARCH_ENABLED
         if([input isKindOfClass: [RCTTextInputComponentView class]]) {
-          backedTextInputView = ((RCTTextInputComponentView *)input).backedTextInputView;
+          backedTextInputView = ((RCTTextInputComponentView *)input).rncekbBackedTextInputView;
         }
     #else
         if([input isKindOfClass: [RCTMultilineTextInputView class]]) {
@@ -246,11 +246,11 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     UIView* textView = nil;
 #ifdef RCT_NEW_ARCH_ENABLED
     if([view isKindOfClass: [RCTTextInputComponentView class]]) {
-        textView = ((RCTTextInputComponentView *)view).backedTextInputView;
+        textView = ((RCTTextInputComponentView *)view).rncekbBackedTextInputView;
     }
 #else
     if([view isKindOfClass: [RCTMultilineTextInputView class]]) {
-        textView = ((RCTMultilineTextInputView *)view).backedTextInputView;
+        textView = ((RCTMultilineTextInputView *)view).rncekbBackedTextInputView;
     }
 #endif
     return textView;
