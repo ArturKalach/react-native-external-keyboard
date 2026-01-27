@@ -242,23 +242,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     return isTextInput;
 }
 
-
-//ToDo check if it still used and required
-- (UIView*)getMultilineTextView: (UIView*)view {
-    UIView* textView = nil;
-#ifdef RCT_NEW_ARCH_ENABLED
-    if([view isKindOfClass: [RCTTextInputComponentView class]]) {
-        textView = ((RCTTextInputComponentView *)view).rncekbBackedTextInputView;
-    }
-#else
-  // ToDo check and refactor
-//    if([view isKindOfClass: [RCTMultilineTextInputView class]]) {
-//        textView = ((RCTMultilineTextInputView *)view).rncekbBackedTextInputView;
-//    }
-#endif
-    return textView;
-}
-
 - (void)updateHalo {
     if(self.subviews.count == 0) {
         return;
