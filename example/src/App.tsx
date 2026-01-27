@@ -35,7 +35,7 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
       />
       <Button
         title="Focus Lock"
-        onPress={() => navigation.navigate('FocusOrder')}
+        onPress={() => navigation.navigate('FocusLock')}
       />
     </View>
   );
