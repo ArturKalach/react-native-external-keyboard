@@ -12,6 +12,7 @@ import { FocusOrderScreen } from './components/FocusOrderExample/FocusOrderScree
 import { PressableTest } from './components/Pressables/PressableTest';
 import { ListsTest } from './components/Lists/ListsText';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
+import { OrderMaze } from './components/OrderMaze/OrderMaze';
 
 export function DetailsScreen() {
   return (
@@ -37,9 +38,18 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
         title="Focus Lock"
         onPress={() => navigation.navigate('FocusLock')}
       />
+      <Button title="Maze" onPress={() => navigation.navigate('Maze')} />
     </View>
   );
 }
+
+const Maze = () => {
+  return (
+    <View style={styles.home}>
+      <OrderMaze />
+    </View>
+  );
+};
 
 export function App() {
   return (
@@ -52,6 +62,7 @@ export function App() {
           <Stack.Screen name="PressableTest" component={PressableTest} />
           <Stack.Screen name="ListTest" component={ListsTest} />
           <Stack.Screen name="FocusLock" component={FocusLockExample} />
+          <Stack.Screen name="Maze" component={Maze} />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
