@@ -22,7 +22,7 @@ iOS | Android
 
 | iOS | Android |
 | :-- | :-- |
-| <img src="/.github/images/rnek-focus-lock-ios.gif" height="500" /> |  <img src="/.github/images/rnek-focus-lock-ios.gif" height="500" />  |
+| <img src="/.github/images/rnek-focus-lock-ios.gif" height="500" /> |  <img src="/.github/images/rnek-focus-lock-android.gif" height="500" />  |
 
 > A new type of focus lock functionality has been introduced, featuring two new components: `Focus.Frame` and `Focus.Trap`. These components help manage and lock focus within specific areas of the screen.
 
