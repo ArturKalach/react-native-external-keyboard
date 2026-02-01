@@ -34,6 +34,8 @@ const getLockedArray = ([r, c]: Point, maze: Maze) => {
   const list = {
     forward: maze![r]![c] === 'O',
     backward: maze![r]![c] === 'O',
+    last: maze![r]![c] === 'O',
+    first: maze![r]![c] === 'O',
     up: isUpLocked([r, c], maze),
     down: isBottomLocked([r, c], maze),
     left: isLeftBlocked([r, c], maze),
@@ -55,11 +57,12 @@ const getOrderForward = (
   compare: (a: string | number, b: string | number) => boolean
 ) => {
   const val = maze?.[r]?.[c];
+  if (val === 'O' || val === 'W') return undefined;
   if (compare(val!, maze?.[r]?.[c + 1]!)) return `${r}_${c + 1}`;
   if (compare(val!, maze?.[r]?.[c - 1]!)) return `${r}_${c - 1}`;
   if (compare(val!, maze?.[r + 1]?.[c]!)) return `${r + 1}_${c}`;
   if (compare(val!, maze?.[r - 1]?.[c]!)) return `${r - 1}_${c}`;
-  return 'none';
+  return undefined;
 };
 
 export const MazeItem = forwardRef<
