@@ -10,8 +10,17 @@
 #import "RNCEKVOrderSubscriber.h"
 
 @implementation RNCEKVFocusLinkObserver {
-  NSMutableDictionary<NSString *, UIView *> *_links; // To store the links
-  NSMutableDictionary<NSString *, NSMutableArray<RNCEKVOrderSubscriber *> *> *_subscribers; // To store the subscribers
+  NSMutableDictionary<NSString *, UIView *> *_links;
+  NSMutableDictionary<NSString *, NSMutableArray<RNCEKVOrderSubscriber *> *> *_subscribers;
+}
+
++ (instancetype)sharedManager {
+  static RNCEKVFocusLinkObserver *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[self alloc] init];
+  });
+  return sharedInstance;
 }
 
 - (instancetype)init {
@@ -39,24 +48,26 @@
   }
 }
 
-- (void)subscribeWithId:(NSString *)identifier
+- (RNCEKVOrderSubscriber* )subscribe:(NSString *)identifier
           onLinkUpdated:(LinkUpdatedCallback)onLinkUpdated
           onLinkRemoved:(LinkRemovedCallback)onLinkRemoved {
   if (!identifier || (!onLinkUpdated && !onLinkRemoved)) {
-    return;
+    return nil;
   }
   
   if (!_subscribers[identifier]) {
     _subscribers[identifier] = [NSMutableArray array];
   }
   
-  RNCEKVOrderSubscriber *subscriber = [[RNCEKVOrderSubscriber alloc] initWithUpdatedCallback:onLinkUpdated
-                                                                             removedCallback:onLinkRemoved];
+  RNCEKVOrderSubscriber *subscriber = [[RNCEKVOrderSubscriber alloc] initWithId: identifier updatedCallback:onLinkUpdated
+                                                                removedCallback:onLinkRemoved];
   [_subscribers[identifier] addObject:subscriber];
   
   if (onLinkUpdated && _links[identifier]) {
     onLinkUpdated(_links[identifier]);
   }
+  
+  return subscriber;
 }
 
 - (void)unsubscribeWithId:(NSString *)identifier
@@ -74,6 +85,20 @@
     
     if (subscriberList.count == 0) {
       [_subscribers removeObjectForKey:identifier];
+    }
+  }
+}
+
+- (void)unsubscribe:(RNCEKVOrderSubscriber *)subscriber {
+  if (!subscriber || !subscriber.identifier) {
+    return;
+  }
+  
+  NSMutableArray<RNCEKVOrderSubscriber *> *subscriberList = _subscribers[subscriber.identifier];
+  if (subscriberList) {
+    [subscriberList removeObject: subscriber];
+    if (subscriberList.count == 0) {
+      [_subscribers removeObjectForKey: subscriber.identifier];
     }
   }
 }

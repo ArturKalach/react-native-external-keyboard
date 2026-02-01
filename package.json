@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.6.7",
+  "version": "0.7.0-rc",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -62,7 +62,7 @@
     "@evilmartians/lefthook": "^1.5.0",
     "@react-native-community/cli": "15.0.1",
     "@react-native/eslint-config": "^0.73.1",
-    "@release-it/conventional-changelog": "^8.0.1",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
     "commitlint": "^17.0.2",
@@ -169,7 +169,8 @@
       "componentProvider": {
         "ExternalKeyboardView": "RNCEKVExternalKeyboardView",
         "KeyboardFocusGroup": "RNCEKVKeyboardFocusGroup",
-        "TextInputFocusWrapper": "RNCEKVTextInputFocusWrapper"
+        "TextInputFocusWrapper": "RNCEKVTextInputFocusWrapper",
+        "ExternalKeyboardLockView": "RNCEKVExternalKeyboardLockView"
       }
     }
   }

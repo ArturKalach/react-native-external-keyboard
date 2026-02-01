@@ -1,14 +1,14 @@
 //
-//  RNCEKVRelashioship.h
+//  RNCEKVOrderRelationship.h
 //
 //  Created by Artur Kalach on 13/07/2024.
 //  Copyright © 2024 Facebook. All rights reserved.
 //
 
-#ifndef RNCEKVRelashioship_h
-#define RNCEKVRelashioship_h
+#ifndef RNCEKVOrderRelationship_h
+#define RNCEKVOrderRelationship_h
 
-@interface RNCEKVRelashioship : NSObject
+@interface RNCEKVOrderRelationship : NSObject
 
 @property UIView* entry;
 @property UIView* exit;
@@ -17,12 +17,13 @@
 - (void)remove:(NSNumber*)position;
 - (void)update:(NSNumber*)lastPosition withPosition:(NSNumber*)position withObject:(NSObject*)obj;
 - (void)clear;
-- (void)setContainer:(UIView*)view;
-- (UIView*)getContainer;
 - (NSArray*)getArray;
+-(int)getItemIndex:(UIView*)element;
+-(UIView*)getItem:(int)index;
 -(BOOL)isEmpty;
+-(int)count;
 
 @end
 
 
-#endif /* RNCEKVRelashioship_h */
+#endif /* RNCEKVOrderRelationship_h */

@@ -1,3 +1,6 @@
+import { FocusFrame } from './components/KeyboardFocusLock/FocusFrame/FocusFrame';
+import { FocusTrap } from './components/KeyboardFocusLock/FocusTrap/FocusTrap';
+
 export {
   ExternalKeyboardViewNative,
   TextInputFocusWrapperNative,
@@ -37,3 +40,8 @@ export {
 } from './context/OrderFocusContext';
 import * as Keyboard from './modules/Keyboard';
 export { Keyboard };
+
+export const Focus = {
+  Frame: FocusFrame,
+  Trap: FocusTrap,
+};

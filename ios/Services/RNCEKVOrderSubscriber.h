@@ -13,10 +13,11 @@ typedef void (^LinkRemovedCallback)(void);
 
 @interface RNCEKVOrderSubscriber : NSObject
 
-@property (nonatomic, weak) LinkUpdatedCallback onLinkUpdated;
-@property (nonatomic, weak) LinkRemovedCallback onLinkRemoved;
+@property (nonatomic, weak) NSString* identifier;
+@property (nonatomic, strong) LinkUpdatedCallback onLinkUpdated;
+@property (nonatomic, strong) LinkRemovedCallback onLinkRemoved;
 
-- (instancetype)initWithUpdatedCallback:(LinkUpdatedCallback)onLinkUpdated
+- (instancetype)initWithId:(NSString*)identifier updatedCallback:(LinkUpdatedCallback)onLinkUpdated
                         removedCallback:(LinkRemovedCallback)onLinkRemoved;
 
 @end

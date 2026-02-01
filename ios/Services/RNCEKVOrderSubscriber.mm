@@ -10,10 +10,11 @@
 
 @implementation RNCEKVOrderSubscriber
 
-- (instancetype)initWithUpdatedCallback:(LinkUpdatedCallback)onLinkUpdated
+- (instancetype)initWithId:(NSString*)identifier updatedCallback:(LinkUpdatedCallback)onLinkUpdated
                         removedCallback:(LinkRemovedCallback)onLinkRemoved {
   self = [super init];
   if (self) {
+    _identifier = identifier;
     _onLinkUpdated = onLinkUpdated;
     _onLinkRemoved = onLinkRemoved;
   }
