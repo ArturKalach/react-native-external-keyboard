@@ -12,7 +12,7 @@
 
 @interface RCTTextInputComponentView (RNCEKVExternalKeyboard)
 
-@property (nonatomic, readonly) UIView<RCTBackedTextInputViewProtocol> *backedTextInputView;
+@property (nonatomic, readonly) UIView* rncekbBackedTextInputView;
 
 @end
 

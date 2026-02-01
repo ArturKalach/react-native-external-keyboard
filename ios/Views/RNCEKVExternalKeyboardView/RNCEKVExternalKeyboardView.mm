@@ -43,6 +43,7 @@ using namespace facebook::react;
   BOOL _isAttachedToController;
   BOOL _isLinked;
   BOOL _isIdLinked;
+  BOOL _autoFocusRequested;
 }
 
 - (void)link:(UIView *)subview {
@@ -74,6 +75,8 @@ using namespace facebook::react;
 
 - (void)onAttached
 {
+  [_gIdDelegate updateGroupIdentifier];
+  [self focusOnMount];
   if(self.subviews.count > 0) {
     [self link: self.subviews[0]];
   }
@@ -126,7 +129,7 @@ using namespace facebook::react;
     _focusDelegate = [[RNCEKVFocusDelegate alloc] initWithView:self];
     _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
     _focusOrderDelegate = [[RNCEKVFocusOrderDelegate alloc] initWithView: self];
-
+    _autoFocusRequested = NO;
     if (@available(iOS 13.0, *)) {
       UIContextMenuInteraction *interaction =
       [[UIContextMenuInteraction alloc] initWithDelegate:self];
@@ -162,6 +165,7 @@ using namespace facebook::react;
   _customGroupId = nil;
   _enableA11yFocus = NO;
   _isLinked = NO;
+  _autoFocusRequested = NO;
 }
 
 - (void)setOrderGroup:(NSString *)orderGroup{
@@ -367,7 +371,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   UIView *focusingView = self; // [_focusDelegate getFocusingView];
 
   if (self.superview != nil && controller != nil) {
-    controller.customFocusView = focusingView;
+    controller.rncekvCustomFocusView = focusingView;
     dispatch_async(dispatch_get_main_queue(), ^{
       [controller setNeedsFocusUpdate];
       [controller updateFocusIfNeeded];
@@ -515,18 +519,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   [super didMoveToWindow];
 
   if (self.window) {
-    [_gIdDelegate updateGroupIdentifier];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(viewControllerChanged:)
-     name:@"ViewControllerChangedNotification"
-     object:nil];
     [self onAttached];
   } else {
-    [[NSNotificationCenter defaultCenter]
-     removeObserver:self
-     name:@"ViewControllerChangedNotification"
-     object:nil];
     [self onDetached];
   }
 
@@ -577,18 +571,21 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   [super willRemoveSubview:subview];
 }
 
-- (void)viewControllerChanged:(NSNotification *)notification {
+- (void)focusOnMount {
   UIViewController *viewController = self.reactViewController;
-  UIViewController *shownController = notification.object;
-  if(viewController != shownController) return;
   if (self.autoFocus) {
-    if(!_isAttachedToController) {
-      UIWindow *window = RCTKeyWindow();
-      if (window) {
-        [self updateFocus:window.rootViewController];
-      } else {
-        [self updateFocus:viewController];
-      }
+    if(!_autoFocusRequested) {
+      _autoFocusRequested = YES;
+      dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+          UIWindow *window = RCTKeyWindow();
+          if (window) {
+            [self updateFocus:window.rootViewController];
+          } else {
+            [self updateFocus:viewController];
+          }
+        });
+      });
     }
   }
 }

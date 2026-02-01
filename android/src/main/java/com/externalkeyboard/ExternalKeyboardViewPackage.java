@@ -2,6 +2,7 @@ package com.externalkeyboard;
 
 
 import com.externalkeyboard.modules.ExternalKeyboardModule;
+import com.externalkeyboard.views.ExternalKeyboardLockView.ExternalKeyboardLockViewManager;
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardViewManager;
 import com.externalkeyboard.views.KeyboardFocusGroup.KeyboardFocusGroupManager;
 import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapperManager;
@@ -50,6 +51,7 @@ public class ExternalKeyboardViewPackage extends TurboReactPackage {
     viewManagers.add(new ExternalKeyboardViewManager());
     viewManagers.add(new TextInputFocusWrapperManager());
     viewManagers.add(new KeyboardFocusGroupManager());
+    viewManagers.add(new ExternalKeyboardLockViewManager());
 
     return viewManagers;
   }

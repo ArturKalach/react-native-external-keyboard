@@ -11,16 +11,22 @@
 
 @interface RNCEKVFocusLinkObserver : NSObject
 
+@property (nonatomic, strong, readonly) RNCEKVFocusLinkObserver *focusLinkObserver;
+
++ (instancetype)sharedManager;
+
 - (void)emitWithId:(NSString *)identifier link:(UIView *)link;
 - (void)emitRemoveWithId:(NSString *)identifier;
 
-- (void)subscribeWithId:(NSString *)identifier
+- (RNCEKVOrderSubscriber*)subscribe:(NSString *)identifier
           onLinkUpdated:(LinkUpdatedCallback)onLinkUpdated
           onLinkRemoved:(LinkRemovedCallback)onLinkRemoved;
 
 - (void)unsubscribeWithId:(NSString *)identifier
             onLinkUpdated:(LinkUpdatedCallback)onLinkUpdated
             onLinkRemoved:(LinkRemovedCallback)onLinkRemoved;
+
+- (void)unsubscribe:(RNCEKVOrderSubscriber *)subscriber;
 
 @end
 

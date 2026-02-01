@@ -13,7 +13,21 @@ export const ANDROID_TRIGGER_CODES = [
   ANDROID_ENTER_CODE,
 ];
 
-const MILLISECOND_THRESHOLD = 20;
+const useDebouncedCallback = <T extends (...args: any[]) => void>(
+  callback: T,
+  delay: number
+) => {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  return useCallback(
+    (...args: Parameters<T>) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+};
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
@@ -27,7 +41,20 @@ export const useKeyboardPress = <
   onLongPress,
   triggerCodes = ANDROID_TRIGGER_CODES,
 }: UseKeyboardPressProps<T, K>) => {
-  const thresholdTime = useRef(0);
+  const isLongPressRef = useRef(false);
+
+  const debouncedOnPress = useDebouncedCallback(
+    (event?: GestureResponderEvent) => {
+      if (isLongPressRef.current) {
+        onLongPress?.();
+      } else {
+        onPress?.(event);
+      }
+      isLongPressRef.current = false;
+    },
+    40
+  );
+
   const onKeyUpPressHandler = useCallback<OnKeyPressFn>(
     (e) => {
       const {
@@ -39,12 +66,12 @@ export const useKeyboardPress = <
 
       if (triggerCodes.includes(keyCode)) {
         if (isLongPress) {
-          thresholdTime.current = e?.timeStamp;
-          onLongPress?.({} as GestureResponderEvent);
+          isLongPressRef.current = true;
+          debouncedOnPress();
         }
       }
     },
-    [onPressOut, onKeyUpPress, triggerCodes, onLongPress]
+    [onPressOut, onKeyUpPress, triggerCodes, debouncedOnPress]
   );
 
   const onKeyDownPressHandler = useMemo(() => {
@@ -59,18 +86,15 @@ export const useKeyboardPress = <
 
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
-      const pressThreshold = (event?.timeStamp ?? 0) - thresholdTime.current;
-      if (pressThreshold > MILLISECOND_THRESHOLD) {
-        onPress?.(event);
-      }
+      debouncedOnPress(event);
     },
-    [onPress]
+    [debouncedOnPress]
   );
 
   const hasHandler = onPressOut || onKeyUpPress || onLongPress || onPress;
   return {
-    onKeyUpPressHandler: hasHandler && onKeyUpPressHandler,
+    onKeyUpPressHandler: hasHandler ? onKeyUpPressHandler : undefined,
     onKeyDownPressHandler,
-    onPressHandler: onPress && onPressHandler,
+    onPressHandler: onPress ? onPressHandler : undefined,
   };
 };

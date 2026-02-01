@@ -11,9 +11,17 @@
 
 @implementation RCTTextInputComponentView (RNCEKVExternalKeyboard)
 
-- (UIView<RCTBackedTextInputViewProtocol> *)backedTextInputView {
-    Ivar ivar = class_getInstanceVariable([self class], "_backedTextInputView");
-    return object_getIvar(self, ivar);
+- (UIView *)rncekbBackedTextInputView {
+  Ivar ivar = class_getInstanceVariable([self class], "_backedTextInputView");
+  if (!ivar) {
+    return nil;
+  }
+  
+  id value = object_getIvar(self, ivar);
+  if ([value isKindOfClass:[UIView class]]) {
+    return (UIView*)value;
+  }
+  return nil;
 }
 
 @end

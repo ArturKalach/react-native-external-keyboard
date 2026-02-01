@@ -206,7 +206,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
     #ifdef RCT_NEW_ARCH_ENABLED
         if([input isKindOfClass: [RCTTextInputComponentView class]]) {
-          backedTextInputView = ((RCTTextInputComponentView *)input).backedTextInputView;
+          backedTextInputView = ((RCTTextInputComponentView *)input).rncekbBackedTextInputView;
         }
     #else
         if([input isKindOfClass: [RCTMultilineTextInputView class]]) {
@@ -240,20 +240,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     BOOL isTextInput = [view isKindOfClass: [RCTSinglelineTextInputView class]];
 #endif
     return isTextInput;
-}
-
-- (UIView*)getMultilineTextView: (UIView*)view {
-    UIView* textView = nil;
-#ifdef RCT_NEW_ARCH_ENABLED
-    if([view isKindOfClass: [RCTTextInputComponentView class]]) {
-        textView = ((RCTTextInputComponentView *)view).backedTextInputView;
-    }
-#else
-    if([view isKindOfClass: [RCTMultilineTextInputView class]]) {
-        textView = ((RCTMultilineTextInputView *)view).backedTextInputView;
-    }
-#endif
-    return textView;
 }
 
 - (void)updateHalo {
