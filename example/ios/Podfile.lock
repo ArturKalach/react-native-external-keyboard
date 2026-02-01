@@ -1242,7 +1242,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-external-keyboard (0.7.0-rc):
+  - react-native-external-keyboard (0.7.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1913,7 +1913,7 @@ SPEC CHECKSUMS:
   React-logger: ae95f0effa7e1791bd6f7283caddca323d4fbc1e
   React-Mapbuffer: 7eb5d69e1154e7743487ef0c8d7261e5b59afb32
   React-microtasksnativemodule: 01dd998649ff5f8814846b7eee84c4d57f5d3671
-  react-native-external-keyboard: 4a04c7f934dd949c961e3be11fd64994fa315c81
+  react-native-external-keyboard: c6e1c99f2e16632661768a90d73752ac7ff20c57
   react-native-safe-area-context: 0d8827b2420dfb4c8a8e27639585e61b912261be
   React-nativeconfig: f7ab6c152e780b99a8c17448f2d99cf5f69a2311
   React-NativeModulesApple: 9aeb901b9bfcc9235e912445fb3cf4780a99baf4
