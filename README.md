@@ -16,6 +16,7 @@ iOS | Android
 - Focus management for `TextInput` and `Pressable` components.
 - Customization of the `Halo Effect` and `tintColor` for iOS.
 - Keyboard focus order.
+- Focus Lock.
 
 ## New Release: Focus Lock
 
