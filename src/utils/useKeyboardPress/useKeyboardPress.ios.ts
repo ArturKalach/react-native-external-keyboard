@@ -10,7 +10,7 @@ const IOS_TRIGGER_CODES = [IOS_SPACE_KEY, IOS_RETURN_OR_ENTER];
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
-  K extends (event?: any) => void,
+  K extends (event?: any) => void
 >({
   onKeyUpPress,
   onKeyDownPress,

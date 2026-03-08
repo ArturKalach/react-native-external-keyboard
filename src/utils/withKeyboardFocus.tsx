@@ -1,53 +1,25 @@
 import React, { useCallback, useMemo, type RefObject } from 'react';
-import {
-  View,
-  StyleSheet,
-  type StyleProp,
-  type ViewStyle,
-  type PressableProps,
-} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { BaseKeyboardView } from '../components';
-import type { FocusStyle } from '../types';
 import type { KeyboardFocus, OnKeyPress } from '../types/BaseKeyboardView';
 import { useFocusStyle } from './useFocusStyle';
-import type { TintType } from '../types/WithKeyboardFocus';
-import {
-  type RenderProp,
-  RenderPropComponent,
-} from '../components/RenderPropComponent/RenderPropComponent';
+import type {
+  KeyboardPressType,
+  WithKeyboardFocus,
+  WithKeyboardFocusComponent,
+} from '../types/WithKeyboardFocus';
+import { RenderPropComponent } from '../components/RenderPropComponent/RenderPropComponent';
 import { useKeyboardPress } from './useKeyboardPress/useKeyboardPress';
 import { IsViewFocusedContext } from '../context/IsViewFocusedContext';
 import type { FocusViewProps } from '../types/KeyboardFocusView.types';
 
-export type KeyboardPressType<K, T> = {
-  onPress?: T | ((e?: OnKeyPress) => void);
-  onLongPress?: T | ((e?: OnKeyPress) => void);
-  onPressIn?: K | ((e?: OnKeyPress) => void);
-  onPressOut?: K | ((e?: OnKeyPress) => void);
-};
-
-export type WithKeyboardProps<R> = {
-  withPressedStyle?: boolean;
-  containerStyle?: StyleProp<ViewStyle>;
-  containerFocusStyle?: FocusStyle;
-  tintType?: TintType;
-  componentRef?: RefObject<R>;
-  FocusHoverComponent?: RenderProp;
-  style?: PressableProps['style'];
-};
-
-export type WithKeyboardFocus<K, T, C, R> = C &
-  KeyboardPressType<K, T> &
-  FocusViewProps &
-  WithKeyboardProps<R>;
-
-export const withKeyboardFocus = <K, T, C extends {}, R>(
-  Component: React.ComponentType<C>
+export const withKeyboardFocus = <ComponentProps extends object>(
+  Component: WithKeyboardFocusComponent<ComponentProps>
 ) => {
   const WithKeyboardFocus = React.memo(
-    React.forwardRef<View | KeyboardFocus, WithKeyboardFocus<K, T, C, R>>(
-      (
-        {
+    React.forwardRef<View | KeyboardFocus, WithKeyboardFocus<ComponentProps>>(
+      (allProps, ref) => {
+        const {
           tintType = 'default',
           autoFocus,
           focusStyle,
@@ -93,10 +65,11 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           orderFirst,
           orderLast,
           lockFocus,
+          onComponentFocus,
+          onComponentBlur,
           ...props
-        },
-        ref
-      ) => {
+        } = allProps as WithKeyboardFocus<ComponentProps>;
+
         const {
           focused,
           containerFocusedStyle,
@@ -146,12 +119,12 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
           <IsViewFocusedContext.Provider value={focused}>
             <BaseKeyboardView
               style={[containerStyle, containerFocusedStyle]}
-              ref={ref}
+              ref={ref as RefObject<KeyboardFocus>}
               viewRef={viewRef}
               onKeyUpPress={onKeyUpPressHandler}
               onKeyDownPress={onKeyDownPressHandler}
-              onFocus={onFocus}
-              onBlur={onBlur}
+              onFocus={onFocus as FocusViewProps['onFocus']}
+              onBlur={onBlur as FocusViewProps['onBlur']}
               onFocusChange={onFocusChangeHandler}
               onContextMenuPress={onContextMenuHandler}
               haloEffect={withHaloEffect}
@@ -184,11 +157,21 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
               <Component
                 ref={componentRef}
                 style={componentStyleViewStyle}
-                onPress={onPressHandler as T}
-                onLongPress={onLongPress as T}
-                onPressIn={onPressIn as K}
-                onPressOut={onPressOut as K}
-                {...(props as unknown as C)}
+                onPress={
+                  onPressHandler as KeyboardPressType<ComponentProps>['onPress']
+                }
+                onLongPress={
+                  onLongPress as KeyboardPressType<ComponentProps>['onLongPress']
+                }
+                onPressIn={
+                  onPressIn as KeyboardPressType<ComponentProps>['onPressIn']
+                }
+                onPressOut={
+                  onPressOut as KeyboardPressType<ComponentProps>['onPressOut']
+                }
+                onFocus={onComponentFocus}
+                onBlur={onComponentBlur}
+                {...(props as unknown as ComponentProps)}
               />
               {focused && HoverComponent && (
                 <RenderPropComponent render={HoverComponent} />
@@ -201,7 +184,7 @@ export const withKeyboardFocus = <K, T, C extends {}, R>(
   );
 
   const wrappedComponentName =
-    Component.displayName || Component.name || 'Component';
+    (Component as any)?.displayName || (Component as any).name || 'Component';
   WithKeyboardFocus.displayName = `withKeyboardFocus(${wrappedComponentName})`;
 
   return WithKeyboardFocus;

@@ -17,7 +17,7 @@ const useDebouncedCallback = <T extends (...args: any[]) => void>(
   callback: T,
   delay: number
 ) => {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   return useCallback(
     (...args: Parameters<T>) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -31,7 +31,7 @@ const useDebouncedCallback = <T extends (...args: any[]) => void>(
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
-  K extends (event?: any) => void,
+  K extends (event?: any) => void
 >({
   onKeyUpPress,
   onKeyDownPress,

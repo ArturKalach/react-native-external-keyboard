@@ -26,6 +26,9 @@ def isNewArchitectureEnabled() {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
+
+def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
 }
@@ -64,7 +67,6 @@ android {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-
   }
 
   buildFeatures {
@@ -115,6 +117,7 @@ dependencies {
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
 
 if (isNewArchitectureEnabled()) {
   react {

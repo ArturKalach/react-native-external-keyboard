@@ -13,7 +13,12 @@ export type {
   BaseKeyboardViewType as KeyboardExtendedViewType,
 } from './types/BaseKeyboardView';
 
-export type { TintType } from './types/WithKeyboardFocus';
+export type {
+  TintType,
+  WithKeyboardFocusDeclaration,
+  WithKeyboardPropsTypeDeclaration,
+  WithKeyboardFocus,
+} from './types/WithKeyboardFocus';
 
 export {
   BaseKeyboardView,
@@ -25,6 +30,7 @@ export {
 export {
   Pressable,
   Pressable as KeyboardExtendedPressable,
+  type KeyboardPressableProps,
 } from './components/Touchable/Pressable';
 export {
   KeyboardExtendedInput,
