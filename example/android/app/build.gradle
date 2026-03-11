@@ -110,29 +110,10 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
-}
-
-def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
-}
-
-if (isNewArchitectureEnabled()) {
-    // Since our library doesn't invoke codegen automatically we need to do it here.
-    tasks.register('invokeLibraryCodegen', Exec) {
-      workingDir "$rootDir/../../"
-      def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
-
-      if (isWindows) {
-        commandLine 'cmd', '/c', 'npx bob build'
-      } else {
-        commandLine 'sh', '-c', 'npx bob build'
-      }
-    }
-    preBuild.dependsOn invokeLibraryCodegen
 }

@@ -1,4 +1,3 @@
-import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 import type { ColorValue, ViewProps } from 'react-native';
 import type {
   BubblingEventHandler,
@@ -7,7 +6,10 @@ import type {
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
 import type { ComponentType } from 'react';
+// eslint-disable-next-line @react-native/no-deep-imports
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
+// eslint-disable-next-line @react-native/no-deep-imports
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 export type FocusChange = Readonly<{
   isFocused: boolean;
@@ -67,6 +69,7 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
 }
 
 export interface NativeCommands {
+  // @ts-ignore
   focus: (viewRef: React.ElementRef<ComponentType>) => void;
 }
 

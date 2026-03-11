@@ -15,7 +15,7 @@ export const useBubbledInfo = (onBubbledContextMenuPress?: () => void) => {
   );
 
   const contextMenu = context.bubbledMenu
-    ? (onBubbledContextMenuPress ?? bubbleStub)
+    ? onBubbledContextMenuPress ?? bubbleStub
     : undefined;
 
   return {

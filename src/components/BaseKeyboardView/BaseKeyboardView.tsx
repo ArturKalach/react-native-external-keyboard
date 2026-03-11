@@ -21,6 +21,7 @@ import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext'
 import { useOnFocusChange } from '../../utils/useOnFocusChange';
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
 
+// @ts-ignore
 type NativeRef = React.ElementRef<ComponentType>;
 const isIOS = Platform.OS === 'ios';
 
@@ -96,7 +97,7 @@ export const BaseKeyboardView = React.memo(
       },
       ref
     ) => {
-      const localRef = useRef<View>();
+      const localRef = useRef<View>(undefined);
       const targetRef = viewRef ?? localRef;
       const lockFocusValue = useMemo(
         () => mapFocusValues(lockFocus),
@@ -115,27 +116,31 @@ export const BaseKeyboardView = React.memo(
           );
       }, [groupId, orderIndex]);
 
-      useImperativeHandle(ref, () => {
-        const actions: Record<string, Function> = {};
+      useImperativeHandle(
+        ref,
+        () => {
+          const actions: Record<string, Function> = {};
 
-        exposeMethods.forEach((method) => {
-          actions[method] = (...args: any[]) => {
-            const componentActions = targetRef?.current as unknown as Record<
-              string,
-              Function
-            >;
-            return componentActions?.[method]?.(...args);
+          exposeMethods.forEach((method) => {
+            actions[method] = (...args: any[]) => {
+              const componentActions = targetRef?.current as unknown as Record<
+                string,
+                Function
+              >;
+              return componentActions?.[method]?.(...args);
+            };
+          });
+
+          actions.focus = () => {
+            if (targetRef?.current) {
+              Commands.focus(targetRef.current as unknown as NativeRef);
+            }
           };
-        });
 
-        actions.focus = () => {
-          if (targetRef?.current) {
-            Commands.focus(targetRef.current as NativeRef);
-          }
-        };
-
-        return actions as unknown as BaseKeyboardViewType;
-      }, [exposeMethods, targetRef]);
+          return actions as unknown as BaseKeyboardViewType;
+        },
+        [exposeMethods, targetRef]
+      );
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
 
@@ -149,16 +154,16 @@ export const BaseKeyboardView = React.memo(
       const ignoreFocusHint = Platform.OS !== 'ios' || !ignoreGroupFocusHint;
 
       const _orderFirst =
-        orderFirst === null ? undefined : (orderFirst ?? orderForward);
+        orderFirst === null ? undefined : orderFirst ?? orderForward;
       const _orderLast =
-        orderLast === null ? undefined : (orderLast ?? orderBackward);
+        orderLast === null ? undefined : orderLast ?? orderBackward;
 
       return (
         <KeyPressContext.Provider value={bubbled.context}>
           <ExternalKeyboardViewNative
             {...props}
             haloEffect={haloEffect ?? true}
-            ref={targetRef as NativeRef}
+            ref={targetRef as React.RefObject<any>}
             canBeFocused={ignoreFocusHint && focusable && canBeFocused}
             autoFocus={autoFocus}
             onKeyDownPress={onKeyDownPress as undefined} //ToDo update types

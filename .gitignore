@@ -28,7 +28,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-.xcode.env.local
+**/.xcode.env.local
 
 # Android/IJ
 #
@@ -54,6 +54,13 @@ node_modules/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+android/app/libs
+android/keystores/debug.keystore
+
 # Yarn
 .yarn/*
 !.yarn/patches
@@ -61,14 +68,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-
-example/.yarn
-
-# BUCK
-buck-out/
-\.buckd/
-android/app/libs
-android/keystores/debug.keystore
 
 # Expo
 .expo/
@@ -82,3 +81,6 @@ lib/
 # React Native Codegen
 ios/generated
 android/generated
+
+# React Native Nitro Modules
+nitrogen/

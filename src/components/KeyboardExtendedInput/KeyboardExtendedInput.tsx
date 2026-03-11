@@ -111,7 +111,7 @@ export const KeyboardExtendedInput = React.forwardRef<
 
     const blurOnSubmit = submitBehavior
       ? submitBehavior === 'blurAndSubmit'
-      : (props.blurOnSubmit ?? true);
+      : props.blurOnSubmit ?? true;
 
     return (
       <TextInputFocusWrapperNative
@@ -128,7 +128,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         groupIdentifier={groupIdentifier ?? contextIdentifier}
       >
         <TextInput
-          ref={ref}
+          ref={ref as React.RefObject<any>}
           editable={canBeFocusable && focusable}
           style={[style, componentFocusedStyle]}
           onSubmitEditing={onSubmitEditing}
