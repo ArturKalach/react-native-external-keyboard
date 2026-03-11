@@ -506,6 +506,37 @@ The map of aliases is provided below: <br />
 `KeyboardFocusView` -> `KeyboardExtendedView` <br />
 `ExternalKeyboardView` -> `KeyboardExtendedBaseView` <br />
 
+# Migration 0.7.x to 0.8.0
+
+React and React Native packages have been updated in `react-native-external-keyboard@0.8.0`.
+
+Unfortunately, the latest React Native versions (0.83.x and 0.84.x) have different types compared to previous versions, and the Pressable as well as KeyboardExtendedPressable props could be incompatible with local types because they have static TypeScript declarations based on the React Native 0.83.4 dependency.
+
+In some cases, you may experience the following TypeScript problem:
+<img width="759" height="81" alt="image" src="https://github.com/user-attachments/assets/d47992ce-d3df-473b-bd96-5f2ba53ab889" />
+
+
+It can be resolved by using a HOC, as it provides dynamic typing.
+```tsx
+const KeyboardPressable = withKeyboardFocus(Pressable)
+
+export const K = (props: PressableProps) => {
+  return <KeyboardPressable {...props} />;
+}
+```
+
+As well, it could be resolved by component redeclaration:
+```ts
+export {};
+
+declare module 'react-native-external-keyboard' {
+    import type { PressableProps, ViewProps } from 'react-native';
+    import type { WithKeyboardFocusDeclaration } from 'react-native-external-keyboard/lib/typescript/src/types/WithKeyboardFocus';
+
+    export const Pressable: WithKeyboardFocusDeclaration<PressableProps, ViewProps['style']>
+    export const KeyboardExtendedPressable: WithKeyboardFocusDeclaration<PressableProps, ViewProps['style']>
+}
+```
 
 # API
 ToDo
