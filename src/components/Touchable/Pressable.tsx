@@ -2,6 +2,7 @@ import {
   Pressable as RNPressable,
   type PressableProps,
   type ViewProps,
+  type View,
 } from 'react-native';
 
 import { withKeyboardFocus } from '../../utils/withKeyboardFocus';
@@ -11,5 +12,6 @@ export const Pressable = withKeyboardFocus(RNPressable);
 
 export type KeyboardPressableProps = WithKeyboardPropsTypeDeclaration<
   PressableProps,
-  ViewProps['style']
+  ViewProps['style'],
+  View
 >;
