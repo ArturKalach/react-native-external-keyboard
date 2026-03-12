@@ -21,7 +21,8 @@ using namespace facebook::react;
 + (void)onKeyDownPressEventEmmiter:(NSDictionary*) dictionary withEmitter:(facebook::react::SharedViewEventEmitter) _eventEmitter {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
-        
+
+        NSString* unicodeChar = [dictionary valueForKey:@"unicodeChar"];
         facebook::react::ExternalKeyboardViewEventEmitter::OnKeyDownPress data = {
             .keyCode = [[dictionary valueForKey:@"keyCode"] intValue],
             .isLongPress = [[dictionary valueForKey:@"isLongPress"] boolValue],
@@ -31,7 +32,7 @@ using namespace facebook::react;
             .isCapsLockOn = [[dictionary valueForKey:@"isCapsLockOn"] boolValue],
             .hasNoModifiers = [[dictionary valueForKey:@"hasNoModifiers"] boolValue],
             .unicode = [[dictionary valueForKey:@"unicode"] intValue],
-            .unicodeChar = [[[dictionary valueForKey:@"unicodeChar"] stringValue] UTF8String],
+            .unicodeChar = [unicodeChar UTF8String],
         };
         viewEventEmitter->onKeyDownPress(data);
     };
@@ -40,7 +41,8 @@ using namespace facebook::react;
 + (void)onKeyUpPressEventEmmiter:(NSDictionary*) dictionary withEmitter:(facebook::react::SharedViewEventEmitter) _eventEmitter {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<ExternalKeyboardViewEventEmitter const>(_eventEmitter);
-        
+
+        NSString* unicodeChar = [dictionary valueForKey:@"unicodeChar"];
         facebook::react::ExternalKeyboardViewEventEmitter::OnKeyUpPress data = {
             .keyCode = [[dictionary valueForKey:@"keyCode"] intValue],
             .isLongPress = [[dictionary valueForKey:@"isLongPress"] boolValue],
@@ -50,7 +52,7 @@ using namespace facebook::react;
             .isCapsLockOn = [[dictionary valueForKey:@"isCapsLockOn"] boolValue],
             .hasNoModifiers = [[dictionary valueForKey:@"hasNoModifiers"] boolValue],
             .unicode = [[dictionary valueForKey:@"unicode"] intValue],
-            .unicodeChar = [[[dictionary valueForKey:@"unicodeChar"] stringValue] UTF8String],
+            .unicodeChar = [unicodeChar UTF8String],
         };
         viewEventEmitter->onKeyUpPress(data);
     };
