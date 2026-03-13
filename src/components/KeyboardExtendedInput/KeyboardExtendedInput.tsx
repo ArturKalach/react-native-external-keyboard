@@ -1,60 +1,19 @@
 import React, { useMemo } from 'react';
-import {
-  View,
-  TextInput,
-  Platform,
-  type TextInputProps,
-  type StyleProp,
-  type ViewStyle,
-  StyleSheet,
-  type ColorValue,
-} from 'react-native';
+import { View, TextInput, Platform, StyleSheet } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
-import type { FocusStyle } from '../../types/FocusStyle';
 import { useFocusStyle } from '../../utils/useFocusStyle';
 import { focusEventMapper } from '../../utils/focusEventMapper';
-import type { TintType } from '../../types/WithKeyboardFocus';
-import {
-  type RenderProp,
-  RenderPropComponent,
-} from '../RenderPropComponent/RenderPropComponent';
+import { RenderPropComponent } from '../RenderPropComponent/RenderPropComponent';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
+import type { KeyboardInputProps } from './KeyboardExtendedInput.types';
+import { blurMap, focusMap } from './KeyboardExtendedInput.consts';
 
 const isIOS = Platform.OS === 'ios';
 
-const focusMap = {
-  default: 0,
-  press: 1,
-  auto: 2,
-};
-
-const blurMap = {
-  default: 0,
-  disable: 1,
-  auto: 2,
-};
-
-export type KeyboardFocusViewProps = TextInputProps & {
-  focusType?: keyof typeof focusMap;
-  blurType?: keyof typeof blurMap;
-  containerStyle?: StyleProp<ViewStyle>;
-  onFocusChange?: (isFocused: boolean) => void;
-  focusStyle?: FocusStyle;
-  haloEffect?: boolean;
-  canBeFocusable?: boolean;
-  focusable?: boolean;
-  tintColor?: ColorValue;
-  tintType?: TintType;
-  containerFocusStyle?: FocusStyle;
-  FocusHoverComponent?: RenderProp;
-  submitBehavior?: string;
-  groupIdentifier?: string;
-};
-
 export const KeyboardExtendedInput = React.forwardRef<
   TextInput,
-  KeyboardFocusViewProps
+  KeyboardInputProps
 >(
   (
     {
@@ -74,6 +33,10 @@ export const KeyboardExtendedInput = React.forwardRef<
       onSubmitEditing,
       submitBehavior,
       groupIdentifier,
+      rejectResponderTermination,
+      selectionHandleColor,
+      cursorColor,
+      maxFontSizeMultiplier,
       ...props
     },
     ref
@@ -133,6 +96,10 @@ export const KeyboardExtendedInput = React.forwardRef<
           style={[style, componentFocusedStyle]}
           onSubmitEditing={onSubmitEditing}
           submitBehavior={submitBehavior}
+          rejectResponderTermination={rejectResponderTermination ?? undefined}
+          selectionHandleColor={selectionHandleColor ?? undefined}
+          cursorColor={cursorColor ?? undefined}
+          maxFontSizeMultiplier={maxFontSizeMultiplier ?? undefined}
           {...props}
         />
         {focused && HoverComonent && (

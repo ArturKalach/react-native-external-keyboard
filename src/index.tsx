@@ -32,10 +32,17 @@ export {
   Pressable as KeyboardExtendedPressable,
   type KeyboardPressableProps,
 } from './components/Touchable/Pressable';
+
 export {
   KeyboardExtendedInput,
   KeyboardExtendedInput as TextInput,
 } from './components/KeyboardExtendedInput/KeyboardExtendedInput';
+export type {
+  KeyboardInputPropsDeclaration,
+  KeyboardInputProps,
+  ExtraKeyboardProps,
+} from './components/KeyboardExtendedInput/KeyboardExtendedInput.types';
+
 export { KeyboardFocusGroup } from './components/KeyboardFocusGroup/KeyboardFocusGroup';
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { useIsViewFocused } from './context/IsViewFocusedContext';
