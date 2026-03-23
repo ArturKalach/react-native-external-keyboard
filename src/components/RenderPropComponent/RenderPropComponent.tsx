@@ -3,6 +3,7 @@ import React, { type FunctionComponent, type ReactElement } from 'react';
 export type RenderProp =
   | ReactElement
   | FunctionComponent
+  | FunctionComponent<{}>
   | (() => ReactElement);
 
 export const RenderPropComponent = ({ render }: { render: RenderProp }) => {

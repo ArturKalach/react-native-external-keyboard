@@ -1,4 +1,4 @@
-import type { PressableProps, ViewProps } from 'react-native';
+import type { PressableProps, View, ViewProps } from 'react-native';
 import type { FocusStyle } from './FocusStyle';
 import type { KeyboardFocus, OnKeyPress } from './BaseKeyboardView';
 import type { FocusViewProps } from './KeyboardFocusView.types';
@@ -36,12 +36,12 @@ export type KeyboardPressType<ComponentProps extends object> = {
   onComponentBlur?: PickProp<ComponentProps, 'onBlur'>;
 };
 
-export type WithKeyboardProps<R = unknown, ViewStyleType = unknown> = {
+export type WithKeyboardProps<ViewType = View, ViewStyleType = unknown> = {
   withPressedStyle?: boolean;
   containerStyle?: ViewStyleType | ViewProps['style'];
   containerFocusStyle?: FocusStyle;
   tintType?: TintType;
-  componentRef?: React.RefObject<R>;
+  componentRef?: React.RefObject<ViewType>;
   FocusHoverComponent?: RenderProp;
   style?: PressableProps['style'];
   onBlur?: (() => void) | ((e: any) => void) | null;
@@ -61,34 +61,38 @@ type MergeProps<BaseProps extends object, OverrideProps extends object> = Omit<
 
 type KeyboardFocusOverrideProps<
   ComponentProps extends object,
-  ViewStyleType
+  ViewStyleType,
+  ViewType = View
 > = KeyboardPressType<ComponentProps> &
   KeyboardFocusBaseProps &
-  WithKeyboardProps<ComponentProps, ViewStyleType>;
+  WithKeyboardProps<ViewType, ViewStyleType>;
 
 export type WithKeyboardFocus<
   ComponentProps extends object,
-  ViewStyleType
+  ViewStyleType,
+  ViewType = View
 > = MergeProps<
   ComponentProps,
-  KeyboardFocusOverrideProps<ComponentProps, ViewStyleType>
+  KeyboardFocusOverrideProps<ComponentProps, ViewStyleType, ViewType>
 >;
 
 export type WithKeyboardPropsTypeDeclaration<
   ComponentProps extends object,
-  ViewStyleType
-> = WithKeyboardFocus<ComponentProps, ViewStyleType> &
+  ViewStyleType,
+  ViewType = View
+> = WithKeyboardFocus<ComponentProps, ViewStyleType, ViewType> &
   RefAttributes<KeyboardFocus>;
 
 export type WithKeyboardFocusDeclaration<
   ComponentProps extends object,
-  ViewStyleType
+  ViewStyleType,
+  ViewType = View
 > =
   | React.JSXElementConstructor<
-      WithKeyboardPropsTypeDeclaration<ComponentProps, ViewStyleType>
+      WithKeyboardPropsTypeDeclaration<ComponentProps, ViewStyleType, ViewType>
     >
   | React.ForwardRefExoticComponent<
-      WithKeyboardPropsTypeDeclaration<ComponentProps, ViewStyleType>
+      WithKeyboardPropsTypeDeclaration<ComponentProps, ViewStyleType, ViewType>
     >;
 
 export type TintType = 'default' | 'hover' | 'background' | 'none';

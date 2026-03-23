@@ -13,13 +13,17 @@ import { useKeyboardPress } from './useKeyboardPress/useKeyboardPress';
 import { IsViewFocusedContext } from '../context/IsViewFocusedContext';
 import type { FocusViewProps } from '../types/KeyboardFocusView.types';
 
-export const withKeyboardFocus = <ComponentProps extends object, ViewStyleType>(
+export const withKeyboardFocus = <
+  ComponentProps extends object,
+  ViewStyleType,
+  ViewType = View
+>(
   Component: WithKeyboardFocusComponent<ComponentProps>
 ) => {
   const WithKeyboardFocus = React.memo(
     React.forwardRef<
       View | KeyboardFocus,
-      WithKeyboardFocus<ComponentProps, ViewStyleType>
+      WithKeyboardFocus<ComponentProps, ViewStyleType, ViewType>
     >((allProps, ref) => {
       const {
         tintType = 'default',
