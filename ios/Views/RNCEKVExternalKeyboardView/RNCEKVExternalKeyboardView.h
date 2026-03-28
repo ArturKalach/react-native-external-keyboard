@@ -91,6 +91,7 @@ NS_ASSUME_NONNULL_END
 @property NSString* orderLast;
 @property NSString* orderFirst;
 @property BOOL isLinked;
+@property BOOL enableContextMenu;
 
 - (UIView*)getFocusTargetView;
 
