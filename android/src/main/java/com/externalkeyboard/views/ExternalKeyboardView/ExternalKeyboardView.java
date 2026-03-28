@@ -154,20 +154,20 @@ public class ExternalKeyboardView extends ReactViewGroup {
 
     if (direction == FOCUS_FORWARD && orderForward != null) {
       View nextView = this.focusOrderDelegate.getLink(orderForward);
-      if (nextView != null) {
+      if (isValidLinkedFocusTarget(nextView)) {
         return nextView;
       }
     }
 
     if (direction == FOCUS_BACKWARD && orderBackward != null) {
       View prevView = this.focusOrderDelegate.getLink(orderBackward);
-      if (prevView != null) {
+      if (isValidLinkedFocusTarget(prevView)) {
         return prevView;
       }
     }
 
-    if(ReactNativeVersionChecker.isReactNative80OrLater()) {
-      if(orderGroup != null && orderIndex != null && (direction == FOCUS_FORWARD || direction == FOCUS_BACKWARD)){
+    if (ReactNativeVersionChecker.isReactNative80OrLater()) {
+      if (orderGroup != null && orderIndex != null && (direction == FOCUS_FORWARD || direction == FOCUS_BACKWARD)) {
         return FocusFinder.getInstance().findNextFocus((ViewGroup) this.getParent(), focused, direction);
       }
     }
@@ -290,6 +290,22 @@ public class ExternalKeyboardView extends ReactViewGroup {
   private View getFocusingView() {
     View focusableView = FocusHelper.getFocusableView(this);
     return focusableView != null ? focusableView : this;
+  }
+
+  private boolean isValidLinkedFocusTarget(View target) {
+    if (target == null || !target.isAttachedToWindow() || !this.isAttachedToWindow()) {
+      return false;
+    }
+
+    if (target.getWindowToken() == null || this.getWindowToken() == null) {
+      return false;
+    }
+
+    if (target.getWindowToken() != this.getWindowToken()) {
+      return false;
+    }
+
+    return target.getRootView() == this.getRootView();
   }
 
   public void setCanBeFocused(boolean canBeFocused) {
