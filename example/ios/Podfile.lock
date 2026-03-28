@@ -1892,7 +1892,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-external-keyboard (0.8.4-rc1):
+  - react-native-external-keyboard (0.8.4):
     - boost
     - DoubleConversion
     - fast_float
@@ -2952,7 +2952,7 @@ SPEC CHECKSUMS:
   React-logger: 993e4b9793768764e0fdd379ad1d6582f7905463
   React-Mapbuffer: 3a5f700ed673820ab4b1b35ba0cf8476400bc4c5
   React-microtasksnativemodule: 094677e625f12276a8f871844a5ee6a945a90221
-  react-native-external-keyboard: a1effe9c020698652bb4e3bc3013feebe01ae477
+  react-native-external-keyboard: 0f08bb2fe3d8903ce01976055171edfbfeb61da3
   react-native-safe-area-context: befb5404eb8a16fdc07fa2bebab3568ecabcbb8a
   React-NativeModulesApple: 29290351acc118784e158aa7b23c42719dc57617
   React-networking: d01f94f15d1a6fce689a8c57d2397a5a40b0b5aa
