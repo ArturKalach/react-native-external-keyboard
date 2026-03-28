@@ -93,6 +93,7 @@ export const BaseKeyboardView = React.memo(
         orderFirst,
         orderLast,
         orderGroup,
+        enableContextMenu,
         ...props
       },
       ref
@@ -164,6 +165,7 @@ export const BaseKeyboardView = React.memo(
             {...props}
             haloEffect={haloEffect ?? true}
             ref={targetRef as React.RefObject<any>}
+            enableContextMenu={enableContextMenu}
             canBeFocused={ignoreFocusHint && focusable && canBeFocused}
             autoFocus={autoFocus}
             onKeyDownPress={onKeyDownPress as undefined} //ToDo update types

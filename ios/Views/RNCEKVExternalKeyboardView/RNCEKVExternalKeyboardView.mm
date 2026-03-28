@@ -44,6 +44,26 @@ using namespace facebook::react;
   BOOL _isLinked;
   BOOL _isIdLinked;
   BOOL _autoFocusRequested;
+  UIContextMenuInteraction *_contextMenuInteraction;
+}
+
+- (void)updateContextMenuRegistration {
+  if (@available(iOS 13.0, *)) {
+    BOOL shouldRegister = _enableContextMenu &&
+      _isFocused != nil &&
+      [_isFocused isEqual:@YES];
+
+    if (shouldRegister && _contextMenuInteraction == nil) {
+      _contextMenuInteraction =
+        [[UIContextMenuInteraction alloc] initWithDelegate:self];
+      [self addInteraction:_contextMenuInteraction];
+    }
+
+    if (!shouldRegister && _contextMenuInteraction != nil) {
+      [self removeInteraction:_contextMenuInteraction];
+      _contextMenuInteraction = nil;
+    }
+  }
 }
 
 - (void)link:(UIView *)subview {
@@ -121,6 +141,7 @@ using namespace facebook::react;
     std::make_shared<const ExternalKeyboardViewProps>();
     _props = defaultProps;
 #endif
+    _enableContextMenu = NO;
     _isAttachedToController = NO;
     _isAttachedToWindow = NO;
     _enableA11yFocus = NO;
@@ -130,11 +151,7 @@ using namespace facebook::react;
     _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
     _focusOrderDelegate = [[RNCEKVFocusOrderDelegate alloc] initWithView: self];
     _autoFocusRequested = NO;
-    if (@available(iOS 13.0, *)) {
-      UIContextMenuInteraction *interaction =
-      [[UIContextMenuInteraction alloc] initWithDelegate:self];
-      [self addInteraction:interaction];
-    }
+    _contextMenuInteraction = nil;
   }
 
   return self;
@@ -166,6 +183,13 @@ using namespace facebook::react;
   _enableA11yFocus = NO;
   _isLinked = NO;
   _autoFocusRequested = NO;
+  _enableContextMenu = NO;
+  [self updateContextMenuRegistration];
+}
+
+- (void)setEnableContextMenu:(BOOL)enableContextMenu {
+  _enableContextMenu = enableContextMenu;
+  [self updateContextMenuRegistration];
 }
 
 - (void)setOrderGroup:(NSString *)orderGroup{
@@ -335,6 +359,11 @@ using namespace facebook::react;
   if (_haloCornerRadius != newViewProps.haloCornerRadius) {
     [self setHaloCornerRadius:newViewProps.haloCornerRadius];
   }
+
+  if (oldViewProps.enableContextMenu != newViewProps.enableContextMenu) {
+    [self setEnableContextMenu: newViewProps.enableContextMenu];
+    [self updateContextMenuRegistration];
+  }
 }
 
 
@@ -383,6 +412,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
   _isFocused = [_focusDelegate isFocusChanged:context];
+  [self updateContextMenuRegistration];
 
   [_focusOrderDelegate setIsFocused: [_isFocused isEqual:@YES]];
   if ([self hasOnFocusChanged]) {

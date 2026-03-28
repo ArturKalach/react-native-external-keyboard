@@ -64,4 +64,6 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
   public abstract void setOrderFirst(ExternalKeyboardView view, @Nullable String value);
 
   public abstract void setOrderLast(ExternalKeyboardView view, @Nullable String value);
+
+  public abstract void setEnableContextMenu(ExternalKeyboardView view, boolean value);
 }

@@ -52,6 +52,7 @@ export type BaseFocusViewProps = {
   ignoreGroupFocusHint?: boolean;
   exposeMethods?: string[];
   enableA11yFocus?: boolean;
+  enableContextMenu?: boolean;
   screenAutoA11yFocus?: boolean;
   screenAutoA11yFocusDelay?: number;
   orderGroup?: string;

@@ -155,6 +155,12 @@ RCT_CUSTOM_VIEW_PROPERTY(lockFocus, NSNumber, RNCEKVExternalKeyboardView)
   }
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(enableContextMenu, BOOL, RNCEKVExternalKeyboardView)
+{
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setEnableContextMenu: value];
+}
+
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
 {
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {

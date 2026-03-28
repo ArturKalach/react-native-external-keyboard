@@ -134,6 +134,7 @@ export const withKeyboardFocus = <
             onBlur={onBlur as FocusViewProps['onBlur']}
             onFocusChange={onFocusChangeHandler}
             onContextMenuPress={onContextMenuHandler}
+            enableContextMenu={Boolean(onLongPress)}
             haloEffect={withHaloEffect}
             haloCornerRadius={haloCornerRadius}
             haloExpendX={haloExpendX}

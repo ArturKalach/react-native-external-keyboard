@@ -258,6 +258,11 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  public void setEnableContextMenu(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
   public void setGroup(ExternalKeyboardView view, boolean value) {
     //stub
   }
