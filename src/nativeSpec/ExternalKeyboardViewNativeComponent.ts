@@ -66,6 +66,7 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   orderBackward?: string;
   orderFirst?: string;
   orderLast?: string;
+  enableContextMenu?: boolean;
 }
 
 export interface NativeCommands {

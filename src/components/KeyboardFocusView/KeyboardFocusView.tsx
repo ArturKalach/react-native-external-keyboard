@@ -101,6 +101,7 @@ export const KeyboardFocusView = React.forwardRef<
           tintColor={tintColor}
           group={group}
           accessible={a11y}
+          enableContextMenu={Boolean(onLongPress)}
           {...props}
         >
           {children}

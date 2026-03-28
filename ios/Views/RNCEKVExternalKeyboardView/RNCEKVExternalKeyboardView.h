@@ -31,6 +31,7 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 @property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
 @property (nonatomic, strong, nullable) NSString *customGroupId;
 @property BOOL autoFocus;
+@property BOOL enableContextMenu;
 @property NSNumber* orderPosition;
 @property NSNumber* lockFocus;
 @property (nonatomic, strong) NSString* orderGroup;
