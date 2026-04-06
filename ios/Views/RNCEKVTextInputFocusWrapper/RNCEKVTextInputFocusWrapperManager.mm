@@ -74,5 +74,74 @@ RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVTextInputFocusWrapper)
     }
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(orderGroup, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderGroup: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSInteger, RNCEKVTextInputFocusWrapper)
+{
+    if (json) {
+        NSNumber* value = [RCTConvert NSNumber:json];
+        [view setOrderPosition: value];
+    }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderId, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderId: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderLeft, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderLeft: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderRight, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderRight: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderUp, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderUp: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderDown, NSString, RNCEKVTextInputFocusWrapper)
+{
+    NSString* value = json ? [RCTConvert NSString:json] : nil;
+    [view setOrderDown: value];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderForward, NSString, RNCEKVTextInputFocusWrapper)
+{
+    view.orderForward = json ? [RCTConvert NSString:json] : nil;
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderBackward, NSString, RNCEKVTextInputFocusWrapper)
+{
+    view.orderBackward = json ? [RCTConvert NSString:json] : nil;
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderFirst, NSString, RNCEKVTextInputFocusWrapper)
+{
+    view.orderFirst = json ? [RCTConvert NSString:json] : nil;
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(orderLast, NSString, RNCEKVTextInputFocusWrapper)
+{
+    view.orderLast = json ? [RCTConvert NSString:json] : nil;
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(lockFocus, NSNumber, RNCEKVTextInputFocusWrapper)
+{
+    view.lockFocus = json ? [RCTConvert NSNumber:json] : nil;
+}
+
 
 @end

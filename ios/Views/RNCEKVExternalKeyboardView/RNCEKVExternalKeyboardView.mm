@@ -265,12 +265,6 @@ using namespace facebook::react;
     [self setHasOnFocusChanged:newViewProps.hasOnFocusChanged];
   }
 
-  BOOL isLockChanged = [RNCEKVPropHelper isPropChanged:_lockFocus intValue: newViewProps.lockFocus];
-  if(isLockChanged) {
-    NSNumber* lockValue = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
-    [self setLockFocus: lockValue];
-  }
-
   if (oldViewProps.canBeFocused != newViewProps.canBeFocused) {
     [self setCanBeFocused:newViewProps.canBeFocused];
   }
@@ -288,6 +282,11 @@ using namespace facebook::react;
     [self setAutoFocus:hasAutoFocus];
   }
 
+  BOOL isLockChanged = [RNCEKVPropHelper isPropChanged:_lockFocus intValue: newViewProps.lockFocus];
+  if(isLockChanged) {
+    NSNumber* lockValue = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
+    [self setLockFocus: lockValue];
+  }
 
   BOOL isIndexChanged = [RNCEKVPropHelper isPropChanged:_orderPosition intValue: newViewProps.orderIndex];
   if(isIndexChanged) {

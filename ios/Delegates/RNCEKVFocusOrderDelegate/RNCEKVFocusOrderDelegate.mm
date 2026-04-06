@@ -92,8 +92,8 @@ static NSNumber *const FOCUS_UPDATE = @1;
 }
 
 - (void)keyboardedViewFocus:(UIView *)view {
-  if ([view isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
-    [(RNCEKVExternalKeyboardView*)view focus];
+  if ([view respondsToSelector:@selector(focus)]) {
+    [(id)view focus];
   }
 }
 

@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.externalkeyboard.delegates.FocusOrderDelegate;
+import com.externalkeyboard.delegates.FocusOrderDelegateHost;
 import com.externalkeyboard.events.EventHelper;
 
 import com.externalkeyboard.helper.FocusHelper;
@@ -22,7 +23,7 @@ import com.facebook.react.uimanager.events.EventDispatcher;
 import com.facebook.react.uimanager.events.EventDispatcherListener;
 import com.facebook.react.views.view.ReactViewGroup;
 
-public class ExternalKeyboardView extends ReactViewGroup {
+public class ExternalKeyboardView extends ReactViewGroup implements FocusOrderDelegateHost {
   public boolean hasKeyDownListener = false;
   public boolean hasKeyUpListener = false;
   public boolean autoFocus = false;

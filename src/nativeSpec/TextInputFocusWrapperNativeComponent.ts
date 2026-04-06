@@ -25,6 +25,18 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   blurOnSubmit?: boolean;
   multiline?: boolean;
   groupIdentifier?: string;
+  lockFocus?: Int32;
+  orderGroup?: string;
+  orderIndex?: Int32;
+  orderId?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderForward?: string;
+  orderBackward?: string;
+  orderFirst?: string;
+  orderLast?: string;
 }
 
 export default codegenNativeComponent<TextInputFocusWrapperNativeComponent>(

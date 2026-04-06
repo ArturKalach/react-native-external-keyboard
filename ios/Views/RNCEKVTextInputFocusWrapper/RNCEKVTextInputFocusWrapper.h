@@ -3,6 +3,7 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTUITextField.h>
 #import "RNCEKVGroupIdentifierProtocol.h"
+#import "RNCEKVFocusOrderProtocol.h"
 #import <React/RCTUITextView.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -11,7 +12,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVTextInputFocusWrapper : RCTViewComponentView <RNCEKVGroupIdentifierProtocol>{
+#define RKNA_PROP_UPDATE(prop, setter, newProps) \
+if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
+[self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
+}
+
+@interface RNCEKVTextInputFocusWrapper : RCTViewComponentView <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }
@@ -23,6 +29,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property int blurType;
 @property BOOL multiline;
 @property (nonatomic, strong, nullable) NSString *customGroupId;
+
+// RNCEKVFocusOrderProtocol
+@property (nonatomic, strong) NSString* orderGroup;
+@property NSNumber* lockFocus;
+@property NSNumber* orderPosition;
+@property (nonatomic, strong) NSString* orderLeft;
+@property (nonatomic, strong) NSString* orderRight;
+@property (nonatomic, strong) NSString* orderUp;
+@property (nonatomic, strong) NSString* orderDown;
+@property NSString* orderForward;
+@property NSString* orderBackward;
+@property NSString* orderLast;
+@property NSString* orderFirst;
+@property (nonatomic, strong) NSString* orderId;
+
 - (UIView*)getFocusTargetView;
 
 - (void)onFocusChange:(BOOL)isFocused;
@@ -37,7 +58,7 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface RNCEKVTextInputFocusWrapper : RCTView <RNCEKVGroupIdentifierProtocol>{
+@interface RNCEKVTextInputFocusWrapper : RCTView <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }
@@ -51,6 +72,21 @@ NS_ASSUME_NONNULL_END
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
 @property (nonatomic, copy) RCTDirectEventBlock onMultiplyTextSubmit;
 @property NSString* customGroupId;
+
+// RNCEKVFocusOrderProtocol
+@property (nonatomic, strong) NSString* orderGroup;
+@property NSNumber* lockFocus;
+@property NSNumber* orderPosition;
+@property (nonatomic, strong) NSString* orderLeft;
+@property (nonatomic, strong) NSString* orderRight;
+@property (nonatomic, strong) NSString* orderUp;
+@property (nonatomic, strong) NSString* orderDown;
+@property NSString* orderForward;
+@property NSString* orderBackward;
+@property NSString* orderLast;
+@property NSString* orderFirst;
+@property (nonatomic, strong) NSString* orderId;
+
 - (UIView*)getFocusTargetView;
 
 - (void)onFocusChange:(BOOL)isFocused;

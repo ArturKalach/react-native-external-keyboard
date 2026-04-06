@@ -4,6 +4,8 @@ import { FocusOrder } from './FocusOrder';
 import { useState } from 'react';
 import { FocusDPadOrder } from './FocusDPadOrder';
 import { FocusLinkOrder } from './FocusLinkOrder';
+import { FocusMixedOrder } from './FocusMixedOrder';
+import { FocusMixedDpadOrder } from './FocusMixedDpadOrder';
 
 export const FocusOrderScreen = () => {
   const [example, setExample] = useState(0);
@@ -24,6 +26,16 @@ export const FocusOrderScreen = () => {
         {example === 2 ? (
           <>
             <FocusLinkOrder onChange={setExample} />
+          </>
+        ) : null}
+        {example === 3 ? (
+          <>
+            <FocusMixedOrder onChange={setExample} />
+          </>
+        ) : null}
+        {example === 4 ? (
+          <>
+            <FocusMixedDpadOrder onChange={setExample} />
           </>
         ) : null}
       </SafeAreaView>

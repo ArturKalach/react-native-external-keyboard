@@ -5,10 +5,8 @@ import android.view.View;
 import com.externalkeyboard.helper.Linking.A11yOrderLinking;
 import com.externalkeyboard.services.FocusLinkObserver.FocusLinkObserver;
 import com.externalkeyboard.services.FocusLinkObserver.FocusLinkObserverSingleton;
-import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
-
 public class FocusOrderDelegate {
-  private final ExternalKeyboardView delegate;
+  private final FocusOrderDelegateHost delegate;
 
   FocusLinkObserver.LinkUpdatedCallback leftUpdated = null;
   FocusLinkObserver.LinkRemovedCallback leftRemoved = null;
@@ -20,7 +18,7 @@ public class FocusOrderDelegate {
   FocusLinkObserver.LinkRemovedCallback downRemoved = null;
 
 
-  public FocusOrderDelegate(ExternalKeyboardView delegate) {
+  public FocusOrderDelegate(FocusOrderDelegateHost delegate) {
     super();
     this.delegate = delegate;
   }

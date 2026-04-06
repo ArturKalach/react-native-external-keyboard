@@ -106,6 +106,11 @@ export const FocusOrder = ({ onChange }: { onChange: (v: number) => void }) => {
         <Button title="DPad Order" onPress={() => onChange(1)} />
       </KeyboardExtendedBaseView>
       <Button title="Focus Link Order" onPress={() => onChange(2)} />
+      <Button title="Mixed (Input + Pressable)" onPress={() => onChange(3)} />
+      <Button
+        title="Mixed DPad (Input + Pressable)"
+        onPress={() => onChange(4)}
+      />
     </View>
   );
 };

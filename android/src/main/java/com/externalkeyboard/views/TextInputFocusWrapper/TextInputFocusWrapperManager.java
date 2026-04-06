@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.MultiplyTextSubmit;
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
@@ -86,6 +88,96 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
 
   @Override
   public void setGroupIdentifier(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "orderGroup")
+  public void setOrderGroup(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderGroup(), value)) {
+      view.setOrderGroup(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderIndex")
+  public void setOrderIndex(TextInputFocusWrapper view, int value) {
+    if (!Objects.equals(view.getOrderIndex(), value)) {
+      view.setOrderIndex(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderId")
+  public void setOrderId(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.orderId, value)) {
+      view.orderId = value;
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderLeft")
+  public void setOrderLeft(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderLeft(), value)) {
+      view.setOrderLeft(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderRight")
+  public void setOrderRight(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderRight(), value)) {
+      view.setOrderRight(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderUp")
+  public void setOrderUp(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderUp(), value)) {
+      view.setOrderUp(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderDown")
+  public void setOrderDown(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderDown(), value)) {
+      view.setOrderDown(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderForward")
+  public void setOrderForward(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.orderForward, value)) {
+      view.orderForward = value;
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderBackward")
+  public void setOrderBackward(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.orderBackward, value)) {
+      view.orderBackward = value;
+    }
+  }
+
+  @Override
+  @ReactProp(name = "lockFocus")
+  public void setLockFocus(TextInputFocusWrapper view, int value) {
+    if (view.lockFocus != value) {
+      view.lockFocus = value;
+    }
+  }
+
+  @Override
+  public void setOrderFirst(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
+  }
+
+  @Override
+  public void setOrderLast(TextInputFocusWrapper view, @Nullable String value) {
     //stub
   }
 
