@@ -1,0 +1,40 @@
+#pragma once
+
+#include <string>
+
+namespace RNCEKV {
+
+struct OrderProps {
+  std::string orderGroup{};
+  int orderIndex{0};
+  int lockFocus{0};
+  std::string orderId{};
+  std::string orderLeft{};
+  std::string orderRight{};
+  std::string orderUp{};
+  std::string orderDown{};
+  std::string orderForward{};
+  std::string orderBackward{};
+  std::string orderFirst{};
+  std::string orderLast{};
+
+  template <typename T>
+  static OrderProps from(const T &props) {
+    return OrderProps{
+      props.orderGroup,
+      props.orderIndex,
+      props.lockFocus,
+      props.orderId,
+      props.orderLeft,
+      props.orderRight,
+      props.orderUp,
+      props.orderDown,
+      props.orderForward,
+      props.orderBackward,
+      props.orderFirst,
+      props.orderLast,
+    };
+  }
+};
+
+} // namespace RNCEKV

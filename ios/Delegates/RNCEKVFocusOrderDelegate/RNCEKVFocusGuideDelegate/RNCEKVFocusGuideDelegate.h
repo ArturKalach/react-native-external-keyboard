@@ -14,7 +14,7 @@
 
 @interface RNCEKVFocusGuideDelegate : NSObject
 
-- (instancetype _Nonnull)initWithView:(UIView<RNCEKVFocusOrderProtocol> *_Nonnull)view;
+- (instancetype _Nonnull)initWithView:(NSObject<RNCEKVFocusOrderProtocol> *_Nonnull)view;
 
 //- (void)setLeftGuide:(UIView *_Nullable)view;
 //- (void)setRightGuide:(UIView *_Nullable)view;

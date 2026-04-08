@@ -41,6 +41,11 @@ typedef NS_ENUM(NSUInteger, RNCEKVLinkDirection) {
 - (void)refreshDown:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
 - (void)clear;
 
+- (void)link;
+- (void)unlink;
+- (void)updatePosition:(NSNumber*) position;
+- (void)updateOrderGroup:(NSString *)orderGroup;
+
 @end
 
 

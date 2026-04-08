@@ -5,6 +5,7 @@
 #import "RNCEKVGroupIdentifierProtocol.h"
 #import "RNCEKVFocusOrderProtocol.h"
 #import <React/RCTUITextView.h>
+#import "RNCEKVViewOrderGroupBase.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -17,7 +18,7 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 [self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
 }
 
-@interface RNCEKVTextInputFocusWrapper : RCTViewComponentView <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
+@interface RNCEKVTextInputFocusWrapper : RNCEKVViewOrderGroupBase <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }
@@ -31,18 +32,18 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 @property (nonatomic, strong, nullable) NSString *customGroupId;
 
 // RNCEKVFocusOrderProtocol
-@property (nonatomic, strong) NSString* orderGroup;
-@property NSNumber* lockFocus;
-@property NSNumber* orderPosition;
-@property (nonatomic, strong) NSString* orderLeft;
-@property (nonatomic, strong) NSString* orderRight;
-@property (nonatomic, strong) NSString* orderUp;
-@property (nonatomic, strong) NSString* orderDown;
-@property NSString* orderForward;
-@property NSString* orderBackward;
-@property NSString* orderLast;
-@property NSString* orderFirst;
-@property (nonatomic, strong) NSString* orderId;
+//@property (nonatomic, strong) NSString* orderGroup;
+//@property NSNumber* lockFocus;
+//@property NSNumber* orderPosition;
+//@property (nonatomic, strong) NSString* orderLeft;
+//@property (nonatomic, strong) NSString* orderRight;
+//@property (nonatomic, strong) NSString* orderUp;
+//@property (nonatomic, strong) NSString* orderDown;
+//@property NSString* orderForward;
+//@property NSString* orderBackward;
+//@property NSString* orderLast;
+//@property NSString* orderFirst;
+//@property (nonatomic, strong) NSString* orderId;
 
 - (UIView*)getFocusTargetView;
 
@@ -58,7 +59,7 @@ NS_ASSUME_NONNULL_END
 
 
 #import <React/RCTView.h>
-@interface RNCEKVTextInputFocusWrapper : RCTView <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
+@interface RNCEKVTextInputFocusWrapper : RNCEKVViewOrderGroupBase <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }

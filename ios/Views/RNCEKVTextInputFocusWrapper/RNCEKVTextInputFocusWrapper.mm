@@ -55,9 +55,6 @@ static const NSInteger AUTO_BLUR = 2;
         static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
         _props = defaultProps;
 #endif
-        _focusOrderDelegate = [[RNCEKVFocusOrderDelegate alloc] initWithView:self];
-        _isLinked = NO;
-        _isIdLinked = NO;
     }
 
     return self;
@@ -69,7 +66,6 @@ static const NSInteger AUTO_BLUR = 2;
 {
     return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
 }
-
 
 
 - (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
@@ -124,29 +120,8 @@ static const NSInteger AUTO_BLUR = 2;
         self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     }
 
-    BOOL isLockChanged = [RNCEKVPropHelper isPropChanged:_lockFocus intValue: newViewProps.lockFocus];
-    if(isLockChanged) {
-      NSNumber* lockValue = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
-      [self setLockFocus: lockValue];
-    }
-
-
-    BOOL isIndexChanged = [RNCEKVPropHelper isPropChanged:_orderPosition intValue: newViewProps.orderIndex];
-    if(isIndexChanged) {
-        NSNumber* position = [RNCEKVPropHelper unwrapIntValue: newViewProps.orderIndex];
-        [self updateOrderPosition: position];
-    }
-
-    RKNA_PROP_UPDATE(orderGroup, setOrderGroup, newViewProps);
-    RKNA_PROP_UPDATE(orderId, setOrderId, newViewProps);
-    RKNA_PROP_UPDATE(orderLeft, setOrderLeft, newViewProps);
-    RKNA_PROP_UPDATE(orderRight, setOrderRight, newViewProps);
-    RKNA_PROP_UPDATE(orderUp, setOrderUp, newViewProps);
-    RKNA_PROP_UPDATE(orderDown, setOrderDown, newViewProps);
-    RKNA_PROP_UPDATE(orderForward, setOrderForward, newViewProps);
-    RKNA_PROP_UPDATE(orderBackward, setOrderBackward, newViewProps);
-    RKNA_PROP_UPDATE(orderLast, setOrderLast, newViewProps);
-    RKNA_PROP_UPDATE(orderFirst, setOrderFirst, newViewProps);
+    [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
+                     newProps:RNCEKV::OrderProps::from(newViewProps)];
 }
 
 Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
@@ -198,7 +173,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #endif
 
-
 - (void)focus {
   UIViewController *viewController = self.reactViewController;
   [self updateFocus:viewController];
@@ -206,103 +180,18 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)updateFocus:(UIViewController *)controller {
   UIView *focusingView = self.subviews.count ? self.subviews[0] : nil;
-
   if (self.superview != nil && controller != nil) {
-    controller.rncekvCustomFocusView = focusingView;
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [controller setNeedsFocusUpdate];
-      [controller updateFocusIfNeeded];
-    });
+    [controller rncekvFocusView:focusingView];
   }
-}
-
-// Focus order linking
-
-- (void)link {
-    if(_orderPosition != nil && _orderGroup != nil && !_isLinked) {
-        [[RNCEKVOrderLinking sharedInstance] add: _orderPosition withOrderKey: _orderGroup withObject:self];
-        _isLinked = YES;
-    }
-    if(_orderId != nil) {
-        [[RNCEKVOrderLinking sharedInstance] storeOrderId:_orderId withView: self];
-        [_focusOrderDelegate linkId];
-        _isIdLinked = YES;
-    }
-}
-
-- (void)unlink {
-    if(_orderPosition != nil && _orderGroup != nil && _isLinked) {
-        [[RNCEKVOrderLinking sharedInstance] remove:_orderPosition withOrderKey: _orderGroup];
-    }
-    if(_orderId != nil) {
-        [[RNCEKVOrderLinking sharedInstance] cleanOrderId:_orderId];
-        [_focusOrderDelegate clear];
-    }
-    _isLinked = NO;
-    _isIdLinked = NO;
-}
-
-- (void)setOrderGroup:(NSString *)orderGroup {
-    if(_orderPosition != nil && self.superview != nil) {
-        [[RNCEKVOrderLinking sharedInstance] updateOrderKey:(NSString *)_orderGroup next:orderGroup position:_orderPosition withView: self];
-    }
-    _orderGroup = orderGroup;
-}
-
-- (void)setOrderId:(NSString *)next {
-    [_focusOrderDelegate refreshId:_orderId next:next];
-    _orderId = next;
-}
-
-- (void)setOrderLeft:(NSString *)orderLeft {
-    [_focusOrderDelegate refreshLeft: _orderLeft next: orderLeft];
-    _orderLeft = orderLeft;
-}
-
-- (void)setOrderRight:(NSString *)orderRight {
-    [_focusOrderDelegate refreshRight: _orderRight next: orderRight];
-    _orderRight = orderRight;
-}
-
-- (void)setOrderUp:(NSString *)orderUp {
-    [_focusOrderDelegate refreshUp: _orderUp next: orderUp];
-    _orderUp = orderUp;
-}
-
-- (void)setOrderDown:(NSString *)orderDown {
-    [_focusOrderDelegate refreshDown: _orderDown next: orderDown];
-    _orderDown = orderDown;
-}
-
-- (void)updateOrderPosition:(NSNumber *)position {
-    if(_orderPosition != nil || _orderPosition != position) {
-        if(_orderGroup != nil && self.superview != nil && _isLinked) {
-            [[RNCEKVOrderLinking sharedInstance] update:position lastPosition:_orderPosition withOrderKey: _orderGroup withView: self];
-        }
-        _orderPosition = position;
-    }
-
-    if(_orderPosition == nil && _orderPosition != position) {
-        _orderPosition = position;
-    }
-}
-
-- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
-    if(!_orderGroup && !_orderPosition && !_lockFocus && !_orderForward && !_orderBackward) {
-        return [super shouldUpdateFocusInContext: context];
-    }
-
-    NSNumber* result = [_focusOrderDelegate shouldUpdateFocusInContext: context];
-    if(result == nil) {
-        return [super shouldUpdateFocusInContext: context];
-    }
-
-    return result.boolValue;
 }
 
 // ToDo RNCEKV-3, if we return yes here, it means that wrapper is focusable, with current implementation it works as expected, but it would be better to double check
 - (BOOL)canBecomeFocused {
     return NO;
+}
+
+- (UIView*)getStoredView {
+  return _textField;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -317,7 +206,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
     if(isNext) {
       [self onFocusChange: YES];
-      [_focusOrderDelegate setIsFocused: YES];
+//      [_focusOrderDelegate setIsFocused: YES];
       if(self.focusType == AUTO_FOCUS) {
         if(_textField != nil) {
           [_textField reactFocus];
@@ -334,6 +223,8 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
         }
       }
     }
+
+   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
 }
 
 - (UIView*)getTextFieldComponent {
@@ -360,22 +251,10 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 
 - (void)cleanReferences{
+    [super cleanReferences];
     _textField = nil;
     _textView = nil;
     _customGroupId = nil;
-    [self unlink];
-    _orderGroup = nil;
-    _orderPosition = nil;
-    _orderLeft = nil;
-    _orderRight = nil;
-    _orderUp = nil;
-    _orderDown = nil;
-    _orderForward = nil;
-    _orderBackward = nil;
-    _orderLast = nil;
-    _orderFirst = nil;
-    _orderId = nil;
-    _lockFocus = nil;
 }
 
 -(BOOL)isHaloHidden {
@@ -449,12 +328,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
   #ifndef RCT_NEW_ARCH_ENABLED
     [self updateHalo];
   #endif
-
-  if (self.window) {
-    [self link];
-  } else {
-    [self unlink];
-  }
 }
 
 

@@ -21,6 +21,7 @@
 #import "RNCEKVFabricEventHelper.h"
 #import <React/RCTConversions.h>
 #import <stdlib.h>
+#include "RNCEKVOrderProps.h"
 
 
 using namespace facebook::react;
@@ -33,10 +34,9 @@ using namespace facebook::react;
 
 @implementation RNCEKVExternalKeyboardView {
   RNCEKVKeyboardKeyPressHandler *_keyboardKeyPressHandler;
-  RNCEKVHaloDelegate *_haloDelegate;
+//  RNCEKVHaloDelegate *_haloDelegate;
   RNCEKVFocusDelegate *_focusDelegate;
   RNCEKVGroupIdentifierDelegate *_gIdDelegate;
-  RNCEKVFocusOrderDelegate *_focusOrderDelegate;
 
   NSNumber *_isFocused;
   BOOL _isAttachedToWindow;
@@ -66,73 +66,17 @@ using namespace facebook::react;
   }
 }
 
-- (void)link:(UIView *)subview {
-  if(_orderPosition != nil && _orderGroup != nil && !_isLinked) {
-    [[RNCEKVOrderLinking sharedInstance] add: _orderPosition withOrderKey: _orderGroup withObject:self];
-    _isLinked = YES;
-  }
-  if(_orderId != nil) {
-    [[RNCEKVOrderLinking sharedInstance] storeOrderId:_orderId withView: self];
-    [_focusOrderDelegate linkId];
-    _isIdLinked = YES;
-  }
-}
-
-- (void)unlink{
-  if(_orderPosition != nil && _orderGroup != nil && _isLinked) {
-    [[RNCEKVOrderLinking sharedInstance] remove:_orderPosition withOrderKey: _orderGroup];
-  }
-
-  if(_orderId != nil) {
-    [[RNCEKVOrderLinking sharedInstance] cleanOrderId:_orderId];
-    [_focusOrderDelegate clear];
-  }
-
-  _isLinked = NO;
-  _isIdLinked = NO;
-}
-
-
 - (void)onAttached
 {
   [_gIdDelegate updateGroupIdentifier];
   [self focusOnMount];
-  if(self.subviews.count > 0) {
-    [self link: self.subviews[0]];
-  }
-}
-
-- (void)onDetached
-{
-  [self unlink];
 }
 
 
-@synthesize haloCornerRadius = _haloCornerRadius;
-@synthesize haloExpendX = _haloExpendX;
-@synthesize haloExpendY = _haloExpendY;
 
-- (void)setOrderLeft:(NSString *)orderLeft {
-  [_focusOrderDelegate refreshLeft: _orderLeft next: orderLeft];
-  _orderLeft = orderLeft;
-}
-
-- (void)setOrderRight:(NSString *)orderRight {
-  [_focusOrderDelegate refreshRight: _orderRight next: orderRight];
-  _orderRight = orderRight;
-}
-
-
-- (void)setOrderUp:(NSString *)orderUp {
-  [_focusOrderDelegate refreshUp: _orderUp next: orderUp];
-  _orderUp = orderUp;
-}
-
-- (void)setOrderDown:(NSString *)orderDown {
-  [_focusOrderDelegate refreshDown: _orderDown next: orderDown];
-  _orderDown = orderDown;
-}
-
+//@synthesize haloCornerRadius = _haloCornerRadius;
+//@synthesize haloExpendX = _haloExpendX;
+//@synthesize haloExpendY = _haloExpendY;
 
 - (instancetype)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
@@ -146,10 +90,10 @@ using namespace facebook::react;
     _isAttachedToWindow = NO;
     _enableA11yFocus = NO;
     _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
-    _haloDelegate = [[RNCEKVHaloDelegate alloc] initWithView:self];
+//    _haloDelegate = [[RNCEKVHaloDelegate alloc] initWithView:self];
     _focusDelegate = [[RNCEKVFocusDelegate alloc] initWithView:self];
     _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView:self];
-    _focusOrderDelegate = [[RNCEKVFocusOrderDelegate alloc] initWithView: self];
+//    _focusOrderDelegate = [[RNCEKVFocusOrderDelegate alloc] initWithView: self];
     _autoFocusRequested = NO;
     _contextMenuInteraction = nil;
   }
@@ -158,27 +102,16 @@ using namespace facebook::react;
 }
 
 - (void)cleanReferences {
-  [_focusOrderDelegate clear];
-  [_haloDelegate clear];
+  [super cleanReferences];
+//  [_focusOrderDelegate clear];
+//  [_haloDelegate clear];
   [_gIdDelegate clear];
   _isAttachedToController = NO;
   _isAttachedToWindow = NO;
-  _isHaloActive = @2; // ToDo RNCEKV-0
-  _haloExpendX = 0;
-  _haloExpendY = 0;
-  _haloCornerRadius = 0;
-  _orderGroup = nil;
-  _orderPosition = nil;
-  _orderLeft = nil;
-  _orderRight = nil;
-  _orderUp = nil;
-  _orderDown = nil;
-  _orderForward = nil;
-  _orderBackward = nil;
-  _orderLast = nil;
-  _orderFirst = nil;
-  _orderId = nil;
-  _lockFocus = nil;
+//  _isHaloActive = @2; // ToDo RNCEKV-0
+//  _haloExpendX = 0;
+//  _haloExpendY = 0;
+//  _haloCornerRadius = 0;
   _customGroupId = nil;
   _enableA11yFocus = NO;
   _isLinked = NO;
@@ -190,48 +123,6 @@ using namespace facebook::react;
 - (void)setEnableContextMenu:(BOOL)enableContextMenu {
   _enableContextMenu = enableContextMenu;
   [self updateContextMenuRegistration];
-}
-
-- (void)setOrderGroup:(NSString *)orderGroup{
-  [self updateOrderGroup:_orderGroup next: orderGroup];
-  _orderGroup = orderGroup;
-}
-
-- (void)updateOrderGroup:(NSString *)prev next:(NSString*)next {
-  if(prev != nil && _orderPosition != nil && self.subviews.count > 0) {
-    [[RNCEKVOrderLinking sharedInstance] updateOrderKey:(NSString *)prev next:next position:_orderPosition withView: self];
-  }
-}
-
-- (void)setOrderId:(NSString*) next {
-  [_focusOrderDelegate refreshId:_orderId next:next];
-  _orderId = next;
-}
-
-- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
-  if(!_orderGroup && !_orderPosition && !_lockFocus && !_orderForward && !_orderBackward) {
-    return [super shouldUpdateFocusInContext: context];
-  }
-
-  NSNumber* result = [_focusOrderDelegate shouldUpdateFocusInContext: context];
-  if(result == nil) {
-    return [super shouldUpdateFocusInContext: context];
-  }
-
-  return result.boolValue;
-}
-
-- (void)updateOrderPosition:(NSNumber *)position {
-  if(_orderPosition != nil || _orderPosition != position) {
-    if(_orderGroup != nil && self.subviews.count > 0 && _isLinked) {
-      [[RNCEKVOrderLinking sharedInstance] update:position lastPosition:_orderPosition withOrderKey: _orderGroup withView: self];
-    }
-    _orderPosition = position;
-  }
-
-  if(_orderPosition == nil && _orderPosition != position) {
-    _orderPosition = position;
-  }
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -282,28 +173,8 @@ using namespace facebook::react;
     [self setAutoFocus:hasAutoFocus];
   }
 
-  BOOL isLockChanged = [RNCEKVPropHelper isPropChanged:_lockFocus intValue: newViewProps.lockFocus];
-  if(isLockChanged) {
-    NSNumber* lockValue = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
-    [self setLockFocus: lockValue];
-  }
-
-  BOOL isIndexChanged = [RNCEKVPropHelper isPropChanged:_orderPosition intValue: newViewProps.orderIndex];
-  if(isIndexChanged) {
-    NSNumber* position = [RNCEKVPropHelper unwrapIntValue: newViewProps.orderIndex];
-    [self updateOrderPosition: position];
-  }
-
-  RKNA_PROP_UPDATE(orderGroup, setOrderGroup, newViewProps);
-  RKNA_PROP_UPDATE(orderId, setOrderId, newViewProps);
-  RKNA_PROP_UPDATE(orderLeft, setOrderLeft, newViewProps);
-  RKNA_PROP_UPDATE(orderRight, setOrderRight, newViewProps);
-  RKNA_PROP_UPDATE(orderUp, setOrderUp, newViewProps);
-  RKNA_PROP_UPDATE(orderDown, setOrderDown, newViewProps);
-  RKNA_PROP_UPDATE(orderForward, setOrderForward, newViewProps);
-  RKNA_PROP_UPDATE(orderBackward, setOrderBackward, newViewProps);
-  RKNA_PROP_UPDATE(orderLast, setOrderLast, newViewProps);
-  RKNA_PROP_UPDATE(orderFirst, setOrderFirst, newViewProps);
+  [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
+                     newProps:RNCEKV::OrderProps::from(newViewProps)];
 
   if (_enableA11yFocus != newViewProps.enableA11yFocus) {
     [self setEnableA11yFocus:newViewProps.enableA11yFocus];
@@ -413,15 +284,15 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   _isFocused = [_focusDelegate isFocusChanged:context];
   [self updateContextMenuRegistration];
 
-  [_focusOrderDelegate setIsFocused: [_isFocused isEqual:@YES]];
+//  [_focusOrderDelegate setIsFocused: [_isFocused isEqual:@YES]];
   if ([self hasOnFocusChanged]) {
     if (_isFocused != nil) {
       _isAttachedToWindow = YES;
       _isAttachedToController = YES;
       [self onFocusChangeHandler:[_isFocused isEqual:@YES]];
     }
-
-    return;
+//
+//    return;
   }
 
   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
@@ -517,32 +388,32 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 
   [super pressesEnded:presses withEvent:event];
 }
-
-- (void)setIsHaloActive:(NSNumber *_Nullable)isHaloActive {
-  _isHaloActive = isHaloActive;
-  [_haloDelegate displayHalo];
-}
-
-- (void)setHaloCornerRadius:(CGFloat)haloCornerRadius {
-  _haloCornerRadius = haloCornerRadius;
-  if (_isAttachedToWindow) {
-    [_haloDelegate updateHalo];
-  }
-}
-
-- (void)setHaloExpendX:(CGFloat)haloExpendX {
-  _haloExpendX = haloExpendX;
-  if (_isAttachedToWindow) {
-    [_haloDelegate updateHalo];
-  }
-}
-
-- (void)setHaloExpendY:(CGFloat)haloExpendY {
-  _haloExpendY = haloExpendY;
-  if (_isAttachedToWindow) {
-    [_haloDelegate updateHalo];
-  }
-}
+//
+//- (void)setIsHaloActive:(NSNumber *_Nullable)isHaloActive {
+//  _isHaloActive = isHaloActive;
+//  [_haloDelegate displayHalo];
+//}
+//
+//- (void)setHaloCornerRadius:(CGFloat)haloCornerRadius {
+//  _haloCornerRadius = haloCornerRadius;
+//  if (_isAttachedToWindow) {
+//    [_haloDelegate updateHalo];
+//  }
+//}
+//
+//- (void)setHaloExpendX:(CGFloat)haloExpendX {
+//  _haloExpendX = haloExpendX;
+//  if (_isAttachedToWindow) {
+//    [_haloDelegate updateHalo];
+//  }
+//}
+//
+//- (void)setHaloExpendY:(CGFloat)haloExpendY {
+//  _haloExpendY = haloExpendY;
+//  if (_isAttachedToWindow) {
+//    [_haloDelegate updateHalo];
+//  }
+//}
 
 - (void)didMoveToWindow {
   [super didMoveToWindow];
@@ -550,7 +421,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   if (self.window) {
     [self onAttached];
   } else {
-    [self onDetached];
+//    [self onDetached];
   }
 
   if (self.window && !_isAttachedToWindow) {
@@ -567,10 +438,10 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 }
 
 // ToDo RNCEKV-8 review and find better place for halo calculation
-- (void)layoutSubviews {
-  [super layoutSubviews];
-  [_haloDelegate displayHalo];
-}
+//- (void)layoutSubviews {
+//  [super layoutSubviews];
+//  [_haloDelegate displayHalo];
+//}
 
 
 - (void) setCustomGroupId:(NSString *)customGroupId {

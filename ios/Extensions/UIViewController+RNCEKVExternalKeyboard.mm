@@ -41,6 +41,14 @@ static char kCustomFocusViewKey;
   [[NSNotificationCenter defaultCenter] postNotificationName:@"ViewControllerChangedNotification" object:self];
 }
 
+- (void)rncekvFocusView:(UIView *)view {
+  self.rncekvCustomFocusView = view;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self setNeedsFocusUpdate];
+    [self updateFocusIfNeeded];
+  });
+}
+
 - (NSArray<id<UIFocusEnvironment>> *)keyboardedPreferredFocusEnvironments {
   NSArray<id<UIFocusEnvironment>> *originalEnvironments = [self keyboardedPreferredFocusEnvironments];
 
