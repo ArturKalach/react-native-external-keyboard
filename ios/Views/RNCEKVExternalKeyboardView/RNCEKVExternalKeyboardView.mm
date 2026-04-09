@@ -21,7 +21,7 @@
 #import "RNCEKVFabricEventHelper.h"
 #import <React/RCTConversions.h>
 #import <stdlib.h>
-#include "RNCEKVOrderProps.h"
+#include "RNCEKVNativeProps.h"
 
 
 using namespace facebook::react;
@@ -173,6 +173,8 @@ using namespace facebook::react;
     [self setAutoFocus:hasAutoFocus];
   }
 
+  [self updateHaloProps:RNCEKV::HaloProps::from(oldViewProps)
+               newProps:RNCEKV::HaloProps::from(newViewProps)];
   [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
                      newProps:RNCEKV::OrderProps::from(newViewProps)];
 
@@ -211,24 +213,24 @@ using namespace facebook::react;
   // we skip, but when it was false we should reset) and recycle (view is reused
   // and we need to double check whether a new place for view should be with or
   // without halo)
-  if (self.isHaloActive != nil || newViewProps.haloEffect == false) {
-    BOOL haloState = newViewProps.haloEffect;
-    if (![self.isHaloActive isEqual:@(haloState)]) {
-      [self setIsHaloActive:@(haloState)];
-    }
-  }
-
-  if (_haloExpendX != newViewProps.haloExpendX) {
-    [self setHaloExpendX:newViewProps.haloExpendX];
-  }
-
-  if (_haloExpendY != newViewProps.haloExpendY) {
-    [self setHaloExpendY:newViewProps.haloExpendY];
-  }
-
-  if (_haloCornerRadius != newViewProps.haloCornerRadius) {
-    [self setHaloCornerRadius:newViewProps.haloCornerRadius];
-  }
+//  if (self.isHaloActive != nil || newViewProps.haloEffect == false) {
+//    BOOL haloState = newViewProps.haloEffect;
+//    if (![self.isHaloActive isEqual:@(haloState)]) {
+//      [self setIsHaloActive:@(haloState)];
+//    }
+//  }
+//
+//  if (_haloExpendX != newViewProps.haloExpendX) {
+//    [self setHaloExpendX:newViewProps.haloExpendX];
+//  }
+//
+//  if (_haloExpendY != newViewProps.haloExpendY) {
+//    [self setHaloExpendY:newViewProps.haloExpendY];
+//  }
+//
+//  if (_haloCornerRadius != newViewProps.haloCornerRadius) {
+//    [self setHaloCornerRadius:newViewProps.haloCornerRadius];
+//  }
 
   if (oldViewProps.enableContextMenu != newViewProps.enableContextMenu) {
     [self setEnableContextMenu: newViewProps.enableContextMenu];
@@ -431,7 +433,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 }
 
 - (void)onViewAttached {
-  [_haloDelegate displayHalo: true];
+//  [_haloDelegate displayHalo: true];
   if (self.autoFocus) {
     [self updateFocus:self.reactViewController];
   }
@@ -459,7 +461,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   if (@available(iOS 15.0, *)) {
 #ifdef RCT_NEW_ARCH_ENABLED
     if([subview isKindOfClass: RCTViewComponentView.class]) {
-      ((RCTViewComponentView*)subview).rncekvCustomFocusEffect = nil;
+//      ((RCTViewComponentView*)subview).rncekvCustomFocusEffect = nil;
     } else {
       subview.focusEffect = nil;
     }

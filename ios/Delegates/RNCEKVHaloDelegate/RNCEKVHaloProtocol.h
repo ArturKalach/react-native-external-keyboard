@@ -10,7 +10,7 @@
 
 @protocol RNCEKVHaloProtocol <NSObject>
 
-- (NSNumber *)isHaloActive;
+- (BOOL)isHaloHidden;
 - (CGFloat) haloCornerRadius;
 - (CGFloat) haloExpendX;
 - (CGFloat) haloExpendY;

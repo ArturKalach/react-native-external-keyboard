@@ -1,7 +1,7 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
-import { Button, SafeAreaView, StyleSheet } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text } from 'react-native';
 import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -13,6 +13,10 @@ import { PressableTest } from './components/Pressables/PressableTest';
 import { ListsTest } from './components/Lists/ListsText';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
+import {
+  KeyboardExtendedInput,
+  KeyboardExtendedPressable,
+} from 'react-native-external-keyboard';
 
 export function DetailsScreen() {
   return (
@@ -29,6 +33,23 @@ const Stack = createNativeStackNavigator();
 function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   return (
     <View style={styles.home}>
+      {/* <KeyboardExtendedPressable
+        haloEffect={true}
+        style={{ borderWidth: 1, padding: 10 }}
+      >
+        <Text>Pressable</Text>
+      </KeyboardExtendedPressable>
+      <KeyboardExtendedInput
+        multiline
+        haloEffect={false}
+        style={{ borderWidth: 1, padding: 10 }}
+      />
+      <KeyboardExtendedPressable
+        haloEffect={false}
+        style={{ borderWidth: 1, padding: 10 }}
+      >
+        <Text>Pressable</Text>
+      </KeyboardExtendedPressable> */}
       <Button title="Details" onPress={() => navigation.navigate('Details')} />
       <Button
         title="Focus Order"

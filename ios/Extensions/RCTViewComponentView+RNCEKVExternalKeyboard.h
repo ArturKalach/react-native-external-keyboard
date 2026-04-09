@@ -15,7 +15,7 @@
 @interface RCTViewComponentView (RNCEKVExternalKeyboard)
 
 @property (nonatomic, copy, nullable) NSString *rncekvCustomGroup;
-@property (nonatomic, copy, nullable) UIFocusEffect *rncekvCustomFocusEffect;
+//@property (nonatomic, copy, nullable) UIFocusEffect *rncekvCustomFocusEffect;
 
 @end
 

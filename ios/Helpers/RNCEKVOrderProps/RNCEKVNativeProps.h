@@ -37,4 +37,23 @@ struct OrderProps {
   }
 };
 
+
+
+struct HaloProps {
+  bool haloEffect{true};
+  double haloExpendX{0};
+  double haloExpendY{0};
+  double haloCornerRadius{0};
+
+  template <typename T>
+  static HaloProps from(const T &props) {
+    return HaloProps{
+      props.haloEffect,
+      props.haloExpendX,
+      props.haloExpendY,
+      props.haloCornerRadius,
+    };
+  }
+};
+
 } // namespace RNCEKV

@@ -43,9 +43,9 @@ static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
 @implementation RNCEKVTextInputFocusWrapper {
-  RNCEKVFocusOrderDelegate *_focusOrderDelegate;
-  BOOL _isLinked;
-  BOOL _isIdLinked;
+//  RNCEKVFocusOrderDelegate *_focusOrderDelegate;
+//  BOOL _isLinked;
+//  BOOL _isIdLinked;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -68,10 +68,10 @@ static const NSInteger AUTO_BLUR = 2;
 }
 
 
-- (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
-    _isHaloActive = isHaloActive;
-    [self updateHalo];
-}
+//- (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
+//    _isHaloActive = isHaloActive;
+//    [self updateHalo];
+//}
 
 - (void)prepareForRecycle
 {
@@ -105,13 +105,9 @@ static const NSInteger AUTO_BLUR = 2;
     if(oldViewProps.multiline != newViewProps.multiline) {
         [self setMultiline: newViewProps.multiline];
     }
-
-    if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
-        BOOL haloState = newViewProps.haloEffect;
-        if(![self.isHaloActive isEqual: @(haloState)]) {
-            [self setIsHaloActive: @(haloState)];
-        }
-    }
+  
+    [self updateHaloProps:RNCEKV::HaloProps::from(oldViewProps)
+                 newProps:RNCEKV::HaloProps::from(newViewProps)];
 
     UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     BOOL renewColor = newColor != nil && self.tintColor == nil;
@@ -216,7 +212,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
     if(isPrev) {
       [self onFocusChange: NO];
-      [_focusOrderDelegate setIsFocused: NO];
+//      [_focrde4usOrderDelegate setIsFocused: NO];
       if(self.blurType == AUTO_BLUR) {
         if(_textField != nil) {
           [_textField reactBlur];
@@ -257,10 +253,10 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     _customGroupId = nil;
 }
 
--(BOOL)isHaloHidden {
-    NSNumber* isHaloActive = [self isHaloActive];
-    return [isHaloActive isEqual: @NO];
-}
+//-(BOOL)isHaloHidden {
+//    NSNumber* isHaloActive = [self isHaloActive];
+//    return [isHaloActive isEqual: @NO];
+//}
 
 - (BOOL)getIsTextInputView: (UIView*)view {
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -270,29 +266,29 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 #endif
     return isTextInput;
 }
-
-- (void)updateHalo {
-    if(self.subviews.count == 0) {
-        return;
-    }
-
-    UIView* view = self.subviews[0];
-    if (@available(iOS 15.0, *)) {
-        BOOL isTextInput = [self getIsTextInputView: view];
-        if(isTextInput) {
-          UIFocusEffect* focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
-          #ifdef RCT_NEW_ARCH_ENABLED
-          if([view.subviews[0] isKindOfClass: RCTViewComponentView.class]) {
-            ((RCTViewComponentView*)view.subviews[0]).rncekvCustomFocusEffect = focusEffect;
-          } else {
-            view.subviews[0].focusEffect = focusEffect;
-          }
-          #else
-          view.subviews[0].focusEffect = focusEffect;
-          #endif
-        }
-    }
-}
+//
+//- (void)updateHalo {
+//    if(self.subviews.count == 0) {
+//        return;
+//    }
+//
+//    UIView* view = self.subviews[0];
+//    if (@available(iOS 15.0, *)) {
+//        BOOL isTextInput = [self getIsTextInputView: view];
+//        if(isTextInput) {
+//          UIFocusEffect* focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
+//          #ifdef RCT_NEW_ARCH_ENABLED
+//          if([view.subviews[0] isKindOfClass: RCTViewComponentView.class]) {
+////            ((RCTViewComponentView*)view.subviews[0]).rncekvCustomFocusEffect = focusEffect;
+//          } else {
+//            view.subviews[0].focusEffect = focusEffect;
+//          }
+//          #else
+//          view.subviews[0].focusEffect = focusEffect;
+//          #endif
+//        }
+//    }
+//}
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
@@ -324,11 +320,11 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 
 // ToDo, check if needed
-- (void)didMoveToWindow {
-  #ifndef RCT_NEW_ARCH_ENABLED
-    [self updateHalo];
-  #endif
-}
+//- (void)didMoveToWindow {
+//  #ifndef RCT_NEW_ARCH_ENABLED
+//    [self updateHalo];
+//  #endif
+//}
 
 
 

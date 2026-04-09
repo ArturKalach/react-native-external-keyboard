@@ -6,6 +6,7 @@
 #import "RNCEKVFocusOrderProtocol.h"
 #import <React/RCTUITextView.h>
 #import "RNCEKVViewOrderGroupBase.h"
+#import "RNCEKVExternalKeyboardHalloBase.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -18,7 +19,7 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 [self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
 }
 
-@interface RNCEKVTextInputFocusWrapper : RNCEKVViewOrderGroupBase <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
+@interface RNCEKVTextInputFocusWrapper : RNCEKVExternalKeyboardHalloBase <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }

@@ -6,7 +6,7 @@
 #import "RNCEKVFocusOrderProtocol.h"
 #import "RNCEKVHaloProtocol.h"
 #import "RNCEKVGroupIdentifierProtocol.h"
-#import "RNCEKVViewOrderGroupBase.h"
+#import "RNCEKVExternalKeyboardHalloBase.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
@@ -18,7 +18,7 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 [self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
 }
 
-@interface RNCEKVExternalKeyboardView : RNCEKVViewOrderGroupBase <UIContextMenuInteractionDelegate, RNCEKVHaloProtocol, RNCEKVFocusProtocol, RNCEKVFocusOrderProtocol, RNCEKVGroupIdentifierProtocol>
+@interface RNCEKVExternalKeyboardView : RNCEKVExternalKeyboardHalloBase <UIContextMenuInteractionDelegate, RNCEKVHaloProtocol, RNCEKVFocusProtocol, RNCEKVFocusOrderProtocol, RNCEKVGroupIdentifierProtocol>
 //@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
 @property BOOL canBeFocused;
 @property BOOL hasOnPressUp;

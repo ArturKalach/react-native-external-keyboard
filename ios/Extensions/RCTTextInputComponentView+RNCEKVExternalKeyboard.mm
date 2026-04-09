@@ -8,6 +8,9 @@
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
 #import <React/RCTBackedTextInputViewProtocol.h>
 #import <objc/runtime.h>
+#import "RNCEKVCustomFocusEffectProtocol.h"
+#import "RCTUITextField.h"
+#import "RCTUITextView.h"
 
 @implementation RCTTextInputComponentView (RNCEKVExternalKeyboard)
 
@@ -24,6 +27,18 @@
   return nil;
 }
 
+@end
+
+@implementation RCTUITextField (RNCEKVExternalKeyboard)
+  - (UIFocusEffect*)focusEffect {
+    id superParent = self.superview.superview;
+    if (superParent != nil && [superParent conformsToProtocol:@protocol(RNCEKVCustomFocusEffectProtocol)]) {
+      id<RNCEKVCustomFocusEffectProtocol> parent = (id<RNCEKVCustomFocusEffectProtocol>)superParent;
+      return [parent customFocusEffect];
+    }
+    
+    return [super focusEffect];
+  }
 @end
 
 #endif

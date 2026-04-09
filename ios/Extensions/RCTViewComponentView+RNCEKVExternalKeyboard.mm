@@ -8,12 +8,12 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 
 #import <Foundation/Foundation.h>
-
+#import "RNCEKVCustomFocusEffectProtocol.h"
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 
 #import <objc/runtime.h>
 static const void *RNCEKVCustomGroupKey = &RNCEKVCustomGroupKey;
-static const void *RNCEKVCustomFocusEffect = &RNCEKVCustomFocusEffect;
+//static const void *RNCEKVCustomFocusEffect = &RNCEKVCustomFocusEffect;
 
 @implementation RCTViewComponentView (RNCEKVExternalKeyboard)
 
@@ -25,13 +25,13 @@ static const void *RNCEKVCustomFocusEffect = &RNCEKVCustomFocusEffect;
     objc_setAssociatedObject(self, RNCEKVCustomGroupKey, rncekvCustomGroup, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (NSString *)rncekvCustomFocusEffect {
-    return objc_getAssociatedObject(self, RNCEKVCustomFocusEffect);
-}
+//- (NSString *)rncekvCustomFocusEffect {
+//    return objc_getAssociatedObject(self, RNCEKVCustomFocusEffect);
+//}
 
-- (void)setRncekvCustomFocusEffect:(NSString *)rncekvCustomFocusEffect {
-    objc_setAssociatedObject(self, RNCEKVCustomFocusEffect, rncekvCustomFocusEffect, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
+//- (void)setRncekvCustomFocusEffect:(NSString *)rncekvCustomFocusEffect {
+//    objc_setAssociatedObject(self, RNCEKVCustomFocusEffect, rncekvCustomFocusEffect, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//}
 
 - (NSString *)focusGroupIdentifier {
   NSString* rncekv = [self rncekvCustomGroup];
@@ -43,9 +43,9 @@ static const void *RNCEKVCustomFocusEffect = &RNCEKVCustomFocusEffect;
 
 
 - (UIFocusEffect*)focusEffect {
-  UIFocusEffect* rncekv = [self rncekvCustomFocusEffect];
-  if(rncekv) {
-    return rncekv;
+  if ([self.superview conformsToProtocol:@protocol(RNCEKVCustomFocusEffectProtocol)]) {
+    id<RNCEKVCustomFocusEffectProtocol> parent = (id<RNCEKVCustomFocusEffectProtocol>)self.superview;
+    return [parent customFocusEffect];
   }
   
   return [super focusEffect];

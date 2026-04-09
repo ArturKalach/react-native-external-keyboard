@@ -14,7 +14,7 @@
 #import "RNCEKVFocusOrderDelegate.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#include "RNCEKVOrderProps.h"
+#include "RNCEKVNativeProps.h"
 #endif
 
 @interface RNCEKVViewOrderGroupBase : RNCEKVViewGroupBase <RNCEKVFocusOrderProtocol>
@@ -40,8 +40,8 @@
 
 
 #ifdef RCT_NEW_ARCH_ENABLED
-- (void)updateFocusOrderProps:(const RNCEKV::OrderProps &)oldViewProps
-                     newProps:(const RNCEKV::OrderProps &)newViewProps;
+- (void)updateFocusOrderProps:(const RNCEKV::OrderProps &)oldProps
+                     newProps:(const RNCEKV::OrderProps &)newProps;
 #endif
 
 @end

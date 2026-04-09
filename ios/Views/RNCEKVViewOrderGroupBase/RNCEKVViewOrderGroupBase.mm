@@ -13,7 +13,7 @@
 #import "UIView+React.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#include "RNCEKVOrderProps.h"
+#include "RNCEKVNativeProps.h"
 #import "RNCEKVPropHelper.h"
 #endif
 
@@ -41,14 +41,14 @@
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
   BOOL isFocused = [self getIsViewFocused: context];
   [_focusOrderDelegate setIsFocused: isFocused];
-  
+
   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
 }
 
 - (void)focus {
   UIViewController *controller = self.reactViewController;
   BOOL isAttached = self.superview != nil && controller != nil;
-  
+
   if (isAttached) {
     [controller rncekvFocusView:[self getStoredView]];
   }
@@ -56,7 +56,7 @@
 
 - (void)cleanReferences {
   [_focusOrderDelegate unlink];
-  
+
     _orderGroup = nil;
     _orderPosition = nil;
     _orderLeft = nil;
@@ -70,7 +70,7 @@
     _orderId = nil;
     _lockFocus = nil;
 }
-  
+
 - (UIView *)getFocusTargetView {
   return [self getStoredView];
 }
