@@ -10,6 +10,10 @@
 #import "RNCEKVHaloDelegate.h"
 #import "RNCEKVExternalKeyboardHalloBase.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+  #import <React/RCTConversions.h>
+#endif
+
 @implementation RNCEKVExternalKeyboardHalloBase {
   RNCEKVHaloDelegate *_haloDelegate;
 }
@@ -85,6 +89,13 @@
 
   if (oldProps.haloCornerRadius != newProps.haloCornerRadius) {
     [self setHaloCornerRadius:newProps.haloCornerRadius];
+  }
+  
+  UIColor *newColor = RCTUIColorFromSharedColor(newProps.tintColor);
+  BOOL renewColor = newColor != nil && self.tintColor == nil;
+  BOOL isColorChanged = oldProps.tintColor != newProps.tintColor;
+  if (isColorChanged || renewColor) {
+    self.tintColor = RCTUIColorFromSharedColor(newProps.tintColor);
   }
 }
 

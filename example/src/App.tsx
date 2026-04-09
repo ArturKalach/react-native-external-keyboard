@@ -14,6 +14,7 @@ import { ListsTest } from './components/Lists/ListsText';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
 import {
+  KeyboardExtendedBaseView,
   KeyboardExtendedInput,
   KeyboardExtendedPressable,
 } from 'react-native-external-keyboard';
@@ -50,6 +51,25 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
       >
         <Text>Pressable</Text>
       </KeyboardExtendedPressable> */}
+      <KeyboardExtendedBaseView
+        focusable={false}
+        canBeFocused={false}
+        group
+        // onKeyUpPress={onKeyUpPressHandler}
+        // onKeyDownPress={onKeyDownPressHandler}
+        // onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
+        // ignoreGroupFocusHint
+        // style={styles.bubbledWrapper}
+      >
+        <Button
+          title="Details"
+          onPress={() => navigation.navigate('Details')}
+        />
+        <Button
+          title="Focus Order"
+          onPress={() => navigation.navigate('FocusOrder')}
+        />
+      </KeyboardExtendedBaseView>
       <Button title="Details" onPress={() => navigation.navigate('Details')} />
       <Button
         title="Focus Order"

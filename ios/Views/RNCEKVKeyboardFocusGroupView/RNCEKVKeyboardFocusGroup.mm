@@ -82,20 +82,20 @@ using namespace facebook::react;
 - (void )setCustomGroupId: (NSString *) customGroupId {
     if (@available(iOS 14.0, *)) {
         _customGroupId = customGroupId;
-        [self updateFocusGroup: customGroupId];
+//        [self updateFocusGroup: customGroupId];
     }
 }
 
-
-- (void )updateFocusGroup: (NSString *) customGroupId {
-    if (@available(iOS 14.0, *)) {
-      #ifdef RCT_NEW_ARCH_ENABLED
-        self.rncekvCustomGroup = _customGroupId;
-      #else
-        self.focusGroupIdentifier = _customGroupId;
-      #endif
-    }
-}
+//
+//- (void )updateFocusGroup: (NSString *) customGroupId {
+//    if (@available(iOS 14.0, *)) {
+//      #ifdef RCT_NEW_ARCH_ENABLED
+//        self.rncekvCustomGroup = _customGroupId;
+//      #else
+//        self.focusGroupIdentifier = _customGroupId;
+//      #endif
+//    }
+//}
 
 
 
@@ -110,7 +110,7 @@ using namespace facebook::react;
 {
     [super prepareForRecycle];
     self.tintColor = nil;
-    [self updateFocusGroup: nil];
+//    [self updateFocusGroup: nil];
     _customGroupId = nil;
 }
 

@@ -55,6 +55,7 @@
 }
 
 - (void)cleanReferences {
+  [super cleanReferences];
   [_focusOrderDelegate unlink];
 
     _orderGroup = nil;

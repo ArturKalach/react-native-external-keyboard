@@ -5,8 +5,8 @@
 #import "RNCEKVGroupIdentifierProtocol.h"
 #import "RNCEKVFocusOrderProtocol.h"
 #import <React/RCTUITextView.h>
-#import "RNCEKVViewOrderGroupBase.h"
-#import "RNCEKVExternalKeyboardHalloBase.h"
+#import "RNCEKVViewGroupIdentifierBase.h"
+#import "RNCEKVViewFocusChangeBase.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
@@ -14,23 +14,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#define RKNA_PROP_UPDATE(prop, setter, newProps) \
-if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
-[self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
-}
+//#define RKNA_PROP_UPDATE(prop, setter, newProps) \
+//if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
+//[self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
+//}
 
-@interface RNCEKVTextInputFocusWrapper : RNCEKVExternalKeyboardHalloBase <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
+@interface RNCEKVTextInputFocusWrapper : RNCEKVViewFocusChangeBase <RNCEKVGroupIdentifierProtocol, RNCEKVFocusOrderProtocol>{
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }
 
-@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
-@property BOOL canBeFocused;
+//@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
+//@property BOOL canBeFocused;
 @property BOOL blurOnSubmit;
 @property int focusType;
 @property int blurType;
 @property BOOL multiline;
-@property (nonatomic, strong, nullable) NSString *customGroupId;
+//@property (nonatomic, strong, nullable) NSString *customGroupId;
 
 // RNCEKVFocusOrderProtocol
 //@property (nonatomic, strong) NSString* orderGroup;
@@ -48,7 +48,7 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 
 - (UIView*)getFocusTargetView;
 
-- (void)onFocusChange:(BOOL)isFocused;
+//- (void)onFocusChange:(BOOL)isFocused;
 - (void)onMultiplyTextSubmitHandler;
 
 @end

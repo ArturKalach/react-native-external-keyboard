@@ -25,6 +25,10 @@
   }
 }
 
+- (void)cleanReferences{
+  self.storedView = nil;
+}
+
 - (void)willRemoveSubview:(UIView *)subview {
   [super willRemoveSubview:subview];
 
@@ -44,7 +48,6 @@
   [super layoutSubviews];
 
   if (self.storedView != nil) {
-    self.storedView.frame = self.bounds;
     [self onSubviewsLayoutUpdated];
   }
 }

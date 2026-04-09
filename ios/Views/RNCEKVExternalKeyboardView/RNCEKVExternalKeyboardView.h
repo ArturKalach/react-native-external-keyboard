@@ -7,32 +7,32 @@
 #import "RNCEKVHaloProtocol.h"
 #import "RNCEKVGroupIdentifierProtocol.h"
 #import "RNCEKVExternalKeyboardHalloBase.h"
+#import "RNCEKVViewKeyPress.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 
 NS_ASSUME_NONNULL_BEGIN
+//
+//#define RKNA_PROP_UPDATE(prop, setter, newProps) \
+//if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
+//[self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
+//}
 
-#define RKNA_PROP_UPDATE(prop, setter, newProps) \
-if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
-[self setter: [RNCEKVPropHelper unwrapStringValue: newProps.prop]]; \
-}
-
-@interface RNCEKVExternalKeyboardView : RNCEKVExternalKeyboardHalloBase <UIContextMenuInteractionDelegate, RNCEKVHaloProtocol, RNCEKVFocusProtocol, RNCEKVFocusOrderProtocol, RNCEKVGroupIdentifierProtocol>
+@interface RNCEKVExternalKeyboardView : RNCEKVViewKeyPress
 //@property (nonatomic, strong, nullable) NSNumber *isHaloActive;
-@property BOOL canBeFocused;
-@property BOOL hasOnPressUp;
-@property BOOL hasOnPressDown;
-@property BOOL hasOnFocusChanged;
+//@property BOOL canBeFocused;
+//@property BOOL hasOnPressUp;
+//@property BOOL hasOnPressDown;
+//@property BOOL hasOnFocusChanged;
 @property BOOL isGroup;
-@property BOOL enableA11yFocus;
+//@property BOOL enableA11yFocus;
 //@property (nonatomic, assign) CGFloat haloCornerRadius;
 //@property (nonatomic, assign) CGFloat haloExpendX;
 //@property (nonatomic, assign) CGFloat haloExpendY;
-@property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
-@property (nonatomic, strong, nullable) NSString *customGroupId;
-@property BOOL autoFocus;
-@property BOOL enableContextMenu;
+//@property (nullable, nonatomic, strong) UIView* myPreferredFocusedView;
+//@property (nonatomic, strong, nullable) NSString *customGroupId;
+//@property BOOL enableContextMenu;
 //@property NSNumber* orderPosition;
 //@property NSNumber* lockFocus;
 //@property (nonatomic, strong) NSString* orderGroup;
@@ -45,11 +45,11 @@ if ([RNCEKVPropHelper isPropChanged: _##prop stringValue: newProps.prop]) { \
 //@property NSString* orderBackward;
 //@property NSString* orderLast;
 //@property NSString* orderFirst;
-@property BOOL isLinked;
+//@property BOOL isLinked;
 
-- (UIView*)getFocusTargetView;
+//- (UIView*)getFocusTargetView;
 
-- (void)focus;
+//- (void)focus;
 
 @end
 

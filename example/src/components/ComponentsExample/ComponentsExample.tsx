@@ -67,13 +67,13 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
         contentContainerStyle={styles.contentContainer}
         style={styles.container}
       >
-        {/* <KeyboardExtendedBaseView
+        <KeyboardExtendedBaseView
           onKeyUpPress={onKeyUpPressHandler}
           onKeyDownPress={onKeyDownPressHandler}
           onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
           ignoreGroupFocusHint
           style={styles.bubbledWrapper}
-        > */}
+        >
           <TouchableOpacity
             onPress={() => {
               console.log(1);
@@ -126,7 +126,6 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           <KeyboardExtendedInput
             focusable={true}
             value={textInput}
-            haloEffect={false}
             onChangeText={setTextInput}
             containerStyle={styles.doubleBottom}
             style={styles.input as object} //ToDo updat type
@@ -189,7 +188,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
               </View>
             </View>
           </Modal>
-        {/* </KeyboardExtendedBaseView> */}
+        </KeyboardExtendedBaseView>
       </ScrollView>
     </KeyboardFocusGroup>
   );
