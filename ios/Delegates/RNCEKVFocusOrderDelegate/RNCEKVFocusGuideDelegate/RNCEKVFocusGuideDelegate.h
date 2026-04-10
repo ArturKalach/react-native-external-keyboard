@@ -16,16 +16,6 @@
 
 - (instancetype _Nonnull)initWithView:(NSObject<RNCEKVFocusOrderProtocol> *_Nonnull)view;
 
-//- (void)setLeftGuide:(UIView *_Nullable)view;
-//- (void)setRightGuide:(UIView *_Nullable)view;
-//- (void)setUpGuide:(UIView *_Nullable)view;
-//- (void)setDownGuide:(UIView *_Nullable)view;
-//
-//- (void)removeLeftGuide;
-//- (void)removeRightGuide;
-//- (void)removeUpGuide;
-//- (void)removeDownGuide;
-
 - (void)setIsFocused:(BOOL)value;
 
 - (void)setGuideFor:(RNCEKVFocusGuideDirection)direction withView: (UIView *_Nonnull)view;

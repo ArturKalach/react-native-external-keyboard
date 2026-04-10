@@ -51,11 +51,14 @@ using namespace facebook::react;
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
 
     [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
-    NSString* nextFocusGroup = context.nextFocusedView.focusGroupIdentifier;
-    BOOL isFocused = [nextFocusGroup isEqual: _customGroupId];
-    if(_isGroupFocused != isFocused){
-        _isGroupFocused = isFocused;
-        [self onFocusChangeHandler: isFocused];
+    if (@available(iOS 14.0, *)) {
+        NSString* nextFocusGroup = context.nextFocusedView.focusGroupIdentifier;
+        BOOL isFocused = [nextFocusGroup isEqual: _customGroupId];
+    
+        if(_isGroupFocused != isFocused){
+            _isGroupFocused = isFocused;
+            [self onFocusChangeHandler: isFocused];
+        }
     }
 }
 

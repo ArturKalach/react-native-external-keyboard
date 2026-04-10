@@ -8,17 +8,20 @@
 #ifndef UIView_RNCEKVExternalKeyboard_h
 #define UIView_RNCEKVExternalKeyboard_h
 
-#ifdef RCT_NEW_ARCH_ENABLED
-
 #import <React/RCTViewComponentView.h>
 
-@interface RCTViewComponentView (RNCEKVExternalKeyboard)
+#ifdef RCT_NEW_ARCH_ENABLED
+  #import <React/RCTViewComponentView.h>
+  #define RNCEKVViewClass RCTViewComponentView
+#else
+  #import <React/RCTView.h>
+  #define RNCEKVViewClass RCTView
+#endif
 
-@property (nonatomic, copy, nullable) NSString *rncekvCustomGroup;
-//@property (nonatomic, copy, nullable) UIFocusEffect *rncekvCustomFocusEffect;
+
+@interface RNCEKVViewClass (RNCEKVExternalKeyboard)
 
 @end
 
-#endif
 
 #endif /* UIView_RNCEKVExternalKeyboard_h */

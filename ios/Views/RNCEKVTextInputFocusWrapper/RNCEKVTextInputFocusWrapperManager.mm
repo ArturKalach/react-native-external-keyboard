@@ -55,15 +55,12 @@ RCT_CUSTOM_VIEW_PROPERTY(blurType, int, RNCEKVTextInputFocusWrapper)
 
 RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVTextInputFocusWrapper)
 {
-    if(json) {
-//        BOOL value = [RCTConvert BOOL:json];
-//        if(view.isHaloActive == nil && !value) {
-//            [view setIsHaloActive: @0];
-//        }
-//        if(view.isHaloActive != nil) {
-//            [view setIsHaloActive: @(value)];
-//        }
+  if(json) {
+    BOOL value = [RCTConvert BOOL:json];
+    if(view.isHaloHidden == value) {
+      [view setIsHaloHidden: !value];
     }
+  }
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVTextInputFocusWrapper)

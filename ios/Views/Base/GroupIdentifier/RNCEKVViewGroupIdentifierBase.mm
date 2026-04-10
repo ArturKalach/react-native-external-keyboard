@@ -28,7 +28,7 @@
 }
 
 - (NSString*)customGroupIdentifier {
-  return [_gIdDelegate getFocusGroupIdentifier];
+  return _gIdDelegate.focusGroupIdentifier;
 }
 
 

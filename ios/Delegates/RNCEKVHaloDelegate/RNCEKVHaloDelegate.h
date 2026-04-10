@@ -13,12 +13,10 @@
 
 @interface RNCEKVHaloDelegate : NSObject
 
-- (instancetype _Nonnull )initWithView:(UIView<RNCEKVHaloProtocol> *_Nonnull)view;
+- (instancetype _Nonnull)initWithView:(UIView<RNCEKVHaloProtocol> *_Nonnull)view;
 
-- (UIFocusEffect*) getHalo;
-//- (void)displayHalo:(BOOL)force;
-//- (void)displayHalo;
-//- (void)updateHalo;
+@property (nonatomic, readonly, nullable) UIFocusEffect *focusEffect;
+- (void)invalidate;
 - (void)clear;
 
 @end

@@ -11,6 +11,7 @@
 #import "RNCEKVOrderLinking.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 #import "UIView+React.h"
+#import "RNCEKVPropHelper.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #include "RNCEKVNativeProps.h"
@@ -58,18 +59,18 @@
   [super cleanReferences];
   [_focusOrderDelegate unlink];
 
-    _orderGroup = nil;
-    _orderPosition = nil;
-    _orderLeft = nil;
-    _orderRight = nil;
-    _orderUp = nil;
-    _orderDown = nil;
-    _orderForward = nil;
-    _orderBackward = nil;
-    _orderLast = nil;
-    _orderFirst = nil;
-    _orderId = nil;
-    _lockFocus = nil;
+  _orderGroup = nil;
+  _orderPosition = nil;
+  _orderLeft = nil;
+  _orderRight = nil;
+  _orderUp = nil;
+  _orderDown = nil;
+  _orderForward = nil;
+  _orderBackward = nil;
+  _orderLast = nil;
+  _orderFirst = nil;
+  _orderId = nil;
+  _lockFocus = nil;
 }
 
 - (UIView *)getFocusTargetView {
@@ -77,6 +78,7 @@
 }
 
 - (void)didMoveToWindow {
+  [super didMoveToWindow];
   if (self.window) {
     [_focusOrderDelegate link];
   } else {
@@ -97,65 +99,66 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusOrderProps:(const RNCEKV::OrderProps &)oldViewProps
                      newProps:(const RNCEKV::OrderProps &)newViewProps {
-  if ((oldViewProps.lockFocus != newViewProps.lockFocus)) {
-    NSNumber* lockValue = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
-    [self setLockFocus: lockValue];
+  NSNumber* lockFocus = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
+  if (![_lockFocus isEqual: lockFocus]) {
+    [self setLockFocus: lockFocus];
   }
 
-  if ((oldViewProps.orderIndex != newViewProps.orderIndex)) {
-    NSNumber* position = [RNCEKVPropHelper unwrapIntValue: newViewProps.orderIndex];
+  NSNumber* position = [RNCEKVPropHelper unwrapIntValue: newViewProps.orderIndex];
+  if (![_orderPosition isEqual: position]) {
     [self setOrderPosition: position];
   }
 
-  if ((oldViewProps.orderGroup != newViewProps.orderGroup)) {
-    NSString* orderGroup = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderGroup];
+  NSString* orderGroup = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderGroup];
+  if (![_orderGroup isEqual: orderGroup]) {
     [self setOrderGroup: orderGroup];
   }
 
-  if ((oldViewProps.orderId != newViewProps.orderId)) {
-    NSString* orderId = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderId];
+  NSString* orderId = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderId];
+  if (![_orderId isEqual: orderId]) {
     [self setOrderId: orderId];
   }
 
-  if ((oldViewProps.orderLeft != newViewProps.orderLeft)) {
-    NSString* orderLeft = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderLeft];
+  NSString* orderLeft = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderLeft];
+  if (![_orderLeft isEqual: orderLeft]) {
     [self setOrderLeft: orderLeft];
   }
 
-  if ((oldViewProps.orderRight != newViewProps.orderRight)) {
-    NSString* orderRight = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderRight];
+  NSString* orderRight = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderRight];
+  if (![_orderRight isEqual: orderRight]) {
     [self setOrderRight: orderRight];
   }
 
-  if ((oldViewProps.orderUp != newViewProps.orderUp)) {
-    NSString* orderUp = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderUp];
+  NSString* orderUp = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderUp];
+  if (![_orderUp isEqual: orderUp]) {
     [self setOrderUp: orderUp];
   }
 
-  if ((oldViewProps.orderDown != newViewProps.orderDown)) {
-    NSString* orderDown = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderDown];
+  NSString* orderDown = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderDown];
+  if (![_orderDown isEqual: orderDown]) {
     [self setOrderDown: orderDown];
   }
 
-  if ((oldViewProps.orderForward != newViewProps.orderForward)) {
-    NSString* orderForward = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderForward];
+  NSString* orderForward = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderForward];
+  if (![_orderForward isEqual: orderForward]) {
     [self setOrderForward: orderForward];
   }
 
-  if ((oldViewProps.orderBackward != newViewProps.orderBackward)) {
-    NSString* orderBackward = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderBackward];
+  NSString* orderBackward = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderBackward];
+  if (![_orderBackward isEqual: orderBackward]) {
     [self setOrderBackward: orderBackward];
   }
 
-  if ((oldViewProps.orderLast != newViewProps.orderLast)) {
-    NSString* orderLast = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderLast];
+  NSString* orderLast = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderLast];
+  if (![_orderLast isEqual: orderLast]) {
     [self setOrderLast: orderLast];
   }
 
-  if ((oldViewProps.orderFirst != newViewProps.orderFirst)) {
-    NSString* orderFirst = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderFirst];
+  NSString* orderFirst = [RNCEKVPropHelper unwrapStringValue: newViewProps.orderFirst];
+  if (![_orderFirst isEqual: orderFirst]) {
     [self setOrderFirst: orderFirst];
   }
+
 }
 #endif
 
@@ -196,5 +199,7 @@
   [_focusOrderDelegate updatePosition: position];
   _orderPosition = position;
 }
+
+
 
 @end

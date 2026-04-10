@@ -19,10 +19,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-//    _isAttachedToWindow = NO;
-//    _enableA11yFocus = NO;
     _keyboardKeyPressHandler = [[RNCEKVKeyboardKeyPressHandler alloc] init];
-//    _autoFocusRequested = NO;
   }
 
   return self;
@@ -30,10 +27,6 @@
 
 - (void)cleanReferences {
   [super cleanReferences];
-  
-//  _isAttachedToWindow = NO;
-//  _enableA11yFocus = NO;
-//  _autoFocusRequested = NO;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED

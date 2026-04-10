@@ -21,6 +21,7 @@
 }
 
 - (void)cleanReferences {
+  [super cleanReferences];
   _enableContextMenu = false;
   [self updateContextMenuRegistration];
 }
