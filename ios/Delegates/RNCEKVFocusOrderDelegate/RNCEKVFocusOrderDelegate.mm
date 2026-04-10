@@ -25,17 +25,9 @@ static NSNumber *const FOCUS_LOCK = @0;
 static NSNumber *const FOCUS_UPDATE = @1;
 
 @implementation RNCEKVFocusOrderDelegate{
-  BOOL _isFocused;
   BOOL _isLinked;
   UIView<RNCEKVFocusOrderProtocol>* _delegate;
-  UIView* _entry;
-  UIView* _exit;
-  UIView* _lock;
-
   RNCEKVFocusGuideDelegate *_focusGuideDelegate;
-  NSMutableDictionary<NSNumber *, id> *_updateLinks;
-  NSMutableDictionary<NSNumber *, id> *_removeLinks;
-
 }
 
 - (instancetype _Nonnull )initWithView:(UIView<RNCEKVFocusOrderProtocol> *_Nonnull)delegate{
@@ -44,7 +36,6 @@ static NSNumber *const FOCUS_UPDATE = @1;
     _delegate = delegate;
     _focusGuideDelegate = [[RNCEKVFocusGuideDelegate alloc] initWithView:delegate];
     _subscribers = [NSMutableDictionary dictionary];
-    _isFocused = false;
   }
   return self;
 }
@@ -97,7 +88,6 @@ static NSNumber *const FOCUS_UPDATE = @1;
     [self clearDirection: direction];
   }
 
-  __typeof(self) __weak weakSelf = self;
   RNCEKVFocusGuideDirection capturedDirection = direction;
 
   LinkUpdatedCallback onLinkUpdated = ^(UIView *link) {
@@ -125,7 +115,6 @@ static NSNumber *const FOCUS_UPDATE = @1;
 }
 
 - (void)refreshDirection:(RNCEKVFocusGuideDirection)direction
-                  prevId:(NSString *)prevId
                   nextId:(NSString *)nextId {
   [self clearDirection:direction];
   [self subscribeToDirection:direction linkId:nextId];
@@ -137,7 +126,6 @@ static NSNumber *const FOCUS_UPDATE = @1;
   }
 }
 
-//ToDo: Refactor to one method with direction param, remove it
 - (void)defaultViewFocus:(UIView *)view {
   UIViewController *controller = _delegate.reactViewController;
   if (controller != nil) {
@@ -147,53 +135,44 @@ static NSNumber *const FOCUS_UPDATE = @1;
 
 
 #pragma mark - Next Focus Handling
-- (void)handleNextFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
-  RNCEKVOrderRelationship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
-  UIView* _entry = orderRelationship.entry;
-  UIView* _exit = orderRelationship.exit;
+- (void)handleNextFocus:(UIView *)current
+           currentIndex:(NSInteger)currentIndex
+      orderRelationship:(RNCEKVOrderRelationship *)orderRelationship {
+  UIView* entry = orderRelationship.entry;
+  UIView* exit = orderRelationship.exit;
 
-  BOOL isEntry = _entry == current;
-  if (isEntry) {
-    UIView* firstElement = [orderRelationship getItem: 0];
-    [self keyboardedViewFocus: firstElement];
+  if (entry == current) {
+    [self keyboardedViewFocus: [orderRelationship getItem: 0]];
   }
 
-  BOOL isLast = currentIndex == orderRelationship.count - 1 && _exit;
-  if (isLast) {
-    [self defaultViewFocus: _exit];
+  if (currentIndex == orderRelationship.count - 1 && exit) {
+    [self defaultViewFocus: exit];
   }
 
-  BOOL inOrderRange = currentIndex >= 0 && currentIndex < orderRelationship.count - 1;
-  if (inOrderRange) {
-    UIView* nextElement = [orderRelationship getItem: currentIndex + 1];
-    [self keyboardedViewFocus: nextElement];
+  if (currentIndex >= 0 && currentIndex < orderRelationship.count - 1) {
+    [self keyboardedViewFocus: [orderRelationship getItem: currentIndex + 1]];
   }
 }
 
 
 #pragma mark - Prev Focus Handling
-- (void)handlePrevFocus:(UIView *)current currentIndex:(NSInteger)currentIndex {
-  RNCEKVOrderRelationship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
-
-  UIView* _exit = orderRelationship.exit;
-  UIView* _entry = orderRelationship.entry;
-
-  BOOL isExit = _exit == current;
+- (void)handlePrevFocus:(UIView *)current
+           currentIndex:(NSInteger)currentIndex
+      orderRelationship:(RNCEKVOrderRelationship *)orderRelationship {
+  UIView* exit = orderRelationship.exit;
+  UIView* entry = orderRelationship.entry;
   int orderCount = [orderRelationship count];
-  if (isExit) {
-    UIView* lastElement = [orderRelationship getItem: orderCount - 1];
-    [self keyboardedViewFocus: lastElement];
+
+  if (exit == current) {
+    [self keyboardedViewFocus: [orderRelationship getItem: orderCount - 1]];
   }
 
-  BOOL isFirst = currentIndex == 0 && _entry;
-  if (isFirst) {
-    [self defaultViewFocus: _entry];
+  if (currentIndex == 0 && entry) {
+    [self defaultViewFocus: entry];
   }
 
-  BOOL inRange = currentIndex > 0 && currentIndex <= orderCount - 1;
-  if (inRange) {
-    UIView* prevElement =  [orderRelationship getItem: currentIndex - 1];
-    [self keyboardedViewFocus: prevElement];
+  if (currentIndex > 0 && currentIndex <= orderCount - 1) {
+    [self keyboardedViewFocus: [orderRelationship getItem: currentIndex - 1]];
   }
 }
 
@@ -204,75 +183,49 @@ static NSNumber *const FOCUS_UPDATE = @1;
   UIView *current = (UIView *)context.previouslyFocusedItem;
   UIView* targetView = [_delegate getFocusTargetView];
 
-  BOOL isTarget = current == targetView;
-  if (isTarget) {
-    NSMutableDictionary<NSNumber *, NSString *> *orderMapping = [NSMutableDictionary dictionary]; //Todo create custom structure
-    if (_delegate.orderLast) {
-      orderMapping[@(UIFocusHeadingLast)] = _delegate.orderLast;
-    }
-    if (_delegate.orderFirst) {
-      orderMapping[@(UIFocusHeadingFirst)] = _delegate.orderFirst;
-    }
-    if (_delegate.orderForward) {
-      orderMapping[@(UIFocusHeadingNext)] = _delegate.orderForward;
-    }
-    if (_delegate.orderBackward) {
-      orderMapping[@(UIFocusHeadingPrevious)] = _delegate.orderBackward;
-    }
+  if (current == targetView) {
+    NSString *orderId = nil;
+    if (movementHint == UIFocusHeadingLast) orderId = _delegate.orderLast;
+    else if (movementHint == UIFocusHeadingFirst) orderId = _delegate.orderFirst;
+    else if (movementHint == UIFocusHeadingNext) orderId = _delegate.orderForward;
+    else if (movementHint == UIFocusHeadingPrevious) orderId = _delegate.orderBackward;
 
-    NSString *orderKey = orderMapping[@(movementHint)];
-    if (orderKey) {
-      UIView *nextView = [[RNCEKVOrderLinking sharedInstance] getOrderView:orderKey];
+    if (orderId) {
+      UIView *nextView = [[RNCEKVOrderLinking sharedInstance] getOrderView:orderId];
       [self keyboardedViewFocus:nextView];
       return FOCUS_LOCK;
     }
-  }
 
-
-  if (current == targetView) {
     NSUInteger rawFocusLockValue = [_delegate.lockFocus unsignedIntegerValue];
-
-    BOOL isDirectionLock = (rawFocusLockValue & movementHint) != 0;
-    if (isDirectionLock) {
+    if ((rawFocusLockValue & movementHint) != 0) {
       return FOCUS_LOCK;
     }
   }
 
   if(_delegate.orderGroup && _delegate.orderPosition != nil) {
     RNCEKVOrderRelationship* orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo: _delegate.orderGroup];
-    NSArray *order = [orderRelationship getArray];
-    if(order.count == 0) {
+    if([orderRelationship getArray].count == 0) {
       return FOCUS_DEFAULT;
     }
 
-    UIView* _exit = orderRelationship.exit;
-    UIView* _entry = orderRelationship.entry;
-
     int currentIndex = [orderRelationship getItemIndex:current];
     int nextIndex = [orderRelationship getItemIndex:next];
-    //    [self findOrderIndex:order element:current];
 
-    //    [self findOrderIndex:order element:next];
-
-    BOOL isEntryElement = _entry == nil && currentIndex == -1 && movementHint == UIFocusHeadingNext;
-
-    if(isEntryElement) {
+    if (orderRelationship.entry == nil && currentIndex == -1 && movementHint == UIFocusHeadingNext) {
       orderRelationship.entry = current;
     }
 
-    BOOL isExit = _exit == nil && nextIndex == -1 && movementHint == UIFocusHeadingNext;
-    if(isExit) {
+    if (orderRelationship.exit == nil && nextIndex == -1 && movementHint == UIFocusHeadingNext) {
       orderRelationship.exit = next;
     }
 
-    if(context.focusHeading == UIFocusHeadingNext) {
-      [self handleNextFocus:current currentIndex: currentIndex];
+    if (movementHint == UIFocusHeadingNext) {
+      [self handleNextFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];
       return FOCUS_UPDATE;
     }
 
-
-    if(context.focusHeading == UIFocusHeadingPrevious) {
-      [self handlePrevFocus:current currentIndex: currentIndex];
+    if (movementHint == UIFocusHeadingPrevious) {
+      [self handlePrevFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];
       return FOCUS_UPDATE;
     }
   }
@@ -310,7 +263,6 @@ static NSNumber *const FOCUS_UPDATE = @1;
   RNCEKVFocusLinkObserver *focusLinkObserver = [RNCEKVFocusLinkObserver sharedManager];
   UIView* view = [_delegate getFocusTargetView];
 
-
   if(prev != nil) {
     [focusLinkObserver emitRemoveWithId: prev];
     [[RNCEKVOrderLinking sharedInstance] cleanOrderId: prev];
@@ -326,28 +278,20 @@ static NSNumber *const FOCUS_UPDATE = @1;
   return [_focusGuideDelegate setIsFocused: value];
 }
 
-- (void)refreshLeft:(NSString*)prev next:(NSString*)next {
-  [self refreshDirection:RNCEKVFocusGuideDirectionLeft
-                  prevId:prev
-                  nextId:next];
+- (void)refreshLeft:(NSString*)next {
+  [self refreshDirection:RNCEKVFocusGuideDirectionLeft nextId:next];
 }
 
-- (void)refreshRight:(NSString*)prev next:(NSString*)next{
-  [self refreshDirection:RNCEKVFocusGuideDirectionRight
-                  prevId:prev
-                  nextId:next];
+- (void)refreshRight:(NSString*)next {
+  [self refreshDirection:RNCEKVFocusGuideDirectionRight nextId:next];
 }
 
-- (void)refreshUp:(NSString*)prev next:(NSString*)next{
-  [self refreshDirection:RNCEKVFocusGuideDirectionUp
-                  prevId:prev
-                  nextId:next];
+- (void)refreshUp:(NSString*)next {
+  [self refreshDirection:RNCEKVFocusGuideDirectionUp nextId:next];
 }
 
-- (void)refreshDown:(NSString*)prev next:(NSString*)next{
-  [self refreshDirection:RNCEKVFocusGuideDirectionDown
-                  prevId:prev
-                  nextId:next];
+- (void)refreshDown:(NSString*)next {
+  [self refreshDirection:RNCEKVFocusGuideDirectionDown nextId:next];
 }
 
 - (void)clear {

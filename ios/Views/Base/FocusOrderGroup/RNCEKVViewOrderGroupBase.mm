@@ -175,22 +175,22 @@
 }
 
 - (void)setOrderLeft:(NSString *)orderLeft {
-  [_focusOrderDelegate refreshLeft: _orderLeft next: orderLeft];
+  [_focusOrderDelegate refreshLeft: orderLeft];
   _orderLeft = orderLeft;
 }
 
 - (void)setOrderRight:(NSString *)orderRight {
-  [_focusOrderDelegate refreshRight: _orderRight next: orderRight];
+  [_focusOrderDelegate refreshRight: orderRight];
   _orderRight = orderRight;
 }
 
 - (void)setOrderUp:(NSString *)orderUp {
-  [_focusOrderDelegate refreshUp: _orderUp next: orderUp];
+  [_focusOrderDelegate refreshUp: orderUp];
   _orderUp = orderUp;
 }
 
 - (void)setOrderDown:(NSString *)orderDown {
-  [_focusOrderDelegate refreshDown: _orderDown next: orderDown];
+  [_focusOrderDelegate refreshDown: orderDown];
   _orderDown = orderDown;
 }
 

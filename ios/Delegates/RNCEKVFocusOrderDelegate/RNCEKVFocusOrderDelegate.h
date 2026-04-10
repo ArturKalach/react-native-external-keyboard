@@ -35,10 +35,10 @@ typedef NS_ENUM(NSUInteger, RNCEKVLinkDirection) {
 - (void)refreshId:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
 - (void)setIsFocused:(BOOL)value;
 
-- (void)refreshLeft:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
-- (void)refreshRight:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
-- (void)refreshUp:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
-- (void)refreshDown:(NSString*_Nullable)prev next:(NSString*_Nullable)next;
+- (void)refreshLeft:(NSString*_Nullable)next;
+- (void)refreshRight:(NSString*_Nullable)next;
+- (void)refreshUp:(NSString*_Nullable)next;
+- (void)refreshDown:(NSString*_Nullable)next;
 - (void)clear;
 
 - (void)link;
