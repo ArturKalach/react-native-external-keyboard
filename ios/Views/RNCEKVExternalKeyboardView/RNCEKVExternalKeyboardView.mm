@@ -6,7 +6,6 @@
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 #import <React/RCTViewManager.h>
 #import <UIKit/UIKit.h>
-#import "RNCEKVFocusOrderDelegate.h"
 #import "RNCEKVOrderLinking.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED

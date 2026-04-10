@@ -4,12 +4,13 @@
 #import <React/RCTUITextField.h>
 #import "RNCEKVGroupIdentifierProtocol.h"
 #import "RNCEKVFocusOrderProtocol.h"
+#import "RNCEKVKeyboardFocusableProtocol.h"
 #import <React/RCTUITextView.h>
 #import "RNCEKVViewGroupIdentifierBase.h"
 #import "RNCEKVViewFocusChangeBase.h"
 
 #import <React/RCTView.h>
-@interface RNCEKVTextInputFocusWrapper : RNCEKVViewFocusChangeBase {
+@interface RNCEKVTextInputFocusWrapper : RNCEKVViewFocusChangeBase <RNCEKVKeyboardFocusableProtocol> {
     RCTUITextField* _textField;
     RCTUITextView* _textView;
 }

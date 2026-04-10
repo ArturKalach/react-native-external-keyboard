@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "RNCEKVViewOrderGroupBase.h"
-#import "RNCEKVFocusOrderDelegate.h"
 #import "RNCEKVOrderLinking.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 #import "UIView+React.h"
@@ -19,7 +18,8 @@
 #endif
 
 @interface RNCEKVViewOrderGroupBase ()
-@property (nonatomic, strong, readwrite) RNCEKVFocusOrderDelegate* focusOrderDelegate;
+@property (nonatomic, strong, readwrite) RNCEKVFocusSequenceDelegate* sequenceDelegate;
+@property (nonatomic, strong, readwrite) RNCEKVFocusLinkDelegate* linkDelegate;
 @end
 
 @implementation RNCEKVViewOrderGroupBase
@@ -27,9 +27,9 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {
-    _focusOrderDelegate = [[RNCEKVFocusOrderDelegate alloc] initWithView:self];
+    _sequenceDelegate = [[RNCEKVFocusSequenceDelegate alloc] initWithView:self];
+    _linkDelegate = [[RNCEKVFocusLinkDelegate alloc] initWithView:self];
   }
-
   return self;
 }
 
@@ -37,12 +37,9 @@
   return context.nextFocusedView == [self getStoredView];
 }
 
-
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-  BOOL isFocused = [self getIsViewFocused: context];
-  [_focusOrderDelegate setIsFocused: isFocused];
-
+  [_linkDelegate setIsFocused:[self getIsViewFocused:context]];
   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
 }
 
@@ -57,7 +54,8 @@
 
 - (void)cleanReferences {
   [super cleanReferences];
-  [_focusOrderDelegate unlink];
+  [_sequenceDelegate unlink];
+  [_linkDelegate unlink];
 
   _orderGroup = nil;
   _orderPosition = nil;
@@ -80,20 +78,26 @@
 - (void)didMoveToWindow {
   [super didMoveToWindow];
   if (self.window) {
-    [_focusOrderDelegate link];
+    [_sequenceDelegate link];
+    [_linkDelegate link];
   } else {
-    [_focusOrderDelegate unlink];
+    [_sequenceDelegate unlink];
+    [_linkDelegate unlink];
   }
 }
 
 - (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
-  NSNumber* result = [_focusOrderDelegate shouldUpdateFocusInContext: context];
-
-  if(result == nil) {
-    return [super shouldUpdateFocusInContext: context];
+  NSNumber *sequenceResult = [_sequenceDelegate shouldUpdateFocusInContext:context];
+  if (sequenceResult != nil) {
+    return sequenceResult.boolValue;
   }
 
-  return result.boolValue;
+  NSNumber *linkResult = [_linkDelegate shouldUpdateFocusInContext:context];
+  if (linkResult != nil) {
+    return linkResult.boolValue;
+  }
+
+  return [super shouldUpdateFocusInContext:context];
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -158,48 +162,42 @@
   if (![_orderFirst isEqual: orderFirst]) {
     [self setOrderFirst: orderFirst];
   }
-
 }
 #endif
 
-
 - (void)setOrderGroup:(NSString *)orderGroup {
-  [_focusOrderDelegate updateOrderGroup: orderGroup];
+  [_sequenceDelegate updateOrderGroup:orderGroup];
   _orderGroup = orderGroup;
 }
 
+- (void)setOrderPosition:(NSNumber *)position {
+  [_sequenceDelegate updatePosition:position];
+  _orderPosition = position;
+}
 
 - (void)setOrderId:(NSString *)next {
-  [_focusOrderDelegate refreshId:_orderId next:next];
+  [_linkDelegate refreshId:_orderId next:next];
   _orderId = next;
 }
 
 - (void)setOrderLeft:(NSString *)orderLeft {
-  [_focusOrderDelegate refreshLeft: orderLeft];
+  [_linkDelegate refreshLeft:orderLeft];
   _orderLeft = orderLeft;
 }
 
 - (void)setOrderRight:(NSString *)orderRight {
-  [_focusOrderDelegate refreshRight: orderRight];
+  [_linkDelegate refreshRight:orderRight];
   _orderRight = orderRight;
 }
 
 - (void)setOrderUp:(NSString *)orderUp {
-  [_focusOrderDelegate refreshUp: orderUp];
+  [_linkDelegate refreshUp:orderUp];
   _orderUp = orderUp;
 }
 
 - (void)setOrderDown:(NSString *)orderDown {
-  [_focusOrderDelegate refreshDown: orderDown];
+  [_linkDelegate refreshDown:orderDown];
   _orderDown = orderDown;
 }
-
-
-- (void)setOrderPosition:(NSNumber *)position {
-  [_focusOrderDelegate updatePosition: position];
-  _orderPosition = position;
-}
-
-
 
 @end
