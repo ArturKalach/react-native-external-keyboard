@@ -36,13 +36,12 @@
   if (!identifier || !link) {
     return;
   }
-  
-  [_links setObject:link forKey:identifier];
+  _links[identifier] = link;
   [self emitLinkUpdatedForId:identifier link:link];
 }
 
 - (void)emitRemoveWithId:(NSString *)identifier {
-  if ([_links objectForKey:identifier]) {
+  if (_links[identifier]) {
     [_links removeObjectForKey:identifier];
     [self emitLinkRemovedForId:identifier];
   }

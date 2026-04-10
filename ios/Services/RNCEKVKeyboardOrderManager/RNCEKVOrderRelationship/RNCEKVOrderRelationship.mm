@@ -17,8 +17,6 @@
   self = [super init];
   if (self) {
     _positions = [[RNCEKVSortedMap alloc] init];
-    _entry = nil;
-    _exit = nil;
   }
   return self;
 }
@@ -39,45 +37,33 @@
   [_positions clear];
 }
 
--(int)getItemIndex:(UIView*)element  {
-  int resultIndex = -1;
-  if([self isEmpty]) {
-    return resultIndex;
-  }
-  
-  NSArray* order = [_positions getValues];
-  for (int i = 0; i < order.count; i++) {
+- (int)getItemIndex:(UIView *)element {
+  NSArray *order = [_positions getValues];
+  for (int i = 0; i < (int)order.count; i++) {
     UIView *orderElement = order[i];
-    if (orderElement.subviews[0] == element) { //ToDo focus element
-      resultIndex = i;
-      break;
+    if (orderElement.subviews[0] == element) {
+      return i;
     }
   }
-  
-  return resultIndex;
+  return -1;
 }
 
--(UIView*)getItem:(int)index {
-  if([self isEmpty]) return nil;
-  
-  NSArray* order = [_positions getValues];
-  BOOL inOrderRange = index >= 0 && index < order.count;
-  if(!inOrderRange) return nil;
-  
+- (UIView *)getItem:(int)index {
+  NSArray *order = [_positions getValues];
+  if (index < 0 || index >= (int)order.count) return nil;
   return order[index];
-};
+}
 
-- (NSArray*)getArray {
+- (NSArray *)getArray {
   return [_positions getValues];
 }
 
--(BOOL)isEmpty {
+- (BOOL)isEmpty {
   return [_positions isEmpty];
 }
 
--(int)count {
-  NSArray* order = [_positions getValues];
-  return order.count;
+- (int)count {
+  return (int)[_positions getValues].count;
 }
 
 
