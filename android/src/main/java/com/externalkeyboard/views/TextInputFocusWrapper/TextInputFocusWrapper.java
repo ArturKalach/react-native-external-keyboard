@@ -10,18 +10,13 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.externalkeyboard.delegates.FocusOrderDelegate;
-import com.externalkeyboard.delegates.FocusOrderDelegateHost;
 import com.externalkeyboard.events.EventHelper;
-import com.externalkeyboard.helper.FocusHelper;
-import com.externalkeyboard.helper.ReactNativeVersionChecker;
 import com.externalkeyboard.modules.ExternalKeyboardModule;
+import com.externalkeyboard.views.base.ViewOrderGroupBase;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.views.textinput.ReactEditText;
 
-import java.lang.reflect.Field;
-
-public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChangeListener, FocusOrderDelegateHost {
+public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.OnFocusChangeListener {
   private final Context context;
   public static final byte FOCUS_BY_PRESS = 1;
   private ReactEditText reactEditText = null;
@@ -31,103 +26,13 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   private boolean blurOnSubmit = true;
   private boolean multiline = false;
   private boolean keyboardFocusable = true;
-  private static View focusedView = null;
 
-  public int lockFocus = 0;
-  public String orderForward;
-  public String orderBackward;
-  public String orderId;
-
-  private Integer orderIndex;
-  private String orderGroup;
-  private String orderUp;
-  private String orderDown;
-  private String orderLeft;
-  private String orderRight;
-
-  private FocusOrderDelegate focusOrderDelegate;
-  private boolean isLinked = false;
-
-  public boolean getIsFocusByPress() {
-    return focusType == FOCUS_BY_PRESS;
-  }
-
-  // FocusOrderDelegateHost implementation
   @Override
   public View getFirstChild() {
     return this.reactEditText;
   }
 
-  @Override
-  public String getOrderGroup() {
-    return orderGroup;
-  }
-
-  @Override
-  public Integer getOrderIndex() {
-    return orderIndex;
-  }
-
-  @Override
-  public String getOrderId() {
-    return orderId;
-  }
-
-  @Override
-  public String getOrderLeft() {
-    return orderLeft;
-  }
-
-  @Override
-  public String getOrderRight() {
-    return orderRight;
-  }
-
-  @Override
-  public String getOrderUp() {
-    return orderUp;
-  }
-
-  @Override
-  public String getOrderDown() {
-    return orderDown;
-  }
-
-  public void setOrderGroup(String orderGroup) {
-    focusOrderDelegate.updateOrderGroup(this.orderGroup, orderGroup);
-    this.orderGroup = orderGroup;
-  }
-
-  public void setOrderIndex(int orderIndex) {
-    if (this.orderIndex == null) {
-      this.orderIndex = orderIndex;
-    } else {
-      this.orderIndex = orderIndex;
-      focusOrderDelegate.refreshOrder();
-    }
-  }
-
-  public void setOrderLeft(String orderLeft) {
-    focusOrderDelegate.refreshLeft(this.orderLeft, orderLeft);
-    this.orderLeft = orderLeft;
-  }
-
-  public void setOrderRight(String orderRight) {
-    focusOrderDelegate.refreshRight(this.orderRight, orderRight);
-    this.orderRight = orderRight;
-  }
-
-  public void setOrderUp(String orderUp) {
-    focusOrderDelegate.refreshUp(this.orderUp, orderUp);
-    this.orderUp = orderUp;
-  }
-
-  public void setOrderDown(String orderDown) {
-    focusOrderDelegate.refreshDown(this.orderDown, orderDown);
-    this.orderDown = orderDown;
-  }
-
-  private boolean getIsNativelyFixedVersion () {
+  private boolean getIsNativelyFixedVersion() {
     try {
       Object minorValue = com.facebook.react.modules.systeminfo.ReactNativeVersion.VERSION.getOrDefault("minor", 0);
       int minor = (minorValue instanceof Integer) ? (int) minorValue : 0;
@@ -172,6 +77,8 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
 
   private void clearEditText() {
     if (this.reactEditText != null) {
+      focusOrderDelegate.unlink(this.reactEditText);
+
       this.reactEditText.setOnFocusChangeListener(null);
       this.reactEditText.setOnKeyListener(null);
 
@@ -186,7 +93,7 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     if (editText != null) {
       this.reactEditText = editText;
       boolean isAlreadyFixed = getIsNativelyFixedVersion();
-      if(isAlreadyFixed) {
+      if (isAlreadyFixed) {
         this.setFocusable(false);
       }
 
@@ -197,7 +104,6 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
       OnFocusChangeListener reactListener = this.reactEditText.getOnFocusChangeListener();
       this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
         reactListener.onFocusChange(textInput, hasTextEditFocus);
-        focusedView = textInput;
         this.focusEventIgnore = false;
         if (focusType != FOCUS_BY_PRESS || !hasTextEditFocus) {
           onFocusChange(textInput, hasTextEditFocus);
@@ -239,7 +145,6 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   public TextInputFocusWrapper(Context context) {
     super(context);
     this.context = context;
-    this.focusOrderDelegate = new FocusOrderDelegate(this);
 
     if (keyboardFocusable) {
       boolean isAlreadyFixed = getIsNativelyFixedVersion();
@@ -257,40 +162,9 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
   }
 
   @Override
-  public View focusSearch(View focused, int direction) {
-    if (lockFocus == 0 && orderForward == null && orderBackward == null) {
-      return super.focusSearch(focused, direction);
-    }
-
-    boolean isLocked = FocusHelper.isLocked(direction, lockFocus);
-    if (isLocked) {
-      return this;
-    }
-
-    if (direction == FOCUS_FORWARD && orderForward != null) {
-      View nextView = this.focusOrderDelegate.getLink(orderForward);
-      if (isValidLinkedFocusTarget(nextView)) {
-        return nextView;
-      }
-    }
-
-    if (direction == FOCUS_BACKWARD && orderBackward != null) {
-      View prevView = this.focusOrderDelegate.getLink(orderBackward);
-      if (isValidLinkedFocusTarget(prevView)) {
-        return prevView;
-      }
-    }
-
-    return super.focusSearch(focused, direction);
-  }
-
-  @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (lockFocus != 0) {
-      boolean isLocked = FocusHelper.isKeyLocked(keyCode, lockFocus);
-      if (isLocked) {
-        return true;
-      }
+    if (isFocusLocked(event)) {
+      return true;
     }
     if (focusType == FOCUS_BY_PRESS) {
       this.reactEditText.setFocusable(false);
@@ -304,7 +178,7 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
 
   public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
     boolean isAlreadyFixed = getIsNativelyFixedVersion();
-    if(isAlreadyFixed) {
+    if (isAlreadyFixed) {
       return super.requestFocus(direction, previouslyFocusedRect);
     }
     if ((direction == View.FOCUS_FORWARD || direction == View.FOCUS_BACKWARD) && focusType != FOCUS_BY_PRESS) {
@@ -346,26 +220,5 @@ public class TextInputFocusWrapper extends ViewGroup implements View.OnFocusChan
     if (!this.reactEditText.hasFocus()) {
       this.reactEditText.requestFocusFromJS();
     }
-  }
-
-  private boolean isValidLinkedFocusTarget(View target) {
-    if (target == null || !target.isAttachedToWindow() || !this.isAttachedToWindow()) {
-      return false;
-    }
-
-    if (target.getWindowToken() == null || this.getWindowToken() == null) {
-      return false;
-    }
-
-    if (target.getWindowToken() != this.getWindowToken()) {
-      return false;
-    }
-
-    return target.getRootView() == this.getRootView();
-  }
-
-  @Override
-  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    // No-op since UIManagerModule handles actually laying out children.
   }
 }

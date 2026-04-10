@@ -34,42 +34,6 @@ const Stack = createNativeStackNavigator();
 function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
   return (
     <View style={styles.home}>
-      {/* <KeyboardExtendedPressable
-        haloEffect={true}
-        style={{ borderWidth: 1, padding: 10 }}
-      >
-        <Text>Pressable</Text>
-      </KeyboardExtendedPressable>
-      <KeyboardExtendedInput
-        multiline
-        haloEffect={false}
-        style={{ borderWidth: 1, padding: 10 }}
-      />
-      <KeyboardExtendedPressable
-        haloEffect={false}
-        style={{ borderWidth: 1, padding: 10 }}
-      >
-        <Text>Pressable</Text>
-      </KeyboardExtendedPressable> */}
-      <KeyboardExtendedBaseView
-        focusable={false}
-        canBeFocused={false}
-        group
-        // onKeyUpPress={onKeyUpPressHandler}
-        // onKeyDownPress={onKeyDownPressHandler}
-        // onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
-        // ignoreGroupFocusHint
-        // style={styles.bubbledWrapper}
-      >
-        <Button
-          title="Details"
-          onPress={() => navigation.navigate('Details')}
-        />
-        <Button
-          title="Focus Order"
-          onPress={() => navigation.navigate('FocusOrder')}
-        />
-      </KeyboardExtendedBaseView>
       <Button title="Details" onPress={() => navigation.navigate('Details')} />
       <Button
         title="Focus Order"

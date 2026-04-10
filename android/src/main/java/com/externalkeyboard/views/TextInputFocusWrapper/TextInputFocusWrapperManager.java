@@ -10,14 +10,10 @@ import java.util.Objects;
 
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.MultiplyTextSubmit;
-import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.textinput.ReactEditText;
-import com.facebook.react.views.view.ReactViewGroup;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -220,5 +216,23 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     export.put(MultiplyTextSubmit.EVENT_NAME, createEventMap("onMultiplyTextSubmit"));
 
     return export;
+  }
+
+  @Override
+  @ReactProp(name = "haloExpendY")
+  public void setHaloExpendY(TextInputFocusWrapper view, float value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "haloExpendX")
+  public void setHaloExpendX(TextInputFocusWrapper view, float value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "haloCornerRadius")
+  public void setHaloCornerRadius(TextInputFocusWrapper view, float value) {
+
   }
 }

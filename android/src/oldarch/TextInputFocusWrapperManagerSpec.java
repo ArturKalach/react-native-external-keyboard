@@ -47,4 +47,10 @@ public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> exte
   public abstract void setOrderFirst(TextInputFocusWrapper view, @Nullable String value);
 
   public abstract void setOrderLast(TextInputFocusWrapper view, @Nullable String value);
+
+  public abstract void setHaloExpendY(TextInputFocusWrapper view, float value);
+
+  public abstract void setHaloExpendX(TextInputFocusWrapper view, float value);
+
+  public abstract void setHaloCornerRadius(TextInputFocusWrapper view, float value);
 }
