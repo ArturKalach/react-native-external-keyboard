@@ -1,5 +1,22 @@
-import { View } from 'react-native';
+import React from 'react';
+import ExternalKeyboardLockView from '../../../nativeSpec/ExternalKeyboardLockViewNativeComponent';
+
 import type { KeyboardFocusLockProps } from '../../../types/KeyboardFocusLock.types';
 
-export const KeyboardFocusLockBase =
-  View as unknown as React.ExoticComponent<KeyboardFocusLockProps>;
+export const KeyboardFocusLockBase = React.memo<KeyboardFocusLockProps>(
+  ({
+    lockDisabled = false,
+    componentType = 0,
+    forceLock = false,
+    ...props
+  }) => {
+    return (
+      <ExternalKeyboardLockView
+        {...props}
+        componentType={componentType}
+        lockDisabled={lockDisabled}
+        forceLock={forceLock}
+      />
+    );
+  }
+);

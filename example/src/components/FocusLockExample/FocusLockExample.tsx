@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { Focus } from 'react-native-external-keyboard';
 
 const FocusTrapContent = ({ onClose }: { onClose: () => void }) => (
-  <Focus.Trap style={styles.focusTrap}>
+  <Focus.Trap forceLock={true} style={styles.focusTrap}>
     <Text accessibilityRole="header">Locked Area</Text>
     <Text>Keyboard and ScreenReader focus is now trapped in this area.</Text>
     <Button

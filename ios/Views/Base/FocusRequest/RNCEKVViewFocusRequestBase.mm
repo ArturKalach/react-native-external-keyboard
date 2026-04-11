@@ -71,13 +71,6 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
   [self focusOnMount];
 }
 
-
-- (void)onViewAttached {
-  if (self.autoFocus) {
-    [self focus];
-  }
-}
-
 - (void)a11yFocus {
   if (!_enableA11yFocus)
     return;
@@ -108,7 +101,9 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
   }
 
   if (self.window && !_isAttachedToWindow) {
-    [self onViewAttached];
+    if (self.autoFocus) {
+      [self focus];
+    }
     _isAttachedToWindow = YES;
   }
 }

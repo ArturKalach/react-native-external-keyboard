@@ -20,6 +20,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RNCEKVExternalKeyboardLockView : RCTViewComponentView
+
+@property (nonatomic, assign) BOOL forceLock;
+@property (nonatomic, assign) BOOL lockDisabled;
+
 @end
 
 NS_ASSUME_NONNULL_END
@@ -30,6 +34,10 @@ NS_ASSUME_NONNULL_END
 
 #import <React/RCTView.h>
 @interface RNCEKVExternalKeyboardLockView : RCTView
+
+@property (nonatomic, assign) BOOL forceLock;
+@property (nonatomic, assign) BOOL lockDisabled;
+
 @end
 
 #endif
