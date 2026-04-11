@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;

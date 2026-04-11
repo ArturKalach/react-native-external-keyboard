@@ -1,7 +1,7 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Home } from './screens/Home/Home';
-import { Button, SafeAreaView, StyleSheet, Text } from 'react-native';
+import { Button, SafeAreaView, StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -13,11 +13,6 @@ import { PressableTest } from './components/Pressables/PressableTest';
 import { ListsTest } from './components/Lists/ListsText';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
-import {
-  KeyboardExtendedBaseView,
-  KeyboardExtendedInput,
-  KeyboardExtendedPressable,
-} from 'react-native-external-keyboard';
 
 export function DetailsScreen() {
   return (

@@ -27,6 +27,17 @@ const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 const TouchableWithoutFeedback = withKeyboardFocus(RNTouchableWithoutFeedback);
 
+const PRC = ({
+  pressed,
+  focused,
+}: {
+  pressed?: boolean;
+  focused?: boolean;
+}) => (
+  <View>
+    <Text>{pressed ? 'Pressed' : focused ? 'Focused' : 'Not Pressed'}</Text>
+  </View>
+);
 export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   const navigation = useNavigation();
   const modalButtonRef = useRef<KeyboardFocus>(null);
@@ -89,13 +100,10 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           >
             <Text>TouchableOpacity</Text>
           </TouchableOpacity>
-          {dShow && (
-            <Pressable autoFocus>
-              <View>
-                <Text>Display</Text>
-              </View>
-            </Pressable>
-          )}
+          {dShow && <Pressable autoFocus renderContent={PRC} />}
+          {dShow && <TouchableOpacity autoFocus renderFocusable={PRC} />}
+
+          {/* {dShow && <Pressable autoFocus renderChildren={FocusableChild} />} */}
           <TouchableWithoutFeedback
             haloExpendX={-5}
             haloExpendY={-5}

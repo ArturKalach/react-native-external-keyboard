@@ -73,6 +73,8 @@ export const withKeyboardFocus = <
         lockFocus,
         onComponentFocus,
         onComponentBlur,
+        renderContent,
+        renderFocusable,
         ...props
       } = allProps as WithKeyboardFocus<ComponentProps, ViewStyleType>;
 
@@ -106,14 +108,45 @@ export const withKeyboardFocus = <
           triggerCodes,
         });
 
-      const HoverComponent = useMemo(() => {
+      const contentChildrenProp = useMemo(
+        () =>
+          renderContent
+            ? (state: Record<string, unknown>) =>
+                (
+                  renderContent as unknown as (
+                    s: Record<string, unknown>
+                  ) => React.ReactNode
+                )({ ...state, focused })
+            : undefined,
+        [renderContent, focused]
+      );
+
+      const focusableChildrenProp = useMemo(
+        () => (renderFocusable ? renderFocusable({ focused }) : undefined),
+        [renderFocusable, focused]
+      );
+
+      const hoverContent = useMemo(() => {
         if (FocusHoverComponent) return FocusHoverComponent;
         if (tintType === 'hover') {
           return <View style={[hoverColor, styles.absolute, styles.opacity]} />;
         }
-
         return undefined;
       }, [FocusHoverComponent, hoverColor, tintType]);
+
+      const focusOrderProps = {
+        orderIndex,
+        orderGroup,
+        orderId,
+        orderLeft,
+        orderRight,
+        orderUp,
+        orderDown,
+        orderForward,
+        orderBackward,
+        orderFirst,
+        orderLast,
+      };
 
       const onContextMenuHandler = useCallback(() => {
         (onLongPress as (e?: OnKeyPress) => void)?.();
@@ -149,18 +182,8 @@ export const withKeyboardFocus = <
             enableA11yFocus={enableA11yFocus}
             screenAutoA11yFocus={screenAutoA11yFocus}
             screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
-            orderIndex={orderIndex}
-            orderGroup={orderGroup}
             lockFocus={lockFocus}
-            orderId={orderId}
-            orderLeft={orderLeft}
-            orderRight={orderRight}
-            orderUp={orderUp}
-            orderDown={orderDown}
-            orderForward={orderForward}
-            orderBackward={orderBackward}
-            orderFirst={orderFirst}
-            orderLast={orderLast}
+            {...focusOrderProps}
           >
             <Component
               ref={componentRef}
@@ -180,9 +203,13 @@ export const withKeyboardFocus = <
               onFocus={onComponentFocus}
               onBlur={onComponentBlur}
               {...(props as unknown as ComponentProps)}
+              {...((contentChildrenProp || focusableChildrenProp) &&
+                ({
+                  children: contentChildrenProp ?? focusableChildrenProp,
+                } as unknown as Partial<ComponentProps>))}
             />
-            {focused && HoverComponent && (
-              <RenderPropComponent render={HoverComponent} />
+            {focused && hoverContent && (
+              <RenderPropComponent render={hoverContent} />
             )}
           </BaseKeyboardView>
         </IsViewFocusedContext.Provider>
