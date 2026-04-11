@@ -27,14 +27,14 @@ const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 const TouchableWithoutFeedback = withKeyboardFocus(RNTouchableWithoutFeedback);
 
-const PRC = ({
+const RenderContent = ({
   pressed,
   focused,
 }: {
   pressed?: boolean;
   focused?: boolean;
 }) => (
-  <View>
+  <View style={styles.pressable}>
     <Text>{pressed ? 'Pressed' : focused ? 'Focused' : 'Not Pressed'}</Text>
   </View>
 );
@@ -100,8 +100,19 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           >
             <Text>TouchableOpacity</Text>
           </TouchableOpacity>
-          {dShow && <Pressable autoFocus renderContent={PRC} />}
-          {dShow && <TouchableOpacity autoFocus renderFocusable={PRC} />}
+          {dShow && (
+            <Pressable
+              containerStyle={styles.pressableContainer}
+              autoFocus
+              renderContent={RenderContent}
+            />
+          )}
+          {dShow && (
+            <TouchableOpacity
+              containerStyle={styles.pressableContainer}
+              renderFocusable={RenderContent}
+            />
+          )}
 
           {/* {dShow && <Pressable autoFocus renderChildren={FocusableChild} />} */}
           <TouchableWithoutFeedback
@@ -165,21 +176,32 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
             onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
             style={styles.keyHandler}
+            groupIdentifier="keyTracker"
           >
-            <View>
-              <Text>{isKeyDown ? 'Press begin:' : 'Press ended:'}</Text>
-              {Object.keys(keyInfo ?? {}).map((key) => (
-                <View key={key}>
-                  {
-                    <Text>{`${key}: ${
-                      (keyInfo as Record<string, string | number | boolean>)[
-                        key
-                      ] ?? ''
-                    }`}</Text>
-                  }
+            <Text style={styles.keyHandlerTitle}>
+              {isKeyDown ? 'Press begin:' : 'Press ended:'}
+            </Text>
+            {Object.keys(keyInfo ?? {}).map((key) => {
+              const value = (
+                keyInfo as Record<string, string | number | boolean>
+              )[key];
+              const isBool = typeof value === 'boolean';
+              return (
+                <View key={key} style={styles.keyHandlerRow}>
+                  <Text style={styles.keyHandlerKey}>{key}</Text>
+                  {isBool && (
+                    <View
+                      style={
+                        value
+                          ? styles.keyHandlerDotTrue
+                          : styles.keyHandlerDotFalse
+                      }
+                    />
+                  )}
+                  <Text style={styles.keyHandlerValue}>{`${value ?? ''}`}</Text>
                 </View>
-              ))}
-            </View>
+              );
+            })}
           </KeyboardExtendedBaseView>
           <Modal visible={showModal}>
             <View style={styles.modal}>
@@ -208,7 +230,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   contentContainer: {
     backgroundColor: '#ffffff',
-    flex: 1,
+    flexGrow: 1,
     padding: 10,
     borderRadius: 15,
   },
@@ -243,11 +265,42 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   keyHandler: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 2,
     marginBottom: 5,
     borderRadius: 10,
+    padding: 10,
+    gap: 4,
+  },
+  keyHandlerTitle: {
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  keyHandlerRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  keyHandlerKey: {
+    color: '#888',
+    minWidth: 120,
+  },
+  keyHandlerValue: {
+    fontWeight: '500',
+    flexShrink: 1,
+  },
+  keyHandlerDotTrue: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: '#34c759',
+    alignSelf: 'center',
+    marginRight: 4,
+  },
+  keyHandlerDotFalse: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: '#ff3b30',
+    alignSelf: 'center',
+    marginRight: 4,
   },
 });
