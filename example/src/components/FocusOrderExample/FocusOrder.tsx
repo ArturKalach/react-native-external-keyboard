@@ -104,7 +104,7 @@ export const FocusOrder = () => {
             </Pressable>
             <Pressable
               onPress={onPress}
-              lockFocus={['up', 'down', 'left']}
+              lockFocus={['up', 'left']}
               orderIndex={9}
               orderId="end"
               orderForward="start"

@@ -99,7 +99,7 @@ export const FocusMixedOrder = () => {
               orderId="end"
               orderBackward="c7"
               orderForward="start"
-              lockFocus={['up', 'down', 'left']}
+              lockFocus={['up', 'left']}
               placeholder="↺"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell, styles.cellEnd]}

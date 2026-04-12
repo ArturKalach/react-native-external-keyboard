@@ -88,6 +88,11 @@ export function FocusOrderScreen({
   );
 }
 
+function pickRandom(currentName: string): NavItem {
+  const others = FOCUS_ORDER_ITEMS.filter((i) => i.name !== currentName);
+  return others[Math.floor(Math.random() * others.length)]!;
+}
+
 function ExampleScreen({
   children,
   navigation,
@@ -106,9 +111,17 @@ function ExampleScreen({
       ? FOCUS_ORDER_ITEMS[currentIndex + 1]
       : null;
 
+  const pushRandom = () => {
+    const item = pickRandom(currentName);
+    (navigation as any).push(item.name);
+  };
+
   return (
     <SafeAreaView style={styles.exampleSafeArea} edges={['bottom']}>
       <View style={styles.exampleContainer}>{children}</View>
+      <TouchableOpacity style={styles.navBtnRandom} onPress={pushRandom}>
+        <Text style={styles.navBtnRandomText}>⚡ Push random</Text>
+      </TouchableOpacity>
       <View style={styles.navRow}>
         {prev ? (
           <TouchableOpacity
@@ -253,4 +266,13 @@ const styles = StyleSheet.create({
   navBtnChevron: { fontSize: 18, color: '#ffffff', lineHeight: 22 },
   navBtnLabel: { fontSize: 14, fontWeight: '500', color: '#ffffff' },
   navBtnText: { fontSize: 15, color: '#007AFF' },
+  navBtnRandom: {
+    alignSelf: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: '#e5e5ea',
+    marginBottom: 4,
+  },
+  navBtnRandomText: { fontSize: 13, fontWeight: '500', color: '#3c3c43' },
 });
