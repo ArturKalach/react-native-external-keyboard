@@ -73,7 +73,7 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusProps:(const RNCEKV::FocusProps &)oldProps
                           newProps:(const RNCEKV::FocusProps &)newProps {
-  if (oldProps.canBeFocused != newProps.canBeFocused) {
+  if (_canBeFocused != newProps.canBeFocused) {
     [self setCanBeFocused:newProps.canBeFocused];
   }
   

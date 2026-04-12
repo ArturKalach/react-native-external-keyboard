@@ -20,6 +20,7 @@ import { useBubbledInfo } from './BaseKeyboardView.hooks';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
 import { useOnFocusChange } from '../../utils/useOnFocusChange';
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
+import { wrapOrderPrefix } from '../../utils/wrapOrderPrefix';
 
 // @ts-ignore
 type NativeRef = React.ElementRef<ComponentType>;
@@ -93,6 +94,11 @@ export const BaseKeyboardView = React.memo(
         orderFirst,
         orderLast,
         orderGroup,
+        orderLeft,
+        orderRight,
+        orderUp,
+        orderDown,
+        orderId,
         enableContextMenu,
         ...props
       },
@@ -109,6 +115,8 @@ export const BaseKeyboardView = React.memo(
 
       const contextGroupId = useOrderFocusGroup();
       const groupId = orderGroup ?? contextGroupId;
+
+      const orderPrefix = contextGroupId ?? '';
 
       useEffect(() => {
         if (orderIndex !== undefined && !groupId)
@@ -154,10 +162,40 @@ export const BaseKeyboardView = React.memo(
       const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
       const ignoreFocusHint = Platform.OS !== 'ios' || !ignoreGroupFocusHint;
 
-      const _orderFirst =
-        orderFirst === null ? undefined : orderFirst ?? orderForward;
-      const _orderLast =
-        orderLast === null ? undefined : orderLast ?? orderBackward;
+      const wrapPrefix = useMemo(
+        () => wrapOrderPrefix(orderPrefix),
+        [orderPrefix]
+      );
+
+      const wrappedOrderProps = useMemo(
+        () => ({
+          orderId: wrapPrefix(orderId),
+          orderForward: wrapPrefix(orderForward),
+          orderBackward: wrapPrefix(orderBackward),
+          orderFirst: wrapPrefix(
+            orderFirst === null ? undefined : orderFirst ?? orderForward
+          ),
+          orderLast: wrapPrefix(
+            orderLast === null ? undefined : orderLast ?? orderBackward
+          ),
+          orderLeft: wrapPrefix(orderLeft),
+          orderRight: wrapPrefix(orderRight),
+          orderUp: wrapPrefix(orderUp),
+          orderDown: wrapPrefix(orderDown),
+        }),
+        [
+          wrapPrefix,
+          orderId,
+          orderForward,
+          orderBackward,
+          orderFirst,
+          orderLast,
+          orderLeft,
+          orderRight,
+          orderUp,
+          orderDown,
+        ]
+      );
 
       return (
         <KeyPressContext.Provider value={bubbled.context}>
@@ -184,10 +222,7 @@ export const BaseKeyboardView = React.memo(
             enableA11yFocus={enableA11yFocus}
             screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             lockFocus={lockFocusValue}
-            orderForward={orderForward}
-            orderBackward={orderBackward}
-            orderFirst={_orderFirst}
-            orderLast={_orderLast}
+            {...wrappedOrderProps}
             orderGroup={groupId}
           />
         </KeyPressContext.Provider>

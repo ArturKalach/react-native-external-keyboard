@@ -9,6 +9,7 @@ import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext'
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
 import type { KeyboardInputProps } from './KeyboardExtendedInput.types';
 import { blurMap, focusMap } from './KeyboardExtendedInput.consts';
+import { wrapOrderPrefix } from '../../utils/wrapOrderPrefix';
 import {
   LockFocusEnum,
   type LockFocusType,
@@ -103,6 +104,8 @@ export const KeyboardExtendedInput = React.forwardRef<
     const contextIdentifier = useGroupIdentifierContext();
     const contextOrderGroup = useOrderFocusGroup();
 
+    const orderPrefix = contextOrderGroup ?? '';
+
     const withHaloEffect = tintType === 'default' && haloEffect;
 
     const nativeFocusHandler = useMemo(
@@ -122,6 +125,35 @@ export const KeyboardExtendedInput = React.forwardRef<
       ? submitBehavior === 'blurAndSubmit'
       : props.blurOnSubmit ?? true;
 
+    const wrapPrefix = useMemo(
+      () => wrapOrderPrefix(orderPrefix),
+      [orderPrefix]
+    );
+
+    const wrappedOrderProps = useMemo(
+      () => ({
+        orderId: wrapPrefix(orderId),
+        orderForward: wrapPrefix(orderForward),
+        orderBackward: wrapPrefix(orderBackward),
+        orderLeft: wrapPrefix(orderLeft),
+        orderRight: wrapPrefix(orderRight),
+        orderUp: wrapPrefix(orderUp),
+        orderDown: wrapPrefix(orderDown),
+        orderFirst: wrapPrefix(orderId),
+        orderLast: wrapPrefix(orderId),
+      }),
+      [
+        wrapPrefix,
+        orderId,
+        orderForward,
+        orderBackward,
+        orderLeft,
+        orderRight,
+        orderUp,
+        orderDown,
+      ]
+    );
+
     return (
       <TextInputFocusWrapperNative
         onFocusChange={nativeFocusHandler as unknown as undefined} //ToDo update type
@@ -137,14 +169,8 @@ export const KeyboardExtendedInput = React.forwardRef<
         groupIdentifier={groupIdentifier ?? contextIdentifier}
         lockFocus={mapLockFocus(lockFocus)}
         orderGroup={orderGroup ?? contextOrderGroup}
-        orderIndex={orderIndex}
-        orderId={orderId}
-        orderForward={orderForward}
-        orderBackward={orderBackward}
-        orderLeft={orderLeft}
-        orderRight={orderRight}
-        orderUp={orderUp}
-        orderDown={orderDown}
+        orderIndex={orderIndex ?? -1}
+        {...wrappedOrderProps}
       >
         <TextInput
           ref={ref as React.RefObject<any>}

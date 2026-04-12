@@ -1,22 +1,59 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Focus } from 'react-native-external-keyboard';
 
+const variantBg: Record<string, string> = {
+  default: '#e5e5ea',
+  primary: '#007AFF',
+  danger: '#ff3b30',
+};
+const variantColor: Record<string, string> = {
+  default: '#000000',
+  primary: '#ffffff',
+  danger: '#ffffff',
+};
+
+const Btn = ({
+  title,
+  onPress,
+  variant = 'default',
+}: {
+  title: string;
+  onPress: () => void;
+  variant?: 'default' | 'primary' | 'danger';
+}) => (
+  <TouchableOpacity
+    style={[styles.btn, { backgroundColor: variantBg[variant] }]}
+    onPress={onPress}
+    accessibilityRole="button"
+  >
+    <Text style={[styles.btnText, { color: variantColor[variant] }]}>
+      {title}
+    </Text>
+  </TouchableOpacity>
+);
+
 const FocusTrapContent = ({ onClose }: { onClose: () => void }) => (
-  <Focus.Trap forceLock={true} style={styles.focusTrap}>
-    <Text accessibilityRole="header">Locked Area</Text>
-    <Text>Keyboard and ScreenReader focus is now trapped in this area.</Text>
-    <Button
-      title="Confirm"
-      onPress={() => console.log('Action confirmed')}
-      accessibilityLabel="Confirm action"
-    />
-    <Button
-      title="Cancel"
-      onPress={onClose}
-      accessibilityLabel="Close locked area"
-    />
-  </Focus.Trap>
+  <View style={styles.overlay}>
+    <Focus.Trap forceLock style={styles.dialog}>
+      <View style={styles.dialogHeader}>
+        <Text style={styles.dialogTitle}>Focus Trapped</Text>
+        <Text style={styles.dialogSubtitle}>
+          Keyboard and screen reader focus is locked inside this area. The
+          background content is unreachable until dismissed.
+        </Text>
+      </View>
+      <View style={styles.dialogActions}>
+        <Btn
+          title="Confirm"
+          variant="primary"
+          onPress={() => console.log('confirmed')}
+        />
+        <Btn title="Cancel" variant="danger" onPress={onClose} />
+      </View>
+    </Focus.Trap>
+  </View>
 );
 
 export const FocusLockExample = () => {
@@ -24,47 +61,96 @@ export const FocusLockExample = () => {
 
   return (
     <Focus.Frame style={styles.flex}>
-      <View style={styles.screen}>
-        <Text accessibilityRole="header">Focus Lock Demo</Text>
-        <Text>
-          This example demonstrates how to keep keyboard focus within a specific
-          area for improved accessibility.
-        </Text>
-        <Button
-          title={shown ? 'Hide Locked Area' : 'Show Locked Area'}
-          onPress={() => setShown(!shown)}
-          accessibilityLabel={shown ? 'Hide locked area' : 'Show locked area'}
-        />
+      <SafeAreaView style={styles.flex}>
+        <View style={styles.screen}>
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>BACKGROUND CONTENT</Text>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Outside Button A</Text>
+              <Text style={styles.cardDesc}>
+                Reachable only when the trap is hidden
+              </Text>
+              <Btn title="Interact" onPress={() => console.log('A pressed')} />
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Outside Button B</Text>
+              <Text style={styles.cardDesc}>
+                Also unreachable while trap is active
+              </Text>
+              <Btn title="Interact" onPress={() => console.log('B pressed')} />
+            </View>
+          </View>
+
+          <View style={styles.triggerSection}>
+            <Btn
+              title="Open Focus Trap"
+              variant="primary"
+              onPress={() => setShown(true)}
+            />
+          </View>
+        </View>
+
         {shown && <FocusTrapContent onClose={() => setShown(false)} />}
-        <Text>
-          You can interact with the rest of the screen when the locked area is
-          hidden.
-        </Text>
-        <Button
-          title="Outside Button"
-          onPress={() => console.log('Button outside locked area pressed')}
-          accessibilityLabel="Button outside locked area"
-        />
-      </View>
+      </SafeAreaView>
     </Focus.Frame>
   );
 };
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   screen: {
     flex: 1,
+    backgroundColor: '#f2f2f7',
+    padding: 16,
+    gap: 16,
+  },
+
+  section: { gap: 10 },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6b6b6b',
+    marginLeft: 4,
+    letterSpacing: 0.5,
+  },
+
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    gap: 6,
+  },
+  cardTitle: { fontSize: 16, fontWeight: '500', color: '#000000' },
+  cardDesc: { fontSize: 13, color: '#8e8e93', marginBottom: 4 },
+
+  triggerSection: {
+    marginTop: 'auto' as unknown as number,
+  },
+
+  btn: {
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  btnText: { fontSize: 15, fontWeight: '600' },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
-    padding: 10,
+    padding: 24,
   },
-  buttons: { flexDirection: 'row', gap: 20 },
-  flex: { flex: 1 },
-  focusTrap: {
-    padding: 10,
-    borderWidth: 2,
-    borderColor: 'gray',
-    borderRadius: 10,
-    gap: 10,
+  dialog: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    gap: 20,
   },
+  dialogHeader: { gap: 8 },
+  dialogTitle: { fontSize: 18, fontWeight: '700', color: '#000000' },
+  dialogSubtitle: { fontSize: 14, color: '#6b6b6b', lineHeight: 20 },
+  dialogActions: { gap: 10 },
 });

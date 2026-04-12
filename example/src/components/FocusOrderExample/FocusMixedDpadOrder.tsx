@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedInput,
+  KeyboardOrderFocusGroup,
   Pressable,
   type KeyboardFocus,
 } from 'react-native-external-keyboard';
@@ -9,12 +10,8 @@ import {
 const list = ['0_0', '0_1', '0_2', '1_0', '1_1', '1_2', '2_0', '2_1', '2_2'];
 const arrows = ['⇖', '⇑', '⇗', '⇐', '⊙', '⇒', '⇙', '⇓', '⇘'];
 
-export const FocusMixedDpadOrder = ({
-  onChange,
-}: {
-  onChange: (v: number) => void;
-}) => {
-  const [state, setState] = useState<number>(0);
+export const FocusMixedDpadOrder = () => {
+  const [state, setState] = useState<number>(4);
   const role = () => {
     setState((i) => (i === list.length - 1 ? 0 : i + 1));
   };
@@ -23,72 +20,101 @@ export const FocusMixedDpadOrder = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Mixed DPad</Text>
-      <View style={styles.column}>
-        <View style={styles.row}>
-          <KeyboardExtendedInput
-            orderId="0_0"
-            orderRight="0_2"
-            orderDown="2_0"
-            placeholder="↓→"
-            style={styles.inputText}
-            containerStyle={styles.block}
-          />
-          <Pressable orderId="0_1" style={styles.block}>
-            <Text>=</Text>
-          </Pressable>
-          <KeyboardExtendedInput
-            orderId="0_2"
-            orderLeft="0_0"
-            orderDown="2_2"
-            placeholder="←↓"
-            style={styles.inputText}
-            containerStyle={styles.block}
-          />
+      <View style={styles.header}>
+        <Text style={styles.title}>Mixed DPad</Text>
+        <Text style={styles.description}>
+          Arrow keys navigate between inputs and buttons in a grid. Center cell
+          links change on press.
+        </Text>
+      </View>
+      <KeyboardOrderFocusGroup>
+        <View style={styles.grid}>
+          <View style={styles.row}>
+            <KeyboardExtendedInput
+              orderId="0_0"
+              orderRight="0_2"
+              orderDown="2_0"
+              placeholder="→↓"
+              style={styles.inputText}
+              containerStyle={[styles.cell, styles.inputCell]}
+            />
+            <Pressable
+              orderId="0_1"
+              style={[styles.cell, styles.pressCell, styles.cellDim]}
+            >
+              <Text style={styles.pressSymbol}>—</Text>
+            </Pressable>
+            <KeyboardExtendedInput
+              orderId="0_2"
+              orderLeft="0_0"
+              orderDown="2_2"
+              placeholder="←↓"
+              style={styles.inputText}
+              containerStyle={[styles.cell, styles.inputCell]}
+            />
+          </View>
+          <View style={styles.row}>
+            <Pressable
+              orderId="1_0"
+              style={[styles.cell, styles.pressCell, styles.cellDim]}
+            >
+              <Text style={styles.pressSymbol}>—</Text>
+            </Pressable>
+            <Pressable
+              ref={ref}
+              orderLeft={list[state]}
+              orderRight={list[state]}
+              orderUp={list[state]}
+              orderDown={list[state]}
+              onPress={role}
+              orderId="1_1"
+              style={[styles.cell, styles.cellCenter]}
+            >
+              <Text style={styles.centerArrow}>{arrows[state]}</Text>
+            </Pressable>
+            <Pressable
+              orderId="1_2"
+              style={[styles.cell, styles.pressCell, styles.cellDim]}
+            >
+              <Text style={styles.pressSymbol}>—</Text>
+            </Pressable>
+          </View>
+          <View style={styles.row}>
+            <KeyboardExtendedInput
+              orderId="2_0"
+              orderUp="0_0"
+              orderRight="2_2"
+              placeholder="↑→"
+              style={styles.inputText}
+              containerStyle={[styles.cell, styles.inputCell]}
+            />
+            <Pressable
+              orderId="2_1"
+              style={[styles.cell, styles.pressCell, styles.cellDim]}
+            >
+              <Text style={styles.pressSymbol}>—</Text>
+            </Pressable>
+            <KeyboardExtendedInput
+              orderId="2_2"
+              orderLeft="2_0"
+              orderUp="0_2"
+              placeholder="↑←"
+              style={styles.inputText}
+              containerStyle={[styles.cell, styles.inputCell]}
+            />
+          </View>
         </View>
-        <View style={styles.row}>
-          <Pressable orderId="1_0" style={styles.block}>
-            <Text>‖</Text>
-          </Pressable>
-          <Pressable
-            ref={ref}
-            orderLeft={list[state]}
-            orderRight={list[state]}
-            orderUp={list[state]}
-            orderDown={list[state]}
-            onPress={role}
-            orderId="1_1"
-            style={styles.block}
-          >
-            <Text>{arrows[state]}</Text>
-          </Pressable>
-          <Pressable orderId="1_2" style={styles.block}>
-            <Text>‖</Text>
-          </Pressable>
+      </KeyboardOrderFocusGroup>
+      <View style={styles.legend}>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, styles.legendInput]} />
+          <Text style={styles.legendText}>Text Input</Text>
         </View>
-        <View style={styles.row}>
-          <KeyboardExtendedInput
-            orderId="2_0"
-            orderUp="0_0"
-            orderRight="2_2"
-            placeholder="↑→"
-            style={styles.inputText}
-            containerStyle={styles.block}
-          />
-          <Pressable orderId="2_1" style={styles.block}>
-            <Text>=</Text>
-          </Pressable>
-          <KeyboardExtendedInput
-            orderId="2_2"
-            orderLeft="2_0"
-            orderUp="0_2"
-            placeholder="↑←"
-            style={styles.inputText}
-            containerStyle={styles.block}
-          />
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, styles.legendCenter]} />
+          <Text style={styles.legendText}>Interactive</Text>
         </View>
       </View>
-      <Button title="Focus Order" onPress={() => onChange(0)} />
     </View>
   );
 };
@@ -96,24 +122,100 @@ export const FocusMixedDpadOrder = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    gap: 12,
+    gap: 20,
+    padding: 16,
   },
-  column: {
-    flexDirection: 'column',
-    gap: 2,
+  header: {
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 8,
   },
-  row: { flexDirection: 'row', gap: 2 },
-  title: { fontSize: 24 },
-  block: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1c1c1e',
+  },
+  description: {
+    fontSize: 13,
+    color: '#6b6b6b',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  grid: {
+    gap: 8,
+  },
+  row: { flexDirection: 'row', gap: 8 },
+  cell: {
+    width: 72,
+    height: 72,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  inputCell: {
+    backgroundColor: '#f0f4ff',
+    borderWidth: 1.5,
+    borderColor: '#c7d5f8',
+  },
+  pressCell: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e5e5ea',
+  },
+  cellDim: {
+    backgroundColor: '#f2f2f7',
+    borderColor: '#e5e5ea',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  cellCenter: {
+    backgroundColor: '#007AFF',
+    shadowOpacity: 0.15,
   },
   inputText: {
     textAlign: 'center',
     fontSize: 16,
+    fontWeight: '600',
+    color: '#007AFF',
     padding: 0,
+  },
+  pressSymbol: {
+    fontSize: 18,
+    color: '#c7c7cc',
+  },
+  centerArrow: {
+    fontSize: 28,
+    color: '#ffffff',
+  },
+  legend: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 3,
+  },
+  legendInput: {
+    backgroundColor: '#f0f4ff',
+    borderWidth: 1.5,
+    borderColor: '#c7d5f8',
+  },
+  legendCenter: {
+    backgroundColor: '#007AFF',
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#6b6b6b',
   },
 });

@@ -172,11 +172,10 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             <Text>Modal</Text>
           </Pressable>
           <KeyboardExtendedBaseView
-            haloEffect={true}
+            canBeFocused={true}
             onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
             onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
             style={styles.keyHandler}
-            groupIdentifier="keyTracker"
           >
             <Text style={styles.keyHandlerTitle}>
               {isKeyDown ? 'Press begin:' : 'Press ended:'}

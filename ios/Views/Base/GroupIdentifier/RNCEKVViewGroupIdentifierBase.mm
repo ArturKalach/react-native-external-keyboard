@@ -27,6 +27,14 @@
   return self;
 }
 
+- (NSString *)focusGroupIdentifier {
+  if(self.canBecomeFocused) {
+    return [self customGroupIdentifier];
+  }
+  
+  return [super focusGroupIdentifier];
+}
+
 - (NSString*)customGroupIdentifier {
   return _gIdDelegate.focusGroupIdentifier;
 }
