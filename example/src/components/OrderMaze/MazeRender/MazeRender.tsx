@@ -90,7 +90,6 @@ export const MazeItem = forwardRef<
             backgroundColor:
               cell === 0 ? '#22c55e' : cell === exit ? '#ef4444' : '#f8fafc',
           },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [cell, exit, isWall]
   );
 
