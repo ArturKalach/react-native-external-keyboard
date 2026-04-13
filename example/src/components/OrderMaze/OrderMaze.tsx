@@ -1,6 +1,10 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
+import {
+  KeyboardOrderFocusGroup,
+  Pressable,
+  type KeyboardFocus,
+} from 'react-native-external-keyboard';
 import { mazeGenerator } from './OrderMaze.util';
 import { MazeRender } from './MazeRender/MazeRender';
 
@@ -25,12 +29,14 @@ export const OrderMaze = () => {
 
   return (
     <View style={styles.gap}>
-      <MazeRender
-        onFinish={exit}
-        reset={reset}
-        startRef={startRef}
-        maze={maze}
-      />
+      <KeyboardOrderFocusGroup>
+        <MazeRender
+          onFinish={exit}
+          reset={reset}
+          startRef={startRef}
+          maze={maze}
+        />
+      </KeyboardOrderFocusGroup>
       {finished && (
         <View style={styles.banner}>
           <Text style={styles.bannerEmoji}>🎉</Text>
