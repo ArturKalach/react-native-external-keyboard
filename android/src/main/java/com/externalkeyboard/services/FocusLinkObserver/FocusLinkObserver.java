@@ -1,5 +1,6 @@
 package com.externalkeyboard.services.FocusLinkObserver;
 
+import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;

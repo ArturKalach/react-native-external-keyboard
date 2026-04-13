@@ -46,7 +46,7 @@ export const FocusOrder = () => {
             </Pressable>
             <Pressable
               onPress={onPress}
-              lockFocus={['left']}
+              lockFocus={['left', 'right']}
               orderIndex={2}
               style={styles.cell}
             >

@@ -208,4 +208,18 @@ public class FocusOrderDelegate {
     }
   }
 
+  public void cleanByOrderId(String orderId) {
+    if (orderId == null) return;
+
+    String orderGroup = delegate.getOrderGroup();
+    Integer orderIndex = delegate.getOrderIndex();
+    if (orderGroup != null && orderIndex != null) {
+      A11yOrderLinking.getInstance().removeRelationship(orderGroup, orderIndex);
+    }
+
+    FocusLinkObserver observer = FocusLinkObserverSingleton.getInstance();
+    observer.emitRemove(orderId);
+    A11yOrderLinking.getInstance().removeOrderLink(orderId);
+  }
+
 }

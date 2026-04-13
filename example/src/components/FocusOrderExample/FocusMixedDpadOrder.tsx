@@ -40,6 +40,8 @@ export const FocusMixedDpadOrder = () => {
             />
             <Pressable
               orderId="0_1"
+              orderLeft="0_0"
+              orderRight="0_2"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
             >
               <Text style={styles.pressSymbol}>—</Text>
@@ -55,7 +57,9 @@ export const FocusMixedDpadOrder = () => {
           </View>
           <View style={styles.row}>
             <Pressable
+              orderUp="0_0"
               orderId="1_0"
+              orderDown="2_0"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
             >
               <Text style={styles.pressSymbol}>—</Text>
@@ -73,7 +77,9 @@ export const FocusMixedDpadOrder = () => {
               <Text style={styles.centerArrow}>{arrows[state]}</Text>
             </Pressable>
             <Pressable
+              orderUp="0_2"
               orderId="1_2"
+              orderDown="2_2"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
             >
               <Text style={styles.pressSymbol}>—</Text>
@@ -89,7 +95,9 @@ export const FocusMixedDpadOrder = () => {
               containerStyle={[styles.cell, styles.inputCell]}
             />
             <Pressable
+              orderLeft="2_0"
               orderId="2_1"
+              orderRight="2_2"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
             >
               <Text style={styles.pressSymbol}>—</Text>

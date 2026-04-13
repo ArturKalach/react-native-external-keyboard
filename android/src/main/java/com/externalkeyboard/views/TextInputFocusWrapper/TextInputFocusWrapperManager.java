@@ -196,6 +196,7 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
 
   @Override
   public void onDropViewInstance(@NonNull TextInputFocusWrapper viewGroup) {
+    viewGroup.onDropViewInstance();
     viewGroup.setEditText(null);
     viewGroup.setOnFocusChangeListener(null);
     super.onDropViewInstance(viewGroup);

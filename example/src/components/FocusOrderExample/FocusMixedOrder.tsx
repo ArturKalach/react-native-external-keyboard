@@ -21,6 +21,7 @@ export const FocusMixedOrder = () => {
           <View style={styles.row}>
             <KeyboardExtendedInput
               orderForward="c1"
+              orderRight="c1"
               orderId="start"
               orderBackward="end"
               lockFocus={['down', 'left']}
@@ -30,6 +31,7 @@ export const FocusMixedOrder = () => {
             />
             <Pressable
               orderId="c1"
+              orderRight="c2"
               orderForward="c2"
               orderBackward="start"
               lockFocus={['down', 'left']}
@@ -39,6 +41,7 @@ export const FocusMixedOrder = () => {
             </Pressable>
             <KeyboardExtendedInput
               orderId="c2"
+              orderDown="c3"
               orderForward="c3"
               orderBackward="c1"
               lockFocus={['left']}
@@ -50,6 +53,7 @@ export const FocusMixedOrder = () => {
           <View style={styles.row}>
             <Pressable
               orderId="c5"
+              orderDown="c6"
               orderForward="c6"
               orderBackward="c4"
               lockFocus={['up', 'right']}
@@ -59,6 +63,7 @@ export const FocusMixedOrder = () => {
             </Pressable>
             <KeyboardExtendedInput
               orderId="c4"
+              orderLeft="c5"
               orderForward="c5"
               orderBackward="c3"
               lockFocus={['up', 'down', 'right']}
@@ -69,6 +74,7 @@ export const FocusMixedOrder = () => {
             <Pressable
               orderId="c3"
               orderForward="c4"
+              orderLeft="c4"
               orderBackward="c2"
               lockFocus={['up', 'down', 'right']}
               style={[styles.cell, styles.pressCell]}
@@ -80,6 +86,7 @@ export const FocusMixedOrder = () => {
             <KeyboardExtendedInput
               orderId="c6"
               orderForward="c7"
+              orderRight="c7"
               orderBackward="c5"
               lockFocus={['up', 'down', 'left']}
               placeholder="→"
@@ -88,6 +95,7 @@ export const FocusMixedOrder = () => {
             />
             <Pressable
               orderId="c7"
+              orderRight="end"
               orderBackward="c6"
               orderForward="end"
               lockFocus={['up', 'down', 'left']}

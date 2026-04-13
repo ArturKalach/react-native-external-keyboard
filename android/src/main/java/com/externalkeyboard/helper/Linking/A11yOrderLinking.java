@@ -1,5 +1,6 @@
 package com.externalkeyboard.helper.Linking;
 
+import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
@@ -59,6 +60,10 @@ public class A11yOrderLinking {
     if (queue == null) return;
 
     queue.removeFromOrder(index);
+
+    if (queue.isEmpty()) {
+      relationships.remove(key);
+    }
   }
 
   public void updateGroup(String prev, String next, Integer position, View child) {

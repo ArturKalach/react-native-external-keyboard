@@ -1,6 +1,7 @@
 package com.externalkeyboard.views.base;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
@@ -168,9 +169,7 @@ public class ViewOrderGroupBase extends ViewGroupBase implements FocusOrderDeleg
     return target.getWindowToken() == this.getWindowToken();
   }
 
-  @Override
-  protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    this.focusOrderDelegate.clear(firstChild);
+  public void onDropViewInstance() {
+    focusOrderDelegate.cleanByOrderId(orderId);
   }
 }

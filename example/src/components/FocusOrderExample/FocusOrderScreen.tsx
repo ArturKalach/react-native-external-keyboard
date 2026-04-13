@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable,
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +13,7 @@ import { FocusMixedOrder } from './FocusMixedOrder';
 import { FocusMixedDpadOrder } from './FocusMixedDpadOrder';
 import { OrderMaze } from '../OrderMaze/OrderMaze';
 import type { NavigationProp } from '@react-navigation/native';
+import { Pressable } from 'react-native-external-keyboard';
 
 type NavItem = { name: string; title: string; description: string };
 

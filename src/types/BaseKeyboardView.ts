@@ -67,6 +67,7 @@ export type BaseFocusViewProps = {
   orderBackward?: string;
   orderFirst?: string | null;
   orderLast?: string | null;
+  orderPrefix?: string;
 };
 
 export type BaseKeyboardViewProps = ViewProps & BaseFocusViewProps;

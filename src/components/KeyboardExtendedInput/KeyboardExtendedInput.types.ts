@@ -36,6 +36,9 @@ export type ExtraKeyboardProps = {
   orderRight?: string;
   orderUp?: string;
   orderDown?: string;
+  orderFirst?: string | null;
+  orderLast?: string | null;
+  orderPrefix?: string;
 };
 
 type IgnoreForCompatibility =

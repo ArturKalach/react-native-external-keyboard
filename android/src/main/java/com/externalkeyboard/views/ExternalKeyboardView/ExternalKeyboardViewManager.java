@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
+import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapper;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -284,5 +285,13 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     } else {
       super.receiveCommand(root, commandId, args);
     }
+  }
+
+  @Override
+  public void onDropViewInstance(@NonNull ReactViewGroup  viewGroup) {
+    if(viewGroup instanceof ExternalKeyboardView) {
+      ((ExternalKeyboardView)viewGroup).onDropViewInstance();
+    }
+    super.onDropViewInstance(viewGroup);
   }
 }

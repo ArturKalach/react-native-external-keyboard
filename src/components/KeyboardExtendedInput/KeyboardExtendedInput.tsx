@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, TextInput, Platform, StyleSheet } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
@@ -83,6 +83,9 @@ export const KeyboardExtendedInput = React.forwardRef<
       selectionHandleColor,
       cursorColor,
       maxFontSizeMultiplier,
+      orderFirst,
+      orderLast,
+      orderPrefix: _orderPrefix,
       ...props
     },
     ref
@@ -102,9 +105,10 @@ export const KeyboardExtendedInput = React.forwardRef<
     });
 
     const contextIdentifier = useGroupIdentifierContext();
-    const contextOrderGroup = useOrderFocusGroup();
+    const contextGroupId = useOrderFocusGroup();
+    const groupId = orderGroup ?? contextGroupId;
 
-    const orderPrefix = contextOrderGroup ?? '';
+    const orderPrefix = _orderPrefix ?? contextGroupId ?? '';
 
     const withHaloEffect = tintType === 'default' && haloEffect;
 
@@ -125,6 +129,46 @@ export const KeyboardExtendedInput = React.forwardRef<
       ? submitBehavior === 'blurAndSubmit'
       : props.blurOnSubmit ?? true;
 
+    useEffect(() => {
+      if (!__DEV__) return;
+      if (orderIndex !== undefined && !groupId)
+        console.warn(
+          '`orderIndex` must be declared alongside `orderGroup` for proper functionality. Ensure components are wrapped with `KeyboardOrderFocusGroup` or provide `orderGroup` directly.'
+        );
+    }, [groupId, orderIndex]);
+
+    useEffect(() => {
+      if (!__DEV__) return;
+      const hasOrderLinkProp =
+        orderId !== undefined ||
+        orderForward !== undefined ||
+        orderBackward !== undefined ||
+        orderFirst !== undefined ||
+        orderLast !== undefined ||
+        orderLeft !== undefined ||
+        orderRight !== undefined ||
+        orderUp !== undefined ||
+        orderDown !== undefined;
+      if (hasOrderLinkProp && orderPrefix === '') {
+        console.warn(
+          '[react-native-external-keyboard] orderId, orderForward, orderBackward, orderFirst, orderLast, ' +
+            'orderLeft, orderRight, orderUp, and orderDown are global IDs. ' +
+            'Wrap the component in <KeyboardOrderFocusGroup> or pass orderPrefix to avoid ID collisions across screens.'
+        );
+      }
+    }, [
+      orderId,
+      orderForward,
+      orderBackward,
+      orderFirst,
+      orderLast,
+      orderLeft,
+      orderRight,
+      orderUp,
+      orderDown,
+      orderPrefix,
+    ]);
+
     const wrapPrefix = useMemo(
       () => wrapOrderPrefix(orderPrefix),
       [orderPrefix]
@@ -139,8 +183,12 @@ export const KeyboardExtendedInput = React.forwardRef<
         orderRight: wrapPrefix(orderRight),
         orderUp: wrapPrefix(orderUp),
         orderDown: wrapPrefix(orderDown),
-        orderFirst: wrapPrefix(orderId),
-        orderLast: wrapPrefix(orderId),
+        orderFirst: wrapPrefix(
+          orderFirst === null ? undefined : orderFirst ?? orderForward
+        ),
+        orderLast: wrapPrefix(
+          orderLast === null ? undefined : orderLast ?? orderBackward
+        ),
       }),
       [
         wrapPrefix,
@@ -151,6 +199,8 @@ export const KeyboardExtendedInput = React.forwardRef<
         orderRight,
         orderUp,
         orderDown,
+        orderFirst,
+        orderLast,
       ]
     );
 
@@ -168,7 +218,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         tintColor={isIOS ? tintColor : undefined}
         groupIdentifier={groupIdentifier ?? contextIdentifier}
         lockFocus={mapLockFocus(lockFocus)}
-        orderGroup={orderGroup ?? contextOrderGroup}
+        orderGroup={groupId}
         orderIndex={orderIndex ?? -1}
         {...wrappedOrderProps}
       >
