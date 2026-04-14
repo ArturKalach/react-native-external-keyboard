@@ -171,8 +171,9 @@
 }
 
 - (void)setOrderPosition:(NSNumber *)position {
-  [_sequenceDelegate updatePosition:position];
-  _orderPosition = position;
+  NSNumber* newPosition = [position intValue] == -1 ? nil : position;
+  [_sequenceDelegate updatePosition:newPosition];
+  _orderPosition = newPosition;
 }
 
 - (void)setOrderId:(NSString *)next {

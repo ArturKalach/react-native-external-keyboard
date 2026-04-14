@@ -29,16 +29,6 @@
   self.storedView = nil;
 }
 
-#ifndef RCT_NEW_ARCH_ENABLED
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-
-    if (self.window == nil) {
-        [self cleanReferences];
-    }
-}
-#endif
-
 - (void)willRemoveSubview:(UIView *)subview {
   [super willRemoveSubview:subview];
 

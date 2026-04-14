@@ -77,13 +77,15 @@ RCT_CUSTOM_VIEW_PROPERTY(orderGroup, NSString, RNCEKVTextInputFocusWrapper)
     [view setOrderGroup: value];
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSInteger, RNCEKVTextInputFocusWrapper)
+RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSNumber, RNCEKVTextInputFocusWrapper)
 {
-    if (json) {
-        NSNumber* value = [RCTConvert NSNumber:json];
-        [view setOrderPosition: value];
-    }
+  if(json){
+    NSNumber* value = [RCTConvert NSNumber:json];
+    NSNumber* orderPosition = [value intValue] == -1 ? nil : value;
+    [view setOrderPosition: orderPosition];
+  }
 }
+
 
 RCT_CUSTOM_VIEW_PROPERTY(orderId, NSString, RNCEKVTextInputFocusWrapper)
 {

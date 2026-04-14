@@ -140,7 +140,8 @@ RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSNumber, RNCEKVExternalKeyboardView)
 {
   if(json){
     NSNumber* value = [RCTConvert NSNumber:json];
-    [view setOrderPosition: value];
+    NSNumber* orderPosition = [value intValue] == -1 ? nil : value;
+    [view setOrderPosition: orderPosition];
   }
 }
 

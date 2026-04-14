@@ -90,7 +90,7 @@ static const NSInteger AUTO_BLUR = 2;
     if(oldViewProps.multiline != newViewProps.multiline) {
         [self setMultiline: newViewProps.multiline];
     }
-  
+
     [self updateGroupIdentifierProps:RNCEKV::GroupIdentifierProps::from(oldViewProps)
                             newProps:RNCEKV::GroupIdentifierProps::from(newViewProps)];
 
@@ -284,14 +284,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
   }
 
   return nil;
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    [super willMoveToSuperview:newSuperview];
-
-    if (newSuperview == nil) {
-        [self cleanReferences];
-    }
 }
 
 @end

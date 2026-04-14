@@ -54,6 +54,7 @@ using namespace facebook::react;
                                                 object:nil];
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
 - (void)prepareForRecycle {
   [super prepareForRecycle];
   _forceLock = NO;
@@ -62,6 +63,7 @@ using namespace facebook::react;
                                                   name:UIAccessibilityElementFocusedNotification
                                                 object:nil];
 }
+#endif
 
 - (void)onAccessibilityFocusChanged:(NSNotification *)notification {
   if (!_forceLock || _lockDisabled) return;

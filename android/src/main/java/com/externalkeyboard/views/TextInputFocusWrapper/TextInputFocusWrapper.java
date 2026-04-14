@@ -26,11 +26,6 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
   private boolean multiline = false;
   private boolean keyboardFocusable = true;
 
-  @Override
-  public View getFirstChild() {
-    return this.reactEditText;
-  }
-
   private boolean getIsNativelyFixedVersion() {
     try {
       Object minorValue = com.facebook.react.modules.systeminfo.ReactNativeVersion.VERSION.getOrDefault("minor", 0);
@@ -41,18 +36,43 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
     }
   }
 
+  // For FOCUS_BY_PRESS: wrapper must always intercept focus (regardless of RN version)
+  //   so the user navigates to the wrapper first, then presses to enter edit mode.
+  // For regular focus: pre-0.79 had a backward-direction bug, so the wrapper handled
+  //   focus transfer. In 0.79+ that is natively fixed and the EditText gets focus directly.
+  private boolean shouldWrapperBeFocusable() {
+    if (!keyboardFocusable) return false;
+    if (focusType == FOCUS_BY_PRESS) return true;
+    return !getIsNativelyFixedVersion();
+  }
+
+  private boolean shouldEditTextBeFocusable() {
+    return keyboardFocusable && !shouldWrapperBeFocusable();
+  }
+
+  private void updateFocusability() {
+    this.setFocusable(shouldWrapperBeFocusable());
+    if (this.reactEditText != null) {
+      this.reactEditText.setFocusable(shouldEditTextBeFocusable());
+    }
+  }
+
+  @Override
+  public View getFirstChild() {
+    // In 0.79+ with regular focus, the EditText receives focus directly.
+    // For FOCUS_BY_PRESS the wrapper itself is the focus target, so return this.
+    if (this.getIsNativelyFixedVersion() && focusType != FOCUS_BY_PRESS && this.reactEditText != null) {
+      return this.reactEditText;
+    }
+    return this;
+  }
+
   public void setKeyboardFocusable(boolean canBeFocusable) {
     if (keyboardFocusable == canBeFocusable) {
       return;
     }
-
     keyboardFocusable = canBeFocusable;
-
-    this.setFocusable(keyboardFocusable);
-    if (this.reactEditText != null) {
-      boolean isAlreadyFixed = getIsNativelyFixedVersion();
-      this.reactEditText.setFocusable(isAlreadyFixed);
-    }
+    updateFocusability();
   }
 
   private View.OnAttachStateChangeListener getOnAttachListener() {
@@ -61,8 +81,7 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
         @Override
         public void onViewAttachedToWindow(@NonNull View view) {
           focusOrderDelegate.link();
-          boolean isAlreadyFixed = getIsNativelyFixedVersion();
-          view.setFocusable(isAlreadyFixed);
+          view.setFocusable(shouldEditTextBeFocusable());
         }
 
         @Override
@@ -91,15 +110,9 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
   public void setEditText(ReactEditText editText) {
     if (editText != null) {
       this.reactEditText = editText;
-      boolean isAlreadyFixed = getIsNativelyFixedVersion();
-      if (isAlreadyFixed) {
-        this.setFocusable(false);
-      }
+      updateFocusability();
 
       this.reactEditText.addOnAttachStateChangeListener(getOnAttachListener());
-      if (focusType == FOCUS_BY_PRESS) {
-        this.reactEditText.setFocusable(isAlreadyFixed);
-      }
       OnFocusChangeListener reactListener = this.reactEditText.getOnFocusChangeListener();
       this.reactEditText.setOnFocusChangeListener((textInput, hasTextEditFocus) -> {
         reactListener.onFocusChange(textInput, hasTextEditFocus);
@@ -112,8 +125,8 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
           ExternalKeyboardModule.setFocusedTextInput(textInput);
         }
         if (!hasTextEditFocus) {
-          this.setFocusable(!isAlreadyFixed);
-          this.reactEditText.setFocusable(isAlreadyFixed);
+          // Restore idle focusability state: wrapper ready to receive focus again
+          updateFocusability();
         }
       });
       onMultiplyBlurSubmitHandle();
@@ -135,6 +148,7 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
 
   public void setFocusType(int focusType) {
     this.focusType = focusType;
+    updateFocusability();
   }
 
   public void setBlurType(int blurType) {
@@ -144,11 +158,7 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
   public TextInputFocusWrapper(Context context) {
     super(context);
     this.context = context;
-
-    if (keyboardFocusable) {
-      boolean isAlreadyFixed = getIsNativelyFixedVersion();
-      setFocusable(!isAlreadyFixed);
-    }
+    setFocusable(shouldWrapperBeFocusable());
   }
 
   public void setBlurOnSubmit(boolean blurOnSubmit) {
@@ -165,7 +175,7 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
     if (isFocusLocked(event)) {
       return true;
     }
-    if (focusType == FOCUS_BY_PRESS) {
+    if (focusType == FOCUS_BY_PRESS && this.reactEditText != null) {
       this.reactEditText.setFocusable(false);
     }
     if (keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -176,15 +186,16 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
   }
 
   public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-    boolean isAlreadyFixed = getIsNativelyFixedVersion();
-    if (isAlreadyFixed) {
+    // In 0.79+ with regular focus, the wrapper is not focusable and this method is
+    // unlikely to be called from normal navigation, but handle it defensively.
+    if (getIsNativelyFixedVersion() && focusType != FOCUS_BY_PRESS) {
       return super.requestFocus(direction, previouslyFocusedRect);
     }
+    // Pre-0.79: wrapper intercepts forward/backward focus and transfers it to EditText.
     if ((direction == View.FOCUS_FORWARD || direction == View.FOCUS_BACKWARD) && focusType != FOCUS_BY_PRESS) {
       this.handleTextInputFocus();
       return true;
     }
-
     return super.requestFocus(direction, previouslyFocusedRect);
   }
 

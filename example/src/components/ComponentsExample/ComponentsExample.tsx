@@ -145,6 +145,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           <KeyboardExtendedInput
             focusable={true}
             value={textInput}
+            focusType="press"
             onChangeText={setTextInput}
             containerStyle={styles.doubleBottom}
             style={styles.input as object} //ToDo updat type
@@ -154,6 +155,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             focusable={true}
             value={multilineTextInput}
             multiline
+            focusType="press"
             onSubmitEditing={() => console.log('OnSubmitEditing: multiline')}
             onChangeText={setMultilineTextInput}
             containerStyle={styles.doubleBottom}
