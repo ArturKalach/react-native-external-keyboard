@@ -38,10 +38,11 @@
 }
 
 - (int)getItemIndex:(UIView *)element {
+  if (element == nil || ![element isKindOfClass:[UIView class]]) return -1;
   NSArray *order = [_positions getValues];
   for (int i = 0; i < (int)order.count; i++) {
     UIView *orderElement = order[i];
-    if (orderElement.subviews[0] == element) {
+    if ([element isDescendantOfView:orderElement]) {
       return i;
     }
   }

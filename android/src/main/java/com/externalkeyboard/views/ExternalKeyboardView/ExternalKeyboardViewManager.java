@@ -1,14 +1,11 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
-import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapper;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -33,20 +30,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @NonNull
   @Override
   public ExternalKeyboardView createViewInstance(@NonNull ThemedReactContext context) {
-    ExternalKeyboardView viewGroup = new ExternalKeyboardView(context);
-
-    viewGroup.setOnHierarchyChangeListener(new ExternalKeyboardView.OnHierarchyChangeListener() {
-      @Override
-      public void onChildViewAdded(View parent, View child) {
-        viewGroup.linkAddView(child);
-      }
-
-      @Override
-      public void onChildViewRemoved(View parent, View child) {
-        viewGroup.linkRemoveView(child);
-      }
-    });
-    return viewGroup;
+    return new ExternalKeyboardView(context);
   }
 
   public static Map<String, Object> buildDirectEventMap(String registrationName) {

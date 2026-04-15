@@ -9,9 +9,11 @@
 #import "RNCEKVFocusLinkObserver.h"
 #import "RNCEKVOrderSubscriber.h"
 #import "RNCEKVOrderLinking.h"
+#import "RNCEKVKeyboardFocusableProtocol.h"
 
 static NSNumber *const FOCUS_DEFAULT = nil;
 static NSNumber *const FOCUS_LOCK = @0;
+static NSNumber *const FOCUS_HANDLED = @0;
 
 @implementation RNCEKVFocusLinkDelegate {
   BOOL _isFocused;
@@ -42,6 +44,14 @@ static NSNumber *const FOCUS_LOCK = @0;
   if (_delegate.orderId != nil) {
     [[RNCEKVOrderLinking sharedInstance] cleanOrderId:_delegate.orderId];
     [self clear];
+  }
+}
+
+#pragma mark - Focus helpers
+
+- (void)keyboardedViewFocus:(UIView *)view {
+  if ([view conformsToProtocol:@protocol(RNCEKVKeyboardFocusableProtocol)]) {
+    [(UIView<RNCEKVKeyboardFocusableProtocol> *)view focus];
   }
 }
 
@@ -157,10 +167,25 @@ static NSNumber *const FOCUS_LOCK = @0;
   UIView *current = (UIView *)context.previouslyFocusedItem;
   UIView *targetView = [_delegate getFocusTargetView];
 
-  if (current == targetView) {
+  BOOL isCurrentDelegate = current != nil
+    && [current isKindOfClass:[UIView class]]
+    && (current == targetView || [current isDescendantOfView:_delegate]);
+  if (isCurrentDelegate) {
     NSUInteger rawFocusLockValue = [_delegate.lockFocus unsignedIntegerValue];
     if ((rawFocusLockValue & movementHint) != 0) {
       return FOCUS_LOCK;
+    }
+
+    NSString *orderId = nil;
+    if (movementHint == UIFocusHeadingLast)          orderId = _delegate.orderLast;
+    else if (movementHint == UIFocusHeadingFirst)    orderId = _delegate.orderFirst;
+    else if (movementHint == UIFocusHeadingNext)     orderId = _delegate.orderForward;
+    else if (movementHint == UIFocusHeadingPrevious) orderId = _delegate.orderBackward;
+
+    if (orderId) {
+      UIView *nextView = [[RNCEKVOrderLinking sharedInstance] getOrderView:orderId];
+      [self keyboardedViewFocus:nextView];
+      return FOCUS_HANDLED;
     }
   }
 

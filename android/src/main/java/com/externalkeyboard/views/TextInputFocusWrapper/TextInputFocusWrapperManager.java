@@ -1,8 +1,5 @@
 package com.externalkeyboard.views.TextInputFocusWrapper;
 
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,8 +10,6 @@ import com.externalkeyboard.events.MultiplyTextSubmit;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.views.textinput.ReactEditText;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,32 +25,12 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
 
   @Override
   public TextInputFocusWrapper createViewInstance(ThemedReactContext context) {
-    return subscribeOnHierarchy(new TextInputFocusWrapper(context));
+    return new TextInputFocusWrapper(context);
   }
 
   @Override
   protected void addEventEmitters(final ThemedReactContext reactContext, TextInputFocusWrapper viewGroup) {
     viewGroup.subscribeOnFocus();
-  }
-
-  protected TextInputFocusWrapper subscribeOnHierarchy(TextInputFocusWrapper viewGroup) {
-    viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-      @Override
-      public void onChildViewAdded(View parent, View child) {
-        if (child instanceof ReactEditText) {
-          viewGroup.setEditText((ReactEditText) child);
-        }
-      }
-
-      @Override
-      public void onChildViewRemoved(View parent, View child) {
-        if (child instanceof ReactEditText) {
-          viewGroup.setEditText(null);
-        }
-      }
-    });
-
-    return viewGroup;
   }
 
   @Override

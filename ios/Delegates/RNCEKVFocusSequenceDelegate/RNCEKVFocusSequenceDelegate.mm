@@ -12,8 +12,7 @@
 #import "UIView+React.h"
 
 static NSNumber *const FOCUS_DEFAULT = nil;
-static NSNumber *const FOCUS_LOCK = @0;
-static NSNumber *const FOCUS_UPDATE = @1;
+static NSNumber *const FOCUS_HANDLED = @0;
 
 @implementation RNCEKVFocusSequenceDelegate {
   BOOL _isLinked;
@@ -74,7 +73,7 @@ static NSNumber *const FOCUS_UPDATE = @1;
 
 #pragma mark - Sequential navigation
 
-- (void)handleNextFocus:(UIView *)current
+- (BOOL)handleNextFocus:(UIView *)current
            currentIndex:(NSInteger)currentIndex
       orderRelationship:(RNCEKVOrderRelationship *)orderRelationship {
   UIView *entry = orderRelationship.entry;
@@ -82,18 +81,23 @@ static NSNumber *const FOCUS_UPDATE = @1;
 
   if (entry == current) {
     [self keyboardedViewFocus:[orderRelationship getItem:0]];
+    return NO;
   }
 
   if (currentIndex == orderRelationship.count - 1 && exit) {
     [self defaultViewFocus:exit];
+    return YES;
   }
 
   if (currentIndex >= 0 && currentIndex < orderRelationship.count - 1) {
     [self keyboardedViewFocus:[orderRelationship getItem:currentIndex + 1]];
+    return YES;
   }
+
+  return NO;
 }
 
-- (void)handlePrevFocus:(UIView *)current
+- (BOOL)handlePrevFocus:(UIView *)current
            currentIndex:(NSInteger)currentIndex
       orderRelationship:(RNCEKVOrderRelationship *)orderRelationship {
   UIView *exit = orderRelationship.exit;
@@ -102,15 +106,20 @@ static NSNumber *const FOCUS_UPDATE = @1;
 
   if (exit == current) {
     [self keyboardedViewFocus:[orderRelationship getItem:orderCount - 1]];
+    return YES;
   }
 
   if (currentIndex == 0 && entry) {
     [self defaultViewFocus:entry];
+    return YES;
   }
 
   if (currentIndex > 0 && currentIndex <= orderCount - 1) {
     [self keyboardedViewFocus:[orderRelationship getItem:currentIndex - 1]];
+    return YES;
   }
+
+  return NO;
 }
 
 #pragma mark - shouldUpdateFocusInContext
@@ -119,21 +128,6 @@ static NSNumber *const FOCUS_UPDATE = @1;
   UIFocusHeading movementHint = context.focusHeading;
   UIView *next = (UIView *)context.nextFocusedItem;
   UIView *current = (UIView *)context.previouslyFocusedItem;
-  UIView *targetView = [_delegate getFocusTargetView];
-
-  if (current == targetView) {
-    NSString *orderId = nil;
-    if (movementHint == UIFocusHeadingLast)          orderId = _delegate.orderLast;
-    else if (movementHint == UIFocusHeadingFirst)    orderId = _delegate.orderFirst;
-    else if (movementHint == UIFocusHeadingNext)     orderId = _delegate.orderForward;
-    else if (movementHint == UIFocusHeadingPrevious) orderId = _delegate.orderBackward;
-
-    if (orderId) {
-      UIView *nextView = [[RNCEKVOrderLinking sharedInstance] getOrderView:orderId];
-      [self keyboardedViewFocus:nextView];
-      return FOCUS_LOCK;
-    }
-  }
 
   if (_delegate.orderGroup && _delegate.orderPosition != nil) {
     RNCEKVOrderRelationship *orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo:_delegate.orderGroup];
@@ -153,13 +147,13 @@ static NSNumber *const FOCUS_UPDATE = @1;
     }
 
     if (movementHint == UIFocusHeadingNext) {
-      [self handleNextFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];
-      return FOCUS_UPDATE;
+      BOOL handled = [self handleNextFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];
+      return handled ? FOCUS_HANDLED : FOCUS_DEFAULT;
     }
 
     if (movementHint == UIFocusHeadingPrevious) {
-      [self handlePrevFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];
-      return FOCUS_UPDATE;
+      BOOL handled = [self handlePrevFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];
+      return handled ? FOCUS_HANDLED : FOCUS_DEFAULT;
     }
   }
 

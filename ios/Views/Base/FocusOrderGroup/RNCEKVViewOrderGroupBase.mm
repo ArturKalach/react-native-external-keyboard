@@ -87,14 +87,23 @@
 }
 
 - (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
-  NSNumber *sequenceResult = [_sequenceDelegate shouldUpdateFocusInContext:context];
-  if (sequenceResult != nil) {
-    return sequenceResult.boolValue;
+    BOOL hasLinkConfig = _lockFocus != nil
+    || _orderId != nil
+    || _orderLeft != nil || _orderRight != nil
+    || _orderUp != nil   || _orderDown != nil
+    || _orderForward != nil || _orderBackward != nil
+    || _orderFirst != nil   || _orderLast != nil;
+
+  if (hasLinkConfig) {
+    NSNumber *linkResult = [_linkDelegate shouldUpdateFocusInContext:context];
+    if (linkResult != nil) return linkResult.boolValue;
   }
 
-  NSNumber *linkResult = [_linkDelegate shouldUpdateFocusInContext:context];
-  if (linkResult != nil) {
-    return linkResult.boolValue;
+  BOOL hasSequenceConfig = _orderGroup != nil && _orderPosition != nil;
+
+  if (hasSequenceConfig) {
+    NSNumber *sequenceResult = [_sequenceDelegate shouldUpdateFocusInContext:context];
+    if (sequenceResult != nil) return sequenceResult.boolValue;
   }
 
   return [super shouldUpdateFocusInContext:context];
@@ -165,40 +174,72 @@
 }
 #endif
 
+- (void)setLockFocus:(NSNumber *)lockFocus {
+  if ([_lockFocus isEqual:lockFocus]) return;
+  _lockFocus = lockFocus;
+}
+
 - (void)setOrderGroup:(NSString *)orderGroup {
+  if ([_orderGroup isEqual:orderGroup]) return;
   [_sequenceDelegate updateOrderGroup:orderGroup];
   _orderGroup = orderGroup;
 }
 
 - (void)setOrderPosition:(NSNumber *)position {
-  NSNumber* newPosition = [position intValue] == -1 ? nil : position;
+  NSNumber *newPosition = [position intValue] == -1 ? nil : position;
+  if ([_orderPosition isEqual:newPosition]) return;
   [_sequenceDelegate updatePosition:newPosition];
   _orderPosition = newPosition;
 }
 
-- (void)setOrderId:(NSString *)next {
-  [_linkDelegate refreshId:_orderId next:next];
-  _orderId = next;
+- (void)setOrderId:(NSString *)orderId {
+  if ([_orderId isEqual:orderId]) return;
+  [_linkDelegate refreshId:_orderId next:orderId];
+  _orderId = orderId;
 }
 
 - (void)setOrderLeft:(NSString *)orderLeft {
+  if ([_orderLeft isEqual:orderLeft]) return;
   [_linkDelegate refreshLeft:orderLeft];
   _orderLeft = orderLeft;
 }
 
 - (void)setOrderRight:(NSString *)orderRight {
+  if ([_orderRight isEqual:orderRight]) return;
   [_linkDelegate refreshRight:orderRight];
   _orderRight = orderRight;
 }
 
 - (void)setOrderUp:(NSString *)orderUp {
+  if ([_orderUp isEqual:orderUp]) return;
   [_linkDelegate refreshUp:orderUp];
   _orderUp = orderUp;
 }
 
 - (void)setOrderDown:(NSString *)orderDown {
+  if ([_orderDown isEqual:orderDown]) return;
   [_linkDelegate refreshDown:orderDown];
   _orderDown = orderDown;
+}
+
+- (void)setOrderForward:(NSString *)orderForward {
+  if ([_orderForward isEqual:orderForward]) return;
+  _orderForward = orderForward;
+}
+
+- (void)setOrderBackward:(NSString *)orderBackward {
+  if ([_orderBackward isEqual:orderBackward]) return;
+  _orderBackward = orderBackward;
+}
+
+- (void)setOrderFirst:(NSString *)orderFirst {
+  if ([_orderFirst isEqual:orderFirst]) return;
+  _orderFirst = orderFirst;
+}
+
+- (void)setOrderLast:(NSString *)orderLast {
+  if ([_orderLast isEqual:orderLast]) return;
+  _orderLast = orderLast;
 }
 
 @end

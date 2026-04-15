@@ -14,6 +14,11 @@ import {
   LinkOrderScreen,
   MixedOrderScreen,
   MixedDPadScreen,
+  MixedPositionOrderScreen,
+  OrderRandomizerScreen,
+  LinkRandomizerScreen,
+  MixedRandomizerScreen,
+  MixedPositionRandomizerScreen,
   MazeExampleScreen,
 } from './components/FocusOrderExample/FocusOrderScreen';
 import { PressableTest } from './components/Pressables/PressableTest';
@@ -177,6 +182,31 @@ export function App() {
             name="MixedDPadExample"
             component={MixedDPadScreen}
             options={{ title: 'Mixed DPad' }}
+          />
+          <Stack.Screen
+            name="MixedPositionOrderExample"
+            component={MixedPositionOrderScreen}
+            options={{ title: 'Mixed Position Order' }}
+          />
+          <Stack.Screen
+            name="LinkRandomizerExample"
+            component={LinkRandomizerScreen}
+            options={{ title: 'Link Randomizer' }}
+          />
+          <Stack.Screen
+            name="MixedRandomizerExample"
+            component={MixedRandomizerScreen}
+            options={{ title: 'Mixed Randomizer' }}
+          />
+          <Stack.Screen
+            name="MixedPositionRandomizerExample"
+            component={MixedPositionRandomizerScreen}
+            options={{ title: 'Mixed Position Randomizer' }}
+          />
+          <Stack.Screen
+            name="OrderRandomizerExample"
+            component={OrderRandomizerScreen}
+            options={{ title: 'Order Randomizer' }}
           />
           <Stack.Screen
             name="MazeExample"

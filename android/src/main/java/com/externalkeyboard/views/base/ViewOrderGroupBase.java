@@ -86,6 +86,10 @@ public class ViewOrderGroupBase extends ViewGroupBase implements FocusOrderDeleg
 
 
   public void setOrderIndex(int orderIndex) {
+    if(orderIndex == -1) {
+      this.orderIndex = null;
+      return;
+    }
     boolean wasSet = this.orderIndex != null;
     this.orderIndex = orderIndex;
     if (wasSet) {
@@ -102,6 +106,18 @@ public class ViewOrderGroupBase extends ViewGroupBase implements FocusOrderDeleg
     this.focusOrderDelegate = new FocusOrderDelegate(this);
   }
 
+  @Override
+  public void onViewAdded(View child) {
+    super.onViewAdded(child);
+    linkAddView(child);
+  }
+
+  @Override
+  public void onViewRemoved(View child) {
+    super.onViewRemoved(child);
+    linkRemoveView(child);
+  }
+
   public void linkAddView(View child) {
     if (firstChild == null) {
       firstChild = child;
@@ -111,8 +127,8 @@ public class ViewOrderGroupBase extends ViewGroupBase implements FocusOrderDeleg
 
   public void linkRemoveView(View view) {
     if (view == firstChild) {
+      focusOrderDelegate.unlink();
       firstChild = null;
-      focusOrderDelegate.unlink(view);
     }
   }
 

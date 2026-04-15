@@ -53,7 +53,7 @@ export const KeyboardExtendedInput = React.forwardRef<
 >(
   (
     {
-      focusType = 'default',
+      focusType = 'press',
       blurType = 'default',
       containerStyle,
       onFocusChange,

@@ -11,6 +11,11 @@ import { FocusDPadOrder } from './FocusDPadOrder';
 import { FocusLinkOrder } from './FocusLinkOrder';
 import { FocusMixedOrder } from './FocusMixedOrder';
 import { FocusMixedDpadOrder } from './FocusMixedDpadOrder';
+import { FocusMixedPositionOrder } from './FocusMixedPositionOrder';
+import { FocusOrderRandomizer } from './FocusOrderRandomizer';
+import { FocusLinkRandomizer } from './FocusLinkRandomizer';
+import { FocusMixedRandomizer } from './FocusMixedRandomizer';
+import { FocusMixedPositionRandomizer } from './FocusMixedPositionRandomizer';
 import { OrderMaze } from '../OrderMaze/OrderMaze';
 import type { NavigationProp } from '@react-navigation/native';
 import { Pressable } from 'react-native-external-keyboard';
@@ -42,6 +47,31 @@ export const FOCUS_ORDER_ITEMS: NavItem[] = [
     name: 'MixedDPadExample',
     title: 'Mixed DPad',
     description: 'D-pad with inputs and pressables',
+  },
+  {
+    name: 'MixedPositionOrderExample',
+    title: 'Mixed Position Order',
+    description: 'Inputs and pressables with index-based ordering',
+  },
+  {
+    name: 'OrderRandomizerExample',
+    title: 'Order Randomizer',
+    description: 'Dynamically reassign orderIndex values',
+  },
+  {
+    name: 'LinkRandomizerExample',
+    title: 'Link Randomizer',
+    description: 'Dynamically rebuild orderForward/orderBackward chain',
+  },
+  {
+    name: 'MixedRandomizerExample',
+    title: 'Mixed Randomizer',
+    description: 'Randomize link chain across inputs and pressables',
+  },
+  {
+    name: 'MixedPositionRandomizerExample',
+    title: 'Mixed Position Randomizer',
+    description: 'Randomize orderIndex across inputs and pressables',
   },
   {
     name: 'MazeExample',
@@ -202,6 +232,67 @@ export function MixedDPadScreen({
   return (
     <ExampleScreen navigation={navigation} currentName="MixedDPadExample">
       <FocusMixedDpadOrder />
+    </ExampleScreen>
+  );
+}
+export function MixedPositionOrderScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
+  return (
+    <ExampleScreen
+      navigation={navigation}
+      currentName="MixedPositionOrderExample"
+    >
+      <FocusMixedPositionOrder />
+    </ExampleScreen>
+  );
+}
+export function LinkRandomizerScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
+  return (
+    <ExampleScreen navigation={navigation} currentName="LinkRandomizerExample">
+      <FocusLinkRandomizer />
+    </ExampleScreen>
+  );
+}
+export function OrderRandomizerScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
+  return (
+    <ExampleScreen navigation={navigation} currentName="OrderRandomizerExample">
+      <FocusOrderRandomizer />
+    </ExampleScreen>
+  );
+}
+export function MixedRandomizerScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
+  return (
+    <ExampleScreen navigation={navigation} currentName="MixedRandomizerExample">
+      <FocusMixedRandomizer />
+    </ExampleScreen>
+  );
+}
+export function MixedPositionRandomizerScreen({
+  navigation,
+}: {
+  navigation: NavigationProp<any>;
+}) {
+  return (
+    <ExampleScreen
+      navigation={navigation}
+      currentName="MixedPositionRandomizerExample"
+    >
+      <FocusMixedPositionRandomizer />
     </ExampleScreen>
   );
 }
