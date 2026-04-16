@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.text.Editable;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -33,7 +34,9 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
 
   private static boolean resolveIsNativelyFixedVersion() {
     try {
-      Object minorValue = com.facebook.react.modules.systeminfo.ReactNativeVersion.VERSION.getOrDefault("minor", 0);
+      Object minorValue = com.facebook.react.modules.systeminfo.ReactNativeVersion.VERSION.containsKey("minor")
+          ? com.facebook.react.modules.systeminfo.ReactNativeVersion.VERSION.get("minor")
+          : 0;
       int minor = (minorValue instanceof Integer) ? (int) minorValue : 0;
       return minor >= 79;
     } catch (Exception e) {
@@ -145,8 +148,10 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
         ExternalKeyboardModule.setFocusedTextInput(textInput);
       }
       if (!hasTextEditFocus) {
-        // Restore idle focusability state: wrapper ready to receive focus again.
         updateFocusability();
+        if (focusType == FOCUS_BY_PRESS) {
+          post(() -> TextInputFocusWrapper.this.requestFocus());
+        }
       }
     });
   }
@@ -221,6 +226,18 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
     return super.onKeyDown(keyCode, event);
   }
 
+  // --- Touch handling ---
+
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    // In FOCUS_BY_PRESS mode the EditText is non-focusable (wrapper holds focus).
+    // Intercept the down event so a tap activates edit mode, same as a keyboard press.
+    if (focusType == FOCUS_BY_PRESS && ev.getAction() == MotionEvent.ACTION_DOWN) {
+      handleTextInputFocus();
+    }
+    return false; // don't consume — let the touch reach the EditText for cursor positioning
+  }
+
   // --- Focus search / request ---
 
   @Override
@@ -228,7 +245,8 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
     // focusSearch(View, int) is only called when a descendant is focused.
     // When the wrapper itself is focused (FOCUS_BY_PRESS idle state), we must
     // handle orderForward/orderBackward here instead.
-    if (focusType == FOCUS_BY_PRESS) {
+
+      if (focusType == FOCUS_BY_PRESS) {
       if (direction == FOCUS_FORWARD && orderForward != null) {
         View next = focusOrderDelegate.getLink(orderForward);
         if (next != null && next.isAttachedToWindow()) return next;
@@ -281,6 +299,9 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
     this.focusEventIgnore = true;
     this.setFocusable(false);
     this.reactEditText.setFocusable(true);
+    // focusableInTouchMode is required for requestFocus() to succeed when the device
+    // is in touch mode (canTakeFocus() returns false without it).
+    this.reactEditText.setFocusableInTouchMode(true);
     if (!this.reactEditText.hasFocus()) {
       this.reactEditText.requestFocusFromJS();
     }
