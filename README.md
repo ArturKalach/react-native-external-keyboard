@@ -15,6 +15,7 @@ iOS | Android
 - Key press event handling.
 - Focus management for `TextInput` and `Pressable` components.
 - Customization of the `Halo Effect` and `tintColor` for iOS.
+- `defaultFocusHighlightEnabled` support for Android.
 - Keyboard focus order.
 - Focus Lock.
 
