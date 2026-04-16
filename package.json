@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.9.0-alpha.4",
+  "version": "0.9.0-rc",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -46,7 +46,11 @@
     "keyboard",
     "keyboard focus",
     "physical keyboard",
-    "WCAG"
+    "focus lock",
+    "focus order",
+    "WCAG",
+    "UIFocusHaloEffect",
+    "defaultFocusHighlightEnabled"
   ],
   "repository": "https://github.com/ArturKalach/react-native-external-keyboard",
   "author": "Artur Kalach <artur.kalach.andreevich@gmail.com> (https://github.com/ArturKalach)",
