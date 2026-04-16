@@ -126,6 +126,8 @@ focusable?: | Indicates if the component can be focused by keyboard | `boolean |
 tintColor?: | Color used for tinting the component | `string`
 tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none'`
 FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
+renderContent?: | Render prop for components whose `children` is itself a render function (e.g. `Pressable`). Receives the component's own render state merged with `{ focused: boolean }`, so you can style content based on both the component state (e.g. `pressed`) and keyboard focus simultaneously. Only available when the wrapped component exposes a render-prop `children`. | `(state: ComponentRenderState & { focused: boolean }) => ReactNode`
+renderFocusable?: | Render prop available on any `withKeyboardFocus`-wrapped component. Replaces `children` and receives `{ focused: boolean }`, allowing you to render different content based on keyboard focus state. Use this when the wrapped component does not expose a render-prop `children`. | `(state: { focused: boolean }) => ReactNode`
 group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
 defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
@@ -152,6 +154,43 @@ orderIndex? | The order index of the element within its group. | `number`
 lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining component props  | `Type of Component`
 
+#### renderContent — Pressable with pressed + focused state
+
+`Pressable` passes a `{ pressed }` state to its `children` render prop. Use `renderContent` to access both `pressed` and the keyboard `focused` state at the same time:
+
+```tsx
+const KeyboardPressable = withKeyboardFocus(Pressable);
+
+<KeyboardPressable
+  onPress={onPress}
+  renderContent={({ pressed, focused }) => (
+    <View style={[
+      styles.button,
+      pressed && styles.pressed,
+      focused && styles.focused,
+    ]}>
+      <Text>{pressed ? 'Pressed' : focused ? 'Focused' : 'Default'}</Text>
+    </View>
+  )}
+/>
+```
+
+#### renderFocusable — TouchableOpacity and other components
+
+`TouchableOpacity` and similar components do not expose a render-prop `children`, so `renderContent` is not available. Use `renderFocusable` instead — it receives only `{ focused }`:
+
+```tsx
+const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
+
+<KeyboardTouchable
+  onPress={onPress}
+  renderFocusable={({ focused }) => (
+    <View style={[styles.button, focused && styles.focused]}>
+      <Text>{focused ? 'Focused' : 'Default'}</Text>
+    </View>
+  )}
+/>
+```
 
 > [!NOTE]
 > You may discover that `long press on spacebar` does not trigger a long press event on `iOS`. This is because `iOS` uses the `Full Keyboard Access` system that provides commands for interacting with the system. Rather than holding down the spacebar, you can use `Tab+M` (the default action for opening the context menu).
