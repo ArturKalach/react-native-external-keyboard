@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedInput,
   KeyboardOrderFocusGroup,
   Pressable,
 } from 'react-native-external-keyboard';
+
+const ANDROID_FOCUS_STYLE = Platform.select({
+  android: { borderWidth: 2, borderColor: '#007AFF' },
+});
 
 export const FocusMixedPositionOrder = () => {
   return (
@@ -23,12 +27,16 @@ export const FocusMixedPositionOrder = () => {
               lockFocus={['down', 'left']}
               placeholder="→"
               style={styles.inputText}
+              defaultFocusHighlightEnabled={false}
               containerStyle={[styles.cell, styles.inputCell]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
             />
             <Pressable
               orderIndex={1}
               lockFocus={['down', 'left']}
               style={[styles.cell, styles.pressCell]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.pressArrow}>→</Text>
             </Pressable>
@@ -38,6 +46,8 @@ export const FocusMixedPositionOrder = () => {
               placeholder="↓"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             />
           </View>
           <View style={styles.row}>
@@ -45,6 +55,8 @@ export const FocusMixedPositionOrder = () => {
               orderIndex={5}
               lockFocus={['up', 'right']}
               style={[styles.cell, styles.pressCell]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.pressArrow}>↓</Text>
             </Pressable>
@@ -54,11 +66,15 @@ export const FocusMixedPositionOrder = () => {
               placeholder="←"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             />
             <Pressable
               orderIndex={3}
               lockFocus={['up', 'down', 'right']}
               style={[styles.cell, styles.pressCell]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.pressArrow}>←</Text>
             </Pressable>
@@ -70,11 +86,15 @@ export const FocusMixedPositionOrder = () => {
               placeholder="→"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             />
             <Pressable
               orderIndex={7}
               lockFocus={['up', 'down', 'left']}
               style={[styles.cell, styles.pressCell]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.pressArrow}>→</Text>
             </Pressable>
@@ -84,6 +104,8 @@ export const FocusMixedPositionOrder = () => {
               placeholder="↺"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell, styles.cellEnd]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             />
           </View>
         </View>
@@ -139,11 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   inputCell: {
     backgroundColor: '#f0f4ff',

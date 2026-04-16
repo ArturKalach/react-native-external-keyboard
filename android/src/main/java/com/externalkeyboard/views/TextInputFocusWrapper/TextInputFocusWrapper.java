@@ -2,6 +2,7 @@ package com.externalkeyboard.views.TextInputFocusWrapper;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -12,11 +13,11 @@ import androidx.annotation.NonNull;
 
 import com.externalkeyboard.events.EventHelper;
 import com.externalkeyboard.modules.ExternalKeyboardModule;
-import com.externalkeyboard.views.base.ViewOrderGroupBase;
+import com.externalkeyboard.views.base.FocusHighlightBase;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.views.textinput.ReactEditText;
 
-public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.OnFocusChangeListener {
+public class TextInputFocusWrapper extends FocusHighlightBase implements View.OnFocusChangeListener {
   private final Context context;
   public static final byte FOCUS_BY_PRESS = 1;
 
@@ -66,6 +67,18 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
   }
 
   @Override
+  protected void syncFocusHighlight () {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+      this.setDefaultFocusHighlightEnabled(focusHighlight);
+      if(this.reactEditText != null) {
+        reactEditText.setDefaultFocusHighlightEnabled(focusHighlight);
+      }
+    }
+  }
+
+
+  @Override
   public View getFirstChild() {
     // In 0.79+ with regular focus, the EditText receives focus directly.
     // For FOCUS_BY_PRESS the wrapper itself is the focus target.
@@ -83,6 +96,7 @@ public class TextInputFocusWrapper extends ViewOrderGroupBase implements View.On
   public void linkAddView(View child) {
     if (!(child instanceof ReactEditText)) return;
     setEditText((ReactEditText) child);  // configure listeners before linking
+    this.syncFocusHighlight();
     super.linkAddView(child);            // store firstChild + call focusOrderDelegate.link()
   }
 

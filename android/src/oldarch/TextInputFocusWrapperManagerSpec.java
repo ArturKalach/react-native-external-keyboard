@@ -5,9 +5,9 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 
 import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapper;
-import com.facebook.react.uimanager.ViewGroupManager;
+import com.facebook.react.views.view.ReactViewManager;
 
-public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> extends ViewGroupManager<T> {
+public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> extends ReactViewManager {
   public abstract void setCanBeFocused(T wrapper, boolean canBeFocused);
 
   public abstract void setFocusType(T wrapper, int focusType);

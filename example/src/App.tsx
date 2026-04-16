@@ -26,6 +26,7 @@ import { ListsTest } from './components/Lists/ListsText';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
 import { Pressable } from 'react-native-external-keyboard';
+import { ANDROID_FOCUS_STYLE } from './constants/styles';
 
 type NavItem = {
   name: string;
@@ -96,6 +97,8 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
               {group.items.map((item, index) => (
                 <View key={item.name}>
                   <Pressable
+                    defaultFocusHighlightEnabled={false}
+                    focusStyle={ANDROID_FOCUS_STYLE}
                     style={({ pressed }) => [
                       styles.navItem,
                       pressed && styles.navItemPressed,

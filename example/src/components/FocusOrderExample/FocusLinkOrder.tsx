@@ -5,6 +5,7 @@ import {
   Pressable,
   type KeyboardFocus,
 } from 'react-native-external-keyboard';
+import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 export const FocusLinkOrder = () => {
   const ref = useRef<KeyboardFocus>(null);
@@ -31,6 +32,8 @@ export const FocusLinkOrder = () => {
               orderBackward="end"
               orderForward="0_1"
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
               lockFocus={['down', 'left']}
             >
               <Text style={styles.cellIndex}>1</Text>
@@ -43,6 +46,8 @@ export const FocusLinkOrder = () => {
               orderForward="0_2"
               lockFocus={['down', 'left']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>2</Text>
               <Text style={styles.cellArrow}>→</Text>
@@ -54,6 +59,8 @@ export const FocusLinkOrder = () => {
               orderForward="1_2"
               lockFocus={['left']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>3</Text>
               <Text style={styles.cellArrow}>↓</Text>
@@ -67,6 +74,8 @@ export const FocusLinkOrder = () => {
               orderForward="2_0"
               lockFocus={['up', 'right']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>7</Text>
               <Text style={styles.cellArrow}>↓</Text>
@@ -78,6 +87,8 @@ export const FocusLinkOrder = () => {
               orderBackward="1_2"
               lockFocus={['up', 'down', 'right']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>6</Text>
               <Text style={styles.cellArrow}>←</Text>
@@ -89,6 +100,8 @@ export const FocusLinkOrder = () => {
               orderForward="1_1"
               lockFocus={['up', 'down', 'right']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>4</Text>
               <Text style={styles.cellArrow}>←</Text>
@@ -102,6 +115,8 @@ export const FocusLinkOrder = () => {
               orderForward="2_1"
               lockFocus={['up', 'down', 'left']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>8</Text>
               <Text style={styles.cellArrow}>→</Text>
@@ -113,6 +128,8 @@ export const FocusLinkOrder = () => {
               orderBackward="2_0"
               lockFocus={['up', 'down', 'left']}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>9</Text>
               <Text style={styles.cellArrow}>→</Text>
@@ -124,6 +141,8 @@ export const FocusLinkOrder = () => {
               orderForward="start"
               orderBackward="2_1"
               style={[styles.cell, styles.cellEnd]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>↺</Text>
               <Text style={styles.cellArrow}>loop</Text>
@@ -174,11 +193,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   cellEnd: {
     backgroundColor: '#e8f4ff',

@@ -68,6 +68,7 @@ export type BaseFocusViewProps = {
   orderFirst?: string | null;
   orderLast?: string | null;
   orderPrefix?: string;
+  defaultFocusHighlightEnabled?: boolean;
 };
 
 export type BaseKeyboardViewProps = ViewProps & BaseFocusViewProps;

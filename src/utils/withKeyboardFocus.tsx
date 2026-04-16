@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, type RefObject } from 'react';
-import { View, StyleSheet, type ViewProps } from 'react-native';
+import { View, StyleSheet, type ViewProps, Platform } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type { KeyboardFocus, OnKeyPress } from '../types/BaseKeyboardView';
 import { useFocusStyle } from './useFocusStyle';
@@ -75,6 +75,7 @@ export const withKeyboardFocus = <
         onComponentBlur,
         renderContent,
         renderFocusable,
+        defaultFocusHighlightEnabled,
         ...props
       } = allProps as WithKeyboardFocus<ComponentProps, ViewStyleType>;
 
@@ -95,7 +96,10 @@ export const withKeyboardFocus = <
         Component,
       });
 
-      const withHaloEffect = tintType === 'default' && haloEffect;
+      const withHaloEffect = Platform.select({
+        ios: tintType === 'default' && haloEffect,
+        android: defaultFocusHighlightEnabled,
+      });
 
       const { onKeyUpPressHandler, onKeyDownPressHandler, onPressHandler } =
         useKeyboardPress({

@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.View;
 
 import com.externalkeyboard.events.EventHelper;
-import com.externalkeyboard.views.base.ViewOrderGroupBase;
+import com.externalkeyboard.views.base.FocusHighlightBase;
 import com.facebook.react.bridge.ReactContext;
 
-public class ViewFocusChangeBase extends ViewOrderGroupBase {
+public class ViewFocusChangeBase extends FocusHighlightBase {
   private View listeningView;
   private final Context context;
 

@@ -22,6 +22,7 @@ import {
   KeyboardFocusGroup,
   Keyboard,
 } from 'react-native-external-keyboard';
+import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
@@ -95,13 +96,17 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             haloCornerRadius={10}
             onLongPress={() => console.log(11)}
             ref={ref}
+            defaultFocusHighlightEnabled={false}
             style={styles.pressable as object} //ToDo updat type
             containerStyle={styles.pressableContainer}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
           >
             <Text>TouchableOpacity</Text>
           </TouchableOpacity>
           {dShow && (
             <Pressable
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
               containerStyle={styles.pressableContainer}
               autoFocus
               renderContent={RenderContent}
@@ -109,13 +114,15 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           )}
           {dShow && (
             <TouchableOpacity
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
               containerStyle={styles.pressableContainer}
               renderFocusable={RenderContent}
             />
           )}
-
-          {/* {dShow && <Pressable autoFocus renderChildren={FocusableChild} />} */}
           <TouchableWithoutFeedback
+            defaultFocusHighlightEnabled={false}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
             haloExpendX={-5}
             haloExpendY={-5}
             haloCornerRadius={5}
@@ -130,6 +137,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             </View>
           </TouchableWithoutFeedback>
           <Pressable
+            defaultFocusHighlightEnabled={false}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
             autoFocus
             containerStyle={styles.pressableContainer}
             style={styles.pressable as object} //ToDo updat type
@@ -143,6 +152,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           </Pressable>
           <Text>Label: KeyboardExtendedInput </Text>
           <KeyboardExtendedInput
+            defaultFocusHighlightEnabled={false}
+            focusStyle={ANDROID_FOCUS_STYLE}
             focusable={true}
             value={textInput}
             focusType="press"
@@ -152,6 +163,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           />
           <Text>Label: Multiline</Text>
           <KeyboardExtendedInput
+            defaultFocusHighlightEnabled={false}
+            focusStyle={ANDROID_FOCUS_STYLE}
             focusable={true}
             value={multilineTextInput}
             multiline
@@ -162,6 +175,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             style={styles.input as object} //ToDo updat type
           />
           <Pressable
+            defaultFocusHighlightEnabled={false}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
             ref={modalButtonRef}
             onFocus={() => {
               Keyboard.dismiss();
@@ -208,13 +223,26 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           <Modal visible={showModal}>
             <View style={styles.modal}>
               <View>
-                <Pressable onPress={() => setShowModal(false)}>
+                <Pressable
+                  defaultFocusHighlightEnabled={false}
+                  focusStyle={ANDROID_FOCUS_STYLE}
+                  onPress={() => setShowModal(false)}
+                >
                   <Text>Modal example</Text>
                 </Pressable>
-                <Pressable autoFocus onPress={() => setShowModal(false)}>
+                <Pressable
+                  defaultFocusHighlightEnabled={false}
+                  focusStyle={ANDROID_FOCUS_STYLE}
+                  autoFocus
+                  onPress={() => setShowModal(false)}
+                >
                   <Text>AutoFocus</Text>
                 </Pressable>
-                <Pressable onPress={() => setShowModal(false)}>
+                <Pressable
+                  defaultFocusHighlightEnabled={false}
+                  focusStyle={ANDROID_FOCUS_STYLE}
+                  onPress={() => setShowModal(false)}
+                >
                   <Text>Close</Text>
                 </Pressable>
               </View>

@@ -5,6 +5,7 @@ import {
   Pressable,
   type KeyboardFocus,
 } from 'react-native-external-keyboard';
+import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 export const FocusOrder = () => {
   const ref = useRef<KeyboardFocus>(null);
@@ -30,6 +31,8 @@ export const FocusOrder = () => {
               orderId="start"
               orderBackward="end"
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
               lockFocus={['down', 'left']}
             >
               <Text style={styles.cellIndex}>1</Text>
@@ -40,6 +43,8 @@ export const FocusOrder = () => {
               lockFocus={['down', 'left']}
               orderIndex={1}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>2</Text>
               <Text style={styles.cellArrow}>→</Text>
@@ -49,6 +54,8 @@ export const FocusOrder = () => {
               lockFocus={['left', 'right']}
               orderIndex={2}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>3</Text>
               <Text style={styles.cellArrow}>↓</Text>
@@ -60,6 +67,8 @@ export const FocusOrder = () => {
               lockFocus={['up', 'right']}
               orderIndex={6}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>7</Text>
               <Text style={styles.cellArrow}>↓</Text>
@@ -69,6 +78,8 @@ export const FocusOrder = () => {
               lockFocus={['up', 'down', 'right']}
               orderIndex={5}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>6</Text>
               <Text style={styles.cellArrow}>←</Text>
@@ -78,6 +89,8 @@ export const FocusOrder = () => {
               lockFocus={['up', 'down', 'right']}
               orderIndex={4}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>5</Text>
               <Text style={styles.cellArrow}>←</Text>
@@ -89,6 +102,8 @@ export const FocusOrder = () => {
               lockFocus={['up', 'down', 'left']}
               orderIndex={7}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>8</Text>
               <Text style={styles.cellArrow}>→</Text>
@@ -98,6 +113,8 @@ export const FocusOrder = () => {
               lockFocus={['up', 'down', 'left']}
               orderIndex={8}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>9</Text>
               <Text style={styles.cellArrow}>→</Text>
@@ -109,6 +126,8 @@ export const FocusOrder = () => {
               orderId="end"
               orderForward="start"
               style={[styles.cell, styles.cellEnd]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellIndex}>↺</Text>
               <Text style={styles.cellArrow}>loop</Text>
@@ -154,11 +173,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   cellEnd: {
     backgroundColor: '#e8f4ff',

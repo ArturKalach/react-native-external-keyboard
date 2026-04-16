@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedInput,
   KeyboardOrderFocusGroup,
   Pressable,
 } from 'react-native-external-keyboard';
+import {
+  ANDROID_FOCUS_STYLE,
+  ANDROID_SECONDARY_FOCUS_STYLE,
+} from '../../constants/styles';
 
 const CELL_COUNT = 9;
 const COLS = 3;
@@ -60,6 +64,8 @@ export const FocusMixedPositionRandomizer = () => {
                     <KeyboardExtendedInput
                       key={gridIndex}
                       orderIndex={orderIndex}
+                      containerFocusStyle={ANDROID_FOCUS_STYLE}
+                      defaultFocusHighlightEnabled={false}
                       placeholder={String(orderIndex + 1)}
                       style={styles.inputText}
                       containerStyle={[styles.cell, styles.inputCell]}
@@ -71,6 +77,8 @@ export const FocusMixedPositionRandomizer = () => {
                   <Pressable
                     key={gridIndex}
                     orderIndex={orderIndex}
+                    focusStyle={ANDROID_FOCUS_STYLE}
+                    defaultFocusHighlightEnabled={false}
                     style={[styles.cell, styles.pressCell]}
                   >
                     <Text style={styles.cellIndex}>{orderIndex + 1}</Text>
@@ -91,9 +99,14 @@ export const FocusMixedPositionRandomizer = () => {
           <Text style={styles.legendText}>Pressable</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.btn} onPress={randomize}>
+      <Pressable
+        defaultFocusHighlightEnabled={false}
+        focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
+        style={styles.btn}
+        onPress={randomize}
+      >
         <Text style={styles.btnText}>⇄ Randomize</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
@@ -133,11 +146,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   inputCell: {
     backgroundColor: '#f0f4ff',

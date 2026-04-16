@@ -46,6 +46,7 @@ export const KeyboardFocusView = React.forwardRef<
       children,
       accessible,
       triggerCodes,
+      defaultFocusHighlightEnabled = true,
       ...props
     },
     ref
@@ -58,7 +59,10 @@ export const KeyboardFocusView = React.forwardRef<
         tintType,
       });
 
-    const withHaloEffect = tintType === 'default' && haloEffect;
+    const withHaloEffect = Platform.select({
+      ios: tintType === 'default' && haloEffect,
+      android: defaultFocusHighlightEnabled,
+    });
 
     const { onKeyUpPressHandler, onKeyDownPressHandler } = useKeyboardPress({
       onKeyUpPress,

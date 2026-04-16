@@ -39,6 +39,7 @@ export type ExtraKeyboardProps = {
   orderFirst?: string | null;
   orderLast?: string | null;
   orderPrefix?: string;
+  defaultFocusHighlightEnabled?: boolean;
 };
 
 type IgnoreForCompatibility =

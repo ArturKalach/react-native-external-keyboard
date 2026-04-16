@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
+  TouchableOpacity as RNTouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FocusOrder } from './FocusOrder';
@@ -18,7 +18,13 @@ import { FocusMixedRandomizer } from './FocusMixedRandomizer';
 import { FocusMixedPositionRandomizer } from './FocusMixedPositionRandomizer';
 import { OrderMaze } from '../OrderMaze/OrderMaze';
 import type { NavigationProp } from '@react-navigation/native';
-import { Pressable } from 'react-native-external-keyboard';
+import { Pressable, withKeyboardFocus } from 'react-native-external-keyboard';
+import {
+  ANDROID_FOCUS_STYLE,
+  ANDROID_SECONDARY_FOCUS_STYLE,
+} from '../../constants/styles';
+
+const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 
 type NavItem = { name: string; title: string; description: string };
 
@@ -95,6 +101,8 @@ export function FocusOrderScreen({
           {FOCUS_ORDER_ITEMS.map((item, index) => (
             <View key={item.name}>
               <Pressable
+                focusStyle={ANDROID_FOCUS_STYLE}
+                defaultFocusHighlightEnabled={false}
                 style={({ pressed }) => [
                   styles.navItem,
                   pressed && styles.navItemPressed,
@@ -149,13 +157,20 @@ function ExampleScreen({
   return (
     <SafeAreaView style={styles.exampleSafeArea} edges={['bottom']}>
       <View style={styles.exampleContainer}>{children}</View>
-      <TouchableOpacity style={styles.navBtnRandom} onPress={pushRandom}>
+      <TouchableOpacity
+        style={styles.navBtnRandom}
+        defaultFocusHighlightEnabled={false}
+        focusStyle={ANDROID_FOCUS_STYLE}
+        onPress={pushRandom}
+      >
         <Text style={styles.navBtnRandomText}>⚡ Push random</Text>
       </TouchableOpacity>
       <View style={styles.navRow}>
         {prev ? (
           <TouchableOpacity
             style={[styles.navBtn, styles.navBtnLeft]}
+            defaultFocusHighlightEnabled={false}
+            focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
             onPress={() => navigation.navigate(prev.name)}
           >
             <Text style={styles.navBtnChevron}>‹</Text>
@@ -167,6 +182,8 @@ function ExampleScreen({
         {next ? (
           <TouchableOpacity
             style={[styles.navBtn, styles.navBtnRight]}
+            defaultFocusHighlightEnabled={false}
+            focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
             onPress={() => navigation.navigate(next.name)}
           >
             <Text style={styles.navBtnLabel}>{next.title}</Text>

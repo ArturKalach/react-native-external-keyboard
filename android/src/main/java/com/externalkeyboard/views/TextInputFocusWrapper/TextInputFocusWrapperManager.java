@@ -10,6 +10,8 @@ import com.externalkeyboard.events.MultiplyTextSubmit;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.views.view.ReactViewGroup;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +31,10 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
-  protected void addEventEmitters(final ThemedReactContext reactContext, TextInputFocusWrapper viewGroup) {
-    viewGroup.subscribeOnFocus();
+  protected void addEventEmitters(final ThemedReactContext reactContext, ReactViewGroup viewGroup) {
+    if(viewGroup instanceof TextInputFocusWrapper) {
+      ((TextInputFocusWrapper)viewGroup).subscribeOnFocus();
+    }
   }
 
   @Override
@@ -160,8 +164,9 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
+  @ReactProp(name = "haloEffect", defaultBoolean = true)
   public void setHaloEffect(TextInputFocusWrapper view, boolean value) {
-    //stub
+    view.setFocusHighlight(value);
   }
 
   @Override
@@ -170,10 +175,12 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
-  public void onDropViewInstance(@NonNull TextInputFocusWrapper viewGroup) {
-    viewGroup.onDropViewInstance();
-    viewGroup.setEditText(null);
-    viewGroup.setOnFocusChangeListener(null);
+  public void onDropViewInstance(@NonNull ReactViewGroup viewGroup) {
+    if(viewGroup instanceof TextInputFocusWrapper) {
+      ((TextInputFocusWrapper)viewGroup).onDropViewInstance();
+      ((TextInputFocusWrapper)viewGroup).setEditText(null);
+      viewGroup.setOnFocusChangeListener(null);
+    }
     super.onDropViewInstance(viewGroup);
   }
 

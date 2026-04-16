@@ -5,6 +5,10 @@ import {
   Pressable,
   type KeyboardFocus,
 } from 'react-native-external-keyboard';
+import {
+  ANDROID_FOCUS_STYLE,
+  ANDROID_SECONDARY_FOCUS_STYLE,
+} from '../../constants/styles';
 
 const list = ['0_0', '0_1', '0_2', '1_0', '1_1', '1_2', '2_0', '2_1', '2_2'];
 const arrows = ['⇖', '⇑', '⇗', '⇐', '⊙', '⇒', '⇙', '⇓', '⇘'];
@@ -49,6 +53,8 @@ export const FocusDPadOrder = () => {
               orderRight="0_2"
               onPress={onPress}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>◤</Text>
               <Text style={styles.cellLabel}>→ ↓</Text>
@@ -57,6 +63,8 @@ export const FocusDPadOrder = () => {
               onPress={onPress}
               orderId="0_1"
               style={[styles.cell, styles.cellDim]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>—</Text>
             </Pressable>
@@ -66,6 +74,8 @@ export const FocusDPadOrder = () => {
               orderDown="2_2"
               orderLeft="0_0"
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>◥</Text>
               <Text style={styles.cellLabel}>← ↓</Text>
@@ -76,6 +86,8 @@ export const FocusDPadOrder = () => {
               onPress={onPress}
               orderId="1_0"
               style={[styles.cell, styles.cellDim]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>—</Text>
             </Pressable>
@@ -88,6 +100,8 @@ export const FocusDPadOrder = () => {
               onPress={role}
               orderId="1_1"
               style={[styles.cell, styles.cellCenter]}
+              focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellCenterArrow}>{arrows[state]}</Text>
               <Text style={styles.cellCenterLabel}>{arrowLabels[state]}</Text>
@@ -96,6 +110,8 @@ export const FocusDPadOrder = () => {
               onPress={onPress}
               orderId="1_2"
               style={[styles.cell, styles.cellDim]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>—</Text>
             </Pressable>
@@ -107,6 +123,8 @@ export const FocusDPadOrder = () => {
               orderRight="2_2"
               onPress={onPress}
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>◣</Text>
               <Text style={styles.cellLabel}>↑ →</Text>
@@ -115,6 +133,8 @@ export const FocusDPadOrder = () => {
               onPress={onPress}
               orderId="2_1"
               style={[styles.cell, styles.cellDim]}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>—</Text>
             </Pressable>
@@ -124,6 +144,8 @@ export const FocusDPadOrder = () => {
               orderUp="0_2"
               orderLeft="2_0"
               style={styles.cell}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              defaultFocusHighlightEnabled={false}
             >
               <Text style={styles.cellSymbol}>◢</Text>
               <Text style={styles.cellLabel}>↑ ←</Text>
@@ -169,11 +191,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   cellDim: {
     backgroundColor: '#f2f2f7',

@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardOrderFocusGroup,
   Pressable,
 } from 'react-native-external-keyboard';
+import {
+  ANDROID_FOCUS_STYLE,
+  ANDROID_SECONDARY_FOCUS_STYLE,
+} from '../../constants/styles';
 
 const CELL_COUNT = 16;
 const COLS = 4;
@@ -67,6 +71,8 @@ export const FocusLinkRandomizer = () => {
                     orderForward={cellId(forwardIndex)}
                     orderBackward={cellId(backwardIndex)}
                     style={styles.cell}
+                    focusStyle={ANDROID_FOCUS_STYLE}
+                    defaultFocusHighlightEnabled={false}
                   >
                     <Text style={styles.cellStep}>{step + 1}</Text>
                     <Text style={styles.cellPos}>
@@ -79,9 +85,14 @@ export const FocusLinkRandomizer = () => {
           ))}
         </View>
       </KeyboardOrderFocusGroup>
-      <TouchableOpacity style={styles.btn} onPress={randomize}>
+      <Pressable
+        defaultFocusHighlightEnabled={false}
+        focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
+        style={styles.btn}
+        onPress={randomize}
+      >
         <Text style={styles.btnText}>⇄ Randomize</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
@@ -123,11 +134,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   cellStep: {
     fontSize: 18,

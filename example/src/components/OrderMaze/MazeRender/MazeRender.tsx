@@ -157,11 +157,6 @@ export const styles = StyleSheet.create({
     borderColor: '#1e293b',
     borderRadius: 8,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 6,
   },
   cell: {
     width: 20,

@@ -123,9 +123,9 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  @ReactProp(name = "haloEffect", defaultBoolean = false)
+  @ReactProp(name = "haloEffect", defaultBoolean = true)
   public void setHaloEffect(ExternalKeyboardView view, boolean value) {
-    //stub
+    view.setFocusHighlight(value);
   }
 
   @Override

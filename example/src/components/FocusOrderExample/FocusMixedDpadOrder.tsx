@@ -6,6 +6,10 @@ import {
   Pressable,
   type KeyboardFocus,
 } from 'react-native-external-keyboard';
+import {
+  ANDROID_FOCUS_STYLE,
+  ANDROID_SECONDARY_FOCUS_STYLE,
+} from '../../constants/styles';
 
 const list = ['0_0', '0_1', '0_2', '1_0', '1_1', '1_2', '2_0', '2_1', '2_2'];
 const arrows = ['⇖', '⇑', '⇗', '⇐', '⊙', '⇒', '⇙', '⇓', '⇘'];
@@ -36,13 +40,17 @@ export const FocusMixedDpadOrder = () => {
               orderDown="2_0"
               placeholder="→↓"
               style={styles.inputText}
+              defaultFocusHighlightEnabled={false}
               containerStyle={[styles.cell, styles.inputCell]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
             />
             <Pressable
               orderId="0_1"
               orderLeft="0_0"
               orderRight="0_2"
+              defaultFocusHighlightEnabled={false}
               style={[styles.cell, styles.pressCell, styles.cellDim]}
+              focusStyle={ANDROID_FOCUS_STYLE}
             >
               <Text style={styles.pressSymbol}>—</Text>
             </Pressable>
@@ -52,7 +60,9 @@ export const FocusMixedDpadOrder = () => {
               orderDown="2_2"
               placeholder="←↓"
               style={styles.inputText}
+              defaultFocusHighlightEnabled={false}
               containerStyle={[styles.cell, styles.inputCell]}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
             />
           </View>
           <View style={styles.row}>
@@ -61,6 +71,8 @@ export const FocusMixedDpadOrder = () => {
               orderId="1_0"
               orderDown="2_0"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
+              defaultFocusHighlightEnabled={false}
+              focusStyle={ANDROID_FOCUS_STYLE}
             >
               <Text style={styles.pressSymbol}>—</Text>
             </Pressable>
@@ -73,6 +85,8 @@ export const FocusMixedDpadOrder = () => {
               onPress={role}
               orderId="1_1"
               style={[styles.cell, styles.cellCenter]}
+              defaultFocusHighlightEnabled={false}
+              focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
             >
               <Text style={styles.centerArrow}>{arrows[state]}</Text>
             </Pressable>
@@ -81,6 +95,8 @@ export const FocusMixedDpadOrder = () => {
               orderId="1_2"
               orderDown="2_2"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
+              defaultFocusHighlightEnabled={false}
+              focusStyle={ANDROID_FOCUS_STYLE}
             >
               <Text style={styles.pressSymbol}>—</Text>
             </Pressable>
@@ -93,12 +109,16 @@ export const FocusMixedDpadOrder = () => {
               placeholder="↑→"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell]}
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
             />
             <Pressable
               orderLeft="2_0"
               orderId="2_1"
               orderRight="2_2"
               style={[styles.cell, styles.pressCell, styles.cellDim]}
+              defaultFocusHighlightEnabled={false}
+              focusStyle={ANDROID_FOCUS_STYLE}
             >
               <Text style={styles.pressSymbol}>—</Text>
             </Pressable>
@@ -109,6 +129,8 @@ export const FocusMixedDpadOrder = () => {
               placeholder="↑←"
               style={styles.inputText}
               containerStyle={[styles.cell, styles.inputCell]}
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
             />
           </View>
         </View>
@@ -159,11 +181,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   inputCell: {
     backgroundColor: '#f0f4ff',

@@ -90,6 +90,7 @@ const colors: {
 const OptionButton = ({ onPress, content }: OptionButtonProps) => (
   <Pressable
     style={styles.optionButton}
+    defaultFocusHighlightEnabled={false}
     focusStyle={isIOS ? undefined : styles.androidOption}
     tintType={isIOS ? 'default' : 'none'}
     onFocus={isIOS ? onPress : undefined}
@@ -131,6 +132,7 @@ const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
       <Pressable
         ref={ref}
         tintColor={background}
+        defaultFocusHighlightEnabled={false}
         haloExpendY={5}
         haloExpendX={5}
         onFocus={isIOS ? onPress : undefined}

@@ -1,22 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
-import {
-  Platform,
-  type ColorValue,
-  type PressableProps,
-  Pressable,
-} from 'react-native';
+import { type ColorValue, type PressableProps, Pressable } from 'react-native';
 import type { FocusStyle } from '../types';
 import type { TintType } from '../types/WithKeyboardFocus';
 
-const backgroundTintMap = Platform.select<Partial<Record<TintType, boolean>>>({
-  ios: {
-    background: true,
-  },
-  default: {
-    background: true,
-    default: true,
-  },
-});
+const backgroundTintMap: Partial<Record<TintType, boolean>> = {
+  background: true,
+};
 
 const DEFAULT_BACKGROUND_TINT = '#dce3f9';
 
@@ -29,6 +18,7 @@ type UseFocusStyleProps<C> = {
   style?: PressableProps['style'];
   Component?: React.ComponentType<C>;
   withPressedStyle?: boolean;
+  defaultFocusHighlightEnabled?: boolean;
 };
 
 export const useFocusStyle = <C extends {}>({

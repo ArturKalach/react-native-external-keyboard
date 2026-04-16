@@ -29,7 +29,7 @@ iOS | Android
 <details>
   <summary>More Information</summary>
 
-- On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal` property to keep the focus within a defined area.
+- On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal` property to keep the screen reader focus within a defined area. For stronger containment — such as preventing focus from reaching system elements like navigation bars or headers — pass `forceLock`. It observes focus changes and moves focus back into the trap when it escapes. Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned.
 - On Android, where no equivalent to `accessibilityViewIsModal` exists, custom logic has been implemented as a workaround. By default, Android uses a custom Activity or Modal to limit focus. While using a Modal is considered the best practice for focus locking on Android, some scenarios—such as issues with React Native's Modal or library-specific constraints—may require alternative implementations.
 
 #### How It Works
@@ -42,11 +42,13 @@ The focus lock functionality should be used as a pair:
 | Prop | Description |
 | :-- | :-- |
 | ViewProps | Includes all standard React Native View properties, such as style, testID, etc. |
+| forceLock? | **iOS only.** Strengthens focus containment beyond `accessibilityViewIsModal` by observing focus changes and returning focus back into the trap whenever it escapes to system elements (e.g. navigation bars, headers). Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned. |
+| lockDisabled? | **Android only.** Disables the focus lock when `true`. |
 
 ```tsx
 <Focus.Frame>
   ...
-  <Focus.Trap>
+  <Focus.Trap forceLock>
     <Text accessibilityRole="header">Locked Area</Text>
     <Button
       title="Confirm"
@@ -79,9 +81,9 @@ cd ios && pod install && cd ..
 The `withKeyboardFocus` HOC is a helper for integrating keyboard focus functionality. It significantly simplifies integration by wrapping the provided component in `KeyboardFocusView` and extending it with additional features, such as focus and blur events.
 
 ```js
-const KeybardedPressable = withKeyboardFocus(Pressable);
-const KeybardedTouchable = withKeyboardFocus(TouchableOpacity);
-const KeybardedButton = withKeyboardFocus(Button);
+const KeyboardPressable = withKeyboardFocus(Pressable);
+const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
+const KeyboardButton = withKeyboardFocus(Button);
 
 ...
 
@@ -125,6 +127,10 @@ tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none
 FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
 group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
+defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
+haloCornerRadius?: | Corner radius of the halo ring (iOS only) | `number`
+haloExpendX?: | Horizontal expansion of the halo ring in points (iOS only) | `number`
+haloExpendY?: | Vertical expansion of the halo ring in points (iOS only) | `number`
 ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
 viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
@@ -140,12 +146,14 @@ orderLeft? | ID of the target for navigation to the left. | `string`
 orderRight? | ID of the target for navigation to the right. | `string`
 orderUp? | ID of the target for navigation upward. | `string`
 orderDown? | ID of the target for navigation downward. | `string`
+orderGroup? | The name of the group for index-based focus ordering. | `string`
+orderIndex? | The order index of the element within its group. | `number`
 lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining component props  | `Type of Component`
 
 
 > [!NOTE]
-> You may discover that `long press on spacebar` does not trigger a long press event on `iOS`. This is because `iOS` use a `Full Keyboard Access` system that provides commands for interacting with the system. Rather than holding down the spacebar, you can use `Tab+M` (the default action for opening the context menu).
+> You may discover that `long press on spacebar` does not trigger a long press event on `iOS`. This is because `iOS` uses the `Full Keyboard Access` system that provides commands for interacting with the system. Rather than holding down the spacebar, you can use `Tab+M` (the default action for opening the context menu).
 > You can change `Commands` in: `Full Keyboard Access` -> `Commands`
 
 
@@ -187,6 +195,10 @@ tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none
 FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
 group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
+defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
+haloCornerRadius?: | Corner radius of the halo ring (iOS only) | `number`
+haloExpendX?: | Horizontal expansion of the halo ring in points (iOS only) | `number`
+haloExpendY?: | Vertical expansion of the halo ring in points (iOS only) | `number`
 triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
 enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
 screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
@@ -199,6 +211,8 @@ orderLeft? | ID of the target for navigation to the left. | `string`
 orderRight? | ID of the target for navigation to the right. | `string`
 orderUp? | ID of the target for navigation upward. | `string`
 orderDown? | ID of the target for navigation downward. | `string`
+orderGroup? | The name of the group for index-based focus ordering. | `string`
+orderIndex? | The order index of the element within its group. | `number`
 lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
 ...rest | Remaining View props  | `View`
 
@@ -225,6 +239,7 @@ onFocusChange?: | Callback for focus change handling | `(isFocused: boolean) => 
 focusType?: | Focus type can be `default`, `auto`, or `press`. Based on investigation, Android and iOS typically have different default behaviors. On Android, the `TextInput` is focused by default, while on iOS, you need to press to focus. `auto` is used for automatic focusing, while keyboard focus targets the input. With `press`, you need to press the spacebar to focus an input. | `"default" \\| "press" \\| "auto"`
 blurType?: | Only for iOS. This defines the behavior for blurring input when focus moves away from the component. By default, iOS allows typing when the keyboard focus is on another component. You can use disable to blur input when focus moves away. (Further investigation is needed for Android.) | `"default"\\| "disable" \\| "auto"`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
+defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
 tintColor?: | Color used for tinting the component | `string`
 style?: | Style for the inner TextInput | `StyleProp<ViewStyle>`
 focusStyle? | Style applied to the inner TextInput when focused | `FocusStyle`
@@ -263,6 +278,9 @@ onKeyDownPress | Handler for the key-down event | `(e: OnKeyPress) => void`
 onContextMenuPress?: | Handler for long press events triggered by the context menu command (iOS only) | () => void;
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 haloEffect | Enables halo effect on focus (iOS only) | `boolean \| undefined`
+haloCornerRadius? | Corner radius of the halo ring (iOS only) | `number`
+haloExpendX? | Horizontal expansion of the halo ring in points (iOS only) | `number`
+haloExpendY? | Vertical expansion of the halo ring in points (iOS only) | `number`
 autoFocus | Indicates if the component should automatically gain focus | `boolean \| undefined`
 tintColor | Color used for tinting the component | `string`
 ref->focus | Command to programmatically focus the component | () => void;
@@ -361,6 +379,37 @@ This is needed for hiding the soft keyboard using a hardware keyboard. Additiona
 </View>
 ```
 
+> [!IMPORTANT]
+> `orderId` values are global. If the same IDs appear more than once on screen — e.g. in a list where each row renders the same component — duplicate IDs will cause incorrect focus jumps. Use `KeyboardOrderFocusGroup` or `orderPrefix` to keep IDs unique per instance.
+>
+> When a link prop is used without any prefix, a console warning is shown reminding you to add one.
+>
+> **`KeyboardOrderFocusGroup` (auto namespace).** Wraps a component tree and automatically namespaces all `orderId` values inside. Ideal for screens and containers where uniqueness is needed but the exact prefix doesn't matter.
+>
+> ```tsx
+> // Each card gets its own isolated namespace
+> {items.map((item) => (
+>   <KeyboardOrderFocusGroup key={item.id}>
+>     <Pressable orderId="title" orderForward="action">…</Pressable>
+>     <Pressable orderId="action" orderBackward="title">…</Pressable>
+>   </KeyboardOrderFocusGroup>
+> ))}
+> ```
+>
+> **Static namespace with `groupId` / `orderPrefix`.** Use an explicit string when you need a stable, predictable namespace — for example, to create intentional focus links between two sibling components that know about each other.
+>
+> ```tsx
+> // groupId on KeyboardOrderFocusGroup
+> <KeyboardOrderFocusGroup groupId="card_42">
+>   <Pressable orderId="title" orderForward="action">…</Pressable>
+>   <Pressable orderId="action" orderBackward="title">…</Pressable>
+> </KeyboardOrderFocusGroup>
+>
+> // or orderPrefix directly on each component
+> <Pressable orderPrefix="card_42" orderId="title" orderForward="action">…</Pressable>
+> <Pressable orderPrefix="card_42" orderId="action" orderBackward="title">…</Pressable>
+> ```
+
 You can find more examples here: [Focus Link Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusLinkOrder.tsx), [DPad Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusDPadOrder.tsx)
 
 | Props | Description | Type |
@@ -372,52 +421,54 @@ You can find more examples here: [Focus Link Order](https://github.com/ArturKala
 | orderRight? | ID of the target for navigation to the right. | `string` |
 | orderUp? | ID of the target for navigation upward. | `string` |
 | orderDown? | ID of the target for navigation downward. | `string` |
+| orderPrefix? | Prefix prepended to this component's `orderId` and all `order*` target IDs. Use to namespace IDs in repeated components (lists, cards) or alongside a static `groupId`. | `string` |
 
 ## Indexes Focus Order
 
-Linking is one of the best ways to set up focus order. However, there may be cases where you need to define the order of multiple elements, such as groups. As an alternative solution, you can use Indexes.
+Linking is one of the best ways to set up focus order. However, there may be cases where you need to define the order of multiple elements within a group. As an alternative, you can use index-based ordering.
+
+### KeyboardOrderFocusGroup
+
+`KeyboardOrderFocusGroup` is a context provider that defines a named focus group. All children that declare `orderIndex` will be ordered within that group. You can optionally provide a `groupId`; if omitted, a unique ID is generated automatically.
 
 ```tsx
+import { KeyboardOrderFocusGroup } from 'react-native-external-keyboard';
+
 <KeyboardOrderFocusGroup>
   <View>
-    <Pressable
-      onPress={onPress}
-      orderIndex={0}
-    >
+    <Pressable onPress={onPress} orderIndex={0}>
       <Text>First</Text>
     </Pressable>
-    <Pressable
-      onPress={onPress}
-      orderIndex={2}
-    >
+    <Pressable onPress={onPress} orderIndex={2}>
       <Text>Third</Text>
     </Pressable>
-    <Pressable
-      onPress={onPress}
-      orderIndex={1}
-    >
+    <Pressable onPress={onPress} orderIndex={1}>
       <Text>Second</Text>
     </Pressable>
   </View>
 </KeyboardOrderFocusGroup>
 ```
-Indexing requres `orderGroup` param for proper order set,  you can use `KeyboardOrderFocusGroup` or provide `orderGroup` to the component.
+
+| Props | Description | Type |
+| :-- | :-- | :-- |
+| groupId? | Optional explicit group name. Auto-generated when omitted. | `string` |
+| children? | Child components | `ReactNode` |
+
+Alternatively, provide `orderGroup` directly on each component to skip the wrapper:
 
 ```tsx
- <Pressable
-      orderGroup="main"
-      onPress={onPress}
-      orderIndex={2}
-    >
-      <Text>Back</Text>
-  </Pressable>
+<Pressable orderGroup="main" onPress={onPress} orderIndex={0}>
+  <Text>First</Text>
+</Pressable>
+<Pressable orderGroup="main" onPress={onPress} orderIndex={1}>
+  <Text>Second</Text>
+</Pressable>
 ```
 
 | Props | Description | Type |
 | :-- | :-- | :-- |
 | orderGroup? | The name of the group containing ordered elements. | `string` |
 | orderIndex? | The order index of the element within the group. | `number` |
-
 
 You can find more examples here: [Focus Order via indexes](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusOrder.tsx)
 

@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardExtendedInput,
   KeyboardOrderFocusGroup,
   Pressable,
 } from 'react-native-external-keyboard';
+import { ANDROID_SECONDARY_FOCUS_STYLE } from '../../constants/styles';
+
+const ANDROID_FOCUS_STYLE = Platform.select({
+  android: { borderWidth: 2, borderColor: '#007AFF' },
+});
 
 const CELL_COUNT = 9;
 const COLS = 3;
@@ -69,6 +74,7 @@ export const FocusMixedRandomizer = () => {
                 if (isInput(gridIndex)) {
                   return (
                     <KeyboardExtendedInput
+                      defaultFocusHighlightEnabled={false}
                       key={gridIndex}
                       orderId={cellId(gridIndex)}
                       orderForward={cellId(forwardIndex)}
@@ -76,17 +82,20 @@ export const FocusMixedRandomizer = () => {
                       placeholder={String(step + 1)}
                       style={styles.inputText}
                       containerStyle={[styles.cell, styles.inputCell]}
+                      containerFocusStyle={ANDROID_FOCUS_STYLE}
                     />
                   );
                 }
 
                 return (
                   <Pressable
+                    defaultFocusHighlightEnabled={false}
                     key={gridIndex}
                     orderId={cellId(gridIndex)}
                     orderForward={cellId(forwardIndex)}
                     orderBackward={cellId(backwardIndex)}
                     style={[styles.cell, styles.pressCell]}
+                    focusStyle={ANDROID_FOCUS_STYLE}
                   >
                     <Text style={styles.cellStep}>{step + 1}</Text>
                   </Pressable>
@@ -106,9 +115,14 @@ export const FocusMixedRandomizer = () => {
           <Text style={styles.legendText}>Pressable</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.btn} onPress={randomize}>
+      <Pressable
+        defaultFocusHighlightEnabled={false}
+        focusStyle={ANDROID_SECONDARY_FOCUS_STYLE}
+        style={styles.btn}
+        onPress={randomize}
+      >
         <Text style={styles.btnText}>⇄ Randomize</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
@@ -148,11 +162,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
   },
   inputCell: {
     backgroundColor: '#f0f4ff',

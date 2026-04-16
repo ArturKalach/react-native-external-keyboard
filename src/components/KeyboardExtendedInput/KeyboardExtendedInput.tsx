@@ -85,6 +85,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       maxFontSizeMultiplier,
       orderFirst,
       orderLast,
+      defaultFocusHighlightEnabled = true,
       orderPrefix: _orderPrefix,
       ...props
     },
@@ -110,7 +111,10 @@ export const KeyboardExtendedInput = React.forwardRef<
 
     const orderPrefix = _orderPrefix ?? contextGroupId ?? '';
 
-    const withHaloEffect = tintType === 'default' && haloEffect;
+    const withHaloEffect = Platform.select({
+      ios: tintType === 'default' && haloEffect,
+      android: defaultFocusHighlightEnabled,
+    });
 
     const nativeFocusHandler = useMemo(
       () => focusEventMapper(onFocusChangeHandler),
