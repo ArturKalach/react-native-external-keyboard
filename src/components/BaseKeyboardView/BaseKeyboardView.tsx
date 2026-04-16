@@ -101,6 +101,7 @@ export const BaseKeyboardView = React.memo(
         orderId,
         enableContextMenu,
         orderPrefix: _orderPrefix,
+        defaultFocusHighlightEnabled = true,
         ...props
       },
       ref
@@ -230,11 +231,20 @@ export const BaseKeyboardView = React.memo(
         ]
       );
 
+      const platformSpecificHalo = useMemo(
+        () =>
+          Platform.select({
+            ios: haloEffect,
+            android: defaultFocusHighlightEnabled,
+          }) ?? true,
+        [defaultFocusHighlightEnabled, haloEffect]
+      );
+
       return (
         <KeyPressContext.Provider value={bubbled.context}>
           <ExternalKeyboardViewNative
             {...props}
-            haloEffect={haloEffect ?? true}
+            haloEffect={platformSpecificHalo}
             ref={targetRef as React.RefObject<any>}
             enableContextMenu={enableContextMenu}
             canBeFocused={ignoreFocusHint && focusable && canBeFocused}
