@@ -64,11 +64,8 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
 {
   if(json) {
     BOOL value = [RCTConvert BOOL:json];
-    if(view.isHaloActive == nil && !value) {
-      [view setIsHaloActive: @0];
-    }
-    if(view.isHaloActive != nil) {
-      [view setIsHaloActive: @(value)];
+    if(view.isHaloHidden == value) {
+      [view setIsHaloHidden: !value];
     }
   }
 }
@@ -90,7 +87,7 @@ RCT_CUSTOM_VIEW_PROPERTY(screenAutoA11yFocusDelay, int, RNCEKVExternalKeyboardVi
 {
   //stub
 }
-
+//
 RCT_CUSTOM_VIEW_PROPERTY(haloCornerRadius, float, RNCEKVExternalKeyboardView)
 {
   if(json) {
@@ -143,7 +140,8 @@ RCT_CUSTOM_VIEW_PROPERTY(orderIndex, NSNumber, RNCEKVExternalKeyboardView)
 {
   if(json){
     NSNumber* value = [RCTConvert NSNumber:json];
-    [view setOrderPosition: value];
+    NSNumber* orderPosition = [value intValue] == -1 ? nil : value;
+    [view setOrderPosition: orderPosition];
   }
 }
 

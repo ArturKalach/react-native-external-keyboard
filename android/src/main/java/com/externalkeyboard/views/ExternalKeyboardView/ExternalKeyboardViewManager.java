@@ -1,7 +1,5 @@
 package com.externalkeyboard.views.ExternalKeyboardView;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -32,20 +30,7 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @NonNull
   @Override
   public ExternalKeyboardView createViewInstance(@NonNull ThemedReactContext context) {
-    ExternalKeyboardView viewGroup = new ExternalKeyboardView(context);
-
-    viewGroup.setOnHierarchyChangeListener(new ExternalKeyboardView.OnHierarchyChangeListener() {
-      @Override
-      public void onChildViewAdded(View parent, View child) {
-        viewGroup.linkAddView(child);
-      }
-
-      @Override
-      public void onChildViewRemoved(View parent, View child) {
-        viewGroup.linkRemoveView(child);
-      }
-    });
-    return viewGroup;
+    return new ExternalKeyboardView(context);
   }
 
   public static Map<String, Object> buildDirectEventMap(String registrationName) {
@@ -138,9 +123,9 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  @ReactProp(name = "haloEffect", defaultBoolean = false)
+  @ReactProp(name = "haloEffect", defaultBoolean = true)
   public void setHaloEffect(ExternalKeyboardView view, boolean value) {
-    //stub
+    view.setFocusHighlight(value);
   }
 
   @Override
@@ -284,5 +269,13 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
     } else {
       super.receiveCommand(root, commandId, args);
     }
+  }
+
+  @Override
+  public void onDropViewInstance(@NonNull ReactViewGroup  viewGroup) {
+    if(viewGroup instanceof ExternalKeyboardView) {
+      ((ExternalKeyboardView)viewGroup).onDropViewInstance();
+    }
+    super.onDropViewInstance(viewGroup);
   }
 }

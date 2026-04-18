@@ -1,5 +1,6 @@
 import { StyleSheet, Text, type ViewStyle } from 'react-native';
 import { Pressable } from 'react-native-external-keyboard';
+import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 export type LineButtonProps = {
   title: string;
@@ -28,8 +29,9 @@ export const LineButton = ({
       onPress={onPress}
       autoFocus={autoFocus}
       style={styles.content}
-      tintColor="#dce3f9"
-      tintType="background"
+      // tintColor="#dce3f9"
+      defaultFocusHighlightEnabled={false}
+      focusStyle={ANDROID_FOCUS_STYLE}
       onLongPress={onLongPress}
     >
       <Text>{title}</Text>

@@ -36,7 +36,18 @@ export type KeyboardPressType<ComponentProps extends object> = {
   onComponentBlur?: PickProp<ComponentProps, 'onBlur'>;
 };
 
-export type WithKeyboardProps<ViewType = View, ViewStyleType = unknown> = {
+/** Extracts the state argument from a component's children render prop, or `never`. */
+type ExtractRenderPropState<T> = T extends (state: infer S) => any ? S : never;
+
+export type ChildrenRenderState<CP extends object> = 'children' extends keyof CP
+  ? ExtractRenderPropState<NonNullable<CP['children']>>
+  : never;
+
+export type WithKeyboardProps<
+  ViewType = View,
+  ViewStyleType = unknown,
+  ComponentProps extends object = {}
+> = {
   withPressedStyle?: boolean;
   containerStyle?: ViewStyleType | ViewProps['style'];
   containerFocusStyle?: FocusStyle;
@@ -46,6 +57,12 @@ export type WithKeyboardProps<ViewType = View, ViewStyleType = unknown> = {
   style?: PressableProps['style'];
   onBlur?: (() => void) | ((e: any) => void) | null;
   onFocus?: (() => void) | ((e: any) => void) | null;
+  renderContent?: ChildrenRenderState<ComponentProps> extends never
+    ? never
+    : (
+        state: ChildrenRenderState<ComponentProps> & { focused: boolean }
+      ) => React.ReactNode;
+  renderFocusable?: (state: { focused: boolean }) => React.ReactNode;
 };
 
 type KeyboardFocusBaseProps = Omit<
@@ -65,7 +82,7 @@ type KeyboardFocusOverrideProps<
   ViewType = View
 > = KeyboardPressType<ComponentProps> &
   KeyboardFocusBaseProps &
-  WithKeyboardProps<ViewType, ViewStyleType>;
+  WithKeyboardProps<ViewType, ViewStyleType, ComponentProps>;
 
 export type WithKeyboardFocus<
   ComponentProps extends object,

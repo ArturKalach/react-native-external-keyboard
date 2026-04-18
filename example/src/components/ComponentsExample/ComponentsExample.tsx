@@ -22,11 +22,23 @@ import {
   KeyboardFocusGroup,
   Keyboard,
 } from 'react-native-external-keyboard';
+import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 const Pressable = withKeyboardFocus(RNPressable);
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 const TouchableWithoutFeedback = withKeyboardFocus(RNTouchableWithoutFeedback);
 
+const RenderContent = ({
+  pressed,
+  focused,
+}: {
+  pressed?: boolean;
+  focused?: boolean;
+}) => (
+  <View style={styles.pressable}>
+    <Text>{pressed ? 'Pressed' : focused ? 'Focused' : 'Not Pressed'}</Text>
+  </View>
+);
 export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
   const navigation = useNavigation();
   const modalButtonRef = useRef<KeyboardFocus>(null);
@@ -84,19 +96,33 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             haloCornerRadius={10}
             onLongPress={() => console.log(11)}
             ref={ref}
+            defaultFocusHighlightEnabled={false}
             style={styles.pressable as object} //ToDo updat type
             containerStyle={styles.pressableContainer}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
           >
             <Text>TouchableOpacity</Text>
           </TouchableOpacity>
           {dShow && (
-            <Pressable autoFocus>
-              <View>
-                <Text>Display</Text>
-              </View>
-            </Pressable>
+            <Pressable
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              containerStyle={styles.pressableContainer}
+              autoFocus
+              renderContent={RenderContent}
+            />
+          )}
+          {dShow && (
+            <TouchableOpacity
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              containerStyle={styles.pressableContainer}
+              renderFocusable={RenderContent}
+            />
           )}
           <TouchableWithoutFeedback
+            defaultFocusHighlightEnabled={false}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
             haloExpendX={-5}
             haloExpendY={-5}
             haloCornerRadius={5}
@@ -111,6 +137,8 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
             </View>
           </TouchableWithoutFeedback>
           <Pressable
+            defaultFocusHighlightEnabled={false}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
             autoFocus
             containerStyle={styles.pressableContainer}
             style={styles.pressable as object} //ToDo updat type
@@ -124,24 +152,31 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           </Pressable>
           <Text>Label: KeyboardExtendedInput </Text>
           <KeyboardExtendedInput
+            defaultFocusHighlightEnabled={false}
+            focusStyle={ANDROID_FOCUS_STYLE}
             focusable={true}
             value={textInput}
+            focusType="press"
             onChangeText={setTextInput}
             containerStyle={styles.doubleBottom}
             style={styles.input as object} //ToDo updat type
           />
           <Text>Label: Multiline</Text>
           <KeyboardExtendedInput
+            defaultFocusHighlightEnabled={false}
+            focusStyle={ANDROID_FOCUS_STYLE}
             focusable={true}
             value={multilineTextInput}
             multiline
+            focusType="press"
             onSubmitEditing={() => console.log('OnSubmitEditing: multiline')}
             onChangeText={setMultilineTextInput}
             containerStyle={styles.doubleBottom}
             style={styles.input as object} //ToDo updat type
           />
-          <Text>Key tracker:</Text>
           <Pressable
+            defaultFocusHighlightEnabled={false}
+            containerFocusStyle={ANDROID_FOCUS_STYLE}
             ref={modalButtonRef}
             onFocus={() => {
               Keyboard.dismiss();
@@ -154,35 +189,60 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           </Pressable>
           <KeyboardExtendedBaseView
             haloEffect={true}
+            canBeFocused={true}
             onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
             onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
             style={styles.keyHandler}
+            groupIdentifier="keyTracker"
           >
-            <View>
-              <Text>{isKeyDown ? 'Press begin:' : 'Press ended:'}</Text>
-              {Object.keys(keyInfo ?? {}).map((key) => (
-                <View key={key}>
-                  {
-                    <Text>{`${key}: ${
-                      (keyInfo as Record<string, string | number | boolean>)[
-                        key
-                      ] ?? ''
-                    }`}</Text>
-                  }
+            <Text style={styles.keyHandlerTitle}>
+              {isKeyDown ? 'Press begin:' : 'Press ended:'}
+            </Text>
+            {Object.keys(keyInfo ?? {}).map((key) => {
+              const value = (
+                keyInfo as Record<string, string | number | boolean>
+              )[key];
+              const isBool = typeof value === 'boolean';
+              return (
+                <View key={key} style={styles.keyHandlerRow}>
+                  <Text style={styles.keyHandlerKey}>{key}</Text>
+                  {isBool && (
+                    <View
+                      style={
+                        value
+                          ? styles.keyHandlerDotTrue
+                          : styles.keyHandlerDotFalse
+                      }
+                    />
+                  )}
+                  <Text style={styles.keyHandlerValue}>{`${value ?? ''}`}</Text>
                 </View>
-              ))}
-            </View>
+              );
+            })}
           </KeyboardExtendedBaseView>
           <Modal visible={showModal}>
             <View style={styles.modal}>
               <View>
-                <Pressable onPress={() => setShowModal(false)}>
+                <Pressable
+                  defaultFocusHighlightEnabled={false}
+                  focusStyle={ANDROID_FOCUS_STYLE}
+                  onPress={() => setShowModal(false)}
+                >
                   <Text>Modal example</Text>
                 </Pressable>
-                <Pressable autoFocus onPress={() => setShowModal(false)}>
+                <Pressable
+                  defaultFocusHighlightEnabled={false}
+                  focusStyle={ANDROID_FOCUS_STYLE}
+                  autoFocus
+                  onPress={() => setShowModal(false)}
+                >
                   <Text>AutoFocus</Text>
                 </Pressable>
-                <Pressable onPress={() => setShowModal(false)}>
+                <Pressable
+                  defaultFocusHighlightEnabled={false}
+                  focusStyle={ANDROID_FOCUS_STYLE}
+                  onPress={() => setShowModal(false)}
+                >
                   <Text>Close</Text>
                 </Pressable>
               </View>
@@ -200,7 +260,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   contentContainer: {
     backgroundColor: '#ffffff',
-    flex: 1,
+    flexGrow: 1,
     padding: 10,
     borderRadius: 15,
   },
@@ -235,11 +295,42 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   keyHandler: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 2,
     marginBottom: 5,
     borderRadius: 10,
+    padding: 10,
+    gap: 4,
+  },
+  keyHandlerTitle: {
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  keyHandlerRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  keyHandlerKey: {
+    color: '#888',
+    minWidth: 120,
+  },
+  keyHandlerValue: {
+    fontWeight: '500',
+    flexShrink: 1,
+  },
+  keyHandlerDotTrue: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: '#34c759',
+    alignSelf: 'center',
+    marginRight: 4,
+  },
+  keyHandlerDotFalse: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: '#ff3b30',
+    alignSelf: 'center',
+    marginRight: 4,
   },
 });

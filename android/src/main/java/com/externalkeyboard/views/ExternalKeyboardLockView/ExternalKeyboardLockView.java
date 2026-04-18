@@ -11,6 +11,7 @@ import com.facebook.react.views.view.ReactViewGroup;
 public class ExternalKeyboardLockView extends ReactViewGroup {
   private int componentType;
   private Boolean lockDisable = false;
+  private Boolean forceLock = false;
 
   public ExternalKeyboardLockView(Context context) {
     super(context);
@@ -33,6 +34,10 @@ public class ExternalKeyboardLockView extends ReactViewGroup {
 
   public void setLockDisabled(boolean lockDisabled) {
     this.lockDisable = lockDisabled;
+  }
+
+  public void setForceLock(boolean forceLock) {
+    this.forceLock = forceLock;
   }
 
   @Override

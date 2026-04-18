@@ -46,6 +46,7 @@ export const KeyboardFocusView = React.forwardRef<
       children,
       accessible,
       triggerCodes,
+      defaultFocusHighlightEnabled = true,
       ...props
     },
     ref
@@ -95,6 +96,7 @@ export const KeyboardFocusView = React.forwardRef<
           onFocusChange={onFocusChangeHandler}
           onContextMenuPress={onLongPress}
           haloEffect={withHaloEffect}
+          defaultFocusHighlightEnabled={defaultFocusHighlightEnabled}
           autoFocus={autoFocus}
           canBeFocused={canBeFocused}
           focusable={focusable}

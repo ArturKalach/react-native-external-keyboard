@@ -9,6 +9,7 @@ import type { FocusStyle } from '../../types/FocusStyle';
 import type { TintType } from '../../types/WithKeyboardFocus';
 import { type RenderProp } from '../RenderPropComponent/RenderPropComponent';
 import type { blurMap, focusMap } from './KeyboardExtendedInput.consts';
+import type { LockFocusType } from '../../types/BaseKeyboardView';
 
 export type ExtraKeyboardProps = {
   focusType?: keyof typeof focusMap;
@@ -25,6 +26,20 @@ export type ExtraKeyboardProps = {
   FocusHoverComponent?: RenderProp;
   submitBehavior?: string;
   groupIdentifier?: string;
+  lockFocus?: LockFocusType[];
+  orderGroup?: string;
+  orderIndex?: number;
+  orderId?: string;
+  orderForward?: string;
+  orderBackward?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderFirst?: string | null;
+  orderLast?: string | null;
+  orderPrefix?: string;
+  defaultFocusHighlightEnabled?: boolean;
 };
 
 type IgnoreForCompatibility =

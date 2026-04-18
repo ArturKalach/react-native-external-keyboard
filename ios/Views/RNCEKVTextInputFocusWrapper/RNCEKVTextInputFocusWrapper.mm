@@ -5,6 +5,8 @@
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
+#import "RNCEKVOrderLinking.h"
+#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -24,6 +26,7 @@
 
 #import <React/RCTConversions.h>
 
+#import "RNCEKVPropHelper.h"
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 #import "RCTFabricComponentsPlugins.h"
 
@@ -39,7 +42,6 @@ static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
 @implementation RNCEKVTextInputFocusWrapper
-
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -60,13 +62,6 @@ static const NSInteger AUTO_BLUR = 2;
     return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
 }
 
-
-
-- (void)setIsHaloActive:(NSNumber * _Nullable)isHaloActive {
-    _isHaloActive = isHaloActive;
-    [self updateHalo];
-}
-
 - (void)prepareForRecycle
 {
     [super prepareForRecycle];
@@ -79,10 +74,6 @@ static const NSInteger AUTO_BLUR = 2;
     const auto &newViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(props);
     [super updateProps
      :props oldProps:oldProps];
-
-    if(oldViewProps.canBeFocused != newViewProps.canBeFocused) {
-        [self setCanBeFocused: newViewProps.canBeFocused];
-    }
 
     if(oldViewProps.focusType != newViewProps.focusType) {
         [self setFocusType: newViewProps.focusType];
@@ -100,20 +91,21 @@ static const NSInteger AUTO_BLUR = 2;
         [self setMultiline: newViewProps.multiline];
     }
 
-    if(self.isHaloActive != nil || newViewProps.haloEffect == false) {
-        BOOL haloState = newViewProps.haloEffect;
-        if(![self.isHaloActive isEqual: @(haloState)]) {
-            [self setIsHaloActive: @(haloState)];
-        }
+    [self updateGroupIdentifierProps:RNCEKV::GroupIdentifierProps::from(oldViewProps)
+                            newProps:RNCEKV::GroupIdentifierProps::from(newViewProps)];
+
+    [self updateHaloProps:RNCEKV::HaloProps::from(oldViewProps)
+                 newProps:RNCEKV::HaloProps::from(newViewProps)];
+    [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
+                       newProps:RNCEKV::OrderProps::from(newViewProps)];
+
+    UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+    BOOL renewColor = newColor != nil && self.tintColor == nil;
+    BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+    if(isColorChanged || renewColor) {
+        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
     }
 
-
-  UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
-  BOOL renewColor = newColor != nil && self.tintColor == nil;
-  BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
-  if(isColorChanged || renewColor) {
-      self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
-  }
 }
 
 Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
@@ -126,7 +118,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
-- (void)onFocusChange:(BOOL) isFocused {
+- (void)onFocusChangeHandler:(BOOL) isFocused {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
         facebook::react::TextInputFocusWrapperEventEmitter::OnFocusChange data = {
@@ -150,7 +142,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 #else
 
 
-- (void)onFocusChange:(BOOL) isFocused {
+- (void)onFocusChangeHandler:(BOOL) isFocused {
     if(self.onFocusChange) {
         self.onFocusChange(@{ @"isFocused": @(isFocused) });
     }
@@ -165,9 +157,24 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 #endif
 
-// ToDo RNCEKV-3, if we return yes here, it means that wrapper is focusable, with current implementation it works as expected, but it would be better to double check
+- (void)focus {
+  UIViewController *viewController = self.reactViewController;
+  [self updateFocus:viewController];
+}
+
+- (void)updateFocus:(UIViewController *)controller {
+  UIView *focusingView = self.subviews.count ? self.subviews[0] : nil;
+  if (self.superview != nil && controller != nil) {
+    [controller rncekvFocusView:focusingView];
+  }
+}
+
 - (BOOL)canBecomeFocused {
     return NO;
+}
+
+- (UIView*)getStoredView {
+  return _textField;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -181,7 +188,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     BOOL isPrev = context.previouslyFocusedView == _textField;
 
     if(isNext) {
-      [self onFocusChange: YES];
       if(self.focusType == AUTO_FOCUS) {
         if(_textField != nil) {
           [_textField reactFocus];
@@ -190,13 +196,14 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     }
 
     if(isPrev) {
-      [self onFocusChange: NO];
       if(self.blurType == AUTO_BLUR) {
         if(_textField != nil) {
           [_textField reactBlur];
         }
       }
     }
+
+   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
 }
 
 - (UIView*)getTextFieldComponent {
@@ -223,14 +230,9 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 
 - (void)cleanReferences{
+    [super cleanReferences];
     _textField = nil;
     _textView = nil;
-    _customGroupId = nil;
-}
-
--(BOOL)isHaloHidden {
-    NSNumber* isHaloActive = [self isHaloActive];
-    return [isHaloActive isEqual: @NO];
 }
 
 - (BOOL)getIsTextInputView: (UIView*)view {
@@ -240,29 +242,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     BOOL isTextInput = [view isKindOfClass: [RCTSinglelineTextInputView class]];
 #endif
     return isTextInput;
-}
-
-- (void)updateHalo {
-    if(self.subviews.count == 0) {
-        return;
-    }
-
-    UIView* view = self.subviews[0];
-    if (@available(iOS 15.0, *)) {
-        BOOL isTextInput = [self getIsTextInputView: view];
-        if(isTextInput) {
-          UIFocusEffect* focusEffect = [self isHaloHidden] ? [RNCEKVFocusEffectUtility emptyFocusEffect] : nil;
-          #ifdef RCT_NEW_ARCH_ENABLED
-          if([view.subviews[0] isKindOfClass: RCTViewComponentView.class]) {
-            ((RCTViewComponentView*)view.subviews[0]).rncekvCustomFocusEffect = focusEffect;
-          } else {
-            view.subviews[0].focusEffect = focusEffect;
-          }
-          #else
-          view.subviews[0].focusEffect = focusEffect;
-          #endif
-        }
-    }
 }
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
@@ -294,29 +273,17 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     [super pressesBegan:presses withEvent:event];
 }
 
-// ToDo, check if needed
-#ifndef RCT_NEW_ARCH_ENABLED
-- (void)didMoveToWindow {
-    [self updateHalo];
-}
-#endif
-
 
 - (UIView*)getFocusTargetView {
+  if(_textField != nil) {
+    return _textField;
+  }
   if(self.subviews.count > 0 && self.subviews[0].subviews.count > 0) {
     UIView* focusingView = self.subviews[0].subviews[0];
     return focusingView;
   }
 
   return nil;
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-    [super willMoveToSuperview:newSuperview];
-
-    if (newSuperview == nil) {
-        [self cleanReferences];
-    }
 }
 
 @end

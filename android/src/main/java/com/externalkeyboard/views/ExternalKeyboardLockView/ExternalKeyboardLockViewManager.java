@@ -29,4 +29,10 @@ public class ExternalKeyboardLockViewManager extends com.externalkeyboard.Extern
   public void setLockDisabled(ExternalKeyboardLockView view, boolean value) {
     view.setLockDisabled(value);
   }
+
+  @Override
+  @ReactProp(name = "forceLock")
+  public void setForceLock(ExternalKeyboardLockView view, boolean value) {
+    view.setForceLock(value);
+  }
 }

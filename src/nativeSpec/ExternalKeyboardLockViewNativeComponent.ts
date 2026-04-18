@@ -7,6 +7,7 @@ export interface ExternalKeyboardLockViewNativeComponentProps
   extends ViewProps {
   componentType: Int32;
   lockDisabled?: boolean;
+  forceLock?: boolean;
 }
 
 export default codegenNativeComponent<ExternalKeyboardLockViewNativeComponentProps>(

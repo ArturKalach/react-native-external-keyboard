@@ -1,5 +1,6 @@
 package com.externalkeyboard.services.FocusLinkObserver;
 
+import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FocusLinkObserver {
-  private final Map<String, View> links;
+  private final Map<String, WeakReference<View>> links;
   private final Map<String, List<Subscriber>> subscribers;
 
   public FocusLinkObserver() {
@@ -22,16 +23,16 @@ public class FocusLinkObserver {
       throw new IllegalArgumentException("Both id and link are required");
     }
 
-    links.put(id, link);
+    links.entrySet().removeIf(e -> e.getValue().get() == null);
+    links.put(id, new WeakReference<>(link));
     emitLinkUpdated(id, link);
   }
 
-
   public void emitRemove(String id) {
     if (links.containsKey(id)) {
-      links.remove(id);  // Remove the link
-      emitLinkRemoved(id);  // Notify subscribers
-      subscribers.remove(id);  // Clean up subscribers for the ID
+      links.remove(id);
+      emitLinkRemoved(id);
+      subscribers.remove(id);
     }
   }
 
@@ -44,7 +45,11 @@ public class FocusLinkObserver {
     subscribers.get(id).add(new Subscriber(onLinkUpdated, onLinkRemoved));
 
     if (onLinkUpdated != null && links.containsKey(id)) {
-      onLinkUpdated.onLinkUpdated(links.get(id));
+      WeakReference<View> ref = links.get(id);
+      View link = ref != null ? ref.get() : null;
+      if (link != null) {
+        onLinkUpdated.onLinkUpdated(link);
+      }
     }
   }
 
@@ -55,11 +60,9 @@ public class FocusLinkObserver {
 
     List<Subscriber> subscriberList = subscribers.get(id);
     if (subscriberList != null) {
-      subscriberList.removeIf(subscriber -> {
-        LinkUpdatedCallback updatedCallback = subscriber.onLinkUpdated.get();
-        LinkRemovedCallback removedCallback = subscriber.onLinkRemoved.get();
-        return updatedCallback == onLinkUpdated && removedCallback == onLinkRemoved;
-      });
+      subscriberList.removeIf(subscriber ->
+        subscriber.onLinkUpdated == onLinkUpdated && subscriber.onLinkRemoved == onLinkRemoved
+      );
 
       if (subscriberList.isEmpty()) {
         subscribers.remove(id);
@@ -70,8 +73,6 @@ public class FocusLinkObserver {
   private void emitLinkUpdated(String id, View link) {
     List<Subscriber> subscriberList = subscribers.get(id);
     if (subscriberList != null) {
-      subscriberList.removeIf(Subscriber::isEmpty);
-
       for (Subscriber subscriber : subscriberList) {
         subscriber.notifyLinkUpdated(link);
       }
@@ -81,10 +82,6 @@ public class FocusLinkObserver {
   private void emitLinkRemoved(String id) {
     List<Subscriber> subscriberList = subscribers.get(id);
     if (subscriberList != null) {
-      // Remove stale subscribers (whose weak references were garbage-collected)
-      subscriberList.removeIf(Subscriber::isEmpty);
-
-      // Notify all valid subscribers
       for (Subscriber subscriber : subscriberList) {
         subscriber.notifyLinkRemoved();
       }
@@ -102,30 +99,24 @@ public class FocusLinkObserver {
   }
 
   private static class Subscriber {
-    private final WeakReference<LinkUpdatedCallback> onLinkUpdated;
-    private final WeakReference<LinkRemovedCallback> onLinkRemoved;
+    final LinkUpdatedCallback onLinkUpdated;
+    final LinkRemovedCallback onLinkRemoved;
 
-    public Subscriber(LinkUpdatedCallback onLinkUpdated, LinkRemovedCallback onLinkRemoved) {
-      this.onLinkUpdated = new WeakReference<>(onLinkUpdated);
-      this.onLinkRemoved = new WeakReference<>(onLinkRemoved);
+    Subscriber(LinkUpdatedCallback onLinkUpdated, LinkRemovedCallback onLinkRemoved) {
+      this.onLinkUpdated = onLinkUpdated;
+      this.onLinkRemoved = onLinkRemoved;
     }
 
-    public void notifyLinkUpdated(View link) {
-      LinkUpdatedCallback callback = onLinkUpdated.get();
-      if (callback != null) {
-        callback.onLinkUpdated(link);
+    void notifyLinkUpdated(View link) {
+      if (onLinkUpdated != null) {
+        onLinkUpdated.onLinkUpdated(link);
       }
     }
 
-    public void notifyLinkRemoved() {
-      LinkRemovedCallback callback = onLinkRemoved.get();
-      if (callback != null) {
-        callback.onLinkRemoved();
+    void notifyLinkRemoved() {
+      if (onLinkRemoved != null) {
+        onLinkRemoved.onLinkRemoved();
       }
-    }
-
-    public boolean isEmpty() {
-      return onLinkUpdated.get() == null && onLinkRemoved.get() == null;
     }
   }
 }

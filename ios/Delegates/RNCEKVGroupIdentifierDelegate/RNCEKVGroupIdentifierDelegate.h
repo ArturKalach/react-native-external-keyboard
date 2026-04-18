@@ -13,13 +13,9 @@
 
 @interface RNCEKVGroupIdentifierDelegate : NSObject
 
-- (instancetype _Nonnull )initWithView:(UIView<RNCEKVGroupIdentifierProtocol> *_Nonnull)view;
+- (instancetype _Nonnull)initWithView:(UIView<RNCEKVGroupIdentifierProtocol> *_Nonnull)view;
 
-- (NSString*_Nonnull) getFocusGroupIdentifier;
-- (void)updateGroupIdentifier;
-- (void)clear;
-- (void)clearSubview:(UIView*_Nullable)subview;
-- (void)syncCustomGroupId;
+@property (nonatomic, readonly, nonnull) NSString *focusGroupIdentifier;
 
 @end
 

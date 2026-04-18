@@ -1,6 +1,10 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
+import {
+  KeyboardOrderFocusGroup,
+  Pressable,
+  type KeyboardFocus,
+} from 'react-native-external-keyboard';
 import { mazeGenerator } from './OrderMaze.util';
 import { MazeRender } from './MazeRender/MazeRender';
 
@@ -25,22 +29,27 @@ export const OrderMaze = () => {
 
   return (
     <View style={styles.gap}>
-      <MazeRender
-        onFinish={exit}
-        reset={reset}
-        startRef={startRef}
-        maze={maze}
-      />
+      <KeyboardOrderFocusGroup>
+        <MazeRender
+          onFinish={exit}
+          reset={reset}
+          startRef={startRef}
+          maze={maze}
+        />
+      </KeyboardOrderFocusGroup>
       {finished && (
-        <View style={styles.gap}>
-          <Text>🎉🎉 Hurray! 🎉🎉</Text>
+        <View style={styles.banner}>
+          <Text style={styles.bannerEmoji}>🎉</Text>
+          <Text style={styles.bannerText}>You escaped!</Text>
+          <Text style={styles.bannerEmoji}>🎉</Text>
           <Pressable
-            focusStyle={styles.cta}
+            focusStyle={styles.ctaFocus}
             lockFocus={['forward', 'last']}
             onPress={restart}
             ref={restartRef}
+            style={styles.cta}
           >
-            <Text>Restart?</Text>
+            <Text style={styles.ctaText}>Play again</Text>
           </Pressable>
         </View>
       )}
@@ -50,5 +59,39 @@ export const OrderMaze = () => {
 
 export const styles = StyleSheet.create({
   gap: { gap: 10 },
-  cta: { borderWidth: 2, borderColor: 'blue' },
+  banner: {
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    backgroundColor: '#f0fdf4',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#22c55e',
+  },
+  bannerEmoji: {
+    fontSize: 32,
+  },
+  bannerText: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#15803d',
+    letterSpacing: 0.5,
+  },
+  cta: {
+    marginTop: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 28,
+    backgroundColor: '#22c55e',
+    borderRadius: 8,
+  },
+  ctaFocus: {
+    borderWidth: 2,
+    borderColor: '#15803d',
+  },
+  ctaText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 15,
+  },
 });

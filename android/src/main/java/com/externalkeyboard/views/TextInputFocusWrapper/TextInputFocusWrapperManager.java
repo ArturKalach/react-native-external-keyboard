@@ -1,20 +1,15 @@
 package com.externalkeyboard.views.TextInputFocusWrapper;
 
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.MultiplyTextSubmit;
-import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardView;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.common.MapBuilder;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.views.textinput.ReactEditText;
 import com.facebook.react.views.view.ReactViewGroup;
 
 import java.util.HashMap;
@@ -32,32 +27,14 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
 
   @Override
   public TextInputFocusWrapper createViewInstance(ThemedReactContext context) {
-    return subscribeOnHierarchy(new TextInputFocusWrapper(context));
+    return new TextInputFocusWrapper(context);
   }
 
   @Override
-  protected void addEventEmitters(final ThemedReactContext reactContext, TextInputFocusWrapper viewGroup) {
-    viewGroup.subscribeOnFocus();
-  }
-
-  protected TextInputFocusWrapper subscribeOnHierarchy(TextInputFocusWrapper viewGroup) {
-    viewGroup.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-      @Override
-      public void onChildViewAdded(View parent, View child) {
-        if (child instanceof ReactEditText) {
-          viewGroup.setEditText((ReactEditText) child);
-        }
-      }
-
-      @Override
-      public void onChildViewRemoved(View parent, View child) {
-        if (child instanceof ReactEditText) {
-          viewGroup.setEditText(null);
-        }
-      }
-    });
-
-    return viewGroup;
+  protected void addEventEmitters(final ThemedReactContext reactContext, ReactViewGroup viewGroup) {
+    if(viewGroup instanceof TextInputFocusWrapper) {
+      ((TextInputFocusWrapper)viewGroup).subscribeOnFocus();
+    }
   }
 
   @Override
@@ -89,6 +66,96 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     //stub
   }
 
+  @Override
+  @ReactProp(name = "orderGroup")
+  public void setOrderGroup(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderGroup(), value)) {
+      view.setOrderGroup(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderIndex")
+  public void setOrderIndex(TextInputFocusWrapper view, int value) {
+    if (!Objects.equals(view.getOrderIndex(), value)) {
+      view.setOrderIndex(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderId")
+  public void setOrderId(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.orderId, value)) {
+      view.orderId = value;
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderLeft")
+  public void setOrderLeft(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderLeft(), value)) {
+      view.setOrderLeft(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderRight")
+  public void setOrderRight(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderRight(), value)) {
+      view.setOrderRight(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderUp")
+  public void setOrderUp(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderUp(), value)) {
+      view.setOrderUp(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderDown")
+  public void setOrderDown(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.getOrderDown(), value)) {
+      view.setOrderDown(value);
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderForward")
+  public void setOrderForward(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.orderForward, value)) {
+      view.orderForward = value;
+    }
+  }
+
+  @Override
+  @ReactProp(name = "orderBackward")
+  public void setOrderBackward(TextInputFocusWrapper view, @Nullable String value) {
+    if (!Objects.equals(view.orderBackward, value)) {
+      view.orderBackward = value;
+    }
+  }
+
+  @Override
+  @ReactProp(name = "lockFocus")
+  public void setLockFocus(TextInputFocusWrapper view, int value) {
+    if (view.lockFocus != value) {
+      view.lockFocus = value;
+    }
+  }
+
+  @Override
+  public void setOrderFirst(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
+  }
+
+  @Override
+  public void setOrderLast(TextInputFocusWrapper view, @Nullable String value) {
+    //stub
+  }
+
 
   @Override
   @ReactProp(name = "canBeFocused", defaultBoolean = true)
@@ -97,8 +164,9 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
+  @ReactProp(name = "haloEffect", defaultBoolean = true)
   public void setHaloEffect(TextInputFocusWrapper view, boolean value) {
-    //stub
+    view.setFocusHighlight(value);
   }
 
   @Override
@@ -107,9 +175,12 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
-  public void onDropViewInstance(@NonNull TextInputFocusWrapper viewGroup) {
-    viewGroup.setEditText(null);
-    viewGroup.setOnFocusChangeListener(null);
+  public void onDropViewInstance(@NonNull ReactViewGroup viewGroup) {
+    if(viewGroup instanceof TextInputFocusWrapper) {
+      ((TextInputFocusWrapper)viewGroup).onDropViewInstance();
+      ((TextInputFocusWrapper)viewGroup).setEditText(null);
+      viewGroup.setOnFocusChangeListener(null);
+    }
     super.onDropViewInstance(viewGroup);
   }
 
@@ -128,5 +199,23 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
     export.put(MultiplyTextSubmit.EVENT_NAME, createEventMap("onMultiplyTextSubmit"));
 
     return export;
+  }
+
+  @Override
+  @ReactProp(name = "haloExpendY")
+  public void setHaloExpendY(TextInputFocusWrapper view, float value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "haloExpendX")
+  public void setHaloExpendX(TextInputFocusWrapper view, float value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "haloCornerRadius")
+  public void setHaloCornerRadius(TextInputFocusWrapper view, float value) {
+
   }
 }

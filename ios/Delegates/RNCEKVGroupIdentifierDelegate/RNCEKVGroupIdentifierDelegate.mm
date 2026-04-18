@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 
 #import "RNCEKVGroupIdentifierDelegate.h"
-#import "RNCEKVFocusEffectUtility.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
@@ -29,89 +28,18 @@
 }
 
 
--  (NSString*) getTagId {
-  if(_tagId) {
-    return _tagId;
+- (NSString *)tagId {
+  if (!_tagId) {
+    _tagId = [NSString stringWithFormat:@"app.group.%@", [NSUUID UUID].UUIDString];
   }
-
-  NSUUID *uuid = [NSUUID UUID];
-  NSString *uniqueID = [uuid UUIDString];
-  _tagId = [NSString stringWithFormat:@"app.group.%@", uniqueID];
-
   return _tagId;
 }
 
-
-- (NSString*) getFocusGroupIdentifier {
+- (NSString *)focusGroupIdentifier {
   if (@available(iOS 14.0, *)) {
-    if(_delegate.customGroupId) {
-      return _delegate.customGroupId;
-    }
-
-    return [self getTagId];
-  } else {
-    return nil;
+    return _delegate.customGroupId ?: self.tagId;
   }
+  return self.tagId;
 }
-
-
-#ifdef RCT_NEW_ARCH_ENABLED
-- (void) updateGroupIdentifier {
-  if (@available(iOS 14.0, *)) {
-    UIView* focus = [_delegate getFocusTargetView];
-
-    NSString* identifier = [self getFocusGroupIdentifier];
-    if([focus isKindOfClass:[RCTViewComponentView class]]) {
-      ((RCTViewComponentView*)focus).rncekvCustomGroup = identifier;
-    } else {
-      focus.focusGroupIdentifier = identifier;
-    }
-  }
-}
-
-#else
-
-- (void) updateGroupIdentifier {
-  if (@available(iOS 14.0, *)) {
-    UIView* focus = [_delegate getFocusTargetView];
-    focus.focusGroupIdentifier = [self getFocusGroupIdentifier];
-  }
-}
-
-#endif
-
-- (void) clear {
-  if (@available(iOS 14.0, *)) {
-    UIView* focus = [_delegate getFocusTargetView];
-    [self clearSubview: focus];
-  }
-}
-
-#ifdef RCT_NEW_ARCH_ENABLED
-- (void)clearSubview: (UIView*_Nullable)subview {
-  if(!subview) return;
-
-  if (@available(iOS 14.0, *)) {
-
-    if(subview) {
-      if([subview isKindOfClass:[RCTViewComponentView class]]) {
-        ((RCTViewComponentView*)subview).rncekvCustomGroup = nil;
-      } else {
-        subview.focusGroupIdentifier = nil;
-      }
-    }
-  }
-}
-#else
-
-- (void)clearSubview: (UIView*_Nullable)subview {
-  if(!subview) return;
-
-  if (@available(iOS 14.0, *)) {
-    subview.focusGroupIdentifier = nil;
-  }
-}
-
-#endif
 
 @end

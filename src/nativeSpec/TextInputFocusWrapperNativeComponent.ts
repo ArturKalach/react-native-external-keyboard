@@ -1,6 +1,7 @@
 import type { ViewProps, ColorValue } from 'react-native';
 import type {
   DirectEventHandler,
+  Float,
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
 // eslint-disable-next-line @react-native/no-deep-imports
@@ -21,10 +22,25 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   blurType?: Int32;
   canBeFocused?: boolean;
   haloEffect?: boolean;
+  haloCornerRadius?: Float;
+  haloExpendX?: Float;
+  haloExpendY?: Float;
   tintColor?: ColorValue;
   blurOnSubmit?: boolean;
   multiline?: boolean;
   groupIdentifier?: string;
+  lockFocus?: Int32;
+  orderGroup?: string;
+  orderIndex?: Int32;
+  orderId?: string;
+  orderLeft?: string;
+  orderRight?: string;
+  orderUp?: string;
+  orderDown?: string;
+  orderForward?: string;
+  orderBackward?: string;
+  orderFirst?: string;
+  orderLast?: string;
 }
 
 export default codegenNativeComponent<TextInputFocusWrapperNativeComponent>(

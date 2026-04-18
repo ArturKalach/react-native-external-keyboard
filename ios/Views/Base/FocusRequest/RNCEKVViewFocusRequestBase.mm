@@ -1,0 +1,112 @@
+//
+//  RNCEKVViewFocusRequestBase.m
+//  react-native-external-keyboard
+//
+//  Created by Artur Kalach on 09/04/2026.
+//
+
+#import <Foundation/Foundation.h>
+#import "UIViewController+RNCEKVExternalKeyboard.h"
+
+#import "UIView+React.h"
+#import "RNCEKVViewFocusRequestBase.h"
+
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "RNCEKVNativeProps.h"
+#import "RNCEKVFabricEventHelper.h"
+#endif
+
+@implementation RNCEKVViewFocusRequestBase {
+  BOOL _isAttachedToWindow;
+  BOOL _autoFocusRequested;
+  BOOL _enableA11yFocus;
+}
+
+- (void)cleanReferences {
+  [super cleanReferences];
+  _isAttachedToWindow = NO;
+  _enableA11yFocus = NO;
+  _autoFocusRequested = NO;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+  if (self = [super initWithFrame:frame]) {
+    _isAttachedToWindow = NO;
+    _autoFocusRequested = NO;
+  }
+
+  return self;
+}
+
+- (void)focus {
+  
+  UIViewController *controller = self.reactViewController;
+  if (controller != nil) {
+    [controller rncekvFocusView: self];
+  }
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self a11yFocus];
+  });
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)updateFocusRequestProps:(const RNCEKV::AutoFocusProps &)oldProps
+newProps:(const RNCEKV::AutoFocusProps &)newProps {
+    if (oldProps.autoFocus != newProps.autoFocus) {
+      [self setAutoFocus: newProps.autoFocus];
+    }
+  
+  if (_enableA11yFocus != newProps.enableA11yFocus) {
+    [self setEnableA11yFocus: newProps.enableA11yFocus];
+  }
+}
+
+
+#endif
+
+
+- (void)onAttached
+{
+  [self focusOnMount];
+}
+
+- (void)a11yFocus {
+  if (!_enableA11yFocus)
+    return;
+  UIView *focusView = [self getFocusTargetView];
+  UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification,
+                                  focusView);
+}
+
+- (void)focusOnMount {
+  if (self.autoFocus) {
+    if(!_autoFocusRequested) {
+      _autoFocusRequested = YES;
+      dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [self focus];
+        });
+      });
+    }
+  }
+}
+
+
+- (void)didMoveToWindow {
+  [super didMoveToWindow];
+
+  if (self.window) {
+    [self onAttached];
+  }
+
+  if (self.window && !_isAttachedToWindow) {
+    if (self.autoFocus) {
+      [self focus];
+    }
+    _isAttachedToWindow = YES;
+  }
+}
+
+
+@end

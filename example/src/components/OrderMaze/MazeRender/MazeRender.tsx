@@ -1,5 +1,5 @@
 import { forwardRef, useMemo, type RefObject } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
 import { type Maze, type MazeInfo, type Point } from '../OrderMaze.util';
 
@@ -80,16 +80,22 @@ export const MazeItem = forwardRef<
   const point = useMemo<Point>(() => [row, column], [row, column]);
   const isStart = cell === 0;
 
+  const isWall = cell === 'W';
+
   const cellStyle = useMemo(
-    () => ({
-      backgroundColor: cell === 0 ? 'green' : cell === exit ? 'red' : undefined,
-      borderTopWidth: isUpLocked(point, matrix) ? 2 : 0,
-      borderBottomWidth: isBottomLocked(point, matrix) ? 2 : 0,
-      borderLeftWidth: isLeftBlocked(point, matrix) ? 2 : 0,
-      borderRightWidth: isRightBlocked(point, matrix) ? 2 : 0,
-    }),
-    [cell, exit, matrix, point]
+    () =>
+      isWall
+        ? styles.wall
+        : {
+            backgroundColor:
+              cell === 0 ? '#22c55e' : cell === exit ? '#ef4444' : '#f8fafc',
+          },
+    [cell, exit, isWall]
   );
+
+  if (isWall) {
+    return <View style={[styles.cell, styles.wall]} />;
+  }
 
   return (
     <Pressable
@@ -101,12 +107,10 @@ export const MazeItem = forwardRef<
       orderForward={getOrderForward(point, matrix, next)}
       orderBackward={getOrderForward(point, matrix, prev)}
       lockFocus={getLockedArray(point, matrix) as ('up' | 'down')[]}
-      haloCornerRadius={5}
+      haloCornerRadius={4}
       focusStyle={styles.focus}
       style={[styles.cell, cellStyle]}
-    >
-      {cell === 'W' ? <Text>{cell}</Text> : null}
-    </Pressable>
+    />
   );
 });
 
@@ -123,7 +127,7 @@ export const MazeRender = ({
 }) => {
   const { exit, matrix } = maze;
   return (
-    <View>
+    <View style={styles.mazeContainer}>
       {matrix.map((row, r) => {
         return (
           <View key={`${r}_`} style={styles.row}>
@@ -148,15 +152,21 @@ export const MazeRender = ({
 };
 
 export const styles = StyleSheet.create({
+  mazeContainer: {
+    borderWidth: 5,
+    borderColor: '#1e293b',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
   cell: {
-    width: 15,
-    height: 15,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: 20,
+    height: 20,
+  },
+  wall: {
+    backgroundColor: '#1e293b',
   },
   focus: {
-    backgroundColor: Platform.OS === 'android' ? 'black' : undefined,
+    backgroundColor: Platform.OS === 'android' ? '#3b82f6' : undefined,
   },
   row: { flexDirection: 'row' },
 });
