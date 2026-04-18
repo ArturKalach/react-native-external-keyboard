@@ -19,49 +19,6 @@ iOS | Android
 - Keyboard focus order.
 - Focus Lock.
 
-## New Release: Focus Lock
-
-| iOS | Android |
-| :-- | :-- |
-| <img src="/.github/images/rnek-focus-lock-ios.gif" height="500" /> |  <img src="/.github/images/rnek-focus-lock-android.gif" height="500" />  |
-
-> A new type of focus lock functionality has been introduced, featuring two new components: `Focus.Frame` and `Focus.Trap`. These components help manage and lock focus within specific areas of the screen.
-
-<details>
-  <summary>More Information</summary>
-
-- On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal` property to keep the screen reader focus within a defined area. For stronger containment — such as preventing focus from reaching system elements like navigation bars or headers — pass `forceLock`. It observes focus changes and moves focus back into the trap when it escapes. Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned.
-- On Android, where no equivalent to `accessibilityViewIsModal` exists, custom logic has been implemented as a workaround. By default, Android uses a custom Activity or Modal to limit focus. While using a Modal is considered the best practice for focus locking on Android, some scenarios—such as issues with React Native's Modal or library-specific constraints—may require alternative implementations.
-
-#### How It Works
-
-The focus lock functionality should be used as a pair:
-
-- `Focus.Frame`: This component is used at the root level of a "screen" to detect focus leaks and ensure that focus remains contained.
-- `Focus.Trap`: This component wraps the content area where focus should be explicitly locked.
-
-| Prop | Description |
-| :-- | :-- |
-| ViewProps | Includes all standard React Native View properties, such as style, testID, etc. |
-| forceLock? | **iOS only.** Strengthens focus containment beyond `accessibilityViewIsModal` by observing focus changes and returning focus back into the trap whenever it escapes to system elements (e.g. navigation bars, headers). Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned. |
-| lockDisabled? | **Android only.** Disables the focus lock when `true`. |
-
-```tsx
-<Focus.Frame>
-  ...
-  <Focus.Trap forceLock>
-    <Text accessibilityRole="header">Locked Area</Text>
-    <Button
-      title="Confirm"
-      accessibilityLabel="Confirm action"
-    />
-  </Focus.Trap>
-  ...
-</Focus.Frame>
-```
-
-</details>
-
 ## Installation
 
 ```sh
@@ -385,6 +342,40 @@ import { Keyboard } from 'react-native-external-keyboard';
 ```
 
 This is needed for hiding the soft keyboard using a hardware keyboard. Additionally, the soft keyboard can be hidden from the settings or by pressing `Alt + K`.
+
+### Focus.Frame and Focus.Trap
+
+`Focus.Frame` and `Focus.Trap` are two components that help manage and lock focus within specific areas of the screen.
+
+- On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal` property to keep the screen reader focus within a defined area. For stronger containment — such as preventing focus from reaching system elements like navigation bars or headers — pass `forceLock`. It observes focus changes and moves focus back into the trap when it escapes. Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned.
+- On Android, where no equivalent to `accessibilityViewIsModal` exists, custom logic has been implemented as a workaround. By default, Android uses a custom Activity or Modal to limit focus. While using a Modal is considered the best practice for focus locking on Android, some scenarios—such as issues with React Native's Modal or library-specific constraints—may require alternative implementations.
+
+#### How It Works
+
+The focus lock functionality should be used as a pair:
+
+- `Focus.Frame`: This component is used at the root level of a "screen" to detect focus leaks and ensure that focus remains contained.
+- `Focus.Trap`: This component wraps the content area where focus should be explicitly locked.
+
+| Prop | Description |
+| :-- | :-- |
+| ViewProps | Includes all standard React Native View properties, such as style, testID, etc. |
+| forceLock? | **iOS only.** Strengthens focus containment beyond `accessibilityViewIsModal` by observing focus changes and returning focus back into the trap whenever it escapes to system elements (e.g. navigation bars, headers). Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned. |
+| lockDisabled? | **Android only.** Disables the focus lock when `true`. |
+
+```tsx
+<Focus.Frame>
+  ...
+  <Focus.Trap forceLock>
+    <Text accessibilityRole="header">Locked Area</Text>
+    <Button
+      title="Confirm"
+      accessibilityLabel="Confirm action"
+    />
+  </Focus.Trap>
+  ...
+</Focus.Frame>
+```
 
 ## Focus order features
 
