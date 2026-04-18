@@ -70,14 +70,6 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVExternalKeyboardView)
   }
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(enableA11yFocus, BOOL, RNCEKVExternalKeyboardView)
-{
-  if(json) {
-    BOOL value = json ? [RCTConvert BOOL:json] : NO;
-    [view setEnableA11yFocus: value];
-  }
-}
-
 RCT_CUSTOM_VIEW_PROPERTY(screenAutoA11yFocus, BOOL, RNCEKVExternalKeyboardView)
 {
   //stub
@@ -159,7 +151,7 @@ RCT_CUSTOM_VIEW_PROPERTY(enableContextMenu, BOOL, RNCEKVExternalKeyboardView)
   [view setEnableContextMenu: value];
 }
 
-RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
+RCT_EXPORT_METHOD(rnekKeyboardFocus:(nonnull NSNumber *)reactTag)
 {
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
     UIView *view = viewRegistry[reactTag];
@@ -168,6 +160,19 @@ RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
     }
     RNCEKVExternalKeyboardView *keyboardView = (RNCEKVExternalKeyboardView*)view;
     [keyboardView focus];
+  }];
+}
+
+
+RCT_EXPORT_METHOD(rnekScreenReaderFocus:(nonnull NSNumber *)reactTag)
+{
+  [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
+    UIView *view = viewRegistry[reactTag];
+    if (!view || ![view isKindOfClass:[RNCEKVExternalKeyboardView class]]) {
+      return;
+    }
+    RNCEKVExternalKeyboardView *keyboardView = (RNCEKVExternalKeyboardView*)view;
+    [keyboardView screenReaderFocus];
   }];
 }
 

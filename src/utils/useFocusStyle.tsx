@@ -1,32 +1,20 @@
 import { useState, useMemo, useCallback } from 'react';
-import { type ColorValue, type PressableProps, Pressable } from 'react-native';
+import { type PressableProps, Pressable } from 'react-native';
 import type { FocusStyle } from '../types';
-import type { TintType } from '../types/WithKeyboardFocus';
-
-const backgroundTintMap: Partial<Record<TintType, boolean>> = {
-  background: true,
-};
-
-const DEFAULT_BACKGROUND_TINT = '#dce3f9';
 
 type UseFocusStyleProps<C> = {
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
   onFocusChange?: (isFocused: boolean) => void;
-  tintColor?: ColorValue;
-  tintType?: TintType;
   style?: PressableProps['style'];
   Component?: React.ComponentType<C>;
   withPressedStyle?: boolean;
-  defaultFocusHighlightEnabled?: boolean;
 };
 
 export const useFocusStyle = <C extends {}>({
   focusStyle,
   onFocusChange,
   containerFocusStyle,
-  tintColor,
-  tintType = 'default',
   style,
   Component,
   withPressedStyle = false,
@@ -47,19 +35,7 @@ export const useFocusStyle = <C extends {}>({
     return focused ? specificStyle : undefined;
   }, [focusStyle, focused]);
 
-  const hoverColor = useMemo(
-    () => ({
-      backgroundColor: tintColor,
-    }),
-    [tintColor]
-  );
-
   const containerFocusedStyle = useMemo(() => {
-    if (backgroundTintMap[tintType] && !containerFocusStyle) {
-      return focused
-        ? { backgroundColor: tintColor ?? DEFAULT_BACKGROUND_TINT }
-        : undefined;
-    }
     if (!containerFocusStyle) return undefined;
 
     const specificStyle =
@@ -68,7 +44,7 @@ export const useFocusStyle = <C extends {}>({
         : containerFocusStyle;
 
     return focused ? specificStyle : undefined;
-  }, [containerFocusStyle, focused, tintColor, tintType]);
+  }, [containerFocusStyle, focused]);
 
   const dafaultComponentStyle = useMemo(
     () => [style, componentFocusedStyle],
@@ -95,7 +71,6 @@ export const useFocusStyle = <C extends {}>({
     componentFocusedStyle,
     containerFocusedStyle,
     onFocusChangeHandler,
-    hoverColor,
     focused,
   };
 };

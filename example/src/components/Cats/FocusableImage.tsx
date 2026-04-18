@@ -3,19 +3,9 @@ import {
   Image,
   type ImageSourcePropType,
   type DimensionValue,
-  Platform,
   StyleSheet,
 } from 'react-native';
-import {
-  Pressable,
-  type KeyboardFocus,
-  type TintType,
-} from 'react-native-external-keyboard';
-
-const tinyType: TintType | undefined = Platform.select({
-  android: 'hover',
-  default: undefined,
-});
+import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
 
 export const FocusableImage = React.forwardRef<
   KeyboardFocus,
@@ -24,8 +14,6 @@ export const FocusableImage = React.forwardRef<
   return (
     <Pressable
       ref={ref}
-      tintType={tinyType}
-      tintColor="#ffffff"
       containerStyle={[
         styles.container,
         { width: width as DimensionValue | undefined },

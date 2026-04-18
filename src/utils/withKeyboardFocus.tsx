@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, type RefObject } from 'react';
-import { View, StyleSheet, type ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type { KeyboardFocus, OnKeyPress } from '../types/BaseKeyboardView';
 import { useFocusStyle } from './useFocusStyle';
@@ -8,7 +8,6 @@ import type {
   WithKeyboardFocus,
   WithKeyboardFocusComponent,
 } from '../types/WithKeyboardFocus';
-import { RenderPropComponent } from '../components/RenderPropComponent/RenderPropComponent';
 import { useKeyboardPress } from './useKeyboardPress/useKeyboardPress';
 import { IsViewFocusedContext } from '../context/IsViewFocusedContext';
 import type { FocusViewProps } from '../types/KeyboardFocusView.types';
@@ -46,7 +45,6 @@ export const withKeyboardFocus = <
         onFocus,
         onBlur,
         containerFocusStyle,
-        FocusHoverComponent,
         viewRef,
         componentRef,
         haloCornerRadius,
@@ -56,7 +54,6 @@ export const withKeyboardFocus = <
         withPressedStyle = false,
         triggerCodes,
         exposeMethods,
-        enableA11yFocus,
         screenAutoA11yFocus,
         screenAutoA11yFocusDelay = 300, // ToDo align with BaseKeyboardView
         orderIndex,
@@ -84,13 +81,10 @@ export const withKeyboardFocus = <
         containerFocusedStyle,
         componentStyleViewStyle,
         onFocusChangeHandler,
-        hoverColor,
       } = useFocusStyle({
         onFocusChange,
-        tintColor,
         focusStyle,
         containerFocusStyle,
-        tintType,
         style,
         withPressedStyle,
         Component,
@@ -126,14 +120,6 @@ export const withKeyboardFocus = <
         () => (renderFocusable ? renderFocusable({ focused }) : undefined),
         [renderFocusable, focused]
       );
-
-      const hoverContent = useMemo(() => {
-        if (FocusHoverComponent) return FocusHoverComponent;
-        if (tintType === 'hover') {
-          return <View style={[hoverColor, styles.absolute, styles.opacity]} />;
-        }
-        return undefined;
-      }, [FocusHoverComponent, hoverColor, tintType]);
 
       const focusOrderProps = {
         orderIndex,
@@ -181,7 +167,6 @@ export const withKeyboardFocus = <
             group={group}
             groupIdentifier={groupIdentifier}
             exposeMethods={exposeMethods}
-            enableA11yFocus={enableA11yFocus}
             screenAutoA11yFocus={screenAutoA11yFocus}
             screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             lockFocus={lockFocus}
@@ -210,9 +195,6 @@ export const withKeyboardFocus = <
                   children: contentChildrenProp ?? focusableChildrenProp,
                 } as unknown as Partial<ComponentProps>))}
             />
-            {focused && hoverContent && (
-              <RenderPropComponent render={hoverContent} />
-            )}
           </BaseKeyboardView>
         </IsViewFocusedContext.Provider>
       );
@@ -225,16 +207,3 @@ export const withKeyboardFocus = <
 
   return WithKeyboardFocus;
 };
-
-const styles = StyleSheet.create({
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  opacity: {
-    opacity: 0.3,
-  },
-});

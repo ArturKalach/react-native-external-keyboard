@@ -51,7 +51,6 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   tintColor?: ColorValue;
   group?: boolean;
   groupIdentifier?: string;
-  enableA11yFocus?: boolean;
   screenAutoA11yFocus?: boolean;
   screenAutoA11yFocusDelay?: Int32;
   orderGroup?: string;
@@ -71,11 +70,13 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
 
 export interface NativeCommands {
   // @ts-ignore
-  focus: (viewRef: React.ElementRef<ComponentType>) => void;
+  rnekKeyboardFocus: (viewRef: React.ElementRef<ComponentType>) => void;
+  // @ts-ignore
+  rnekScreenReaderFocus: (viewRef: React.ElementRef<ComponentType>) => void;
 }
 
 export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
-  supportedCommands: ['focus'],
+  supportedCommands: ['rnekKeyboardFocus', 'rnekScreenReaderFocus'],
 });
 
 export default codegenNativeComponent<ExternalKeyboardNativeProps>(

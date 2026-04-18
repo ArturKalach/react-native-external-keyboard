@@ -82,7 +82,6 @@ autoFocus?: | Indicates if the component should automatically gain focus | `bool
 focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
 tintColor?: | Color used for tinting the component | `string`
 tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none'`
-FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
 renderContent?: | Render prop for components whose `children` is itself a render function (e.g. `Pressable`). Receives the component's own render state merged with `{ focused: boolean }`, so you can style content based on both the component state (e.g. `pressed`) and keyboard focus simultaneously. Only available when the wrapped component exposes a render-prop `children`. | `(state: ComponentRenderState & { focused: boolean }) => ReactNode`
 renderFocusable?: | Render prop available on any `withKeyboardFocus`-wrapped component. Replaces `children` and receives `{ focused: boolean }`, allowing you to render different content based on keyboard focus state. Use this when the wrapped component does not expose a render-prop `children`. | `(state: { focused: boolean }) => ReactNode`
 group?: | Indicates if the component is a focusable group | `boolean`
@@ -95,7 +94,6 @@ ref?: | Provides a reference to the component, allowing programmatic focus contr
 viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
 onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
 triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
-enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
 screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
 `screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
 `exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
@@ -189,7 +187,6 @@ autoFocus?: | Indicates if the component should automatically gain focus | `bool
 focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
 tintColor?: | Color used for tinting the component | `string`
 tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none'`
-FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
 group?: | Indicates if the component is a focusable group | `boolean`
 haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
 defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
@@ -197,7 +194,6 @@ haloCornerRadius?: | Corner radius of the halo ring (iOS only) | `number`
 haloExpendX?: | Horizontal expansion of the halo ring in points (iOS only) | `number`
 haloExpendY?: | Vertical expansion of the halo ring in points (iOS only) | `number`
 triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
-enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
 screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
 `screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
 `exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
@@ -243,7 +239,6 @@ focusStyle? | Style applied to the inner TextInput when focused | `FocusStyle`
 containerStyle | Style for the container | StyleProp<ViewStyle>
 containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
 tintType?: | Tint behavior type | `'default' \\| 'hover' \\| 'background' \\| 'none'`
-FocusHoverComponent?: | Component displayed on focus | `\\| ReactElement  \\| FunctionComponent  \\| (() => ReactElement);`
 onSubmitEditing?: | Extended `onSubmitEditing` for multiline input | `(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)`
 ...rest | Remaining TextInput props  | `TextInputProps`
 

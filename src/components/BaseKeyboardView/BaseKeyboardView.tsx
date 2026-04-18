@@ -26,14 +26,6 @@ import { wrapOrderPrefix } from '../../utils/wrapOrderPrefix';
 type NativeRef = React.ElementRef<ComponentType>;
 const isIOS = Platform.OS === 'ios';
 
-const DEFAULT_EXPOSE_METHODS = [
-  'blur',
-  'measure',
-  'measureInWindow',
-  'measureLayout',
-  'setNativeProps',
-];
-
 enum BITS {
   BIT_01 = 0b1,
   BIT_02 = 0b10,
@@ -84,8 +76,6 @@ export const BaseKeyboardView = React.memo(
         groupIdentifier,
         tintColor,
         ignoreGroupFocusHint,
-        exposeMethods = DEFAULT_EXPOSE_METHODS,
-        enableA11yFocus = false,
         screenAutoA11yFocusDelay = 500,
         lockFocus,
         orderIndex,
@@ -162,27 +152,48 @@ export const BaseKeyboardView = React.memo(
       useImperativeHandle(
         ref,
         () => {
-          const actions: Record<string, Function> = {};
-
-          exposeMethods.forEach((method) => {
-            actions[method] = (...args: any[]) => {
-              const componentActions = targetRef?.current as unknown as Record<
-                string,
-                Function
-              >;
-              return componentActions?.[method]?.(...args);
-            };
-          });
-
-          actions.focus = () => {
-            if (targetRef?.current) {
-              Commands.focus(targetRef.current as unknown as NativeRef);
-            }
+          const nativeCommands: Record<string, () => void> = {
+            keyboardFocus: () => {
+              if (targetRef?.current) {
+                Commands.rnekKeyboardFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+              }
+            },
+            screenReaderFocus: () => {
+              if (targetRef?.current) {
+                Commands.rnekScreenReaderFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+              }
+            },
+            focus: () => {
+              if (targetRef?.current) {
+                Commands.rnekKeyboardFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+                Commands.rnekScreenReaderFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+              }
+            },
           };
 
-          return actions as unknown as BaseKeyboardViewType;
+          const native = targetRef?.current as unknown as Record<
+            string,
+            unknown
+          >;
+
+          return new Proxy({} as BaseKeyboardViewType, {
+            get(_target, prop: string) {
+              if (prop in nativeCommands) {
+                return nativeCommands[prop];
+              }
+              return native?.[prop];
+            },
+          });
         },
-        [exposeMethods, targetRef]
+        [targetRef]
       );
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
@@ -262,7 +273,6 @@ export const BaseKeyboardView = React.memo(
             hasOnFocusChanged={Boolean(hasOnFocusChanged)}
             group={group}
             orderIndex={orderIndex ?? -1}
-            enableA11yFocus={enableA11yFocus}
             screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             lockFocus={lockFocusValue}
             {...wrappedOrderProps}

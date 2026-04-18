@@ -81,7 +81,6 @@ export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
       renderItem={({ item, index }) => (
         <Pressable
           tintColor="#ff0000"
-          tintType="hover"
           defaultFocusHighlightEnabled={false}
           ref={index === 0 ? ref : undefined}
           containerStyle={styles.item as object} //ToDo type

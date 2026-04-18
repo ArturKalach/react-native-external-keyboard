@@ -96,13 +96,11 @@ struct ContextMenuProps {
 
 struct AutoFocusProps {
   bool autoFocus{false};
-  bool enableA11yFocus{false};
-  
+
   template <typename T>
   static AutoFocusProps from(const T &props) {
     return AutoFocusProps{
       props.autoFocus,
-      props.enableA11yFocus,
     };
   }
 };
@@ -110,7 +108,7 @@ struct AutoFocusProps {
 struct KeyPressProps {
   bool hasKeyDownPress{false};
   bool hasKeyUpPress{false};
-  
+
   template <typename T>
   static KeyPressProps from(const T &props) {
     return KeyPressProps{

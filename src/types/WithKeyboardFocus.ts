@@ -4,11 +4,6 @@ import type { KeyboardFocus, OnKeyPress } from './BaseKeyboardView';
 import type { FocusViewProps } from './KeyboardFocusView.types';
 import type { RefAttributes } from 'react';
 
-export type RenderProp =
-  | React.ReactElement
-  | React.FunctionComponent
-  | (() => React.ReactElement);
-
 type KeyboardPressHandler = (e?: OnKeyPress) => void;
 
 type PressHandlerProp<
@@ -53,7 +48,6 @@ export type WithKeyboardProps<
   containerFocusStyle?: FocusStyle;
   tintType?: TintType;
   componentRef?: React.RefObject<ViewType>;
-  FocusHoverComponent?: RenderProp;
   style?: PressableProps['style'];
   onBlur?: (() => void) | ((e: any) => void) | null;
   onFocus?: (() => void) | ((e: any) => void) | null;
@@ -112,4 +106,4 @@ export type WithKeyboardFocusDeclaration<
       WithKeyboardPropsTypeDeclaration<ComponentProps, ViewStyleType, ViewType>
     >;
 
-export type TintType = 'default' | 'hover' | 'background' | 'none';
+export type TintType = 'default' | 'none';

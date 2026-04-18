@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import {
   Text,
   View,
@@ -113,21 +113,6 @@ type FocusItemProps = {
 
 const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
   ({ radius = 10, onPress, background, color, content }, ref) => {
-    const hoverComponent = useMemo(() => {
-      if (isIOS) return undefined;
-      return (
-        <View
-          style={[
-            styles.androidHover,
-            {
-              borderRadius: radius + 5,
-              borderColor: background,
-            },
-          ]}
-        />
-      );
-    }, [background, radius]);
-
     return (
       <Pressable
         ref={ref}
@@ -138,8 +123,6 @@ const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
         onFocus={isIOS ? onPress : undefined}
         onPress={onPress}
         haloCornerRadius={radius}
-        tintType={isIOS ? 'default' : 'hover'}
-        FocusHoverComponent={hoverComponent}
         containerStyle={[
           styles.focusItemContainer,
           {

@@ -7,7 +7,6 @@ import {
 
 import type { FocusStyle } from '../../types/FocusStyle';
 import type { TintType } from '../../types/WithKeyboardFocus';
-import { type RenderProp } from '../RenderPropComponent/RenderPropComponent';
 import type { blurMap, focusMap } from './KeyboardExtendedInput.consts';
 import type { LockFocusType } from '../../types/BaseKeyboardView';
 
@@ -23,7 +22,6 @@ export type ExtraKeyboardProps = {
   tintColor?: ColorValue;
   tintType?: TintType;
   containerFocusStyle?: FocusStyle;
-  FocusHoverComponent?: RenderProp;
   submitBehavior?: string;
   groupIdentifier?: string;
   lockFocus?: LockFocusType[];

@@ -15,7 +15,6 @@ import com.facebook.react.uimanager.events.EventDispatcherListener;
 
 public class ViewFocusRequestBase extends ViewFocusChangeBase {
   public boolean autoFocus = false;
-  public boolean enableA11yFocus = false;
   public boolean hasBeenFocused = false;
   public boolean hasBeenA11yFocused = false;
 
@@ -33,7 +32,7 @@ public class ViewFocusRequestBase extends ViewFocusChangeBase {
   }
 
   private void onRnScreenViewAppear() {
-    boolean a11yAutoFocus = autoFocus && enableA11yFocus && !hasBeenA11yFocused && screenAutoA11yFocus;
+    boolean a11yAutoFocus = autoFocus && !hasBeenA11yFocused && screenAutoA11yFocus;
     if (!a11yAutoFocus) return;
 
     try {
@@ -102,9 +101,9 @@ public class ViewFocusRequestBase extends ViewFocusChangeBase {
     });
   }
 
-  private void a11yFocus(View view) {
-    if (!enableA11yFocus) return;
-    view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+  public void a11yFocus() {
+    View focusingView = this.getFocusingView();
+    focusingView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
   }
 
   public void focus(boolean keyboard, boolean a11y) {
@@ -112,9 +111,9 @@ public class ViewFocusRequestBase extends ViewFocusChangeBase {
     if (keyboard) {
       focusingView.requestFocus();
     }
-    if (a11y) {
-      a11yFocus(focusingView);
-    }
+   if (a11y) {
+     a11yFocus();
+   }
   }
 
 

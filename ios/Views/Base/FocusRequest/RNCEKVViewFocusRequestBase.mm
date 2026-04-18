@@ -19,13 +19,11 @@
 @implementation RNCEKVViewFocusRequestBase {
   BOOL _isAttachedToWindow;
   BOOL _autoFocusRequested;
-  BOOL _enableA11yFocus;
 }
 
 - (void)cleanReferences {
   [super cleanReferences];
   _isAttachedToWindow = NO;
-  _enableA11yFocus = NO;
   _autoFocusRequested = NO;
 }
 
@@ -39,14 +37,17 @@
 }
 
 - (void)focus {
-  
   UIViewController *controller = self.reactViewController;
   if (controller != nil) {
     [controller rncekvFocusView: self];
   }
-  
+}
+
+- (void)screenReaderFocus {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self a11yFocus];
+    UIView *focusView = [self getFocusTargetView];
+    UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification,
+                                    focusView);
   });
 }
 
@@ -56,10 +57,6 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
     if (oldProps.autoFocus != newProps.autoFocus) {
       [self setAutoFocus: newProps.autoFocus];
     }
-  
-  if (_enableA11yFocus != newProps.enableA11yFocus) {
-    [self setEnableA11yFocus: newProps.enableA11yFocus];
-  }
 }
 
 
@@ -69,14 +66,6 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
 - (void)onAttached
 {
   [self focusOnMount];
-}
-
-- (void)a11yFocus {
-  if (!_enableA11yFocus)
-    return;
-  UIView *focusView = [self getFocusTargetView];
-  UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification,
-                                  focusView);
 }
 
 - (void)focusOnMount {

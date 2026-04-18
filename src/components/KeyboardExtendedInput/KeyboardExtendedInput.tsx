@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import { View, TextInput, Platform, StyleSheet } from 'react-native';
+import { TextInput, Platform } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
 import { useFocusStyle } from '../../utils/useFocusStyle';
 import { focusEventMapper } from '../../utils/focusEventMapper';
-import { RenderPropComponent } from '../RenderPropComponent/RenderPropComponent';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
 import type { KeyboardInputProps } from './KeyboardExtendedInput.types';
@@ -65,7 +64,6 @@ export const KeyboardExtendedInput = React.forwardRef<
       containerFocusStyle,
       tintColor,
       tintType = 'default',
-      FocusHoverComponent,
       onSubmitEditing,
       submitBehavior,
       groupIdentifier,
@@ -92,17 +90,13 @@ export const KeyboardExtendedInput = React.forwardRef<
     ref
   ) => {
     const {
-      focused,
       containerFocusedStyle,
       componentFocusedStyle,
       onFocusChangeHandler,
-      hoverColor,
     } = useFocusStyle({
       onFocusChange,
-      tintColor,
       focusStyle,
       containerFocusStyle,
-      tintType,
     });
 
     const contextIdentifier = useGroupIdentifierContext();
@@ -120,14 +114,6 @@ export const KeyboardExtendedInput = React.forwardRef<
       () => focusEventMapper(onFocusChangeHandler),
       [onFocusChangeHandler]
     );
-
-    const HoverComonent = useMemo(() => {
-      if (FocusHoverComponent) return FocusHoverComponent;
-      if (tintType === 'hover')
-        return <View style={[hoverColor, styles.absolute, styles.opacity]} />;
-
-      return undefined;
-    }, [FocusHoverComponent, hoverColor, tintType]);
 
     const blurOnSubmit = submitBehavior
       ? submitBehavior === 'blurAndSubmit'
@@ -238,23 +224,7 @@ export const KeyboardExtendedInput = React.forwardRef<
           maxFontSizeMultiplier={maxFontSizeMultiplier ?? undefined}
           {...props}
         />
-        {focused && HoverComonent && (
-          <RenderPropComponent render={HoverComonent} />
-        )}
       </TextInputFocusWrapperNative>
     );
   }
 );
-
-const styles = StyleSheet.create({
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  opacity: {
-    opacity: 0.3,
-  },
-});

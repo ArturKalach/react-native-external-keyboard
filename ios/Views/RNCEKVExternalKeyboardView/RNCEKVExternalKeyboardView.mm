@@ -58,9 +58,13 @@ using namespace facebook::react;
 
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args {
-  NSString *FOCUS = @"focus";
-  if ([commandName isEqual:FOCUS]) {
+  NSString *KEYBOARD_FOCUS = @"rnekKeyboardFocus";
+  NSString *SCREEN_READER_FOCUS = @"rnekScreenReaderFocus";
+  if ([commandName isEqual:KEYBOARD_FOCUS]) {
     [self focus];
+  }
+  if ([commandName isEqual:SCREEN_READER_FOCUS]) {
+    [self screenReaderFocus];
   }
 }
 
