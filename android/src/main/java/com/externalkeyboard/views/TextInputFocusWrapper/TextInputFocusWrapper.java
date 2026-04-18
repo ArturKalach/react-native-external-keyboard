@@ -88,6 +88,14 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
     return this;
   }
 
+  @Override
+  public void setNextFocusForwardId(int nextFocusForwardId) {
+    super.setNextFocusForwardId(nextFocusForwardId);
+    if (reactEditText != null) {
+      reactEditText.setNextFocusForwardId(nextFocusForwardId);
+    }
+  }
+
   // --- Child lifecycle (mirrors ExternalKeyboardView pattern) ---
 
   // Overrides ViewOrderGroupBase.linkAddView so the manager can call it uniformly
