@@ -17,26 +17,29 @@ export const useKeyboardPress = <
   onPressIn,
   onPressOut,
   triggerCodes = IOS_TRIGGER_CODES,
+  disabled = false,
 }: UseKeyboardPressProps<T, K>) => {
   const onKeyUpPressHandler = useMemo(() => {
     if (!onPressOut) return onKeyUpPress;
     return (e: OnKeyPress) => {
       onKeyUpPress?.(e);
+      if (disabled) return;
       if (triggerCodes.includes(e.nativeEvent.keyCode)) {
         onPressOut?.(e);
       }
     };
-  }, [onKeyUpPress, onPressOut, triggerCodes]);
+  }, [onKeyUpPress, onPressOut, triggerCodes, disabled]);
 
   const onKeyDownPressHandler = useMemo(() => {
     if (!onPressIn) return onKeyDownPress;
     return (e: OnKeyPress) => {
       onKeyDownPress?.(e);
+      if (disabled) return;
       if (triggerCodes.includes(e.nativeEvent.keyCode)) {
         onPressIn?.(e);
       }
     };
-  }, [onKeyDownPress, onPressIn, triggerCodes]);
+  }, [onKeyDownPress, onPressIn, triggerCodes, disabled]);
 
   return {
     onKeyUpPressHandler,

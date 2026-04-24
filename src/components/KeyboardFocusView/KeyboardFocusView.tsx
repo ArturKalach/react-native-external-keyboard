@@ -66,6 +66,7 @@ export const KeyboardFocusView = React.forwardRef<
       onPress,
       onLongPress,
       triggerCodes,
+      disabled: (props as { disabled?: boolean })?.disabled,
     });
 
     const HoverComonent = useMemo(() => {
