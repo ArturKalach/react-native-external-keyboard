@@ -104,6 +104,7 @@ export const withKeyboardFocus = <
           onPressIn: onPressIn as (e?: OnKeyPress) => void,
           onPressOut: onPressOut as (e?: OnKeyPress) => void,
           triggerCodes,
+          disabled: (props as { disabled?: boolean })?.disabled,
         });
 
       const HoverComponent = useMemo(() => {
