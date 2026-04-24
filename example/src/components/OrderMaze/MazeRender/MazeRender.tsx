@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, type RefObject } from 'react';
+import { forwardRef, useMemo, type LegacyRef } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
 import { type Maze, type MazeInfo, type Point } from '../OrderMaze.util';
@@ -122,7 +122,7 @@ export const MazeRender = ({
 }: {
   maze: MazeInfo;
   reset: () => void;
-  startRef: RefObject<KeyboardFocus | null>;
+  startRef: LegacyRef<KeyboardFocus>;
   onFinish: () => void;
 }) => {
   const { exit, matrix } = maze;
