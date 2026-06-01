@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onSubviewRemoved:(UIView *)subview;
 - (void)onSubviewsLayoutUpdated;
 
+- (BOOL)focusableWrapper;
+
 - (void)cleanReferences;
 
 @end

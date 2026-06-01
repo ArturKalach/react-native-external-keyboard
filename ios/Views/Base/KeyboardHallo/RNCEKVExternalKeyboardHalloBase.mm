@@ -23,12 +23,34 @@
   if (self = [super initWithFrame:frame]) {
     _haloDelegate = [[RNCEKVHaloDelegate alloc] initWithView:self];
   }
-  
+
   return self;
 }
 
 - (UIFocusEffect*)customFocusEffect  API_AVAILABLE(ios(15.0)){
   return _haloDelegate.focusEffect;
+}
+
+- (UIFocusEffect*)focusEffect {
+  if (!self.focusableWrapper) {
+    UIFocusEffect* effect = [self customFocusEffect];
+    if(effect != nil) {
+      return effect;
+    }
+  }
+
+  return [super focusEffect];
+}
+
+- (void)layoutSubviews {
+  [super layoutSubviews];
+
+  if (!self.roundedHaloFix) {
+    return;
+  }
+
+  UIFocusEffect* effect = [self focusEffect];
+  self.focusEffect = effect;
 }
 
 - (void)cleanReferences {
@@ -38,6 +60,7 @@
   _haloExpendX = 0;
   _haloExpendY = 0;
   _haloCornerRadius = 0;
+  _roundedHaloFix = false;
 }
 
 
@@ -61,6 +84,11 @@
   [_haloDelegate invalidate];
 }
 
+- (void)setRoundedHaloFix:(BOOL)roundedHaloFix {
+  _roundedHaloFix = roundedHaloFix;
+  [_haloDelegate invalidate];
+}
+
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateHaloProps:(const RNCEKV::HaloProps &)oldProps
                newProps:(const RNCEKV::HaloProps &)newProps {
@@ -79,7 +107,11 @@
   if (oldProps.haloCornerRadius != newProps.haloCornerRadius) {
     [self setHaloCornerRadius:newProps.haloCornerRadius];
   }
-  
+
+  if (self.roundedHaloFix != newProps.roundedHaloFix) {
+    [self setRoundedHaloFix:newProps.roundedHaloFix];
+  }
+
   UIColor *newColor = RCTUIColorFromSharedColor(newProps.tintColor);
   BOOL renewColor = newColor != nil && self.tintColor == nil;
   BOOL isColorChanged = oldProps.tintColor != newProps.tintColor;

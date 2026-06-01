@@ -21,10 +21,12 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   focusType?: Int32;
   blurType?: Int32;
   canBeFocused?: boolean;
+  hasOnFocusChanged?: boolean;
   haloEffect?: boolean;
   haloCornerRadius?: Float;
   haloExpendX?: Float;
   haloExpendY?: Float;
+  roundedHaloFix?: boolean;
   tintColor?: ColorValue;
   blurOnSubmit?: boolean;
   multiline?: boolean;

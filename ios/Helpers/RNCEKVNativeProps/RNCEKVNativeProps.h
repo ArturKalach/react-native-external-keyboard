@@ -45,6 +45,7 @@ struct HaloProps {
   double haloExpendY{0};
   double haloCornerRadius{0};
   facebook::react::SharedColor tintColor{};
+  bool roundedHaloFix{false};
 
   template <typename T>
   static HaloProps from(const T &props) {
@@ -54,6 +55,7 @@ struct HaloProps {
       props.haloExpendY,
       props.haloCornerRadius,
       props.tintColor,
+      props.roundedHaloFix,
     };
   }
 };

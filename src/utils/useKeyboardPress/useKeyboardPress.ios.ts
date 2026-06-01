@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { UseKeyboardPressProps } from './useKeyboardPress.types';
-import type { OnKeyPress } from '../../types/BaseKeyboardView';
+import type { OnKeyPress } from '../../types';
 import type { GestureResponderEvent } from 'react-native';
 
 const IOS_SPACE_KEY = 44;

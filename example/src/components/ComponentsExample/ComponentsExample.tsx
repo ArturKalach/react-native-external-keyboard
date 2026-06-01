@@ -83,7 +83,6 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           onKeyUpPress={onKeyUpPressHandler}
           onKeyDownPress={onKeyDownPressHandler}
           onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
-          ignoreGroupFocusHint
           style={styles.bubbledWrapper}
         >
           <TouchableOpacity
@@ -189,7 +188,7 @@ export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
           </Pressable>
           <KeyboardExtendedBaseView
             haloEffect={true}
-            canBeFocused={true}
+            focusable={true}
             onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
             onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
             style={styles.keyHandler}

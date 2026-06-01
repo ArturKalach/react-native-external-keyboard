@@ -92,7 +92,6 @@ const OptionButton = ({ onPress, content }: OptionButtonProps) => (
     style={styles.optionButton}
     defaultFocusHighlightEnabled={false}
     focusStyle={isIOS ? undefined : styles.androidOption}
-    tintType={isIOS ? 'default' : 'none'}
     onFocus={isIOS ? onPress : undefined}
     onPress={onPress}
     haloExpendX={5}

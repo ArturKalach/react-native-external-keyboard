@@ -139,6 +139,12 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  @ReactProp(name = "roundedHaloFix")
+  public void setRoundedHaloFix(ExternalKeyboardView view, boolean value) {
+    //stub
+  }
+
+  @Override
   @ReactProp(name = "tintColor")
   public void setTintColor(ExternalKeyboardView view, @Nullable Integer value) {
     //stub
@@ -240,8 +246,9 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  public void setGroup(ExternalKeyboardView view, boolean value) {
-    //stub
+  @ReactProp(name = "focusableWrapper", defaultBoolean = false)
+  public void setFocusableWrapper(ExternalKeyboardView view, boolean value) {
+    view.setFocusableWrapper(value);
   }
 
   @Override

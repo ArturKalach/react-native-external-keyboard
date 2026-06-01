@@ -60,4 +60,8 @@
 
 - (void)onSubviewsLayoutUpdated {}
 
+- (BOOL)focusableWrapper {
+  return NO;
+}
+
 @end

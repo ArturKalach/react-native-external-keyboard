@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { UseKeyboardPressProps } from './useKeyboardPress.types';
-import type { OnKeyPress, OnKeyPressFn } from '../../types/BaseKeyboardView';
+import type { OnKeyPress, OnKeyPressFn } from '../../types';
 
 export const ANDROID_SPACE_KEY_CODE = 62;
 export const ANDROID_DPAD_CENTER_CODE = 23;

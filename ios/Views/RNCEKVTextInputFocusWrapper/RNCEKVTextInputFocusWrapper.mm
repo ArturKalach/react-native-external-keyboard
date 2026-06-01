@@ -91,6 +91,9 @@ static const NSInteger AUTO_BLUR = 2;
         [self setMultiline: newViewProps.multiline];
     }
 
+    [self updateFocusProps:RNCEKV::FocusProps::from(oldViewProps)
+                  newProps:RNCEKV::FocusProps::from(newViewProps)];
+
     [self updateGroupIdentifierProps:RNCEKV::GroupIdentifierProps::from(oldViewProps)
                             newProps:RNCEKV::GroupIdentifierProps::from(newViewProps)];
 
@@ -175,6 +178,16 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (UIView*)getStoredView {
   return _textField;
+}
+
+- (NSNumber *)resolveFocusChange:(UIFocusUpdateContext *)context {
+  if([context.nextFocusedView isDescendantOfView:self]) {
+    return @YES;
+  } else if([context.previouslyFocusedView isDescendantOfView:self]) {
+    return @NO;
+  }
+
+  return nil;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -284,6 +297,10 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
   }
 
   return nil;
+}
+
+- (BOOL)focusableWrapper {
+  return YES;
 }
 
 @end

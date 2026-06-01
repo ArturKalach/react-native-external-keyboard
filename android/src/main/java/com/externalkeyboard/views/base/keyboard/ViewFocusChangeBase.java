@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.View;
 
 import com.externalkeyboard.events.EventHelper;
-import com.externalkeyboard.views.base.FocusHighlightBase;
+import com.externalkeyboard.views.base.FocusableBase;
 import com.facebook.react.bridge.ReactContext;
 
-public class ViewFocusChangeBase extends FocusHighlightBase {
+public class ViewFocusChangeBase extends FocusableBase {
   private View listeningView;
   private final Context context;
 
@@ -22,7 +22,6 @@ public class ViewFocusChangeBase extends FocusHighlightBase {
     super.onAttachedToWindow();
 
     this.listeningView = getFocusingView();
-    setFocusable(this.listeningView == this);
 
     this.listeningView.setOnFocusChangeListener((focusedView, hasFocus) -> {
       EventHelper.focusChanged((ReactContext) context, this.getId(), hasFocus);

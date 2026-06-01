@@ -22,6 +22,7 @@
 @property (nonatomic, assign) CGFloat haloExpendX;
 @property (nonatomic, assign) CGFloat haloExpendY;
 @property (nonatomic, assign) BOOL isHaloHidden;
+@property (nonatomic, assign) BOOL roundedHaloFix;
 
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateHaloProps:(const RNCEKV::HaloProps &)oldProps

@@ -104,11 +104,17 @@ RCT_CUSTOM_VIEW_PROPERTY(haloExpendY, float, RNCEKVExternalKeyboardView)
   }
 }
 
-
-RCT_CUSTOM_VIEW_PROPERTY(group, BOOL, RNCEKVExternalKeyboardView)
+RCT_CUSTOM_VIEW_PROPERTY(roundedHaloFix, BOOL, RNCEKVExternalKeyboardView)
 {
   BOOL value = json ? [RCTConvert BOOL:json] : NO;
-  [view setIsGroup: value];
+  [view setRoundedHaloFix: value];
+}
+
+
+RCT_CUSTOM_VIEW_PROPERTY(focusableWrapper, BOOL, RNCEKVExternalKeyboardView)
+{
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setFocusableWrapper: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)

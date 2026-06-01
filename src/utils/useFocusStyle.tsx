@@ -1,24 +1,22 @@
 import { useState, useMemo, useCallback } from 'react';
-import { type PressableProps, Pressable } from 'react-native';
+import type { PressableProps } from 'react-native';
 import type { FocusStyle } from '../types';
 
-type UseFocusStyleProps<C> = {
+type UseFocusStyleProps = {
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
   onFocusChange?: (isFocused: boolean) => void;
   style?: PressableProps['style'];
-  Component?: React.ComponentType<C>;
-  withPressedStyle?: boolean;
+  pressedStyleSignature?: boolean;
 };
 
-export const useFocusStyle = <C extends {}>({
+export const useFocusStyle = ({
   focusStyle,
   onFocusChange,
   containerFocusStyle,
   style,
-  Component,
-  withPressedStyle = false,
-}: UseFocusStyleProps<C>) => {
+  pressedStyleSignature = false,
+}: UseFocusStyleProps) => {
   const [focused, setFocusStatus] = useState(false);
 
   const onFocusChangeHandler = useCallback(
@@ -46,9 +44,9 @@ export const useFocusStyle = <C extends {}>({
     return focused ? specificStyle : undefined;
   }, [containerFocusStyle, focused]);
 
-  const dafaultComponentStyle = useMemo(
-    () => [style, componentFocusedStyle],
-    [style, componentFocusedStyle]
+  const defaultComponentStyle = useMemo(
+    () => (pressedStyleSignature ? undefined : [style, componentFocusedStyle]),
+    [pressedStyleSignature, style, componentFocusedStyle]
   );
   const styleHandlerPressable = useCallback(
     ({ pressed }: { pressed: boolean }) => {
@@ -61,10 +59,9 @@ export const useFocusStyle = <C extends {}>({
     [componentFocusedStyle, style]
   );
 
-  const componentStyleViewStyle =
-    Component === Pressable || withPressedStyle
-      ? styleHandlerPressable
-      : dafaultComponentStyle;
+  const componentStyleViewStyle = pressedStyleSignature
+    ? styleHandlerPressable
+    : defaultComponentStyle;
 
   return {
     componentStyleViewStyle,

@@ -1,49 +1,52 @@
-import { FocusFrame } from './components/KeyboardFocusLock/FocusFrame/FocusFrame';
-import { FocusTrap } from './components/KeyboardFocusLock/FocusTrap/FocusTrap';
+import {
+  FocusFrame,
+  FocusTrap,
+  KeyboardFocusView,
+  KeyboardExtendedInput,
+  Pressable,
+} from './components';
+import * as Keyboard from './modules/Keyboard';
 
+// Native spec
 export {
   ExternalKeyboardViewNative,
   TextInputFocusWrapperNative,
   type KeyPress,
 } from './nativeSpec';
 
-export type {
-  OnKeyPress,
-  KeyboardFocus,
-  BaseKeyboardViewType as KeyboardExtendedViewType,
-} from './types/BaseKeyboardView';
-
-export type {
-  TintType,
-  WithKeyboardFocusDeclaration,
-  WithKeyboardPropsTypeDeclaration,
-  WithKeyboardFocus,
-} from './types/WithKeyboardFocus';
-
+// Components
 export {
   BaseKeyboardView,
+  BaseKeyboardView as ExternalKeyboardView,
+  BaseKeyboardView as KeyboardExtendedBaseView,
   KeyboardFocusView,
-  ExternalKeyboardView,
-  KeyboardExtendedView,
-  KeyboardExtendedBaseView,
-} from './components';
-export {
-  Pressable,
-  Pressable as KeyboardExtendedPressable,
-  type KeyboardPressableProps,
-} from './components/Touchable/Pressable';
-
-export {
+  KeyboardFocusView as KeyboardExtendedView,
+  KeyboardFocusGroup,
   KeyboardExtendedInput,
   KeyboardExtendedInput as TextInput,
-} from './components/KeyboardExtendedInput/KeyboardExtendedInput';
-export type {
-  KeyboardInputPropsDeclaration,
-  KeyboardInputProps,
-  ExtraKeyboardProps,
-} from './components/KeyboardExtendedInput/KeyboardExtendedInput.types';
+  Pressable,
+  Pressable as KeyboardExtendedPressable,
+} from './components';
 
-export { KeyboardFocusGroup } from './components/KeyboardFocusGroup/KeyboardFocusGroup';
+// Types
+export {
+  LockComponentType,
+  type OnKeyPress,
+  type KeyboardFocus,
+  type OnFocusChangeFn,
+  type BaseKeyboardViewType,
+  type WithKeyboardFocusProps,
+  type WithKeyboardFocusPropsWithRef,
+  type KeyboardFocusableComponent,
+  type KeyboardFocusableComponentDeclaration,
+  type KeyboardFocusLockProps,
+  type KeyboardInputPropsDeclaration,
+  type KeyboardInputProps,
+  type ExtraKeyboardProps,
+} from './types';
+export type { KeyboardPressableProps } from './components';
+
+// Hooks & context
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { useIsViewFocused } from './context/IsViewFocusedContext';
 export {
@@ -51,10 +54,18 @@ export {
   OrderFocusGroupContext,
   useOrderFocusGroup,
 } from './context/OrderFocusContext';
-import * as Keyboard from './modules/Keyboard';
+
+// Modules
 export { Keyboard };
 
+// Namespaces
 export const Focus = {
   Frame: FocusFrame,
   Trap: FocusTrap,
+};
+
+export const K = {
+  Input: KeyboardExtendedInput,
+  View: KeyboardFocusView,
+  Pressable,
 };

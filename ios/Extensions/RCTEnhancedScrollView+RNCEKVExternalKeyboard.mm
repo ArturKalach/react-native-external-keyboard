@@ -12,13 +12,19 @@
 #import "RNCEKVSwizzleInstanceMethod.h"
 #import "RCTScrollViewComponentView.h"
 
+static void RNCEKVEnhancedScrollViewSwizzle(void) {
+  RNCEKVSwizzleInstanceMethod([RCTEnhancedScrollView class], @selector(initWithFrame:), @selector(rncekvInitWithFrame:));
+}
+
 @implementation RCTEnhancedScrollView (RNCEKVExternalKeyboard)
+
+RNCEKV_INSTALL_SWIZZLES(RNCEKVEnhancedScrollViewSwizzle)
 
 - (NSArray<id<UIFocusEnvironment>> *)preferredFocusEnvironments {
   @try {
     BOOL isScrollViewComponent = self.superview &&
     [self.superview isKindOfClass:[RCTScrollViewComponentView class]];
-    
+
     if (isScrollViewComponent) {
       RCTScrollViewComponentView *scrollViewComponent = (RCTScrollViewComponentView *)self.superview;
       return @[scrollViewComponent.containerView];
@@ -26,15 +32,8 @@
   }
   @catch (NSException *exception) {
   }
-  
-  return [super preferredFocusEnvironments];
-}
 
-+ (void)load {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    RNCEKVSwizzleInstanceMethod([self class], @selector(initWithFrame:), @selector(rncekvInitWithFrame:));
-  });
+  return [super preferredFocusEnvironments];
 }
 
 - (instancetype)rncekvInitWithFrame:(CGRect)frame {

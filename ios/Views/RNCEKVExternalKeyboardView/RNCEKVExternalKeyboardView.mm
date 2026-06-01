@@ -95,8 +95,8 @@ using namespace facebook::react;
   [self updateFocusRequestProps:RNCEKV::AutoFocusProps::from(oldViewProps)
                      newProps:RNCEKV::AutoFocusProps::from(newViewProps)];
 
-  if (oldViewProps.group != newViewProps.group) {
-    [self setIsGroup:newViewProps.group];
+  if (oldViewProps.focusableWrapper != newViewProps.focusableWrapper) {
+    [self setFocusableWrapper:newViewProps.focusableWrapper];
   }
 }
 

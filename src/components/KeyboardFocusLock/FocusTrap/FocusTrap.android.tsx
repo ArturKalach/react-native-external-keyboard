@@ -2,14 +2,14 @@ import React from 'react';
 
 import { FocusTrapMountWrapper } from './FocusTrapMountWrapper';
 import { KeyboardFocusLockBase } from '../KeyboardFocusLockBase/KeyboardFocusLockBase';
-import type { KeyboardFocusLockProps } from '../../../types/KeyboardFocusLock.types';
+import { LockComponentType, type KeyboardFocusLockProps } from '../../../types';
 
 export const FocusTrap = React.memo<KeyboardFocusLockProps>(
   ({ lockDisabled = false, ...props }) => (
     <FocusTrapMountWrapper>
       <KeyboardFocusLockBase
         {...props}
-        componentType={0}
+        componentType={LockComponentType.Trap}
         lockDisabled={lockDisabled}
       />
     </FocusTrapMountWrapper>

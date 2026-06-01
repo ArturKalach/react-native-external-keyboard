@@ -12,7 +12,7 @@
 
 @interface RNCEKVExternalKeyboardView : RNCEKVViewKeyPress <RNCEKVKeyboardFocusableProtocol>
 
-@property BOOL isGroup;
+@property BOOL focusableWrapper;
 
 #ifndef RCT_NEW_ARCH_ENABLED
 @property (nonatomic, copy) RCTDirectEventBlock onFocusChange;

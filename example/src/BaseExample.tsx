@@ -12,7 +12,7 @@ import {
   KeyboardExtendedInput,
   KeyboardExtendedView,
   KeyboardExtendedPressable,
-  type KeyboardExtendedViewType,
+  type BaseKeyboardViewType,
   type OnKeyPress,
   withKeyboardFocus,
 } from 'react-native-external-keyboard';
@@ -20,7 +20,7 @@ import {
 const TouchableOpacity = withKeyboardFocus(RNTouchableOpacity);
 
 export const BaseExample = () => {
-  const ref = React.useRef<KeyboardExtendedViewType>(null);
+  const ref = React.useRef<BaseKeyboardViewType>(null);
   const [isKeyDown, setIsKeyDown] = React.useState(true);
   const [status, setStatus] = React.useState('Not pressed');
   const [textInput, setTextInput] = React.useState('Text input here!');

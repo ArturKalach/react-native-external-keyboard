@@ -48,8 +48,9 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   haloCornerRadius?: Float;
   haloExpendX?: Float;
   haloExpendY?: Float;
+  roundedHaloFix?: boolean;
   tintColor?: ColorValue;
-  group?: boolean;
+  focusableWrapper?: boolean;
   groupIdentifier?: string;
   screenAutoA11yFocus?: boolean;
   screenAutoA11yFocusDelay?: Int32;

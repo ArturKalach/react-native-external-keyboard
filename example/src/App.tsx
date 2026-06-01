@@ -22,7 +22,9 @@ import {
   MazeExampleScreen,
 } from './components/FocusOrderExample/FocusOrderScreen';
 import { PressableTest } from './components/Pressables/PressableTest';
+import { KeyboardPressableScreen } from './components/Pressables/KeyboardPressableScreen';
 import { ListsTest } from './components/Lists/ListsText';
+import { ComponentsPlayground } from './components/BaseKeyboardView/ComponentsPlayground';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
 import { Pressable } from 'react-native-external-keyboard';
@@ -74,10 +76,22 @@ const NAV_GROUPS: NavGroup[] = [
         color: '#5856D6',
       },
       {
+        name: 'KeyboardPressable',
+        title: 'Keyboard Pressable',
+        description: 'children, renderContent & renderFocusable',
+        color: '#0A84FF',
+      },
+      {
         name: 'ListTest',
         title: 'Lists',
         description: 'Focusable scrollable list',
         color: '#AF52DE',
+      },
+      {
+        name: 'ComponentsPlayground',
+        title: 'Components Playground',
+        description: 'Focus, key press, halo & lockFocus',
+        color: '#FF3B30',
       },
     ],
   },
@@ -217,7 +231,17 @@ export function App() {
             options={{ title: 'Maze' }}
           />
           <Stack.Screen name="PressableTest" component={PressableTest} />
+          <Stack.Screen
+            name="KeyboardPressable"
+            component={KeyboardPressableScreen}
+            options={{ title: 'Keyboard Pressable' }}
+          />
           <Stack.Screen name="ListTest" component={ListsTest} />
+          <Stack.Screen
+            name="ComponentsPlayground"
+            component={ComponentsPlayground}
+            options={{ title: 'Components Playground' }}
+          />
           <Stack.Screen name="FocusLock" component={FocusLockExample} />
           <Stack.Screen name="Maze" component={MazeScreen} />
         </Stack.Navigator>

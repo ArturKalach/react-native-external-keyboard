@@ -1,7 +1,7 @@
 import React from 'react';
 import { FrameProvider } from '../../../context/FocusFrameProviderContext';
 import { KeyboardFocusLockBase } from '../KeyboardFocusLockBase/KeyboardFocusLockBase';
-import type { KeyboardFocusLockProps } from '../../../types/KeyboardFocusLock.types';
+import { LockComponentType, type KeyboardFocusLockProps } from '../../../types';
 
 export const FocusFrame = React.memo<KeyboardFocusLockProps>(
   ({ lockDisabled = false, ...props }) => {
@@ -9,7 +9,7 @@ export const FocusFrame = React.memo<KeyboardFocusLockProps>(
       <FrameProvider>
         <KeyboardFocusLockBase
           {...props}
-          componentType={1}
+          componentType={LockComponentType.Frame}
           lockDisabled={lockDisabled}
         />
       </FrameProvider>

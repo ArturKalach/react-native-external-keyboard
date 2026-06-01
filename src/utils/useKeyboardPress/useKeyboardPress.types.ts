@@ -1,4 +1,4 @@
-import type { OnKeyPressFn } from '../../types/BaseKeyboardView';
+import type { OnKeyPressFn } from '../../types';
 
 export type UseKeyboardPressProps<T, K> = {
   triggerCodes?: number[];

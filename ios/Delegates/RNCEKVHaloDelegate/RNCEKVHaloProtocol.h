@@ -14,6 +14,7 @@
 - (CGFloat) haloCornerRadius;
 - (CGFloat) haloExpendX;
 - (CGFloat) haloExpendY;
+- (BOOL) roundedHaloFix;
 - (UIView*) getFocusTargetView;
 
 @end
