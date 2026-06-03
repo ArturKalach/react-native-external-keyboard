@@ -1,6 +1,9 @@
 import { forwardRef, useMemo, type RefObject } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
+import {
+  Pressable,
+  type BaseKeyboardViewType,
+} from 'react-native-external-keyboard';
 import { type Maze, type MazeInfo, type Point } from '../OrderMaze.util';
 
 const isUpLocked = (p: Point, m: Maze) => {
@@ -66,7 +69,7 @@ const getOrderForward = (
 };
 
 export const MazeItem = forwardRef<
-  KeyboardFocus,
+  BaseKeyboardViewType,
   {
     row: number;
     column: number;
@@ -122,7 +125,7 @@ export const MazeRender = ({
 }: {
   maze: MazeInfo;
   reset: () => void;
-  startRef: RefObject<KeyboardFocus | null>;
+  startRef: RefObject<BaseKeyboardViewType | null>;
   onFinish: () => void;
 }) => {
   const { exit, matrix } = maze;

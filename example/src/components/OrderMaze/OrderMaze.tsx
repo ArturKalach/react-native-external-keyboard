@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardOrderFocusGroup,
   Pressable,
-  type KeyboardFocus,
+  type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
 import { mazeGenerator } from './OrderMaze.util';
 import { MazeRender } from './MazeRender/MazeRender';
@@ -13,8 +13,8 @@ const size = 14;
 export const OrderMaze = () => {
   const [finished, setFinished] = useState(false);
   const [maze, setMaze] = useState(() => mazeGenerator(size));
-  const startRef = useRef<KeyboardFocus>(null);
-  const restartRef = useRef<KeyboardFocus>(null);
+  const startRef = useRef<BaseKeyboardViewType>(null);
+  const restartRef = useRef<BaseKeyboardViewType>(null);
   const reset = () => startRef.current?.focus();
   const exit = () => {
     setFinished(true);

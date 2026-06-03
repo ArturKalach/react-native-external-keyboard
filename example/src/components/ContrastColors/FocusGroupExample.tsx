@@ -9,7 +9,7 @@ import {
 import {
   KeyboardFocusGroup,
   withKeyboardFocus,
-  type KeyboardFocus,
+  type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
 import { Color } from './Color/Color';
 
@@ -110,7 +110,7 @@ type FocusItemProps = {
   content: string;
 };
 
-const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
+const FocusItem = forwardRef<BaseKeyboardViewType, FocusItemProps>(
   ({ radius = 10, onPress, background, color, content }, ref) => {
     return (
       <Pressable
@@ -138,7 +138,7 @@ const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
   }
 );
 
-export const FocusGroupExample = forwardRef<KeyboardFocus>((_, ref) => {
+export const FocusGroupExample = forwardRef<BaseKeyboardViewType>((_, ref) => {
   const [radius, setRadious] = useState(5);
   const [currentItem, setCurrentItem] = useState(colors[0]);
   return (

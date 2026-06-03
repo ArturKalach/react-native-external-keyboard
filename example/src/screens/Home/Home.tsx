@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LineButton } from '../../components/LineButton/LineButton';
-import type { KeyboardFocus } from 'react-native-external-keyboard';
+import type { BaseKeyboardViewType } from 'react-native-external-keyboard';
 import { Cats } from '../../components/Cats/Cats';
 import { ComponentsExample } from '../../components/ComponentsExample/ComponentsExample';
 import { FocusGroupExample } from '../../components/ContrastColors/FocusGroupExample';
@@ -47,9 +47,9 @@ const ContentDivider = () => <View style={styles.divider} />;
 
 export const Home = () => {
   const [selected, setSelected] = useState('Components');
-  const componentsExampleRef = useRef<KeyboardFocus>(null);
-  const contrastColorsRef = useRef<KeyboardFocus>(null);
-  const catsRef = useRef<KeyboardFocus>(null);
+  const componentsExampleRef = useRef<BaseKeyboardViewType>(null);
+  const contrastColorsRef = useRef<BaseKeyboardViewType>(null);
+  const catsRef = useRef<BaseKeyboardViewType>(null);
   const onLongPressHandle = (value: string) => {
     if (value === 'Components') {
       componentsExampleRef?.current?.focus();

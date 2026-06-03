@@ -3,7 +3,6 @@ import { Pressable as RNPressable, View, type ViewProps } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type {
   BaseKeyboardViewType,
-  KeyboardFocus,
   KeyboardPressType,
   OnKeyPress,
   WithKeyboardFocusProps,
@@ -22,7 +21,7 @@ export const withKeyboardFocus = <
 ) => {
   const WithKeyboardFocus = React.memo(
     React.forwardRef<
-      View | KeyboardFocus,
+      BaseKeyboardViewType,
       WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType>
     >((allProps, ref) => {
       const {

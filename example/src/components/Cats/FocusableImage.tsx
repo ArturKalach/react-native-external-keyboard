@@ -5,10 +5,13 @@ import {
   type DimensionValue,
   StyleSheet,
 } from 'react-native';
-import { Pressable, type KeyboardFocus } from 'react-native-external-keyboard';
+import {
+  Pressable,
+  type BaseKeyboardViewType,
+} from 'react-native-external-keyboard';
 
 export const FocusableImage = React.forwardRef<
-  KeyboardFocus,
+  BaseKeyboardViewType,
   { source: ImageSourcePropType; width: string }
 >(({ width, source }, ref) => {
   return (

@@ -1,4 +1,4 @@
-import type { NativeSyntheticEvent, View } from 'react-native';
+import type { HostInstance, NativeSyntheticEvent } from 'react-native';
 
 /**
  * Handler invoked when a view gains or loses keyboard focus.
@@ -18,8 +18,14 @@ export type KeyboardFocus = {
   screenReaderFocus: () => void;
 };
 
-/** The underlying `View` augmented with the imperative {@link KeyboardFocus} handle. */
-export type BaseKeyboardViewType = View & KeyboardFocus;
+/**
+ * The underlying native view instance augmented with the imperative
+ * {@link KeyboardFocus} handle. Uses RN's `HostInstance` (the host view ref —
+ * `measure`, `measureInWindow`, `setNativeProps`, …) rather than the `View`
+ * component type, so it resolves correctly under both the legacy and strict
+ * (`react-native-strict-api`) RN type sets.
+ */
+export type BaseKeyboardViewType = HostInstance & KeyboardFocus;
 
 /** Native event payload emitted by the view's focus-change callback. */
 export type KeyboardFocusEvent = NativeSyntheticEvent<{

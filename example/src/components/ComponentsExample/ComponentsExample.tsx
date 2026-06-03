@@ -16,11 +16,11 @@ import {
 import {
   KeyboardExtendedInput,
   KeyboardExtendedBaseView,
-  type KeyboardFocus,
   type KeyPress,
   withKeyboardFocus,
   KeyboardFocusGroup,
   Keyboard,
+  type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
@@ -39,219 +39,225 @@ const RenderContent = ({
     <Text>{pressed ? 'Pressed' : focused ? 'Focused' : 'Not Pressed'}</Text>
   </View>
 );
-export const ComponentsExample = forwardRef<KeyboardFocus, {}>((_, ref) => {
-  const navigation = useNavigation();
-  const modalButtonRef = useRef<KeyboardFocus>(null);
-  const [isKeyDown, setIsKeyDown] = React.useState(true);
-  const [textInput, setTextInput] = React.useState('Input here!');
-  const [multilineTextInput, setMultilineTextInput] = React.useState(
-    'Multiline input here!'
-  );
+export const ComponentsExample = forwardRef<BaseKeyboardViewType, {}>(
+  (_, ref) => {
+    const navigation = useNavigation();
+    const modalButtonRef = useRef<BaseKeyboardViewType>(null);
+    const [isKeyDown, setIsKeyDown] = React.useState(true);
+    const [textInput, setTextInput] = React.useState('Input here!');
+    const [multilineTextInput, setMultilineTextInput] = React.useState(
+      'Multiline input here!'
+    );
 
-  const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(undefined);
-  const [showModal, setShowModal] = React.useState(false);
-  const [dShow, setDShow] = React.useState(false);
+    const [keyInfo, setKeyInfo] = React.useState<KeyPress | undefined>(
+      undefined
+    );
+    const [showModal, setShowModal] = React.useState(false);
+    const [dShow, setDShow] = React.useState(false);
 
-  const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
-    setIsKeyDown(false);
-    setKeyInfo(e.nativeEvent);
-  };
-  const onKeyDownHandler = (e: NativeSyntheticEvent<KeyPress>) => {
-    setIsKeyDown(true);
-    setKeyInfo(e.nativeEvent);
-  };
+    const onKeyUpHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+      setIsKeyDown(false);
+      setKeyInfo(e.nativeEvent);
+    };
+    const onKeyDownHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+      setIsKeyDown(true);
+      setKeyInfo(e.nativeEvent);
+    };
 
-  const onKeyDownPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
-    console.log('down', e.nativeEvent.keyCode);
-  };
+    const onKeyDownPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+      console.log('down', e.nativeEvent.keyCode);
+    };
 
-  const onKeyUpPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
-    console.log('up', e.nativeEvent.keyCode);
-  };
+    const onKeyUpPressHandler = (e: NativeSyntheticEvent<KeyPress>) => {
+      console.log('up', e.nativeEvent.keyCode);
+    };
 
-  const onBubbledContextMenuPressHandler = () => {
-    console.log('menu');
-  };
+    const onBubbledContextMenuPressHandler = () => {
+      console.log('menu');
+    };
 
-  return (
-    <KeyboardFocusGroup tintColor="orange" style={styles.flex}>
-      <ScrollView
-        contentContainerStyle={styles.contentContainer}
-        style={styles.container}
-      >
-        <KeyboardExtendedBaseView
-          onKeyUpPress={onKeyUpPressHandler}
-          onKeyDownPress={onKeyDownPressHandler}
-          onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
-          style={styles.bubbledWrapper}
+    return (
+      <KeyboardFocusGroup tintColor="orange" style={styles.flex}>
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          style={styles.container}
         >
-          <TouchableOpacity
-            onPress={() => {
-              console.log(1);
-              setDShow((v: boolean) => !v);
-            }}
-            haloExpendX={5}
-            haloExpendY={5}
-            haloCornerRadius={10}
-            onLongPress={() => console.log(11)}
-            ref={ref}
-            defaultFocusHighlightEnabled={false}
-            style={styles.pressable as object} //ToDo updat type
-            containerStyle={styles.pressableContainer}
-            containerFocusStyle={ANDROID_FOCUS_STYLE}
+          <KeyboardExtendedBaseView
+            onKeyUpPress={onKeyUpPressHandler}
+            onKeyDownPress={onKeyDownPressHandler}
+            onBubbledContextMenuPress={onBubbledContextMenuPressHandler}
+            style={styles.bubbledWrapper}
           >
-            <Text>TouchableOpacity</Text>
-          </TouchableOpacity>
-          {dShow && (
+            <TouchableOpacity
+              onPress={() => {
+                console.log(1);
+                setDShow((v: boolean) => !v);
+              }}
+              haloExpendX={5}
+              haloExpendY={5}
+              haloCornerRadius={10}
+              onLongPress={() => console.log(11)}
+              ref={ref}
+              defaultFocusHighlightEnabled={false}
+              style={styles.pressable as object} //ToDo updat type
+              containerStyle={styles.pressableContainer}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+            >
+              <Text>TouchableOpacity</Text>
+            </TouchableOpacity>
+            {dShow && (
+              <Pressable
+                defaultFocusHighlightEnabled={false}
+                containerFocusStyle={ANDROID_FOCUS_STYLE}
+                containerStyle={styles.pressableContainer}
+                autoFocus
+                renderContent={RenderContent}
+              />
+            )}
+            {dShow && (
+              <TouchableOpacity
+                defaultFocusHighlightEnabled={false}
+                containerFocusStyle={ANDROID_FOCUS_STYLE}
+                containerStyle={styles.pressableContainer}
+                renderFocusable={RenderContent}
+              />
+            )}
+            <TouchableWithoutFeedback
+              defaultFocusHighlightEnabled={false}
+              containerFocusStyle={ANDROID_FOCUS_STYLE}
+              haloExpendX={-5}
+              haloExpendY={-5}
+              haloCornerRadius={5}
+              containerStyle={styles.pressableContainer}
+              onPress={() => {
+                navigation.navigate('PressableTest' as never);
+              }}
+              onLongPress={() => navigation.navigate('ListTest' as never)}
+            >
+              <View style={styles.pressable}>
+                <Text>Pressable\List Test</Text>
+              </View>
+            </TouchableWithoutFeedback>
             <Pressable
               defaultFocusHighlightEnabled={false}
               containerFocusStyle={ANDROID_FOCUS_STYLE}
-              containerStyle={styles.pressableContainer}
               autoFocus
-              renderContent={RenderContent}
+              containerStyle={styles.pressableContainer}
+              style={styles.pressable as object} //ToDo updat type
+              onPress={() => modalButtonRef.current?.focus()}
+              onLongPress={() => console.log(33)}
+              onFocus={() => {
+                Keyboard.dismiss();
+              }}
+            >
+              <Text>Pressable: Focus Modal</Text>
+            </Pressable>
+            <Text>Label: KeyboardExtendedInput </Text>
+            <KeyboardExtendedInput
+              defaultFocusHighlightEnabled={false}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              focusable={true}
+              value={textInput}
+              focusType="press"
+              onChangeText={setTextInput}
+              containerStyle={styles.doubleBottom}
+              style={styles.input as object} //ToDo updat type
             />
-          )}
-          {dShow && (
-            <TouchableOpacity
+            <Text>Label: Multiline</Text>
+            <KeyboardExtendedInput
+              defaultFocusHighlightEnabled={false}
+              focusStyle={ANDROID_FOCUS_STYLE}
+              focusable={true}
+              value={multilineTextInput}
+              multiline
+              focusType="press"
+              onSubmitEditing={() => console.log('OnSubmitEditing: multiline')}
+              onChangeText={setMultilineTextInput}
+              containerStyle={styles.doubleBottom}
+              style={styles.input as object} //ToDo updat type
+            />
+            <Pressable
               defaultFocusHighlightEnabled={false}
               containerFocusStyle={ANDROID_FOCUS_STYLE}
+              ref={modalButtonRef}
+              onFocus={() => {
+                Keyboard.dismiss();
+              }}
+              onPress={() => setShowModal(true)}
               containerStyle={styles.pressableContainer}
-              renderFocusable={RenderContent}
-            />
-          )}
-          <TouchableWithoutFeedback
-            defaultFocusHighlightEnabled={false}
-            containerFocusStyle={ANDROID_FOCUS_STYLE}
-            haloExpendX={-5}
-            haloExpendY={-5}
-            haloCornerRadius={5}
-            containerStyle={styles.pressableContainer}
-            onPress={() => {
-              navigation.navigate('PressableTest' as never);
-            }}
-            onLongPress={() => navigation.navigate('ListTest' as never)}
-          >
-            <View style={styles.pressable}>
-              <Text>Pressable\List Test</Text>
-            </View>
-          </TouchableWithoutFeedback>
-          <Pressable
-            defaultFocusHighlightEnabled={false}
-            containerFocusStyle={ANDROID_FOCUS_STYLE}
-            autoFocus
-            containerStyle={styles.pressableContainer}
-            style={styles.pressable as object} //ToDo updat type
-            onPress={() => modalButtonRef.current?.focus()}
-            onLongPress={() => console.log(33)}
-            onFocus={() => {
-              Keyboard.dismiss();
-            }}
-          >
-            <Text>Pressable: Focus Modal</Text>
-          </Pressable>
-          <Text>Label: KeyboardExtendedInput </Text>
-          <KeyboardExtendedInput
-            defaultFocusHighlightEnabled={false}
-            focusStyle={ANDROID_FOCUS_STYLE}
-            focusable={true}
-            value={textInput}
-            focusType="press"
-            onChangeText={setTextInput}
-            containerStyle={styles.doubleBottom}
-            style={styles.input as object} //ToDo updat type
-          />
-          <Text>Label: Multiline</Text>
-          <KeyboardExtendedInput
-            defaultFocusHighlightEnabled={false}
-            focusStyle={ANDROID_FOCUS_STYLE}
-            focusable={true}
-            value={multilineTextInput}
-            multiline
-            focusType="press"
-            onSubmitEditing={() => console.log('OnSubmitEditing: multiline')}
-            onChangeText={setMultilineTextInput}
-            containerStyle={styles.doubleBottom}
-            style={styles.input as object} //ToDo updat type
-          />
-          <Pressable
-            defaultFocusHighlightEnabled={false}
-            containerFocusStyle={ANDROID_FOCUS_STYLE}
-            ref={modalButtonRef}
-            onFocus={() => {
-              Keyboard.dismiss();
-            }}
-            onPress={() => setShowModal(true)}
-            containerStyle={styles.pressableContainer}
-            style={styles.pressable as object} //ToDo updat type
-          >
-            <Text>Modal</Text>
-          </Pressable>
-          <KeyboardExtendedBaseView
-            haloEffect={true}
-            focusable={true}
-            onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
-            onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
-            style={styles.keyHandler}
-            groupIdentifier="keyTracker"
-          >
-            <Text style={styles.keyHandlerTitle}>
-              {isKeyDown ? 'Press begin:' : 'Press ended:'}
-            </Text>
-            {Object.keys(keyInfo ?? {}).map((key) => {
-              const value = (
-                keyInfo as Record<string, string | number | boolean>
-              )[key];
-              const isBool = typeof value === 'boolean';
-              return (
-                <View key={key} style={styles.keyHandlerRow}>
-                  <Text style={styles.keyHandlerKey}>{key}</Text>
-                  {isBool && (
-                    <View
-                      style={
-                        value
-                          ? styles.keyHandlerDotTrue
-                          : styles.keyHandlerDotFalse
-                      }
-                    />
-                  )}
-                  <Text style={styles.keyHandlerValue}>{`${value ?? ''}`}</Text>
+              style={styles.pressable as object} //ToDo updat type
+            >
+              <Text>Modal</Text>
+            </Pressable>
+            <KeyboardExtendedBaseView
+              haloEffect={true}
+              focusable={true}
+              onKeyDownPress={onKeyDownHandler as unknown as undefined} //ToDo updat type
+              onKeyUpPress={onKeyUpHandler as unknown as undefined} //ToDo updat type
+              style={styles.keyHandler}
+              groupIdentifier="keyTracker"
+            >
+              <Text style={styles.keyHandlerTitle}>
+                {isKeyDown ? 'Press begin:' : 'Press ended:'}
+              </Text>
+              {Object.keys(keyInfo ?? {}).map((key) => {
+                const value = (
+                  keyInfo as Record<string, string | number | boolean>
+                )[key];
+                const isBool = typeof value === 'boolean';
+                return (
+                  <View key={key} style={styles.keyHandlerRow}>
+                    <Text style={styles.keyHandlerKey}>{key}</Text>
+                    {isBool && (
+                      <View
+                        style={
+                          value
+                            ? styles.keyHandlerDotTrue
+                            : styles.keyHandlerDotFalse
+                        }
+                      />
+                    )}
+                    <Text style={styles.keyHandlerValue}>{`${
+                      value ?? ''
+                    }`}</Text>
+                  </View>
+                );
+              })}
+            </KeyboardExtendedBaseView>
+            <Modal visible={showModal}>
+              <View style={styles.modal}>
+                <View>
+                  <Pressable
+                    defaultFocusHighlightEnabled={false}
+                    focusStyle={ANDROID_FOCUS_STYLE}
+                    onPress={() => setShowModal(false)}
+                  >
+                    <Text>Modal example</Text>
+                  </Pressable>
+                  <Pressable
+                    defaultFocusHighlightEnabled={false}
+                    focusStyle={ANDROID_FOCUS_STYLE}
+                    autoFocus
+                    onPress={() => setShowModal(false)}
+                  >
+                    <Text>AutoFocus</Text>
+                  </Pressable>
+                  <Pressable
+                    defaultFocusHighlightEnabled={false}
+                    focusStyle={ANDROID_FOCUS_STYLE}
+                    onPress={() => setShowModal(false)}
+                  >
+                    <Text>Close</Text>
+                  </Pressable>
                 </View>
-              );
-            })}
-          </KeyboardExtendedBaseView>
-          <Modal visible={showModal}>
-            <View style={styles.modal}>
-              <View>
-                <Pressable
-                  defaultFocusHighlightEnabled={false}
-                  focusStyle={ANDROID_FOCUS_STYLE}
-                  onPress={() => setShowModal(false)}
-                >
-                  <Text>Modal example</Text>
-                </Pressable>
-                <Pressable
-                  defaultFocusHighlightEnabled={false}
-                  focusStyle={ANDROID_FOCUS_STYLE}
-                  autoFocus
-                  onPress={() => setShowModal(false)}
-                >
-                  <Text>AutoFocus</Text>
-                </Pressable>
-                <Pressable
-                  defaultFocusHighlightEnabled={false}
-                  focusStyle={ANDROID_FOCUS_STYLE}
-                  onPress={() => setShowModal(false)}
-                >
-                  <Text>Close</Text>
-                </Pressable>
               </View>
-            </View>
-          </Modal>
-        </KeyboardExtendedBaseView>
-      </ScrollView>
-    </KeyboardFocusGroup>
-  );
-});
+            </Modal>
+          </KeyboardExtendedBaseView>
+        </ScrollView>
+      </KeyboardFocusGroup>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 10 },

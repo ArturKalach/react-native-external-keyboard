@@ -243,7 +243,7 @@ export const BaseKeyboardView = React.memo(
             lockFocus={lockFocusValue}
             {...wrappedOrderProps}
             orderGroup={groupId}
-            roundedHaloFix={haloEffect === false && roundedHaloFix}
+            roundedHaloFix={roundedHaloFix}
           />
         </KeyPressContext.Provider>
       );

@@ -32,6 +32,10 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
   private boolean blurOnSubmit = true;
   private boolean multiline = false;
   private boolean keyboardFocusable = true;
+  // FOCUS_BY_PRESS only: set while a directional focus search (Tab/Shift+Tab/arrows)
+  // is moving focus out of the EditText, so the blur handler knows not to pull
+  // focus back to the wrapper. Cleared right after on the message queue.
+  private boolean navigatingAway = false;
 
   private static boolean resolveIsNativelyFixedVersion() {
     try {
@@ -172,7 +176,14 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
       if (!hasTextEditFocus) {
         updateFocusability();
         if (focusType == FOCUS_BY_PRESS) {
-          post(() -> TextInputFocusWrapper.this.requestFocus());
+          // Tab/Shift+Tab/arrows blur the EditText as part of moving focus to
+          // another view — leave it there. Otherwise edit mode was exited in
+          // place (Enter/submit, keyboard dismissed), and clearFocus() would let
+          // the framework default focus to the first view on screen, so pull
+          // focus back to the wrapper to stay on this control in its idle state.
+          if (!navigatingAway) {
+            post(() -> TextInputFocusWrapper.this.requestFocus());
+          }
         }
       }
     });
@@ -279,6 +290,19 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
       }
     }
     return super.focusSearch(direction);
+  }
+
+  @Override
+  public View focusSearch(View focused, int direction) {
+    // Called when a descendant (the EditText, in edit mode) drives a directional
+    // focus search. Flag it so the blur handler lets focus move to the next view
+    // instead of pulling it back to the wrapper. Cleared on the next loop tick so
+    // a search that finds no target (no blur fired) doesn't strand the flag.
+    if (focusType == FOCUS_BY_PRESS) {
+      navigatingAway = true;
+      post(() -> navigatingAway = false);
+    }
+    return super.focusSearch(focused, direction);
   }
 
   @Override

@@ -1,10 +1,10 @@
-![react-native-external-keyboard](/.github/images/react-native-external-keyboard.png)
+![React Native External Keyboard banner — physical keyboard support for iOS and Android](/.github/images/react-native-external-keyboard.png)
 
 
 # React Native External Keyboard
 
 <div>
-  <img align="right" width="35%" src="/.github/images/rnek-ios-example.gif">
+  <img align="right" width="35%" src="/.github/images/react-native-external-keyboard.gif" alt="Demo of navigating a React Native app with a physical keyboard — focus moving between buttons and inputs">
 </div>
 
 Native-first React Native toolkit for physical (external) keyboard support on iOS and Android — focus management, key-press events, custom focus order, and focus locking.
