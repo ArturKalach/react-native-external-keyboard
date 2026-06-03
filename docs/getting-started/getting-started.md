@@ -1,8 +1,8 @@
 # Getting Started
 
-|Android | iOS|
-|--|--|
-| ![React Native External Keyboard on Android](../images/react-native-external-keyboard-android.gif) | ![React Native External Keyboard on iOS](../images/react-native-external-keyboard-ios.gif) |
+| iOS | Android |
+| --- | --- |
+| <img src="../images/react-native-external-keyboard-ios.gif" height="400" alt="React Native External Keyboard on iOS" /> | <img src="../images/react-native-external-keyboard-android.gif" height="400" alt="React Native External Keyboard on Android" /> |
 
 `react-native-external-keyboard` adds physical (external) keyboard support to React Native apps: keyboard focus management, key-press events, custom focus order, and focus locking — on both iOS and Android.
 

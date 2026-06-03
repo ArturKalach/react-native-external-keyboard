@@ -1,8 +1,8 @@
 # Pressable focus handling
 
-|Android | iOS|
-|--|--|
-| ![Programmatic focus on Android](../images/programatic-focus-android.gif) | ![Programmatic focus on iOS](../images/programatic-focus-ios.gif) |
+| iOS | Android |
+| --- | --- |
+| <img src="../images/programatic-focus-ios.gif" height="400" alt="Programmatic focus on iOS" /> | <img src="../images/programatic-focus-android.gif" height="400" alt="Programmatic focus on Android" /> |
 
 This guide covers how a keyboard-focusable `Pressable`/`Touchable` reports focus and how to style it: the focus lifecycle events (`onFocus`, `onBlur`, `onFocusChange`), the two style hooks (`focusStyle`, `containerFocusStyle`), and the two render props (`renderContent`, `renderFocusable`).
 

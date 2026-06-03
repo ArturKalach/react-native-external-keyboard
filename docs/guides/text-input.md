@@ -1,8 +1,8 @@
 # Keyboard text input
 
-|Android | iOS|
-|--|--|
-| ![Keyboard text input on Android](../images/keyboard-input-android.gif) | ![Keyboard text input on iOS](../images/keyboard-input-ios.gif) |
+| iOS | Android |
+| --- | --- |
+| <img src="../images/keyboard-input-ios.gif" height="400" alt="Keyboard text input on iOS" /> | <img src="../images/keyboard-input-android.gif" height="400" alt="Keyboard text input on Android" /> |
 
 `KeyboardExtendedInput` is a `TextInput` with physical-keyboard focus support. It lets the field participate in keyboard focus navigation, customizes how it takes and releases focus across platforms, and extends `onSubmitEditing` so it works for multiline inputs too.
 

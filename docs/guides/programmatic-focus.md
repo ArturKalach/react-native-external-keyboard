@@ -1,8 +1,8 @@
 # Programmatic focus
 
-|Android | iOS|
-|--|--|
-| ![Programmatic focus on Android](../images/programatic-focus-android.gif) | ![Programmatic focus on iOS](../images/programatic-focus-ios.gif) |
+| iOS | Android |
+| --- | --- |
+| <img src="../images/programatic-focus-ios.gif" height="400" alt="Programmatic focus on iOS" /> | <img src="../images/programatic-focus-android.gif" height="400" alt="Programmatic focus on Android" /> |
 
 Sometimes focus needs to move in response to app logic — after opening a panel, submitting a form, or restoring a previous position. Every keyboard-focusable component exposes an imperative handle through `ref` for exactly this.
 
