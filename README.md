@@ -68,6 +68,13 @@ const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
 | Bridgeless mode | ✅ |
 | Expo (prebuild / bare) | ✅ |
 
+## React Native compatibility
+
+| Library version | React Native |
+| :-- | :-- |
+| `1.0.0` | ≥ 0.80 |
+| `0.11.0` | ≤ 0.79 |
+
 ## Documentation
 
 New here? Start with the [getting started guide](./docs/getting-started/getting-started.md), then follow a task-focused guide. The [full docs index](./docs/README.md) links everything.
@@ -109,6 +116,23 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 | [`KeyboardFocus` ref](./docs/api/overview.md#imperative-ref-keyboardfocus) | Imperative focus handle (`focus`, `keyboardFocus`, `screenReaderFocus`). |
 | [Hooks](./docs/api/overview.md#hooks) | `useIsViewFocused`, `useOrderFocusGroup`. |
 | [Focus-order props](./docs/api/overview.md#focus-order-props) | `orderId`, `order*`, `orderIndex`, `orderGroup`, `lockFocus`. |
+
+---
+
+## Roadmap
+
+All planned features are implemented and released. No new functionality or API changes are planned.
+
+Future work is limited to:
+- React Native version support (new releases)
+- Bug fixes and issue resolution
+
+Both active versions receive fixes:
+
+| Version | React Native | Status |
+| :-- | :-- | :-- |
+| `1.0.0` | ≥ 0.80 | Active — bug fixes and new RN support |
+| `0.11.0` | ≤ 0.79 | Active — bug fixes only |
 
 ---
 
