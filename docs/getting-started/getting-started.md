@@ -122,4 +122,6 @@ The same components are exported under several names for convenience and backwar
 
 ---
 
-Next, learn the everyday workflow in [Pressable focus handling →](../guides/pressable-focus.md), or jump to the [Component overview](../components/overview.md) for the full props reference.
+**Next:** [Pressable focus handling →](../guides/pressable-focus.md) — learn the everyday workflow.
+
+**Reference:** [Component overview →](../components/overview.md) — the full props tables.
