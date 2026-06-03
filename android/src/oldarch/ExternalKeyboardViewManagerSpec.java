@@ -15,9 +15,9 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
 
   public abstract void setHasKeyUpPress(T view, boolean value);
 
-  public void rnekKeyboardFocus(ExternalKeyboardView view);
+  public abstract void rnekKeyboardFocus(ExternalKeyboardView view);
 
-  public void rnekScreenReaderFocus(ExternalKeyboardView view)
+  public abstract void rnekScreenReaderFocus(ExternalKeyboardView view);
 
   public abstract void setAutoFocus(ExternalKeyboardView view, @Nullable boolean value);
 

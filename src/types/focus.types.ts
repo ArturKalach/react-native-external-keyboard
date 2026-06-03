@@ -10,7 +10,7 @@ export type OnFocusChangeFn = (isFocused: boolean, tag?: number) => void;
 
 /** Imperative focus handle exposed via `ref` on keyboard-focusable components. */
 export type KeyboardFocusHandle = {
-  /** Moves keyboard focus to this element (alias of {@link KeyboardFocusHandle.keyboardFocus}). */
+  /** Moves both physical-keyboard and screen-reader focus to this element. */
   focus: () => void;
   /** Moves physical-keyboard focus to this element. */
   keyboardFocus: () => void;

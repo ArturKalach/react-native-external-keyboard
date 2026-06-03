@@ -194,7 +194,6 @@ All standard `ViewProps` and the [common focus props](#common-focus-props), plus
 
 | Prop | Type | Description |
 | :-- | :-- | :-- |
-| `canBeFocused` | `boolean` | **Deprecated** — use `focusable`. |
 | `focusableWrapper` | `boolean` | Treat the view as a transparent focus wrapper rather than a focusable target itself. |
 | `enableContextMenu` | `boolean` | Enable the context-menu interaction on the view. |
 | `ref → focus()` | `() => void` | Programmatically focus the view. See the [imperative ref](../api/overview.md#imperative-ref-keyboardfocus). |
