@@ -1,5 +1,9 @@
 # Focus order
 
+|Android | iOS|
+|--|--|
+| ![Focus order on Android](../images/focus-order-android.gif) | ![Focus order on iOS](../images/focus-order-ios.gif) |
+
 By default, physical-keyboard focus follows the native view hierarchy. When your visual layout differs from that order — grids, columns, custom navigation — you can take control with three independent systems that can be combined:
 
 1. **[Link-based](#1-link-based-ordering)** — each element names which element to focus next in each direction.

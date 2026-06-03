@@ -1,5 +1,9 @@
 # Programmatic focus
 
+|Android | iOS|
+|--|--|
+| ![Programmatic focus on Android](../images/programatic-focus-android.gif) | ![Programmatic focus on iOS](../images/programatic-focus-ios.gif) |
+
 Sometimes focus needs to move in response to app logic — after opening a panel, submitting a form, or restoring a previous position. Every keyboard-focusable component exposes an imperative handle through `ref` for exactly this.
 
 ```tsx

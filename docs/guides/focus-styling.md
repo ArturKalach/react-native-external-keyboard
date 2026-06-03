@@ -1,5 +1,9 @@
 # Native focus styling — halo, tint & Android highlight
 
+|Android | iOS|
+|--|--|
+| ![Native focus styling on Android](../images/focus-styling-android.gif) | ![Native focus styling on iOS](../images/focus-styling-ios.gif) |
+
 Beyond your own `focusStyle` ([see Pressable focus handling](./pressable-focus.md)), each platform draws a **native** focus indicator. This guide covers configuring and disabling it: the iOS halo (`haloEffect`, `tintColor`, `haloExpendX`/`haloExpendY`, `haloCornerRadius`, `roundedHaloFix`) and the Android highlight (`defaultFocusHighlightEnabled`).
 
 | Platform | Native indicator | Controlled by |
