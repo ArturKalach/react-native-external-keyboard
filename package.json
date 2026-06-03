@@ -26,7 +26,8 @@
     "!**/__fixtures__",
     "!**/__mocks__",
     "!**/.*",
-    "!**/CLAUDE.md"
+    "!**/CLAUDE.md",
+    "!**/docs"
   ],
   "scripts": {
     "example": "yarn workspace react-native-external-keyboard-example",
