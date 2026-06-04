@@ -87,6 +87,9 @@ export const BaseKeyboardView = React.memo(
         orderId,
         enableContextMenu,
         orderPrefix: _orderPrefix,
+        // Deprecated no-ops: destructured out so they never reach the native view.
+        enableA11yFocus: _enableA11yFocus,
+        tintType: _tintType,
         defaultFocusHighlightEnabled = true,
         roundedHaloFix = false,
         ...props

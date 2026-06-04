@@ -102,6 +102,15 @@ export type BaseFocusViewProps = {
    * @default 300
    */
   screenAutoA11yFocusDelay?: number;
+  /**
+   * @deprecated No longer has any effect — kept only for backwards compatibility.
+   */
+  enableA11yFocus?: boolean;
+  /**
+   * @deprecated No longer has any effect — kept only for backwards compatibility.
+   * Use {@link tintColor} to tint the focus halo.
+   */
+  tintType?: 'default' | 'hover' | 'background' | 'none';
 } & CommonFocusProps &
   FocusOrderProps;
 
