@@ -1,4 +1,4 @@
-package externalkeyboard.example
+package com.externalkeyboardexample
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

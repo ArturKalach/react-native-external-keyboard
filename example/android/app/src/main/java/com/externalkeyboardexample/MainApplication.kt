@@ -1,4 +1,4 @@
-package externalkeyboard.example
+package com.externalkeyboardexample
 
 import android.app.Application
 import com.facebook.react.PackageList

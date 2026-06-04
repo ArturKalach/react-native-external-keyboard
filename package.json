@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "1.0.0-alpaha.0",
+  "version": "0.11.0-rc",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -73,7 +73,7 @@
     "@react-native/eslint-config": "0.83.4",
     "@release-it/conventional-changelog": "^10.0.1",
     "@types/jest": "^29.5.14",
-    "@types/react": "^19.2.0",
+    "@types/react": "^18.3.30",
     "commitlint": "^19.8.1",
     "del-cli": "^6.0.0",
     "eslint": "^9.35.0",
@@ -82,8 +82,8 @@
     "jest": "^29.7.0",
     "lefthook": "^2.0.3",
     "prettier": "^2.8.8",
-    "react": "19.2.0",
-    "react-native": "0.83.4",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
     "react-native-builder-bob": "^0.40.18",
     "release-it": "^19.0.4",
     "turbo": "^2.5.6",
@@ -92,6 +92,9 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "resolutions": {
+    "@types/react": "^18.3.30"
   },
   "workspaces": [
     "example"
