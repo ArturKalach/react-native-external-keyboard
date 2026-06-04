@@ -21,7 +21,7 @@ export const withKeyboardFocus = <
 ) => {
   const WithKeyboardFocus = React.memo(
     React.forwardRef<
-      BaseKeyboardViewType,
+      BaseKeyboardViewType | View,
       WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType>
     >((allProps, ref) => {
       const {
@@ -149,7 +149,7 @@ export const withKeyboardFocus = <
           <BaseKeyboardView
             style={containerStyleArr}
             defaultFocusHighlightEnabled={defaultFocusHighlightEnabled}
-            ref={ref as RefObject<BaseKeyboardViewType>}
+            ref={ref as RefObject<BaseKeyboardViewType | View>}
             onKeyUpPress={onKeyUpPressHandler}
             onKeyDownPress={onKeyDownPressHandler}
             onFocus={onFocus ?? undefined}

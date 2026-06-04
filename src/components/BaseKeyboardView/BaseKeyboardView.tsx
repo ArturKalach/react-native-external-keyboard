@@ -56,7 +56,7 @@ const mapFocusValues = (values: LockFocusType[] | undefined) => {
 };
 
 export const BaseKeyboardView = React.memo(
-  React.forwardRef<BaseKeyboardViewType, BaseKeyboardViewProps>(
+  React.forwardRef<BaseKeyboardViewType | View, BaseKeyboardViewProps>(
     (
       {
         onFocusChange,
@@ -178,7 +178,7 @@ export const BaseKeyboardView = React.memo(
             },
           };
 
-          return new Proxy({} as BaseKeyboardViewType, {
+          return new Proxy({} as BaseKeyboardViewType | View, {
             get(_target, prop: string) {
               if (prop in nativeCommands) {
                 return nativeCommands[prop];

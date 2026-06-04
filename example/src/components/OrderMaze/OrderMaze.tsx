@@ -13,8 +13,8 @@ const size = 14;
 export const OrderMaze = () => {
   const [finished, setFinished] = useState(false);
   const [maze, setMaze] = useState(() => mazeGenerator(size));
-  const startRef = useRef<BaseKeyboardViewType>(null);
-  const restartRef = useRef<BaseKeyboardViewType>(null);
+  const startRef = useRef<BaseKeyboardViewType | null>(null);
+  const restartRef = useRef<BaseKeyboardViewType | null>(null);
   const reset = () => startRef.current?.focus();
   const exit = () => {
     setFinished(true);

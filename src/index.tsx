@@ -32,6 +32,7 @@ export {
 export {
   LockComponentType,
   type OnKeyPress,
+  type OnKeyPressFn,
   type KeyboardFocus,
   type OnFocusChangeFn,
   type BaseKeyboardViewType,
