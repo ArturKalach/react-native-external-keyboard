@@ -6,19 +6,19 @@ import com.externalkeyboard.views.ExternalKeyboardLockView.ExternalKeyboardLockV
 import com.externalkeyboard.views.ExternalKeyboardView.ExternalKeyboardViewManager;
 import com.externalkeyboard.views.KeyboardFocusGroup.KeyboardFocusGroupManager;
 import com.externalkeyboard.views.TextInputFocusWrapper.TextInputFocusWrapperManager;
-import com.facebook.react.TurboReactPackage;
+import com.facebook.react.BaseReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.module.model.ReactModuleInfo;
 import com.facebook.react.module.model.ReactModuleInfoProvider;
 import com.facebook.react.uimanager.ViewManager;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExternalKeyboardViewPackage extends TurboReactPackage {
+public class ExternalKeyboardViewPackage extends BaseReactPackage {
   @Override
   public NativeModule getModule(String name, ReactApplicationContext reactContext) {
     if (name.equals(ExternalKeyboardModule.NAME)) {
@@ -30,29 +30,31 @@ public class ExternalKeyboardViewPackage extends TurboReactPackage {
 
   @Override
   public ReactModuleInfoProvider getReactModuleInfoProvider() {
-    return () -> {
-      Map<String, ReactModuleInfo> map = new HashMap<>();
-      boolean isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
-      map.put(ExternalKeyboardModule.NAME, new ReactModuleInfo(ExternalKeyboardModule.NAME, // name
-        ExternalKeyboardModule.NAME, // className
-        false,                           // canOverrideExistingModule
-        false,                           // needsEagerInit
-        true,                            // hasConstants
-        false,                           // isCxxModule
-        isTurboModule                    // isTurboModule
-      ));
-      return map;
+    return new ReactModuleInfoProvider() {
+      @Override
+      public Map<String, ReactModuleInfo> getReactModuleInfos() {
+        Map<String, ReactModuleInfo> map = new HashMap<>();
+
+        map.put(ExternalKeyboardModule.NAME, new ReactModuleInfo(
+          ExternalKeyboardModule.NAME, // name
+          ExternalKeyboardModule.NAME, // className
+          false,                   // canOverrideExistingModule
+          false,                   // needsEagerInit
+          false,                   // isCxxModule
+          BuildConfig.IS_NEW_ARCHITECTURE_ENABLED // isTurboModule
+        ));
+        return map;
+      }
     };
   }
 
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-    List<ViewManager> viewManagers = new ArrayList<>();
-    viewManagers.add(new ExternalKeyboardViewManager());
-    viewManagers.add(new TextInputFocusWrapperManager());
-    viewManagers.add(new KeyboardFocusGroupManager());
-    viewManagers.add(new ExternalKeyboardLockViewManager());
-
-    return viewManagers;
+    return Arrays.asList(
+      new ExternalKeyboardViewManager(),
+      new TextInputFocusWrapperManager(),
+      new KeyboardFocusGroupManager(),
+      new ExternalKeyboardLockViewManager()
+    );
   }
 }

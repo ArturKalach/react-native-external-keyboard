@@ -1,7 +1,5 @@
-import type { ViewProps } from 'react-native';
+import { codegenNativeComponent, type ViewProps } from 'react-native';
 import type { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
-// eslint-disable-next-line @react-native/no-deep-imports
-import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 export interface ExternalKeyboardLockViewNativeComponentProps
   extends ViewProps {
