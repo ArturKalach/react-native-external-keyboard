@@ -125,7 +125,7 @@ export const MazeRender = ({
 }: {
   maze: MazeInfo;
   reset: () => void;
-  startRef: RefObject<BaseKeyboardViewType | null>;
+  startRef: RefObject<BaseKeyboardViewType>;
   onFinish: () => void;
 }) => {
   const { exit, matrix } = maze;

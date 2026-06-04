@@ -21,7 +21,7 @@ export const withKeyboardFocus = <
 ) => {
   const WithKeyboardFocus = React.memo(
     React.forwardRef<
-      BaseKeyboardViewType,
+      BaseKeyboardViewType | View,
       WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType>
     >((allProps, ref) => {
       const {
@@ -76,6 +76,11 @@ export const withKeyboardFocus = <
         renderContent,
         renderFocusable,
         roundedHaloFix,
+        // Deprecated no-ops: discard so they never reach the wrapped component.
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        enableA11yFocus: _enableA11yFocus,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        tintType: _tintType,
         children: userChildren,
         ...props
       } = allProps as WithKeyboardFocusProps<ComponentProps, ViewStyleType> & {
@@ -144,7 +149,7 @@ export const withKeyboardFocus = <
           <BaseKeyboardView
             style={containerStyleArr}
             defaultFocusHighlightEnabled={defaultFocusHighlightEnabled}
-            ref={ref as RefObject<BaseKeyboardViewType>}
+            ref={ref as RefObject<BaseKeyboardViewType | View>}
             onKeyUpPress={onKeyUpPressHandler}
             onKeyDownPress={onKeyDownPressHandler}
             onFocus={onFocus ?? undefined}

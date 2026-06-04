@@ -74,13 +74,16 @@ type RenderContentProp<CP extends object> =
  */
 type RenderFocusableProp = (state: { focused: boolean }) => React.ReactNode;
 
-// renderContent and renderFocusable are mutually exclusive. The type rejects
-// the both-provided case so the conflict surfaces at compile time rather than
-// silently resolving in useRenderedChildren.
-type RenderSlot<CP extends object> =
-  | { renderContent: RenderContentProp<CP>; renderFocusable?: never }
-  | { renderFocusable: RenderFocusableProp; renderContent?: never }
-  | { renderContent?: never; renderFocusable?: never };
+// `renderContent` and `renderFocusable` are conceptually mutually exclusive, but
+// the public slot is kept as a plain (non-discriminated) object so consumer-side
+// `Omit`/`Pick` over the prop type don't collapse a union and break assignability.
+// If both are passed, `renderContent` wins at runtime (see useRenderedChildren).
+// `renderContent` still resolves to `never` for components without render-prop
+// children, so it remains unassignable on those.
+type RenderSlot<CP extends object> = {
+  renderContent?: RenderContentProp<CP>;
+  renderFocusable?: RenderFocusableProp;
+};
 
 type WithKeyboardBaseProps<ViewType, ViewStyleType> = {
   /**
