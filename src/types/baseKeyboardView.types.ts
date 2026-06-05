@@ -42,6 +42,15 @@ export type CommonFocusProps = {
    * @default true
    */
   defaultFocusHighlightEnabled?: boolean;
+  /**
+   * Cross-platform focus highlight mode. `'none'` disables the focus highlight
+   * entirely — the iOS halo and the Android default highlight — equivalent to
+   * `haloEffect={false}` / `defaultFocusHighlightEnabled={false}`. `'default'`
+   * (the default) keeps the platform highlight.
+   *
+   * @default 'default'
+   */
+  tintType?: 'default' | 'none';
 };
 
 export type BaseFocusViewProps = {
@@ -106,15 +115,6 @@ export type BaseFocusViewProps = {
    * @deprecated No longer has any effect — kept only for backwards compatibility.
    */
   enableA11yFocus?: boolean;
-  /**
-   * Cross-platform focus highlight mode. `'none'` disables the focus highlight
-   * entirely — the iOS halo and the Android default highlight — equivalent to
-   * `haloEffect={false}` / `defaultFocusHighlightEnabled={false}`. `'default'`
-   * (the default) keeps the platform highlight.
-   *
-   * @default 'default'
-   */
-  tintType?: 'default' | 'none';
 } & CommonFocusProps &
   FocusOrderProps;
 
