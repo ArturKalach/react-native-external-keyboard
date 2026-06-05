@@ -10,8 +10,9 @@ Beyond your own `focusStyle` ([see Pressable focus handling](./pressable-focus.m
 | :-- | :-- | :-- |
 | iOS | The focus **halo** (a ring drawn around the focused view) | `haloEffect`, `tintColor`, `halo*` props |
 | Android | The system **focus highlight** | `defaultFocusHighlightEnabled` |
+| Both | Cross-platform shortcut to turn the native indicator **off** | `tintType="none"` |
 
-Both are **enabled by default**. The iOS halo props have no effect on Android, and `defaultFocusHighlightEnabled` has no effect on iOS.
+Both are **enabled by default**. The iOS halo props have no effect on Android, and `defaultFocusHighlightEnabled` has no effect on iOS. To switch the native indicator off on **both** platforms with one prop, use [`tintType="none"`](#turning-off-all-native-indicators).
 
 ---
 
@@ -128,7 +129,21 @@ Android draws its own system focus highlight on the focused native view, control
 
 ## Turning off all native indicators
 
-To rely entirely on your own `focusStyle` / `containerFocusStyle` across both platforms, disable both native indicators:
+To rely entirely on your own `focusStyle` / `containerFocusStyle` across both platforms, disable both native indicators. The simplest way is `tintType="none"` — a cross-platform shortcut that turns the iOS halo **and** the Android highlight off in one prop:
+
+```tsx
+<KeyboardPressable
+  tintType="none" // iOS halo + Android highlight, both off
+  focusStyle={({ focused }) => ({
+    backgroundColor: focused ? 'dodgerblue' : 'transparent',
+  })}
+  onPress={onPress}
+>
+  <Text>Fully custom focus look</Text>
+</KeyboardPressable>
+```
+
+`tintType="none"` is equivalent to setting `haloEffect={false}` on iOS and `defaultFocusHighlightEnabled={false}` on Android:
 
 ```tsx
 <KeyboardPressable
@@ -142,6 +157,13 @@ To rely entirely on your own `focusStyle` / `containerFocusStyle` across both pl
   <Text>Fully custom focus look</Text>
 </KeyboardPressable>
 ```
+
+| Prop | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `tintType` | `'default' \| 'none'` | `'default'` | `'none'` disables the native focus indicator on both platforms (iOS halo + Android highlight). `'default'` keeps it. |
+
+> [!NOTE]
+> `tintType="none"` also engages the [`roundedHaloFix`](#roundedhalofix) path on iOS when you pass `roundedHaloFix`, just like `haloEffect={false}` — so a disabled halo stays suppressed on rounded views. It works on `KeyboardExtendedInput` too.
 
 ---
 

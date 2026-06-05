@@ -37,7 +37,6 @@ Migration notes are listed newest first. Each section only covers changes that n
 | :-- | :-- |
 | `enableA11yFocus` | Use `screenAutoA11yFocus` to auto-move screen-reader focus, or the imperative `ref.current?.screenReaderFocus()`. |
 | `ignoreGroupFocusHint` | Removed — the iOS focus-hint workaround it controlled is gone. Delete the prop. |
-| `tintType` | Removed — tinting is controlled solely via `tintColor`. Drop the prop. |
 | `FocusHoverComponent` | Removed — render focus-dependent content with the `renderContent` / `renderFocusable` render props, or style it with `focusStyle` / `containerFocusStyle`. |
 | `exposeMethods` | Removed — the `KeyboardFocus` `ref` is now a proxy that forwards any non-focus property to the underlying native view automatically, so no allowlist is needed. Call `ref.current?.measure(...)`, `ref.current?.setNativeProps(...)`, etc. directly. |
 
@@ -59,6 +58,21 @@ Migration notes are listed newest first. Each section only covers changes that n
 >…</KeyboardPressable>
 ```
 
+### Changed component props
+
+| Prop | 0.9.1 | 1.0.0 | Notes |
+| :-- | :-- | :-- | :-- |
+| `tintType` | `'default' \| 'hover' \| 'background' \| 'none'` | `'default' \| 'none'` | The `'hover'` and `'background'` values are gone — tinting color is controlled via `tintColor`. `'none'` is retained as a cross-platform shortcut to disable the native focus indicator (iOS halo + Android highlight); `'default'` keeps it. [Details](../guides/focus-styling.md#turning-off-all-native-indicators). |
+
+```tsx
+// Before (0.9.1) — 'background'/'hover' tinted the view
+<KeyboardPressable tintType="background" onPress={onPress}>…</KeyboardPressable>
+
+// After (1.0.0) — color via tintColor / focusStyle; tintType="none" only disables the indicator
+<KeyboardPressable tintColor="dodgerblue" onPress={onPress}>…</KeyboardPressable>
+<KeyboardPressable tintType="none" focusStyle={{ backgroundColor: 'dodgerblue' }} onPress={onPress}>…</KeyboardPressable>
+```
+
 ### Renamed exported types
 
 The HOC and view types were renamed for consistency. Update your type imports:
@@ -69,7 +83,7 @@ The HOC and view types were renamed for consistency. Update your type imports:
 | `WithKeyboardFocus` | `KeyboardFocusableComponent` |
 | `WithKeyboardFocusDeclaration` | `KeyboardFocusableComponentDeclaration` |
 | `WithKeyboardPropsTypeDeclaration` | Removed — use `WithKeyboardFocusProps` / `WithKeyboardFocusPropsWithRef`. |
-| `TintType` | Removed — no replacement; tinting is controlled via `tintColor`. |
+| `TintType` | Removed as a named export — the `tintType` prop still exists but is typed inline as `'default' \| 'none'`, so import it from the prop types if you need it rather than the standalone `TintType`. |
 
 ```tsx
 // Before (0.9.1)
