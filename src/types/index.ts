@@ -1,9 +1,9 @@
 export type {
   FocusViewProps,
   KeyboardFocusViewProps,
-} from './keyboardFocusView.types';
-export type { KeyboardFocusLockProps } from './keyboardFocusLock.types';
-export { LockComponentType } from './keyboardFocusLock.types';
+} from './KeyboardFocusView.types';
+export type { KeyboardFocusLockProps } from './KeyboardFocusLock.types';
+export { LockComponentType } from './KeyboardFocusLock.types';
 export type {
   OnFocusChangeFn,
   KeyboardFocus,

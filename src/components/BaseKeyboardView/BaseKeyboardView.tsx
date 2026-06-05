@@ -87,9 +87,9 @@ export const BaseKeyboardView = React.memo(
         orderId,
         enableContextMenu,
         orderPrefix: _orderPrefix,
+        tintType,
         // Deprecated no-ops: destructured out so they never reach the native view.
         enableA11yFocus: _enableA11yFocus,
-        tintType: _tintType,
         defaultFocusHighlightEnabled = true,
         roundedHaloFix = false,
         ...props
@@ -218,9 +218,9 @@ export const BaseKeyboardView = React.memo(
         orderDown,
       });
 
-      const platformSpecificHalo = isIOS
-        ? haloEffect ?? true
-        : defaultFocusHighlightEnabled;
+      const platformSpecificHalo =
+        tintType !== 'none' &&
+        (isIOS ? haloEffect ?? true : defaultFocusHighlightEnabled);
 
       return (
         <KeyPressContext.Provider value={bubbled.context}>

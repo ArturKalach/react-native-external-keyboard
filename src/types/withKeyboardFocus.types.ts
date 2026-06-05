@@ -2,7 +2,7 @@ import type { PressableProps, View, ViewProps } from 'react-native';
 import type { FocusStyle } from './focusStyle.types';
 import type { KeyboardFocus } from './focus.types';
 import type { OnKeyPress } from './keyPress.types';
-import type { FocusViewProps } from './keyboardFocusView.types';
+import type { FocusViewProps } from './KeyboardFocusView.types';
 import type { RefAttributes } from 'react';
 
 /** Fallback press handler used when the wrapped component declares no matching prop. */

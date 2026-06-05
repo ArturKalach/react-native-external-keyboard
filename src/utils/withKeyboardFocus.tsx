@@ -76,11 +76,10 @@ export const withKeyboardFocus = <
         renderContent,
         renderFocusable,
         roundedHaloFix,
+        tintType,
         // Deprecated no-ops: discard so they never reach the wrapped component.
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         enableA11yFocus: _enableA11yFocus,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        tintType: _tintType,
         children: userChildren,
         ...props
       } = allProps as WithKeyboardFocusProps<ComponentProps, ViewStyleType> & {
@@ -158,6 +157,7 @@ export const withKeyboardFocus = <
             onContextMenuPress={onContextMenuHandler}
             enableContextMenu={enableContextMenu}
             haloEffect={haloEffect}
+            tintType={tintType}
             haloCornerRadius={haloCornerRadius}
             haloExpendX={haloExpendX}
             haloExpendY={haloExpendY}

@@ -42,15 +42,19 @@
   return [super focusEffect];
 }
 
+
+
 - (void)layoutSubviews {
   [super layoutSubviews];
 
-  if (!self.roundedHaloFix) {
-    return;
-  }
+  if(self.isHaloHidden || !self.roundedHaloFix) return;
 
-  UIFocusEffect* effect = [self focusEffect];
-  self.focusEffect = effect;
+  // Re-arm the focus effect by reading it and writing it straight back, forcing
+  // UIKit to repaint the halo after a layout pass squared off the rounded clip.
+  UIView* target = (self.focusableWrapper && self.subviews.count > 0)
+    ? self.subviews.firstObject
+    : self;
+  target.focusEffect = target.focusEffect;
 }
 
 - (void)cleanReferences {

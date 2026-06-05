@@ -107,10 +107,14 @@ export type BaseFocusViewProps = {
    */
   enableA11yFocus?: boolean;
   /**
-   * @deprecated No longer has any effect — kept only for backwards compatibility.
-   * Use {@link tintColor} to tint the focus halo.
+   * Cross-platform focus highlight mode. `'none'` disables the focus highlight
+   * entirely — the iOS halo and the Android default highlight — equivalent to
+   * `haloEffect={false}` / `defaultFocusHighlightEnabled={false}`. `'default'`
+   * (the default) keeps the platform highlight.
+   *
+   * @default 'default'
    */
-  tintType?: 'default' | 'hover' | 'background' | 'none';
+  tintType?: 'default' | 'none';
 } & CommonFocusProps &
   FocusOrderProps;
 
