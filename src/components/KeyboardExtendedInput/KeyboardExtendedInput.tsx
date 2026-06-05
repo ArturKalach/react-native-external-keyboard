@@ -51,6 +51,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       cursorColor,
       maxFontSizeMultiplier,
       defaultFocusHighlightEnabled = true,
+      tintType,
       orderPrefix: _orderPrefix,
       ...props
     },
@@ -112,10 +113,12 @@ export const KeyboardExtendedInput = React.forwardRef<
       ? submitBehavior === 'blurAndSubmit'
       : props.blurOnSubmit ?? true;
 
-    const withHaloEffect = Platform.select({
-      ios: haloEffect,
-      android: defaultFocusHighlightEnabled,
-    });
+    const withHaloEffect =
+      tintType !== 'none' &&
+      Platform.select({
+        ios: haloEffect,
+        android: defaultFocusHighlightEnabled,
+      });
 
     return (
       <TextInputFocusWrapperNative
@@ -125,7 +128,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         blurType={blurMap[blurType]}
         style={[containerStyle, containerFocusedStyle]}
         haloEffect={withHaloEffect}
-        roundedHaloFix={haloEffect === false && roundedHaloFix}
+        roundedHaloFix={withHaloEffect === false && roundedHaloFix}
         multiline={props.multiline}
         blurOnSubmit={blurOnSubmit}
         onMultiplyTextSubmit={onSubmitEditing}
