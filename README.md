@@ -87,6 +87,10 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 - [Keyboard text input](./docs/guides/text-input.md) — `KeyboardExtendedInput`, `focusType`, `blurType`
 - [Focus order](./docs/guides/focus-order.md) — link-based, index-based, and direction-lock ordering
 
+**Advanced**
+
+- [Native focus services](./docs/guides/native-focus-services.md) — native-side focus API & memory service for custom native code
+
 **Reference**
 
 - [Component overview](./docs/components/overview.md) — every component and its props
