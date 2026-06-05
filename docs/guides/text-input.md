@@ -91,6 +91,7 @@ Like other components, the input supports per-platform native indicators and you
 | `haloEffect` | `boolean` | `true` | *(iOS)* Halo ring on focus. |
 | `roundedHaloFix` | `boolean` | `false` | *(iOS)* Keeps a disabled halo (`haloEffect={false}`) suppressed on rounded (`borderRadius`) views. [Why & alternative](./focus-styling.md#roundedhalofix). |
 | `defaultFocusHighlightEnabled` | `boolean` | `true` | *(Android)* Default focus highlight. |
+| `tintType` | `'default' \| 'none'` | `'default'` | Cross-platform shortcut: `'none'` disables the native focus indicator on both platforms (iOS halo + Android highlight). [Details](./focus-styling.md#turning-off-all-native-indicators). |
 | `tintColor` | `string` | — | *(iOS)* Halo / tint color. |
 | `style` | `StyleProp<ViewStyle>` | — | Style for the inner `TextInput`. |
 | `focusStyle` | [`FocusStyle`](../api/overview.md#focusstyle) | — | Style applied to the inner input when focused. |

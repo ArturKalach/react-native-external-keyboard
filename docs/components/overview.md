@@ -34,6 +34,7 @@ Shared by `withKeyboardFocus`-wrapped components, `KeyboardExtendedView`, and `K
 | `haloExpendY` | `number` | — | *(iOS)* Vertical expansion of the halo beyond the view bounds. |
 | `roundedHaloFix` | `boolean` | — | *(iOS)* When `haloEffect={false}`, keeps the disabled halo from reappearing on rounded (`borderRadius`) views. [Why & alternative](../guides/focus-styling.md#roundedhalofix). |
 | `defaultFocusHighlightEnabled` | `boolean` | `true` | *(Android)* Enables Android's default focus highlight. |
+| `tintType` | `'default' \| 'none'` | `'default'` | Cross-platform shortcut: `'none'` disables the native focus indicator on both platforms (iOS halo + Android highlight). [Details](../guides/focus-styling.md#turning-off-all-native-indicators). |
 | `screenAutoA11yFocus` | `boolean` | — | Move screen-reader focus to this element automatically. |
 | `screenAutoA11yFocusDelay` | `number` | `300` | *(Android)* Delay (ms) before screen-reader auto-focus; render may take 300–500 ms. |
 | `onContextMenuPress` | `() => void` | — | *(iOS)* Long-press via the context-menu command (`Tab + M`). |
