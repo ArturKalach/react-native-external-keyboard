@@ -26,6 +26,12 @@ Read them in order, or jump to the one you need.
 | 4 | [Keyboard text input](./guides/text-input.md) | `KeyboardExtendedInput`, `focusType`, `blurType`, multiline submit |
 | 5 | [Focus order](./guides/focus-order.md) | Link-based, index-based, and direction-lock ordering |
 
+**Advanced**
+
+| Guide | Covers |
+| :-- | :-- |
+| [Native focus services](./guides/native-focus-services.md) | Native-side `KeyboardFocusService` / `FocusMemoryService` for driving focus from your own native code |
+
 ---
 
 ## Components
