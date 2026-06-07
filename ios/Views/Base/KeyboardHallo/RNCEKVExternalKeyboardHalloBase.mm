@@ -47,7 +47,7 @@
 - (void)layoutSubviews {
   [super layoutSubviews];
 
-  if(self.isHaloHidden || !self.roundedHaloFix) return;
+  if(!self.isHaloHidden && !self.roundedHaloFix) return;
 
   // Re-arm the focus effect by reading it and writing it straight back, forcing
   // UIKit to repaint the halo after a layout pass squared off the rounded clip.
