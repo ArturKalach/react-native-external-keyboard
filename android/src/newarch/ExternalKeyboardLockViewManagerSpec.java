@@ -1,6 +1,5 @@
 package com.externalkeyboard;
 
-import com.facebook.react.viewmanagers.ExternalKeyboardLockViewManagerInterface;
 import com.facebook.react.views.view.ReactViewGroup;
 import com.facebook.react.views.view.ReactViewManager;
 
