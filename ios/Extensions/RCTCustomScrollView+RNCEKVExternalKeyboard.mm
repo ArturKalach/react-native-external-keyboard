@@ -9,14 +9,13 @@
 #import "RCTScrollView.h"
 #import "RNCEKVSwizzleInstanceMethod.h"
 
+static void RNCEKVRCTScrollViewSwizzle(void) {
+  RNCEKVSwizzleInstanceMethod([RCTScrollView class], @selector(initWithEventDispatcher:), @selector(rncekvInitWithEventDispatcher:));
+}
+
 @implementation RCTScrollView (RNCEKVExternalKeyboard)
 
-+ (void)load {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    RNCEKVSwizzleInstanceMethod([self class], @selector(initWithEventDispatcher:), @selector(rncekvInitWithEventDispatcher:));
-  });
-}
+RNCEKV_INSTALL_SWIZZLES(RNCEKVRCTScrollViewSwizzle)
 
 - (instancetype)rncekvInitWithEventDispatcher:(CGRect)frame {
   RCTScrollView *rctView = [self rncekvInitWithEventDispatcher:frame];

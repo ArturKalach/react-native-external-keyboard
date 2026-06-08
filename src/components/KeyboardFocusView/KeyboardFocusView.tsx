@@ -1,31 +1,20 @@
 import React, { useMemo } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
-import type { KeyboardFocusViewProps } from '../../types/KeyboardFocusView.types';
-import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
+import { Platform } from 'react-native';
 import type {
+  KeyboardFocusViewProps,
   BaseKeyboardViewType,
   KeyboardFocus,
-} from '../../types/BaseKeyboardView';
-import type { TintType } from '../../types/WithKeyboardFocus';
-import {
-  type RenderProp,
-  RenderPropComponent,
-} from '../RenderPropComponent/RenderPropComponent';
-import { useFocusStyle } from '../../utils/useFocusStyle';
-import { useKeyboardPress } from '../../utils/useKeyboardPress/useKeyboardPress';
+} from '../../types';
+import { BaseKeyboardView } from '../BaseKeyboardView/BaseKeyboardView';
+import { useKeyboardFocusContainer } from '../../utils/useKeyboardFocusContainer';
 import { IsViewFocusedContext } from '../../context/IsViewFocusedContext';
 
 export const KeyboardFocusView = React.forwardRef<
   BaseKeyboardViewType | KeyboardFocus,
-  KeyboardFocusViewProps & {
-    tintType?: TintType;
-    FocusHoverComponent?: RenderProp;
-    withView?: boolean;
-  }
+  KeyboardFocusViewProps
 >(
   (
     {
-      tintType = 'default',
       autoFocus,
       focusStyle,
       style,
@@ -34,15 +23,13 @@ export const KeyboardFocusView = React.forwardRef<
       onLongPress,
       onKeyUpPress,
       onKeyDownPress,
-      group = false,
+      focusableWrapper = false,
       haloEffect = true,
-      canBeFocused = true,
-      focusable = true,
-      withView = true, //ToDo RNCEKV-9 update and rename Discussion #63
+      focusable,
+      withView = true,
       tintColor,
       onFocus,
       onBlur,
-      FocusHoverComponent,
       children,
       accessible,
       triggerCodes,
@@ -51,17 +38,15 @@ export const KeyboardFocusView = React.forwardRef<
     },
     ref
   ) => {
-    const { focused, containerFocusedStyle, onFocusChangeHandler, hoverColor } =
-      useFocusStyle({
-        onFocusChange,
-        tintColor,
-        containerFocusStyle: focusStyle,
-        tintType,
-      });
-
-    const withHaloEffect = tintType === 'default' && haloEffect;
-
-    const { onKeyUpPressHandler, onKeyDownPressHandler } = useKeyboardPress({
+    const {
+      focused,
+      containerFocusedStyle,
+      onFocusChangeHandler,
+      onKeyUpPressHandler,
+      onKeyDownPressHandler,
+    } = useKeyboardFocusContainer({
+      onFocusChange,
+      containerFocusStyle: focusStyle,
       onKeyUpPress,
       onKeyDownPress,
       onPress,
@@ -70,62 +55,39 @@ export const KeyboardFocusView = React.forwardRef<
       disabled: (props as { disabled?: boolean })?.disabled,
     });
 
-    const HoverComonent = useMemo(() => {
-      if (FocusHoverComponent) return FocusHoverComponent;
-      if (tintType === 'hover')
-        return <View style={[hoverColor, styles.absolute, styles.opacity]} />;
+    const a11y =
+      (Platform.OS === 'android' && withView && accessible !== false) ||
+      accessible;
 
-      return undefined;
-    }, [FocusHoverComponent, hoverColor, tintType]);
-
-    const a11y = useMemo(() => {
-      return (
-        (Platform.OS === 'android' && withView && accessible !== false) ||
-        accessible
-      );
-    }, [accessible, withView]);
+    const containerStyleArr = useMemo(
+      () => [style, containerFocusedStyle],
+      [style, containerFocusedStyle]
+    );
 
     return (
       <IsViewFocusedContext.Provider value={focused}>
         <BaseKeyboardView
-          style={[style, containerFocusedStyle]}
-          ref={ref}
+          style={containerStyleArr}
+          ref={ref as React.Ref<BaseKeyboardViewType>}
           onKeyUpPress={onKeyUpPressHandler}
           onKeyDownPress={onKeyDownPressHandler}
           onFocus={onFocus}
           onBlur={onBlur}
           onFocusChange={onFocusChangeHandler}
           onContextMenuPress={onLongPress}
-          haloEffect={withHaloEffect}
+          haloEffect={haloEffect}
           defaultFocusHighlightEnabled={defaultFocusHighlightEnabled}
           autoFocus={autoFocus}
-          canBeFocused={canBeFocused}
           focusable={focusable}
           tintColor={tintColor}
-          group={group}
+          focusableWrapper={focusableWrapper}
           accessible={a11y}
           enableContextMenu={Boolean(onLongPress)}
           {...props}
         >
           {children}
-          {focused && HoverComonent && (
-            <RenderPropComponent render={HoverComonent} />
-          )}
         </BaseKeyboardView>
       </IsViewFocusedContext.Provider>
     );
   }
 );
-
-const styles = StyleSheet.create({
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  opacity: {
-    opacity: 0.3,
-  },
-});

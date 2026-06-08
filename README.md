@@ -1,656 +1,151 @@
+![React Native External Keyboard banner — physical keyboard support for iOS and Android](/.github/images/react-native-external-keyboard.png)
+
+
 # React Native External Keyboard
 
-React Native library for enhanced external keyboard support.
+<div>
+  <img align="right" width="35%" src="/.github/images/react-native-external-keyboard.gif" alt="Demo of navigating a React Native app with a physical keyboard — focus moving between buttons and inputs">
+</div>
 
-- ⚡️ The New Architecture is supported
-- ⚡️ Bridgeless
+Native-first React Native toolkit for physical (external) keyboard support on iOS and Android — focus management, key-press events, custom focus order, and focus locking.
 
-iOS | Android
--- | --
-<img src="/.github/images/rnek-ios-example.gif" height="500" /> | <img src="/.github/images/rnek-android-example.gif" height="500" />
+- 🎯 **Keyboard focus management** — focus/blur events, `autoFocus`, imperative focus via `ref`
+- ⌨️ **Key press events** — handle key-down / key-up with full modifier info
+- 🔢 **Custom focus order** — link-based, index-based, or direction locking
+- 🔒 **Focus lock** — keep focus inside modals and overlays (`Focus.Frame` / `Focus.Trap`)
+- 🎨 **Native focus styling** — iOS halo effect & `tintColor`, Android `defaultFocusHighlightEnabled`
+- ⚡ New Architecture · Old Architecture · Bridgeless · Expo prebuild
 
-## Features
+> [!TIP]
+> The quickest start is the `K` namespace — `K.Pressable`, `K.View`, and `K.Input` are drop-in, keyboard-focusable versions of `Pressable`, `View`, and `TextInput`. To add focus to a component you already have (a custom button, `TouchableOpacity`, …), reach for the [`withKeyboardFocus`](./docs/components/overview.md#withkeyboardfocus) HOC. See the [getting started guide](./docs/getting-started/getting-started.md).
 
-- Keyboard focus management and autofocus capabilities.
-- Key press event handling.
-- Focus management for `TextInput` and `Pressable` components.
-- Customization of the `Halo Effect` and `tintColor` for iOS.
-- `defaultFocusHighlightEnabled` support for Android.
-- Keyboard focus order.
-- Focus Lock.
+> [!NOTE]
+> On iOS, long-pressing the spacebar does not fire a long press — iOS routes it through *Full Keyboard Access*. Use `Tab + M` (the default "open context menu" command) instead.
+
+</br>
 
 ## Installation
 
 ```sh
 npm install react-native-external-keyboard
+cd ios && pod install
 ```
 
-iOS:
+Get started with the [getting started guide](./docs/getting-started/getting-started.md) or jump straight to the [component overview](./docs/components/overview.md).
 
-```sh
-cd ios && pod install && cd ..
-```
+## Quick start
 
+Use the `K` namespace — `K.Pressable`, `K.View`, and `K.Input` are ready-made, keyboard-focusable replacements for `Pressable`, `View`, and `TextInput`:
 
-## Usage
+```tsx
+import { K } from 'react-native-external-keyboard';
+import { Text } from 'react-native';
 
-### withKeyboardFocus - For Pressable, Touchable, and more
-
-The `withKeyboardFocus` HOC is a helper for integrating keyboard focus functionality. It significantly simplifies integration by wrapping the provided component in `KeyboardFocusView` and extending it with additional features, such as focus and blur events.
-
-```js
-const KeyboardPressable = withKeyboardFocus(Pressable);
-const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
-const KeyboardButton = withKeyboardFocus(Button);
-
-...
-
-<TouchableOpacity
-  ref={ref}
-  onPress={...}
-  onLongPress={...}
-  onFocus={...}
-  onBlur={...}
-  style={styles.pressable}
-  containerStyle={styles.pressableContainer}
+<K.Pressable
   autoFocus
->
-  <Text>TouchableOpacity</Text>
-</TouchableOpacity>
-```
-
-After wrapping a `Pressable` or `Touchable` with `withKeyboardFocus`, you will be able to handle `focus` and `blur` events, control the `tint color`, apply focus and container focus styles, `focus` the component using a `ref`, or configure `autoFocus`.
-
-
-Props | Description | Type
--- | -- | --
-onPress?: | Default `onPress` or keyboard-handled `onPress` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-onLongPress?: | Default `onLongPress` or keyboard-handled `onLongPress` (`Tab+M` for iOS). | `((event: GestureResponderEvent) => void) \| null \| undefined`
-onPressIn:? | Default `onPressIn` or keyboard-handled `onPressIn` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-onPressOut:? | Default `onPressOut` or keyboard-handled `onPressOut` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-style?: | Styles the inner component | `StyleProp<ViewStyle>; for Pressable: PressableProps['style']`
-withPressedStyle?: | Enables the pressed style handler for custom components; always true for the standard Pressable. | `boolean \| undefined`, false by default
-focusStyle?: | Style applied to the inner component when focused | `FocusStyle`
-containerStyle?: | Style for the container | StyleProp<ViewStyle>;
-containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
-onFocus?: | Handler called when the component is focused  | `() => void`
-onBlur?: | Handler called when the component loses focus | `() => void`
-onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean, tag?: number) => void`
-onKeyUpPress?: | Handler for the key-up event | `(e: OnKeyPress) => void`
-onKeyDownPress?: | Handler for the key-down event | `(e: OnKeyPress) => void`
-autoFocus?: | Indicates if the component should automatically gain focus | `boolean | undefined`
-focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
-tintColor?: | Color used for tinting the component | `string`
-tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none'`
-FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
-renderContent?: | Render prop for components whose `children` is itself a render function (e.g. `Pressable`). Receives the component's own render state merged with `{ focused: boolean }`, so you can style content based on both the component state (e.g. `pressed`) and keyboard focus simultaneously. Only available when the wrapped component exposes a render-prop `children`. | `(state: ComponentRenderState & { focused: boolean }) => ReactNode`
-renderFocusable?: | Render prop available on any `withKeyboardFocus`-wrapped component. Replaces `children` and receives `{ focused: boolean }`, allowing you to render different content based on keyboard focus state. Use this when the wrapped component does not expose a render-prop `children`. | `(state: { focused: boolean }) => ReactNode`
-group?: | Indicates if the component is a focusable group | `boolean`
-haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
-defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
-haloCornerRadius?: | Corner radius of the halo ring (iOS only) | `number`
-haloExpendX?: | Horizontal expansion of the halo ring in points (iOS only) | `number`
-haloExpendY?: | Vertical expansion of the halo ring in points (iOS only) | `number`
-ref?: | Provides a reference to the component, allowing programmatic focus control | `{ focus: () => void}`
-viewRef?: | Provides a reference to the underlying view component | `RefObject<View>`
-onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
-triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
-enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
-screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
-`screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
-`exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
-orderId? | A unique ID used for link target identification. | `string`
-orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
-orderForward? | ID of the target for forward navigation with "Tab". | `string`
-orderLeft? | ID of the target for navigation to the left. | `string`
-orderRight? | ID of the target for navigation to the right. | `string`
-orderUp? | ID of the target for navigation upward. | `string`
-orderDown? | ID of the target for navigation downward. | `string`
-orderGroup? | The name of the group for index-based focus ordering. | `string`
-orderIndex? | The order index of the element within its group. | `number`
-lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
-...rest | Remaining component props  | `Type of Component`
-
-#### renderContent — Pressable with pressed + focused state
-
-`Pressable` passes a `{ pressed }` state to its `children` render prop. Use `renderContent` to access both `pressed` and the keyboard `focused` state at the same time:
-
-```tsx
-const KeyboardPressable = withKeyboardFocus(Pressable);
-
-<KeyboardPressable
   onPress={onPress}
-  renderContent={({ pressed, focused }) => (
-    <View style={[
-      styles.button,
-      pressed && styles.pressed,
-      focused && styles.focused,
-    ]}>
-      <Text>{pressed ? 'Pressed' : focused ? 'Focused' : 'Default'}</Text>
-    </View>
-  )}
-/>
+  focusStyle={{ backgroundColor: 'dodgerblue' }}
+>
+  <Text>Press me with Space or Enter</Text>
+</K.Pressable>
 ```
 
-#### renderFocusable — TouchableOpacity and other components
-
-`TouchableOpacity` and similar components do not expose a render-prop `children`, so `renderContent` is not available. Use `renderFocusable` instead — it receives only `{ focused }`:
+Need focus on a component the `K` namespace doesn't cover — `TouchableOpacity`, a custom button, a third-party component? Wrap it with the [`withKeyboardFocus`](./docs/components/overview.md#withkeyboardfocus) HOC:
 
 ```tsx
+import { withKeyboardFocus } from 'react-native-external-keyboard';
+import { TouchableOpacity } from 'react-native';
+
 const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
-
-<KeyboardTouchable
-  onPress={onPress}
-  renderFocusable={({ focused }) => (
-    <View style={[styles.button, focused && styles.focused]}>
-      <Text>{focused ? 'Focused' : 'Default'}</Text>
-    </View>
-  )}
-/>
 ```
 
-> [!NOTE]
-> You may discover that `long press on spacebar` does not trigger a long press event on `iOS`. This is because `iOS` uses the `Full Keyboard Access` system that provides commands for interacting with the system. Rather than holding down the spacebar, you can use `Tab+M` (the default action for opening the context menu).
-> You can change `Commands` in: `Full Keyboard Access` -> `Commands`
+## Architecture support
 
-
-### KeyboardExtendedView
-`KeyboardExtendedView` is similar to `withKeyboardFocus`; it is also based on `KeyboardExtendedBaseView` and provides keyboard focus functionality. It can be useful for handling key presses or managing the focus of a group of components.
-
-```
-<KeyboardExtendedView>
-  <Text>Parent component</Text>
-  <KeyboardExtendedView>
-    <Text>Child component 1</Text>
-  </KeyboardExtendedView>
-  <KeyboardExtendedView>
-    <Text>Child component 2</Text>
-  </KeyboardExtendedView>
-</KeyboardExtendedView>
-```
-
-Props | Description | Type
--- | -- | --
-onPress?: | Default `onPress` or keyboard-handled `onPress` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-onLongPress?: | Default `onLongPress` or keyboard-handled `onLongPress` (`Tab+M` for iOS). | `((event: GestureResponderEvent) => void) \| null \| undefined`
-onPressIn:? | Default `onPressIn` or keyboard-handled `onPressIn` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-onPressOut:? | Default `onPressOut` or keyboard-handled `onPressOut` | `((event: GestureResponderEvent) => void) \| null \| undefined`
-style?: | Style for the inner component | `StyleProp<ViewStyle>`
-focusStyle?: | Style applied to the inner component when focused | `FocusStyle`
-containerStyle?: | Style for the container | StyleProp<ViewStyle>;
-containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
-onFocus?: | Handler called when the component is focused  | `() => void`
-onBlur?: | Handler called when the component loses focus | `() => void`
-onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean, tag?: number) => void`
-onKeyUpPress?: | Handler for the key-up event | `(e: OnKeyPress) => void`
-onKeyDownPress?: | Handler for the key-down event | `(e: OnKeyPress) => void`
-onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
-autoFocus?: | Indicates if the component should automatically gain focus | `boolean | undefined`
-focusable?: | Indicates if the component can be focused by keyboard | `boolean | undefined`
-tintColor?: | Color used for tinting the component | `string`
-tintType?: | Tint behavior type | `'default' \| 'hover' \| 'background' \| 'none'`
-FocusHoverComponent?: | Component displayed on focus | `\| ReactElement  \| FunctionComponent  \| (() => ReactElement);`
-group?: | Indicates if the component is a focusable group | `boolean`
-haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
-defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
-haloCornerRadius?: | Corner radius of the halo ring (iOS only) | `number`
-haloExpendX?: | Horizontal expansion of the halo ring in points (iOS only) | `number`
-haloExpendY?: | Vertical expansion of the halo ring in points (iOS only) | `number`
-triggerCodes?: | `onPress` and `onLongPress` trigger codes  | `number[] \| undefined`,  spacebar and enter by default
-enableA11yFocus?: | Can be used to move the screen reader focus within the keyboard using `ref.current.focus`.                                           | `boolean \| undefined`
-screenAutoA11yFocus?: | Enables screen reader auto-focus functionality. | `boolean \| undefined`
-`screenAutoA11yFocusDelay?:`   | **Android only:** Delay for screen reader autofocus. On Android, focus can only be applied after the component has rendered, which may take 300–500 milliseconds. | `number \| undefined`, default: 300
-`exposeMethods?:` | List of exposed view methods  | `string[] \| undefined`, by default the following methods are exposed: `'blur', 'measure', 'measureInWindow', 'measureLayout', and 'setNativeProps'`.
-orderId? | A unique ID used for link target identification. | `string`
-orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
-orderForward? | ID of the target for forward navigation with "Tab". | `string`
-orderLeft? | ID of the target for navigation to the left. | `string`
-orderRight? | ID of the target for navigation to the right. | `string`
-orderUp? | ID of the target for navigation upward. | `string`
-orderDown? | ID of the target for navigation downward. | `string`
-orderGroup? | The name of the group for index-based focus ordering. | `string`
-orderIndex? | The order index of the element within its group. | `number`
-lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
-...rest | Remaining View props  | `View`
-
-
-### KeyboardExtendedInput
-
-The `TextInput` component with keyboard focus support. This component allows the TextInput to be focused using the keyboard in various scenarios.
-
-```js
-import { KeyboardExtendedInput } from 'react-native-external-keyboard';
-...
-  <KeyboardExtendedInput
-    focusType="default"
-    blurType="default"
-    value={textInput}
-    onChangeText={setTextInput}
-  />
-```
-
-Props | Description | Type
--- | -- | --
-focusable?: | Boolean property whether component can be focused by keyboard | `boolean \\| undefined` default `true`
-onFocusChange?: | Callback for focus change handling | `(isFocused: boolean) => void \\| undefined`
-focusType?: | Focus type can be `default`, `auto`, or `press`. Based on investigation, Android and iOS typically have different default behaviors. On Android, the `TextInput` is focused by default, while on iOS, you need to press to focus. `auto` is used for automatic focusing, while keyboard focus targets the input. With `press`, you need to press the spacebar to focus an input. | `"default" \\| "press" \\| "auto"`
-blurType?: | Only for iOS. This defines the behavior for blurring input when focus moves away from the component. By default, iOS allows typing when the keyboard focus is on another component. You can use disable to blur input when focus moves away. (Further investigation is needed for Android.) | `"default"\\| "disable" \\| "auto"`
-haloEffect?: | Enables halo effect on focus (iOS only) | `boolean`
-defaultFocusHighlightEnabled?: | **Android only.** Enables Android's default focus highlight for the focused native view. | `boolean \| undefined`, default: `true`
-tintColor?: | Color used for tinting the component | `string`
-style?: | Style for the inner TextInput | `StyleProp<ViewStyle>`
-focusStyle? | Style applied to the inner TextInput when focused | `FocusStyle`
-containerStyle | Style for the container | StyleProp<ViewStyle>
-containerFocusStyle?: | Style applied to the container when focused | `FocusStyle`
-tintType?: | Tint behavior type | `'default' \\| 'hover' \\| 'background' \\| 'none'`
-FocusHoverComponent?: | Component displayed on focus | `\\| ReactElement  \\| FunctionComponent  \\| (() => ReactElement);`
-onSubmitEditing?: | Extended `onSubmitEditing` for multiline input | `(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)`
-...rest | Remaining TextInput props  | `TextInputProps`
-
-
-### KeyboardExtendedBaseView: (alias for: ExternalKeyboardView)
-
-```js
-import { KeyboardExtendedBaseView } from 'react-native-external-keyboard';
-...
-  <KeyboardExtendedBaseView
-    onKeyDownPress={...}
-    onKeyUpPress={...}
-    focusable
-  >
-    <Text>Content</Text>
-  </KeyboardExtendedBaseView>
-```
-
-Props | Description | Type
--- | -- | --
-focusable | Indicates if the component can be focused by keyboard | `boolean \| undefined`
-canBeFocused | (deprecated) Indicates if the component can be focused by keyboard | `boolean \| undefined`
-group | Indicates if the component is a focusable group | `boolean`
-onFocus | Handler called when the component is focused | `() => void`
-onBlur | Handler called when the component loses focus | `() => void`
-onFocusChange | Handler called when the component is focused or blurred | `(isFocused: boolean, tag?: number) => void`
-onKeyUpPress | Handler for the key-up event | `(e: OnKeyPress) => void`
-onKeyDownPress | Handler for the key-down event | `(e: OnKeyPress) => void`
-onContextMenuPress?: | Handler for long press events triggered by the context menu command (iOS only) | () => void;
-onBubbledContextMenuPress | Handler for bubbled long-press events triggered by the context menu command (iOS only) | () => void;
-haloEffect | Enables halo effect on focus (iOS only) | `boolean \| undefined`
-haloCornerRadius? | Corner radius of the halo ring (iOS only) | `number`
-haloExpendX? | Horizontal expansion of the halo ring in points (iOS only) | `number`
-haloExpendY? | Vertical expansion of the halo ring in points (iOS only) | `number`
-autoFocus | Indicates if the component should automatically gain focus | `boolean \| undefined`
-tintColor | Color used for tinting the component | `string`
-ref->focus | Command to programmatically focus the component | () => void;
-orderId? | A unique ID used for link target identification. | `string`
-orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string`
-orderForward? | ID of the target for forward navigation with "Tab". | `string`
-orderLeft? | ID of the target for navigation to the left. | `string`
-orderRight? | ID of the target for navigation to the right. | `string`
-orderUp? | ID of the target for navigation upward. | `string`
-orderDown? | ID of the target for navigation downward. | `string`
-lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last'
-...rest | Remaining View props | `View`
-
-### KeyboardFocusGroup
-The `KeyboardFocusGroup` is a View-based component developed based on the iOS API. It can be used for defining focus groups or setting the `tintColor` globally.
-
-```tsx
-  <KeyboardFocusGroup
-    tintColor="orange">
-    <ScrollView
-      contentContainerStyle={styles.contentContainer}
-      style={styles.container}
-    >
-    ...
-    </ScrollView>
-  </KeyboardFocusGroup>
-  <KeyboardFocusGroup
-    focusStyle={{ backgroundColor: 'green' }}
-    onFocusChange={(e) => console.log('green', e)}
-    groupIdentifier="green"
-    tintColor="green"
-  >
-      <Button>
-  </KeyboardFocusGroup>
-  <KeyboardFocusGroup
-    focusStyle={{ backgroundColor: 'yellow' }}
-    onFocusChange={(e) => console.log('yellow', e)}
-    groupIdentifier="yellow"
-    tintColor="yellow"
-  >
-      <Button>
-  </KeyboardFocusGroup>
-```
-
-Props | Description | Type
--- | -- | --
-focusStyle? | Style applied to the inner component when it is focused | `FocusStyle`
-onFocusChange?: | Handler called when the component is focused or blurred | `(isFocused: boolean) => void;`
-onFocus?: | Handler called when the component is focused  | `() => void`
-onBlur?: | Handler called when the component loses focus | `() => void`
-groupIdentifier?: | Relates to iOS `focusGroupIdentifier`: the identifier of the focus group to which this view belongs| `string`
-
-### Keyboard
-Keyboard module to support soft keyboard dismissal.
-
-```tsx
-import { Keyboard } from 'react-native-external-keyboard';
-
-...
-  Keyboard.dismiss();
-...
-```
-
-This is needed for hiding the soft keyboard using a hardware keyboard. Additionally, the soft keyboard can be hidden from the settings or by pressing `Alt + K`.
-
-### Focus.Frame and Focus.Trap
-
-`Focus.Frame` and `Focus.Trap` are two components that help manage and lock focus within specific areas of the screen.
-
-- On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal` property to keep the screen reader focus within a defined area. For stronger containment — such as preventing focus from reaching system elements like navigation bars or headers — pass `forceLock`. It observes focus changes and moves focus back into the trap when it escapes. Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned.
-- On Android, where no equivalent to `accessibilityViewIsModal` exists, custom logic has been implemented as a workaround. By default, Android uses a custom Activity or Modal to limit focus. While using a Modal is considered the best practice for focus locking on Android, some scenarios—such as issues with React Native's Modal or library-specific constraints—may require alternative implementations.
-
-#### How It Works
-
-The focus lock functionality should be used as a pair:
-
-- `Focus.Frame`: This component is used at the root level of a "screen" to detect focus leaks and ensure that focus remains contained.
-- `Focus.Trap`: This component wraps the content area where focus should be explicitly locked.
-
-| Prop | Description |
+| Capability | Supported |
 | :-- | :-- |
-| ViewProps | Includes all standard React Native View properties, such as style, testID, etc. |
-| forceLock? | **iOS only.** Strengthens focus containment beyond `accessibilityViewIsModal` by observing focus changes and returning focus back into the trap whenever it escapes to system elements (e.g. navigation bars, headers). Note: because focus is corrected reactively, VoiceOver may briefly jump to an element outside the trap before being returned. |
-| lockDisabled? | **Android only.** Disables the focus lock when `true`. |
+| New Architecture (Fabric / Turbo Modules) | ✅ |
+| Old Architecture (Bridge) | ✅ |
+| Bridgeless mode | ✅ |
+| Expo (prebuild / bare) | ✅ |
 
-```tsx
-<Focus.Frame>
-  ...
-  <Focus.Trap forceLock>
-    <Text accessibilityRole="header">Locked Area</Text>
-    <Button
-      title="Confirm"
-      accessibilityLabel="Confirm action"
-    />
-  </Focus.Trap>
-  ...
-</Focus.Frame>
-```
+## React Native compatibility
 
-## Focus order features
+| Library version | React Native |
+| :-- | :-- |
+| `1.0.0` | ≥ 0.80 |
+| `0.11.0` | ≤ 0.79 |
 
-## Link Focus Order
+## Documentation
 
-`Linking` components could be the most logical way to define focus order. By using properties such as `orderId` and `orderBackward`, `orderForward`, `orderLeft`, `orderRight`, `orderUp`, and `orderDown`, you can customize the focus order according to your needs.
+New here? Start with the [getting started guide](./docs/getting-started/getting-started.md), then follow a task-focused guide. The [full docs index](./docs/README.md) links everything.
 
-```tsx
-<View>
-  <Pressable
-    onPress={onPress}
-    orderId="0_0"
-    orderForward="0_2"
-  >
-    <Text>1</Text>
-  </Pressable>
-  <Pressable
-    onPress={onPress}
-    orderId="0_2"
-    orderBackward="0_1"
-  >
-    <Text>3</Text>
-  </Pressable>
-  <Pressable
-    onPress={onPress}
-    orderId="0_1"
-    orderForward="0_2"
-    orderBackward="0_0"
-  >
-    <Text>2</Text>
-  </Pressable>
-</View>
-```
+**Guides** — task-focused walkthroughs
 
-> [!IMPORTANT]
-> `orderId` values are global. If the same IDs appear more than once on screen — e.g. in a list where each row renders the same component — duplicate IDs will cause incorrect focus jumps. Use `KeyboardOrderFocusGroup` or `orderPrefix` to keep IDs unique per instance.
->
-> When a link prop is used without any prefix, a console warning is shown reminding you to add one.
->
-> **`KeyboardOrderFocusGroup` (auto namespace).** Wraps a component tree and automatically namespaces all `orderId` values inside. Ideal for screens and containers where uniqueness is needed but the exact prefix doesn't matter.
->
-> ```tsx
-> // Each card gets its own isolated namespace
-> {items.map((item) => (
->   <KeyboardOrderFocusGroup key={item.id}>
->     <Pressable orderId="title" orderForward="action">…</Pressable>
->     <Pressable orderId="action" orderBackward="title">…</Pressable>
->   </KeyboardOrderFocusGroup>
-> ))}
-> ```
->
-> **Static namespace with `groupId` / `orderPrefix`.** Use an explicit string when you need a stable, predictable namespace — for example, to create intentional focus links between two sibling components that know about each other.
->
-> ```tsx
-> // groupId on KeyboardOrderFocusGroup
-> <KeyboardOrderFocusGroup groupId="card_42">
->   <Pressable orderId="title" orderForward="action">…</Pressable>
->   <Pressable orderId="action" orderBackward="title">…</Pressable>
-> </KeyboardOrderFocusGroup>
->
-> // or orderPrefix directly on each component
-> <Pressable orderPrefix="card_42" orderId="title" orderForward="action">…</Pressable>
-> <Pressable orderPrefix="card_42" orderId="action" orderBackward="title">…</Pressable>
-> ```
+- [Pressable focus handling](./docs/guides/pressable-focus.md) — focus/blur events, `focusStyle`, render props
+- [Native focus styling](./docs/guides/focus-styling.md) — iOS halo & `tintColor`, Android focus highlight
+- [Programmatic focus](./docs/guides/programmatic-focus.md) — `ref.focus()`, `keyboardFocus()`, `autoFocus`
+- [Keyboard text input](./docs/guides/text-input.md) — `KeyboardExtendedInput`, `focusType`, `blurType`
+- [Focus order](./docs/guides/focus-order.md) — link-based, index-based, and direction-lock ordering
 
-You can find more examples here: [Focus Link Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusLinkOrder.tsx), [DPad Order](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusDPadOrder.tsx)
+**Advanced**
 
-| Props | Description | Type |
-| :-- | :-- | :-- |
-| orderId? | A unique ID used for link target identification. | `string` |
-| orderBackward? | ID of the target for backward navigation with "Tab + Shift". | `string` |
-| orderForward? | ID of the target for forward navigation with "Tab". | `string` |
-| orderLeft? | ID of the target for navigation to the left. | `string` |
-| orderRight? | ID of the target for navigation to the right. | `string` |
-| orderUp? | ID of the target for navigation upward. | `string` |
-| orderDown? | ID of the target for navigation downward. | `string` |
-| orderPrefix? | Prefix prepended to this component's `orderId` and all `order*` target IDs. Use to namespace IDs in repeated components (lists, cards) or alongside a static `groupId`. | `string` |
+- [Native focus services](./docs/guides/native-focus-services.md) — native-side focus API & memory service for custom native code
 
-## Indexes Focus Order
+**Reference**
 
-Linking is one of the best ways to set up focus order. However, there may be cases where you need to define the order of multiple elements within a group. As an alternative, you can use index-based ordering.
+- [Component overview](./docs/components/overview.md) — every component and its props
+- [API reference](./docs/api/overview.md) — modules, hooks, the imperative ref, shared types
+- [Migration guide](./docs/migration/migration.md) — version-to-version upgrade notes
 
-### KeyboardOrderFocusGroup
+## What's available
 
-`KeyboardOrderFocusGroup` is a context provider that defines a named focus group. All children that declare `orderIndex` will be ordered within that group. You can optionally provide a `groupId`; if omitted, a unique ID is generated automatically.
+**Components**
 
-```tsx
-import { KeyboardOrderFocusGroup } from 'react-native-external-keyboard';
+| Export | Purpose |
+| :-- | :-- |
+| [`K.Pressable` / `K.View` / `K.Input`](./docs/getting-started/getting-started.md#quick-start) | Ready-made, keyboard-focusable `Pressable` / `View` / `TextInput`. Start here. |
+| [`withKeyboardFocus(C)`](./docs/components/overview.md#withkeyboardfocus) | HOC that adds keyboard focus to any `Pressable`/`Touchable`-like component. |
+| [`KeyboardExtendedView`](./docs/components/overview.md#keyboardextendedview) | Focus-aware `View` for key handling and grouping (also `K.View`). |
+| [`KeyboardExtendedInput`](./docs/components/overview.md#keyboardextendedinput) | `TextInput` with keyboard focus support (also `K.Input`). |
+| [`KeyboardExtendedBaseView`](./docs/components/overview.md#keyboardextendedbaseview) | Low-level focusable view (alias `ExternalKeyboardView`). |
+| [`KeyboardFocusGroup`](./docs/components/overview.md#keyboardfocusgroup) | iOS `focusGroupIdentifier` grouping + global `tintColor`. |
+| [`Focus.Frame` / `Focus.Trap`](./docs/components/overview.md#focusframe--focustrap) | Confine focus to a region (modals, overlays). |
+| [`KeyboardOrderFocusGroup`](./docs/components/overview.md#keyboardorderfocusgroup) | Namespacing + index-based focus ordering. |
 
-<KeyboardOrderFocusGroup>
-  <View>
-    <Pressable onPress={onPress} orderIndex={0}>
-      <Text>First</Text>
-    </Pressable>
-    <Pressable onPress={onPress} orderIndex={2}>
-      <Text>Third</Text>
-    </Pressable>
-    <Pressable onPress={onPress} orderIndex={1}>
-      <Text>Second</Text>
-    </Pressable>
-  </View>
-</KeyboardOrderFocusGroup>
-```
+**API**
 
-| Props | Description | Type |
-| :-- | :-- | :-- |
-| groupId? | Optional explicit group name. Auto-generated when omitted. | `string` |
-| children? | Child components | `ReactNode` |
+| Export | Purpose |
+| :-- | :-- |
+| [`Keyboard`](./docs/api/overview.md#keyboard-module) | Dismiss the soft keyboard from a hardware keyboard. |
+| [`KeyboardFocus` ref](./docs/api/overview.md#imperative-ref-keyboardfocus) | Imperative focus handle (`focus`, `keyboardFocus`, `screenReaderFocus`). |
+| [Hooks](./docs/api/overview.md#hooks) | `useIsViewFocused`, `useOrderFocusGroup`. |
+| [Focus-order props](./docs/api/overview.md#focus-order-props) | `orderId`, `order*`, `orderIndex`, `orderGroup`, `lockFocus`. |
 
-Alternatively, provide `orderGroup` directly on each component to skip the wrapper:
-
-```tsx
-<Pressable orderGroup="main" onPress={onPress} orderIndex={0}>
-  <Text>First</Text>
-</Pressable>
-<Pressable orderGroup="main" onPress={onPress} orderIndex={1}>
-  <Text>Second</Text>
-</Pressable>
-```
-
-| Props | Description | Type |
-| :-- | :-- | :-- |
-| orderGroup? | The name of the group containing ordered elements. | `string` |
-| orderIndex? | The order index of the element within the group. | `number` |
-
-You can find more examples here: [Focus Order via indexes](https://github.com/ArturKalach/react-native-external-keyboard/blob/release/0.6.0-rc/example/src/components/FocusOrderExample/FocusOrder.tsx)
-
-## Focus Lock
-
-Finally, you can lock focus to specific directions.
-
-```tsx
- <Pressable
-  lockFocus={['down', 'right']}
->
-  <Text>Lock Example</Text>
-</Pressable>
-```
-
-
-| Props | Description | Type |
-| :-- | :-- | :-- |
-| lockFocus? | An array of directions to lock focus. | Array of 'left' \| 'right' \| 'up' \| 'down' \| 'forward' \| 'backward' \| 'first' \| 'last' |
-
-> [!NOTE]
-> `first` and `last` are specific to `iOS`. When focus is blocked for `forward` and `backward` on iOS, it checks for the `last` and `first` elements to focus.
-
-
-# Migration 0.3.x to 0.4.0
-
-## Module (A11yModule, KeyboardExtendedModule)
-
-Functions in the `A11yModule` (`KeyboardExtendedModule`) have been deprecated. They appeared appropriate at the time, but with the new architecture and to improve usability, they have been replaced with `ref` actions.
-
-Previous:
-```jsx
-import { KeyboardExtendedModule } from 'react-native-external-keyboard';
-
-KeyboardExtendedModule.setKeyboardFocus(ref); //or A11yModule.setKeyboardFocus(ref);
-```
-
-Updated:
-```
-import { KeyboardExtendedPressable, type KeyboardFocus } from 'react-native-external-keyboard';
-...
-
-const ref = useRef<KeyboardFocus>(null);
-
-...
-
-const onPressForFocus = () => {
-  ref.current.focus()
-}
-
-<TouchableOpacity
-  ref={ref}
->
-  <Text>TouchableOpacity</Text>
-</TouchableOpacity>
-
-```
-
-The specific method for iOS, `setPreferredKeyboardFocus`, has not been added so far because we now have the new feature `autoFocus`, which does not fit well with the new API and its approach. It is better to use `autoFocus` for focusing views on both Android and iOS.
-
-If you truly need this method, please create a new issue, and we will consider how to return it.
-
-## Pressable
-<details>
-  <summary>Pressable changes</summary>
-
-Unfortunately, the previous version of Pressable had many issues. For iOS, we cloned the entire Pressable component from React Native's source code, while for Android, we simply wrapped the component.
-
-
-This led to two main problems:
-
-1. Difficulty in updating Pressable for iOS.
-2. Challenges in controlling styles.
-
-For these reasons, we replaced Pressable with `withKeyboardFocus(Pressable)`, as it was the only viable path forward to introduce new features.
-</details>
-
-
-## Component aliases
-
-It is believed that good naming can simplify usage and development. Based on this principle and for compatibility with `0.2.x`, aliases were added. You can still use the old naming convention, and it will be maintained in future releases.
-
-The map of aliases is provided below: <br />
-`A11yModule` -> `KeyboardExtendedModule` <br />
-`Pressable` -> `KeyboardExtendedPressable` <br />
-`KeyboardFocusView` -> `KeyboardExtendedView` <br />
-`ExternalKeyboardView` -> `KeyboardExtendedBaseView` <br />
-
-# Migration 0.7.x to 0.8.0
-
-React and React Native packages have been updated in `react-native-external-keyboard@0.8.0`.
-
-Unfortunately, the latest React Native versions (0.83.x and 0.84.x) have different types compared to previous versions, and the Pressable as well as KeyboardExtendedPressable props could be incompatible with local types because they have static TypeScript declarations based on the React Native 0.83.4 dependency.
-
-In some cases, you may experience the following TypeScript problem:
-<img width="759" height="81" alt="image" src="https://github.com/user-attachments/assets/d47992ce-d3df-473b-bd96-5f2ba53ab889" />
-
-
-It can be resolved by using a HOC, as it provides dynamic typing.
-```tsx
-const KeyboardPressable = withKeyboardFocus(Pressable)
-
-export const K = (props: PressableProps) => {
-  return <KeyboardPressable {...props} />;
-}
-```
-
-As well, it could be resolved by component redeclaration:
-```ts
-export {};
-
-declare module 'react-native-external-keyboard' {
-    import type { PressableProps, ViewProps } from 'react-native';
-    import type { WithKeyboardFocusDeclaration } from 'react-native-external-keyboard/lib/typescript/src/types/WithKeyboardFocus';
-
-    export const Pressable: WithKeyboardFocusDeclaration<PressableProps, ViewProps['style']>
-    export const KeyboardExtendedPressable: WithKeyboardFocusDeclaration<PressableProps, ViewProps['style']>
-}
-```
-
-# API
-ToDo
-
-```ts
-export type OnKeyPress = NativeSyntheticEvent<{
-  keyCode: number;
-  unicode: number;
-  unicodeChar: string;
-  isLongPress: boolean;
-  isAltPressed: boolean;
-  isShiftPressed: boolean;
-  isCtrlPressed: boolean;
-  isCapsLockOn: boolean;
-  hasNoModifiers: boolean;
-}>;
-```
+---
 
 ## Roadmap
-- [ ] Refactor and Performance optimization
-- [ ] Update `focusGroupIdentifier` and implement `KeyboardNavigationCluster` functionality
-- [ ] Update `onPress` and `onLongPress` for `withKeyboardFocus`
-- [x] Add functionality to control keyboard focus order.
-- [ ] Verify and update `focusable` and `disabled` states for iOS and Android.
-- [ ] Update `Readme.md`.
-- [ ] Create the documentation.
 
+All planned features are implemented and released. No new functionality or API changes are planned.
+
+Future work is limited to:
+- React Native version support (new releases)
+- Bug fixes and issue resolution
+
+Both active versions receive fixes:
+
+| Version | React Native | Status |
+| :-- | :-- | :-- |
+| `1.0.0` | ≥ 0.80 | Active — bug fixes and new RN support |
+| `0.11.0` | ≤ 0.79 | Active — bug fixes only |
+
+---
 
 ## Contributing
-Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas.
+
+Any type of contribution is highly appreciated. Feel free to create PRs, raise issues, or share ideas — see the [contributing guide](CONTRIBUTING.md) for the development workflow.
 
 ## Acknowledgements
+
 It has been a long journey since the first release of the `react-native-external-keyboard` package. Many features have been added, and a lot of issues have been fixed.
 
 With that, I would like to thank the contributors, those who created issues, and the followers, because achieving these results wouldn't have been possible without you.
@@ -659,7 +154,7 @@ Thanks to the initial authors: [Andrii Koval](https://github.com/ZioVio), [Micha
 
 Thanks to the contributors: [João Mosmann](https://github.com/JoaoMosmann), [Stéphane](https://github.com/stephane-r).
 
-Thanks to those who created issues:  [Stéphane](https://github.com/stephane-r), [proohit](https://github.com/proohit), [Rananjaya Bandara](https://github.com/Rananjaya), [SteveHoneckPGE](https://github.com/SteveHoneckPGE), [Wes](https://github.com/mrpoodestump)
+Thanks to those who created issues: [Stéphane](https://github.com/stephane-r), [proohit](https://github.com/proohit), [Rananjaya Bandara](https://github.com/Rananjaya), [SteveHoneckPGE](https://github.com/SteveHoneckPGE), [Wes](https://github.com/mrpoodestump).
 
 I really appreciate your help; it has truly helped me move forward!
 

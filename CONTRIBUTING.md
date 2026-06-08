@@ -1,143 +1,121 @@
 # Contributing
 
-Contributions are always welcome, no matter how large or small!
+Contributions are always welcome — no matter how large or small, and in any form.
 
-We want this community to be friendly and respectful to each other. Please follow it in all your interactions with the project. Before contributing, please read the [code of conduct](./CODE_OF_CONDUCT.md).
+Every issue, feature request, and pull request is important and will be read, investigated, and responded to. Don't hesitate to open something even if you're not sure how to describe it or don't have a reproduction yet — that's completely fine. Any information you can share helps.
+
+The most valuable contributions are:
+
+- **Bug reports** — especially ones with a hardware keyboard reproduction
+- **Fixes for issues on newer React Native versions**
+- **Docs and type improvements**
+- **Pull requests** — fixes, RN version support, docs, tests
+
+If you can, it's helpful to include:
+
+- A minimal code example or steps to reproduce
+- The library version, React Native version, and platform (iOS / Android)
+- Architecture (New Arch / Old Arch) and, for accessibility issues, the screen reader (VoiceOver / TalkBack)
+
+None of these are required — a rough description or even just a question is enough to get started. The more context you provide, the faster the fix, but something is always better than nothing.
+
+Before contributing, please read the [code of conduct](./CODE_OF_CONDUCT.md).
+
+---
 
 ## Development workflow
 
-To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
+Install dependencies from the root:
 
 ```sh
 yarn
 ```
 
-> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
+> Use `yarn`. The tooling (Lefthook, builder-bob, release-it) is built around it.
 
-While developing, you can run the [example app](/example/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
-
-To start the packager:
+Run the example app to test changes. JS changes reflect immediately; native changes require a rebuild.
 
 ```sh
-yarn example start
+yarn example start      # Metro bundler
+yarn example android    # Android
+yarn example ios        # iOS
 ```
 
-To run the example app on Android:
+### Architecture
 
+The example runs on the **New Architecture** by default. To test the **Old Architecture**:
+
+**Android:**
 ```sh
-yarn example android
+ORG_GRADLE_PROJECT_newArchEnabled=false yarn example android
 ```
 
-To run the example app on iOS:
-
+**iOS:**
 ```sh
+cd example/ios && RCT_NEW_ARCH_ENABLED=0 pod install && cd ../..
 yarn example ios
 ```
 
-By default, the example is configured to build with the old architecture. To run the example with the new architecture, you can do the following:
+To confirm which architecture is active, check the Metro logs for the `"fabric":true` flag (New Arch):
 
-1. For Android, run:
+```sh
+Running "ExternalKeyboardExample" with {"fabric":true,"concurrentRoot":true,...}
+```
 
-   ```sh
-   ORG_GRADLE_PROJECT_newArchEnabled=true yarn example android
-   ```
-
-2. For iOS, run:
-
-   ```sh
-   RCT_NEW_ARCH_ENABLED=1 yarn example pods
-   yarn example ios
-   ```
-
-If you are building for a different architecture than your previous build, make sure to remove the build folders first. You can run the following command to cleanup all build folders:
+When switching architectures, clean the build folders first:
 
 ```sh
 yarn clean
 ```
 
-To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
+### Native code
+
+- **iOS** — open `example/ios/ExternalKeyboardExample.xcworkspace` in Xcode. Source files are under `Pods > Development Pods > react-native-external-keyboard`.
+- **Android** — open `example/android` in Android Studio. Source files are under `react-native-external-keyboard`.
+
+### Verification
 
 ```sh
-Running "ExternalKeyboardExample" with {"fabric":true,"initialProps":{"concurrentRoot":true},"rootTag":1}
+yarn typecheck   # TypeScript
+yarn lint        # ESLint + Prettier
+yarn lint --fix  # Auto-fix formatting
+yarn test        # Jest unit tests
 ```
 
-Note the `"fabric":true` and `"concurrentRoot":true` properties.
+Pre-commit hooks (Lefthook) run typecheck and lint automatically on commit.
 
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
+---
 
-```sh
-yarn typecheck
-yarn lint
-```
+## Commit messages
 
-To fix formatting errors, run the following:
+This project follows [Conventional Commits](https://www.conventionalcommits.org/en):
 
-```sh
-yarn lint --fix
-```
+| Prefix | Use for |
+| :-- | :-- |
+| `fix` | Bug fixes |
+| `feat` | New functionality |
+| `refactor` | Code changes with no behaviour change |
+| `docs` | Documentation only |
+| `test` | Adding or updating tests |
+| `chore` | Tooling, CI, dependencies |
 
-Remember to add tests for your change if possible. Run the unit tests by:
+A commit-msg hook validates this format on commit.
 
-```sh
-yarn test
-```
+---
 
-To edit the Objective-C or Swift files, open `example/ios/ExternalKeyboardExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-external-keyboard`.
+## Pull requests
 
-To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-external-keyboard` under `Android`.
+- Keep PRs focused on one change
+- For native changes (iOS / Android), note which platform and architecture you tested on
+- For API or behaviour changes, open an issue first to align with the maintainer
+- Make sure `typecheck`, `lint`, and `test` all pass
 
+---
 
-### Commit message convention
+## Publishing
 
-We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
-
-- `fix`: bug fixes, e.g. fix crash due to deprecated method.
-- `feat`: new features, e.g. add new method to the module.
-- `refactor`: code refactor, e.g. migrate from class components to hooks.
-- `docs`: changes into documentation, e.g. add usage example for the module..
-- `test`: adding or updating tests, e.g. add integration tests using detox.
-- `chore`: tooling changes, e.g. change CI config.
-
-Our pre-commit hooks verify that your commit message matches this format when committing.
-
-### Linting and tests
-
-[ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/)
-
-We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
-
-Our pre-commit hooks verify that the linter and tests pass when committing.
-
-### Publishing to npm
-
-We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
-
-To publish new versions, run the following:
+Releases are managed with [release-it](https://github.com/release-it/release-it):
 
 ```sh
 yarn release
 ```
-
-### Scripts
-
-The `package.json` file contains various scripts for common tasks:
-
-- `yarn bootstrap`: setup project by installing all dependencies and pods.
-- `yarn typecheck`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
-- `yarn test`: run unit tests with Jest.
-- `yarn example start`: start the Metro server for the example app.
-- `yarn example android`: run the example app on Android.
-- `yarn example ios`: run the example app on iOS.
-
-### Sending a pull request
-
-> **Working on your first pull request?** You can learn how from this _free_ series: [How to Contribute to an Open Source Project on GitHub](https://app.egghead.io/playlists/how-to-contribute-to-an-open-source-project-on-github).
-
-When you're sending a pull request:
-
-- Prefer small pull requests focused on one change.
-- Verify that linters and tests are passing.
-- Review the documentation to make sure it looks good.
-- Follow the pull request template when opening a pull request.
-- For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.

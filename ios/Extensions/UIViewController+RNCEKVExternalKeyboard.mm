@@ -16,7 +16,14 @@
 
 static char kCustomFocusViewKey;
 
+static void RNCEKVUIViewControllerSwizzle(void) {
+  RNCEKVSwizzleInstanceMethod([UIViewController class], @selector(viewDidAppear:), @selector(keyboardedViewDidAppear:));
+  RNCEKVSwizzleInstanceMethod([UIViewController class], @selector(preferredFocusEnvironments), @selector(keyboardedPreferredFocusEnvironments));
+}
+
 @implementation UIViewController (RNCEKVExternalKeyboard)
+
+RNCEKV_INSTALL_SWIZZLES(RNCEKVUIViewControllerSwizzle)
 
 - (UIView *)rncekvCustomFocusView {
   return objc_getAssociatedObject(self, &kCustomFocusViewKey);
@@ -24,16 +31,6 @@ static char kCustomFocusViewKey;
 
 - (void)setRncekvCustomFocusView:(UIView *)customFocusView {
   objc_setAssociatedObject(self, &kCustomFocusViewKey, customFocusView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-+ (void)load
-{
-    static dispatch_once_t once_token;
-
-    dispatch_once(&once_token, ^{
-      RNCEKVSwizzleInstanceMethod([self class], @selector(viewDidAppear:), @selector(keyboardedViewDidAppear:));
-      RNCEKVSwizzleInstanceMethod([self class], @selector(preferredFocusEnvironments), @selector(keyboardedPreferredFocusEnvironments));
-    });
 }
 
 - (void)keyboardedViewDidAppear:(BOOL)animated {

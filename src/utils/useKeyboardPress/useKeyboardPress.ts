@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { UseKeyboardPressProps } from './useKeyboardPress.types';
-import type { OnKeyPress } from '../../types/BaseKeyboardView';
+import type { OnKeyPress } from '../../types';
 
 const IOS_SPACE_KEY = 44;
 const IOS_RETURN_OR_ENTER = 40;
@@ -14,21 +14,26 @@ export const useKeyboardPress = <
   onKeyUpPress,
   onKeyDownPress,
   onPress,
+  onLongPress,
   onPressIn,
   onPressOut,
   triggerCodes = IOS_TRIGGER_CODES,
   disabled = false,
 }: UseKeyboardPressProps<T, K>) => {
   const onKeyUpPressHandler = useMemo(() => {
-    if (!onPressOut) return onKeyUpPress;
     return (e: OnKeyPress) => {
       onKeyUpPress?.(e);
       if (disabled) return;
       if (triggerCodes.includes(e.nativeEvent.keyCode)) {
         onPressOut?.(e);
+        if (e.nativeEvent.isLongPress) {
+          onLongPress?.({} as any);
+        } else {
+          onPress?.({} as any);
+        }
       }
     };
-  }, [onKeyUpPress, onPressOut, triggerCodes, disabled]);
+  }, [onKeyUpPress, onLongPress, onPress, onPressOut, triggerCodes]);
 
   const onKeyDownPressHandler = useMemo(() => {
     if (!onPressIn) return onKeyDownPress;

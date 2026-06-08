@@ -22,6 +22,12 @@ RCT_CUSTOM_VIEW_PROPERTY(canBeFocused, BOOL, RNCEKVTextInputFocusWrapper)
     [view setCanBeFocused: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(hasOnFocusChanged, BOOL, RNCEKVTextInputFocusWrapper)
+{
+    BOOL value =  json ? [RCTConvert BOOL:json] : NO;
+    [view setHasOnFocusChanged: value];
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVTextInputFocusWrapper)
 {
     NSString* value = json ? [RCTConvert NSString:json] : nil;
@@ -61,6 +67,12 @@ RCT_CUSTOM_VIEW_PROPERTY(haloEffect, BOOL, RNCEKVTextInputFocusWrapper)
       [view setIsHaloHidden: !value];
     }
   }
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(roundedHaloFix, BOOL, RNCEKVTextInputFocusWrapper)
+{
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setRoundedHaloFix: value];
 }
 
 RCT_CUSTOM_VIEW_PROPERTY(tintColor, UIColor, RNCEKVTextInputFocusWrapper)

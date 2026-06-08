@@ -1,7 +1,10 @@
 import { forwardRef } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Color } from './Color/Color';
-import { type KeyboardFocus, Pressable } from 'react-native-external-keyboard';
+import {
+  type BaseKeyboardViewType,
+  Pressable,
+} from 'react-native-external-keyboard';
 
 const colors: {
   background: string;
@@ -73,7 +76,7 @@ const colors: {
 
 const Separator = () => <View style={styles.separator} />;
 
-export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
+export const ContrastColors = forwardRef<BaseKeyboardViewType>((_, ref) => {
   return (
     <FlatList
       data={colors}
@@ -81,7 +84,6 @@ export const ContrastColors = forwardRef<KeyboardFocus>((_, ref) => {
       renderItem={({ item, index }) => (
         <Pressable
           tintColor="#ff0000"
-          tintType="hover"
           defaultFocusHighlightEnabled={false}
           ref={index === 0 ? ref : undefined}
           containerStyle={styles.item as object} //ToDo type

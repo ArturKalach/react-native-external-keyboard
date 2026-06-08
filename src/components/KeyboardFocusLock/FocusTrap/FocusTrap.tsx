@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { FocusTrapMountWrapper } from './FocusTrapMountWrapper';
-import type { KeyboardFocusLockProps } from '../../../types/KeyboardFocusLock.types';
+import type { KeyboardFocusLockProps } from '../../../types';
 import { KeyboardFocusLockBase } from '../KeyboardFocusLockBase/KeyboardFocusLockBase';
 
 export const FocusTrap = ({

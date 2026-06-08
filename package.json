@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,7 +25,9 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
+    "!**/.*",
+    "!**/CLAUDE.md",
+    "!**/docs"
   ],
   "scripts": {
     "example": "yarn workspace react-native-external-keyboard-example",

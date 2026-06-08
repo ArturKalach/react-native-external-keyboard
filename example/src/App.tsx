@@ -22,9 +22,17 @@ import {
   MazeExampleScreen,
 } from './components/FocusOrderExample/FocusOrderScreen';
 import { PressableTest } from './components/Pressables/PressableTest';
+import { KeyboardPressableScreen } from './components/Pressables/KeyboardPressableScreen';
 import { ListsTest } from './components/Lists/ListsText';
+import { ComponentsPlayground } from './components/BaseKeyboardView/ComponentsPlayground';
 import { FocusLockExample } from './components/FocusLockExample/FocusLockExample';
+import { NativeFocusStyleScreen } from './components/NativeFocusStyle/NativeFocusStyleScreen';
+import { ProgrammaticFocusScreen } from './components/ProgrammaticFocus/ProgrammaticFocusScreen';
+import { FocusOrderAnimatedScreen } from './components/FocusOrderAnimated/FocusOrderAnimatedScreen';
+import { KeyboardPressableShowcaseScreen } from './components/KeyboardPressableShowcase/KeyboardPressableShowcaseScreen';
+import { KeyboardInputScreen } from './components/KeyboardInputFocusType/KeyboardInputScreen';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
+import { withDemoNav } from './components/DemoNav/DemoNav';
 import { Pressable } from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from './constants/styles';
 
@@ -45,6 +53,41 @@ const NAV_GROUPS: NavGroup[] = [
     group: 'Demos',
     items: [
       {
+        name: 'KeyboardPressableShowcase',
+        title: 'Pressable Focus',
+        description: 'Focus × press across render modes',
+        color: '#0A84FF',
+      },
+      {
+        name: 'NativeFocusStyle',
+        title: 'Focus Styling',
+        description: 'Native halo, tint & custom ring',
+        color: '#FF2D55',
+      },
+      {
+        name: 'ProgrammaticFocus',
+        title: 'Programmatic Focus',
+        description: 'Jump focus imperatively with ref.focus()',
+        color: '#5856D6',
+      },
+      {
+        name: 'KeyboardInput',
+        title: 'TextInput',
+        description: 'focusType — navigate, then edit',
+        color: '#30B0C7',
+      },
+      {
+        name: 'FocusOrderAnimated',
+        title: 'Focus Order',
+        description: 'Custom Tab order traced along a spiral',
+        color: '#AF52DE',
+      },
+    ],
+  },
+  {
+    group: 'Tests',
+    items: [
+      {
         name: 'Details',
         title: 'Components',
         description: 'Buttons, inputs, modals & key tracker',
@@ -62,11 +105,6 @@ const NAV_GROUPS: NavGroup[] = [
         description: 'Trap keyboard focus within a region',
         color: '#FF9500',
       },
-    ],
-  },
-  {
-    group: 'Tests',
-    items: [
       {
         name: 'PressableTest',
         title: 'Pressables',
@@ -74,10 +112,22 @@ const NAV_GROUPS: NavGroup[] = [
         color: '#5856D6',
       },
       {
+        name: 'KeyboardPressable',
+        title: 'Keyboard Pressable',
+        description: 'children, renderContent & renderFocusable',
+        color: '#0A84FF',
+      },
+      {
         name: 'ListTest',
         title: 'Lists',
         description: 'Focusable scrollable list',
         color: '#AF52DE',
+      },
+      {
+        name: 'ComponentsPlayground',
+        title: 'Components Playground',
+        description: 'Focus, key press, halo & lockFocus',
+        color: '#FF3B30',
       },
     ],
   },
@@ -107,7 +157,11 @@ function HomeScreen({ navigation }: { navigation: NavigationProp<any> }) {
                   >
                     <View
                       style={[styles.navDot, { backgroundColor: item.color }]}
-                    />
+                    >
+                      {group.group === 'Demos' && (
+                        <Text style={styles.navDotNumber}>{index + 1}</Text>
+                      )}
+                    </View>
                     <View style={styles.navTextContainer}>
                       <Text style={styles.navTitle}>{item.title}</Text>
                       <Text style={styles.navDescription}>
@@ -142,6 +196,25 @@ export function DetailsScreen() {
 function MazeScreen() {
   return <OrderMaze />;
 }
+
+// Demo screens get a shared Prev/Next footer (order defined in DemoNav).
+const KeyboardPressableShowcaseDemo = withDemoNav(
+  KeyboardPressableShowcaseScreen,
+  'KeyboardPressableShowcase'
+);
+const NativeFocusStyleDemo = withDemoNav(
+  NativeFocusStyleScreen,
+  'NativeFocusStyle'
+);
+const ProgrammaticFocusDemo = withDemoNav(
+  ProgrammaticFocusScreen,
+  'ProgrammaticFocus'
+);
+const KeyboardInputDemo = withDemoNav(KeyboardInputScreen, 'KeyboardInput');
+const FocusOrderAnimatedDemo = withDemoNav(
+  FocusOrderAnimatedScreen,
+  'FocusOrderAnimated'
+);
 
 const Stack = createNativeStackNavigator();
 
@@ -217,8 +290,43 @@ export function App() {
             options={{ title: 'Maze' }}
           />
           <Stack.Screen name="PressableTest" component={PressableTest} />
+          <Stack.Screen
+            name="KeyboardPressable"
+            component={KeyboardPressableScreen}
+            options={{ title: 'Keyboard Pressable' }}
+          />
           <Stack.Screen name="ListTest" component={ListsTest} />
+          <Stack.Screen
+            name="ComponentsPlayground"
+            component={ComponentsPlayground}
+            options={{ title: 'Components Playground' }}
+          />
           <Stack.Screen name="FocusLock" component={FocusLockExample} />
+          <Stack.Screen
+            name="NativeFocusStyle"
+            component={NativeFocusStyleDemo}
+            options={{ title: 'Native Focus Styling' }}
+          />
+          <Stack.Screen
+            name="ProgrammaticFocus"
+            component={ProgrammaticFocusDemo}
+            options={{ title: 'Programmatic Focus' }}
+          />
+          <Stack.Screen
+            name="FocusOrderAnimated"
+            component={FocusOrderAnimatedDemo}
+            options={{ title: 'Focus Order' }}
+          />
+          <Stack.Screen
+            name="KeyboardPressableShowcase"
+            component={KeyboardPressableShowcaseDemo}
+            options={{ title: 'Keyboard Pressable' }}
+          />
+          <Stack.Screen
+            name="KeyboardInput"
+            component={KeyboardInputDemo}
+            options={{ title: 'Keyboard Input' }}
+          />
           <Stack.Screen name="Maze" component={MazeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -260,7 +368,10 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  navDotNumber: { color: '#ffffff', fontSize: 16, fontWeight: '800' },
   navTextContainer: { flex: 1, gap: 2 },
   navTitle: { fontSize: 16, fontWeight: '500', color: '#000000' },
   navDescription: { fontSize: 13, color: '#8e8e93' },

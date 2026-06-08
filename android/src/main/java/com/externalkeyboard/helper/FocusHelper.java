@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 
 public class FocusHelper {
   private static final int MASK_FOCUS_UP = 0b1;
@@ -64,7 +63,7 @@ public class FocusHelper {
     return null;
   }
   public static boolean isAccessible(@Nullable View view) {
-    return view != null && ViewCompat.isImportantForAccessibility(view);
+    return view != null && view.isImportantForAccessibility();
   }
 
   public static View findFirstAccessible(@Nullable ViewGroup viewGroup, boolean ignoreRoot) {

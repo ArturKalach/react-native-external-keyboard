@@ -6,21 +6,27 @@ import android.view.View;
 
 public class FocusHighlightBase extends ViewOrderGroupBase {
   protected boolean focusHighlight = true;
+  protected boolean focusableWrapper = true;
 
   public void setFocusHighlight (boolean defaultFocusHighlightEnabled) {
     focusHighlight = defaultFocusHighlightEnabled;
     syncFocusHighlight();
   }
 
-  protected View getFocusHighlightView () {
-    return this.getFirstChild();
+  public void setFocusableWrapper (boolean isFocusableWrapper) {
+    focusableWrapper = isFocusableWrapper;
+    syncFocusHighlight();
+  }
+
+  protected View getFocusTargetView () {
+    return focusableWrapper ? this.getFirstChild() : this;
   }
 
   protected void syncFocusHighlight () {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      View child = this.getFocusHighlightView();
-      if(child != null) {
-        child.setDefaultFocusHighlightEnabled(focusHighlight);
+      View view = getFocusTargetView();
+      if(view != null) {
+        view.setDefaultFocusHighlightEnabled(focusHighlight);
       }
     }
   }

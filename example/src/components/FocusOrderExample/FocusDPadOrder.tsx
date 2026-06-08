@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import {
   KeyboardOrderFocusGroup,
   Pressable,
-  type KeyboardFocus,
+  type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
 import {
   ANDROID_FOCUS_STYLE,
@@ -30,7 +30,7 @@ export const FocusDPadOrder = () => {
     setState((i) => (i === list.length - 1 ? 0 : i + 1));
   };
 
-  const ref = useRef<KeyboardFocus>(null);
+  const ref = useRef<BaseKeyboardViewType>(null);
   const onPress = () => {
     ref.current?.focus();
   };

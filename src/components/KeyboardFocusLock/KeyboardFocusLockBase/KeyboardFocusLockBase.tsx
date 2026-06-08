@@ -1,12 +1,12 @@
 import React from 'react';
 import ExternalKeyboardLockView from '../../../nativeSpec/ExternalKeyboardLockViewNativeComponent';
 
-import type { KeyboardFocusLockProps } from '../../../types/KeyboardFocusLock.types';
+import { LockComponentType, type KeyboardFocusLockProps } from '../../../types';
 
 export const KeyboardFocusLockBase = React.memo<KeyboardFocusLockProps>(
   ({
     lockDisabled = false,
-    componentType = 0,
+    componentType = LockComponentType.Trap,
     forceLock = false,
     ...props
   }) => {

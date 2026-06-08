@@ -12,7 +12,7 @@
 
 @protocol RNCEKVFocusProtocol <NSObject>
 - (BOOL)canBeFocused;
-- (BOOL)isGroup;
+- (BOOL)focusableWrapper;
 @end
 
 #endif /* RNCEKVFocusProtocol_h */

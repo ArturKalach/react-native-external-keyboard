@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import type { OnFocusChangeFn } from '../types';
+import type { OnFocusChangeFn, NativeFocusChangeHandler } from '../types';
 
 type UseFocusChange = {
-  onFocusChange?: (f: boolean, tag?: number) => void;
+  onFocusChange?: OnFocusChangeFn;
   onFocus?: () => void;
   onBlur?: () => void;
 };
@@ -12,12 +12,9 @@ export const useOnFocusChange = ({
   onFocus,
   onBlur,
 }: UseFocusChange) =>
-  useCallback<OnFocusChangeFn>(
+  useCallback<NativeFocusChangeHandler>(
     (e) => {
-      onFocusChange?.(
-        e.nativeEvent.isFocused,
-        (e?.nativeEvent as unknown as { target?: number })?.target
-      );
+      onFocusChange?.(e.nativeEvent.isFocused, e.nativeEvent.target);
       if (e.nativeEvent.isFocused) {
         onFocus?.();
       } else {

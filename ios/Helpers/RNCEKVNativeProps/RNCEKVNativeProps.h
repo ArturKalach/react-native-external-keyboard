@@ -45,6 +45,7 @@ struct HaloProps {
   double haloExpendY{0};
   double haloCornerRadius{0};
   facebook::react::SharedColor tintColor{};
+  bool roundedHaloFix{false};
 
   template <typename T>
   static HaloProps from(const T &props) {
@@ -54,6 +55,7 @@ struct HaloProps {
       props.haloExpendY,
       props.haloCornerRadius,
       props.tintColor,
+      props.roundedHaloFix,
     };
   }
 };
@@ -96,13 +98,11 @@ struct ContextMenuProps {
 
 struct AutoFocusProps {
   bool autoFocus{false};
-  bool enableA11yFocus{false};
-  
+
   template <typename T>
   static AutoFocusProps from(const T &props) {
     return AutoFocusProps{
       props.autoFocus,
-      props.enableA11yFocus,
     };
   }
 };
@@ -110,7 +110,7 @@ struct AutoFocusProps {
 struct KeyPressProps {
   bool hasKeyDownPress{false};
   bool hasKeyUpPress{false};
-  
+
   template <typename T>
   static KeyPressProps from(const T &props) {
     return KeyPressProps{

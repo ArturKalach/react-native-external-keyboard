@@ -10,9 +10,10 @@
 #import "RNCEKVCustomFocusEffectProtocol.h"
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 #import "RNCEKVCustomGroudIdProtocol.h"
+#import "RNCEKVFocusProtocol.h"
+#import "RNCEKVHaloProtocol.h"
 
 @implementation RNCEKVViewClass (RNCEKVExternalKeyboard)
-
 
 - (NSString *)focusGroupIdentifier {
   if ([self.superview conformsToProtocol:@protocol(RNCEKVCustomGroudIdProtocol)]) {
@@ -22,12 +23,12 @@
       return groupId;
     }
   }
-  
+
   return [super focusGroupIdentifier];
 }
 
 
-- (UIFocusEffect*)focusEffect {
+- (UIFocusEffect*)focusEffect API_AVAILABLE(ios(15.0)) {
   if ([self.superview conformsToProtocol:@protocol(RNCEKVCustomFocusEffectProtocol)]) {
     id<RNCEKVCustomFocusEffectProtocol> parent = (id<RNCEKVCustomFocusEffectProtocol>)self.superview;
     UIFocusEffect* effect = [parent customFocusEffect];
@@ -35,8 +36,19 @@
       return effect;
     }
   }
-  
+
   return [super focusEffect];
+}
+
+- (BOOL)canBecomeFocused {
+  if ([self.superview conformsToProtocol:@protocol(RNCEKVFocusProtocol)]) {
+    id<RNCEKVFocusProtocol> parent = (id<RNCEKVFocusProtocol>)self.superview;
+    if (parent.focusableWrapper) {
+      return parent.canBeFocused;
+    }
+  }
+
+  return [super canBecomeFocused];
 }
 
 @end

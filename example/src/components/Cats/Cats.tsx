@@ -1,10 +1,10 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import type { KeyboardFocus } from 'react-native-external-keyboard';
+import type { BaseKeyboardViewType } from 'react-native-external-keyboard';
 import { FocusableImage } from './FocusableImage';
 
 export const Cats = forwardRef((_, ref) => {
-  const firstRef = useRef<KeyboardFocus>(null);
+  const firstRef = useRef<BaseKeyboardViewType>(null);
 
   useImperativeHandle(ref, () => ({
     focus: () => firstRef?.current?.focus(),

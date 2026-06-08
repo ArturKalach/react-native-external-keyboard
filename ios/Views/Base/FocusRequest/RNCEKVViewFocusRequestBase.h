@@ -18,7 +18,6 @@
 @interface RNCEKVViewFocusRequestBase : RNCEKVViewContextMenuBase
 
 @property BOOL autoFocus;
-@property BOOL enableA11yFocus;
 
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -28,6 +27,7 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps;
 #endif
 
 - (void)focus;
+- (void)screenReaderFocus;
 
 @end
 

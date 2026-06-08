@@ -20,10 +20,6 @@
   NSNumber* _isFocused;
 }
 
-- (BOOL)isGroup {
-  return false;
-}
-
 - (BOOL)isKeyboardFocused {
   return [_isFocused isEqual:@YES];
 }
@@ -33,7 +29,7 @@
     _focusDelegate = [[RNCEKVFocusDelegate alloc] initWithView:self];
     _isFocused = nil;
   }
-  
+
   return self;
 }
 
@@ -50,15 +46,21 @@
 
 
 - (BOOL)canBecomeFocused {
-  if (!_canBeFocused)
-    NO;
-  return [_focusDelegate canBecomeFocused];
+  if (!self.focusableWrapper) {
+    return _canBeFocused;
+  }
+
+  return [super canBecomeFocused];
 }
 
 
+- (NSNumber *)resolveFocusChange:(UIFocusUpdateContext *)context {
+  return [_focusDelegate isFocusChanged:context];
+}
+
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-  _isFocused = [_focusDelegate isFocusChanged:context];
+  _isFocused = [self resolveFocusChange:context];
 
   if ([self hasOnFocusChanged]) {
     if (_isFocused != nil) {
@@ -76,7 +78,7 @@
   if (_canBeFocused != newProps.canBeFocused) {
     [self setCanBeFocused:newProps.canBeFocused];
   }
-  
+
   if (_hasOnFocusChanged != newProps.hasOnFocusChanged) {
     [self setHasOnFocusChanged:newProps.hasOnFocusChanged];
   }

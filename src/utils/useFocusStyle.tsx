@@ -1,36 +1,22 @@
 import { useState, useMemo, useCallback } from 'react';
-import { type ColorValue, type PressableProps, Pressable } from 'react-native';
+import type { PressableProps } from 'react-native';
 import type { FocusStyle } from '../types';
-import type { TintType } from '../types/WithKeyboardFocus';
 
-const backgroundTintMap: Partial<Record<TintType, boolean>> = {
-  background: true,
-};
-
-const DEFAULT_BACKGROUND_TINT = '#dce3f9';
-
-type UseFocusStyleProps<C> = {
+type UseFocusStyleProps = {
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
   onFocusChange?: (isFocused: boolean) => void;
-  tintColor?: ColorValue;
-  tintType?: TintType;
   style?: PressableProps['style'];
-  Component?: React.ComponentType<C>;
-  withPressedStyle?: boolean;
-  defaultFocusHighlightEnabled?: boolean;
+  pressedStyleSignature?: boolean;
 };
 
-export const useFocusStyle = <C extends {}>({
+export const useFocusStyle = ({
   focusStyle,
   onFocusChange,
   containerFocusStyle,
-  tintColor,
-  tintType = 'default',
   style,
-  Component,
-  withPressedStyle = false,
-}: UseFocusStyleProps<C>) => {
+  pressedStyleSignature = false,
+}: UseFocusStyleProps) => {
   const [focused, setFocusStatus] = useState(false);
 
   const onFocusChangeHandler = useCallback(
@@ -47,19 +33,7 @@ export const useFocusStyle = <C extends {}>({
     return focused ? specificStyle : undefined;
   }, [focusStyle, focused]);
 
-  const hoverColor = useMemo(
-    () => ({
-      backgroundColor: tintColor,
-    }),
-    [tintColor]
-  );
-
   const containerFocusedStyle = useMemo(() => {
-    if (backgroundTintMap[tintType] && !containerFocusStyle) {
-      return focused
-        ? { backgroundColor: tintColor ?? DEFAULT_BACKGROUND_TINT }
-        : undefined;
-    }
     if (!containerFocusStyle) return undefined;
 
     const specificStyle =
@@ -68,11 +42,11 @@ export const useFocusStyle = <C extends {}>({
         : containerFocusStyle;
 
     return focused ? specificStyle : undefined;
-  }, [containerFocusStyle, focused, tintColor, tintType]);
+  }, [containerFocusStyle, focused]);
 
-  const dafaultComponentStyle = useMemo(
-    () => [style, componentFocusedStyle],
-    [style, componentFocusedStyle]
+  const defaultComponentStyle = useMemo(
+    () => (pressedStyleSignature ? undefined : [style, componentFocusedStyle]),
+    [pressedStyleSignature, style, componentFocusedStyle]
   );
   const styleHandlerPressable = useCallback(
     ({ pressed }: { pressed: boolean }) => {
@@ -85,17 +59,15 @@ export const useFocusStyle = <C extends {}>({
     [componentFocusedStyle, style]
   );
 
-  const componentStyleViewStyle =
-    Component === Pressable || withPressedStyle
-      ? styleHandlerPressable
-      : dafaultComponentStyle;
+  const componentStyleViewStyle = pressedStyleSignature
+    ? styleHandlerPressable
+    : defaultComponentStyle;
 
   return {
     componentStyleViewStyle,
     componentFocusedStyle,
     containerFocusedStyle,
     onFocusChangeHandler,
-    hoverColor,
     focused,
   };
 };

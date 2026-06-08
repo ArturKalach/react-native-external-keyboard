@@ -164,6 +164,11 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
+  public void setHasOnFocusChanged(TextInputFocusWrapper view, boolean value) {
+    //stub - Android attaches focus listeners unconditionally
+  }
+
+  @Override
   @ReactProp(name = "haloEffect", defaultBoolean = true)
   public void setHaloEffect(TextInputFocusWrapper view, boolean value) {
     view.setFocusHighlight(value);
@@ -216,6 +221,12 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   @Override
   @ReactProp(name = "haloCornerRadius")
   public void setHaloCornerRadius(TextInputFocusWrapper view, float value) {
+
+  }
+
+  @Override
+  @ReactProp(name = "roundedHaloFix")
+  public void setRoundedHaloFix(TextInputFocusWrapper view, boolean value) {
 
   }
 }

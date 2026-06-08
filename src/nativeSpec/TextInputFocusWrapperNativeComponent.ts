@@ -1,11 +1,13 @@
-import type { ViewProps, ColorValue } from 'react-native';
+import {
+  codegenNativeComponent,
+  type ViewProps,
+  type ColorValue,
+} from 'react-native';
 import type {
   DirectEventHandler,
   Float,
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
-// eslint-disable-next-line @react-native/no-deep-imports
-import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 export type FocusChange = Readonly<{
   isFocused: boolean;
@@ -21,10 +23,12 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   focusType?: Int32;
   blurType?: Int32;
   canBeFocused?: boolean;
+  hasOnFocusChanged?: boolean;
   haloEffect?: boolean;
   haloCornerRadius?: Float;
   haloExpendX?: Float;
   haloExpendY?: Float;
+  roundedHaloFix?: boolean;
   tintColor?: ColorValue;
   blurOnSubmit?: boolean;
   multiline?: boolean;

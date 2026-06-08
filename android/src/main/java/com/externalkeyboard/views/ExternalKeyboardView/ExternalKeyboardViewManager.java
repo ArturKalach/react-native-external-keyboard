@@ -70,14 +70,6 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  @ReactProp(name = "enableA11yFocus", defaultBoolean = false)
-  public void setEnableA11yFocus(ExternalKeyboardView wrapper, boolean enableA11yFocus) {
-    if(wrapper.enableA11yFocus != enableA11yFocus) {
-      wrapper.enableA11yFocus = enableA11yFocus;
-    }
-  }
-
-  @Override
   @ReactProp(name = "screenAutoA11yFocus", defaultBoolean = false)
   public void setScreenAutoA11yFocus(ExternalKeyboardView wrapper, boolean enableA11yFocus) {
     if(wrapper.screenAutoA11yFocus != enableA11yFocus) {
@@ -143,6 +135,12 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   @Override
   @ReactProp(name = "haloExpendY")
   public void setHaloExpendY(ExternalKeyboardView view, float value) {
+    //stub
+  }
+
+  @Override
+  @ReactProp(name = "roundedHaloFix")
+  public void setRoundedHaloFix(ExternalKeyboardView view, boolean value) {
     //stub
   }
 
@@ -248,8 +246,9 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  public void setGroup(ExternalKeyboardView view, boolean value) {
-    //stub
+  @ReactProp(name = "focusableWrapper", defaultBoolean = false)
+  public void setFocusableWrapper(ExternalKeyboardView view, boolean value) {
+    view.setFocusableWrapper(value);
   }
 
   @Override
@@ -258,14 +257,22 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
-  public void focus(ExternalKeyboardView view) {
+  public void rnekKeyboardFocus(ExternalKeyboardView view) {
     view.focus();
   }
 
   @Override
+  public void rnekScreenReaderFocus(ExternalKeyboardView view) {
+    view.a11yFocus();
+  }
+
+
+  @Override
   public void receiveCommand(ReactViewGroup root, String commandId, @Nullable ReadableArray args) {
-    if (commandId.equals("focus")) {
-      this.focus((ExternalKeyboardView) root);
+    if (commandId.equals("rnekKeyboardFocus")) {
+      this.rnekKeyboardFocus((ExternalKeyboardView) root);
+    } else if (commandId.equals("rnekScreenReaderFocus")) {
+      this.rnekScreenReaderFocus((ExternalKeyboardView) root);
     } else {
       super.receiveCommand(root, commandId, args);
     }

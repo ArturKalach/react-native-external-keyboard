@@ -10,29 +10,21 @@ import { ExternalKeyboardViewNative } from '../../nativeSpec';
 import { Commands } from '../../nativeSpec/ExternalKeyboardViewNativeComponent';
 import {
   LockFocusEnum,
+  type LockFocusType,
   type BaseKeyboardViewProps,
   type BaseKeyboardViewType,
-  type LockFocusType,
-} from '../../types/BaseKeyboardView';
+} from '../../types';
 import type { View } from 'react-native';
 import { KeyPressContext } from '../../context/BubbledKeyPressContext';
 import { useBubbledInfo } from './BaseKeyboardView.hooks';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
 import { useOnFocusChange } from '../../utils/useOnFocusChange';
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
-import { wrapOrderPrefix } from '../../utils/wrapOrderPrefix';
+import { useWrappedOrderProps } from '../../utils/useWrappedOrderProps';
 
 // @ts-ignore
 type NativeRef = React.ElementRef<ComponentType>;
 const isIOS = Platform.OS === 'ios';
-
-const DEFAULT_EXPOSE_METHODS = [
-  'blur',
-  'measure',
-  'measureInWindow',
-  'measureLayout',
-  'setNativeProps',
-];
 
 enum BITS {
   BIT_01 = 0b1,
@@ -41,8 +33,6 @@ enum BITS {
   BIT_04 = 0b1000,
   BIT_05 = 0b10000,
   BIT_06 = 0b100000,
-  BIT_07 = 0b1000000,
-  BIT_08 = 0b10000000,
   BIT_09 = 0b100000000,
   BIT_10 = 0b1000000000,
 }
@@ -66,7 +56,7 @@ const mapFocusValues = (values: LockFocusType[] | undefined) => {
 };
 
 export const BaseKeyboardView = React.memo(
-  React.forwardRef<BaseKeyboardViewType, BaseKeyboardViewProps>(
+  React.forwardRef<BaseKeyboardViewType | View, BaseKeyboardViewProps>(
     (
       {
         onFocusChange,
@@ -75,18 +65,14 @@ export const BaseKeyboardView = React.memo(
         onBubbledContextMenuPress,
         haloEffect,
         autoFocus,
-        canBeFocused = true,
         focusable = true,
-        group = false,
+        focusableWrapper = false,
         onFocus,
         onBlur,
-        viewRef,
         groupIdentifier,
         tintColor,
-        ignoreGroupFocusHint,
-        exposeMethods = DEFAULT_EXPOSE_METHODS,
-        enableA11yFocus = false,
-        screenAutoA11yFocusDelay = 500,
+        // TODO: revisit screenAutoA11yFocusDelay default (currently 300ms)
+        screenAutoA11yFocusDelay = 300,
         lockFocus,
         orderIndex,
         orderForward,
@@ -101,13 +87,16 @@ export const BaseKeyboardView = React.memo(
         orderId,
         enableContextMenu,
         orderPrefix: _orderPrefix,
+        tintType,
+        // Deprecated no-ops: destructured out so they never reach the native view.
+        enableA11yFocus: _enableA11yFocus,
         defaultFocusHighlightEnabled = true,
+        roundedHaloFix = false,
         ...props
       },
       ref
     ) => {
-      const localRef = useRef<View>(undefined);
-      const targetRef = viewRef ?? localRef;
+      const targetRef = useRef<View | null>(null);
       const lockFocusValue = useMemo(
         () => mapFocusValues(lockFocus),
         [lockFocus]
@@ -162,27 +151,48 @@ export const BaseKeyboardView = React.memo(
       useImperativeHandle(
         ref,
         () => {
-          const actions: Record<string, Function> = {};
-
-          exposeMethods.forEach((method) => {
-            actions[method] = (...args: any[]) => {
-              const componentActions = targetRef?.current as unknown as Record<
-                string,
-                Function
-              >;
-              return componentActions?.[method]?.(...args);
-            };
-          });
-
-          actions.focus = () => {
-            if (targetRef?.current) {
-              Commands.focus(targetRef.current as unknown as NativeRef);
-            }
+          const nativeCommands: Record<string, () => void> = {
+            keyboardFocus: () => {
+              if (targetRef?.current) {
+                Commands.rnekKeyboardFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+              }
+            },
+            screenReaderFocus: () => {
+              if (targetRef?.current) {
+                Commands.rnekScreenReaderFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+              }
+            },
+            focus: () => {
+              if (targetRef?.current) {
+                Commands.rnekKeyboardFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+                Commands.rnekScreenReaderFocus(
+                  targetRef.current as unknown as NativeRef
+                );
+              }
+            },
           };
 
-          return actions as unknown as BaseKeyboardViewType;
+          return new Proxy({} as BaseKeyboardViewType | View, {
+            get(_target, prop: string) {
+              if (prop in nativeCommands) {
+                return nativeCommands[prop];
+              }
+              return (
+                targetRef?.current as unknown as
+                  | Record<string, unknown>
+                  | null
+                  | undefined
+              )?.[prop];
+            },
+          });
         },
-        [exposeMethods, targetRef]
+        [targetRef]
       );
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
@@ -193,52 +203,24 @@ export const BaseKeyboardView = React.memo(
         onBlur,
       });
 
-      const hasOnFocusChanged = onFocusChange || onFocus || onBlur;
-      const ignoreFocusHint = Platform.OS !== 'ios' || !ignoreGroupFocusHint;
+      const hasFocusListener = onFocusChange || onFocus || onBlur;
 
-      const wrapPrefix = useMemo(
-        () => wrapOrderPrefix(orderPrefix),
-        [orderPrefix]
-      );
+      const wrappedOrderProps = useWrappedOrderProps({
+        orderPrefix,
+        orderId,
+        orderForward,
+        orderBackward,
+        orderFirst,
+        orderLast,
+        orderLeft,
+        orderRight,
+        orderUp,
+        orderDown,
+      });
 
-      const wrappedOrderProps = useMemo(
-        () => ({
-          orderId: wrapPrefix(orderId),
-          orderForward: wrapPrefix(orderForward),
-          orderBackward: wrapPrefix(orderBackward),
-          orderFirst: wrapPrefix(
-            orderFirst === null ? undefined : orderFirst ?? orderForward
-          ),
-          orderLast: wrapPrefix(
-            orderLast === null ? undefined : orderLast ?? orderBackward
-          ),
-          orderLeft: wrapPrefix(orderLeft),
-          orderRight: wrapPrefix(orderRight),
-          orderUp: wrapPrefix(orderUp),
-          orderDown: wrapPrefix(orderDown),
-        }),
-        [
-          wrapPrefix,
-          orderId,
-          orderForward,
-          orderBackward,
-          orderFirst,
-          orderLast,
-          orderLeft,
-          orderRight,
-          orderUp,
-          orderDown,
-        ]
-      );
-
-      const platformSpecificHalo = useMemo(
-        () =>
-          Platform.select({
-            ios: haloEffect,
-            android: defaultFocusHighlightEnabled,
-          }) ?? true,
-        [defaultFocusHighlightEnabled, haloEffect]
-      );
+      const platformSpecificHalo =
+        tintType !== 'none' &&
+        (isIOS ? haloEffect ?? true : defaultFocusHighlightEnabled);
 
       return (
         <KeyPressContext.Provider value={bubbled.context}>
@@ -247,26 +229,24 @@ export const BaseKeyboardView = React.memo(
             haloEffect={platformSpecificHalo}
             ref={targetRef as React.RefObject<any>}
             enableContextMenu={enableContextMenu}
-            canBeFocused={ignoreFocusHint && focusable && canBeFocused}
+            canBeFocused={focusable}
             autoFocus={autoFocus}
-            onKeyDownPress={onKeyDownPress as undefined} //ToDo update types
-            onKeyUpPress={onKeyUpPress as undefined} //ToDo update types
+            onKeyDownPress={onKeyDownPress}
+            onKeyUpPress={onKeyUpPress}
             onBubbledContextMenuPress={bubbled.contextMenu}
             groupIdentifier={groupIdentifier ?? contextIdentifier}
             tintColor={isIOS ? tintColor : undefined}
-            onFocusChange={
-              (hasOnFocusChanged && onFocusChangeHandler) as undefined
-            } //ToDo update types
+            onFocusChange={hasFocusListener ? onFocusChangeHandler : undefined}
             hasKeyDownPress={Boolean(onKeyDownPress)}
             hasKeyUpPress={Boolean(onKeyUpPress)}
-            hasOnFocusChanged={Boolean(hasOnFocusChanged)}
-            group={group}
+            hasOnFocusChanged={Boolean(hasFocusListener)}
+            focusableWrapper={focusableWrapper}
             orderIndex={orderIndex ?? -1}
-            enableA11yFocus={enableA11yFocus}
             screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
             lockFocus={lockFocusValue}
             {...wrappedOrderProps}
             orderGroup={groupId}
+            roundedHaloFix={roundedHaloFix}
           />
         </KeyPressContext.Provider>
       );

@@ -31,6 +31,8 @@ newProps:(const RNCEKV::FocusProps &)newProps;
 
 - (void)onFocusChangeHandler:(BOOL)isFocused;
 
+- (NSNumber *)resolveFocusChange:(UIFocusUpdateContext *)context;
+
 @end
 
 

@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import {
   Text,
   View,
@@ -9,7 +9,7 @@ import {
 import {
   KeyboardFocusGroup,
   withKeyboardFocus,
-  type KeyboardFocus,
+  type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
 import { Color } from './Color/Color';
 
@@ -92,7 +92,6 @@ const OptionButton = ({ onPress, content }: OptionButtonProps) => (
     style={styles.optionButton}
     defaultFocusHighlightEnabled={false}
     focusStyle={isIOS ? undefined : styles.androidOption}
-    tintType={isIOS ? 'default' : 'none'}
     onFocus={isIOS ? onPress : undefined}
     onPress={onPress}
     haloExpendX={5}
@@ -111,23 +110,8 @@ type FocusItemProps = {
   content: string;
 };
 
-const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
+const FocusItem = forwardRef<BaseKeyboardViewType, FocusItemProps>(
   ({ radius = 10, onPress, background, color, content }, ref) => {
-    const hoverComponent = useMemo(() => {
-      if (isIOS) return undefined;
-      return (
-        <View
-          style={[
-            styles.androidHover,
-            {
-              borderRadius: radius + 5,
-              borderColor: background,
-            },
-          ]}
-        />
-      );
-    }, [background, radius]);
-
     return (
       <Pressable
         ref={ref}
@@ -138,8 +122,6 @@ const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
         onFocus={isIOS ? onPress : undefined}
         onPress={onPress}
         haloCornerRadius={radius}
-        tintType={isIOS ? 'default' : 'hover'}
-        FocusHoverComponent={hoverComponent}
         containerStyle={[
           styles.focusItemContainer,
           {
@@ -156,7 +138,7 @@ const FocusItem = forwardRef<KeyboardFocus, FocusItemProps>(
   }
 );
 
-export const FocusGroupExample = forwardRef<KeyboardFocus>((_, ref) => {
+export const FocusGroupExample = forwardRef<BaseKeyboardViewType>((_, ref) => {
   const [radius, setRadious] = useState(5);
   const [currentItem, setCurrentItem] = useState(colors[0]);
   return (

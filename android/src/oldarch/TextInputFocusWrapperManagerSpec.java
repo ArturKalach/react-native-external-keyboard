@@ -10,6 +10,8 @@ import com.facebook.react.views.view.ReactViewManager;
 public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> extends ReactViewManager {
   public abstract void setCanBeFocused(T wrapper, boolean canBeFocused);
 
+  public abstract void setHasOnFocusChanged(T wrapper, boolean value);
+
   public abstract void setFocusType(T wrapper, int focusType);
 
   public abstract void setBlurType(T wrapper, int blurType);
@@ -53,4 +55,6 @@ public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> exte
   public abstract void setHaloExpendX(TextInputFocusWrapper view, float value);
 
   public abstract void setHaloCornerRadius(TextInputFocusWrapper view, float value);
+
+  public abstract void setRoundedHaloFix(TextInputFocusWrapper view, boolean value);
 }

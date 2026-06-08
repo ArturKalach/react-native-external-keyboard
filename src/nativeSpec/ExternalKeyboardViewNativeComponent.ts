@@ -1,4 +1,9 @@
-import type { ColorValue, ViewProps } from 'react-native';
+import {
+  codegenNativeComponent,
+  codegenNativeCommands,
+  type ColorValue,
+  type ViewProps,
+} from 'react-native';
 import type {
   BubblingEventHandler,
   DirectEventHandler,
@@ -6,10 +11,6 @@ import type {
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
 import type { ComponentType } from 'react';
-// eslint-disable-next-line @react-native/no-deep-imports
-import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
-// eslint-disable-next-line @react-native/no-deep-imports
-import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 export type FocusChange = Readonly<{
   isFocused: boolean;
@@ -48,10 +49,10 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
   haloCornerRadius?: Float;
   haloExpendX?: Float;
   haloExpendY?: Float;
+  roundedHaloFix?: boolean;
   tintColor?: ColorValue;
-  group?: boolean;
+  focusableWrapper?: boolean;
   groupIdentifier?: string;
-  enableA11yFocus?: boolean;
   screenAutoA11yFocus?: boolean;
   screenAutoA11yFocusDelay?: Int32;
   orderGroup?: string;
@@ -71,11 +72,13 @@ export interface ExternalKeyboardNativeProps extends ViewProps {
 
 export interface NativeCommands {
   // @ts-ignore
-  focus: (viewRef: React.ElementRef<ComponentType>) => void;
+  rnekKeyboardFocus: (viewRef: React.ElementRef<ComponentType>) => void;
+  // @ts-ignore
+  rnekScreenReaderFocus: (viewRef: React.ElementRef<ComponentType>) => void;
 }
 
 export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
-  supportedCommands: ['focus'],
+  supportedCommands: ['rnekKeyboardFocus', 'rnekScreenReaderFocus'],
 });
 
 export default codegenNativeComponent<ExternalKeyboardNativeProps>(
