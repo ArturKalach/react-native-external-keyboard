@@ -185,7 +185,6 @@ const HaloCard = ({
   const custom = variant === 'custom';
   // The last two avoid corner radius — the iOS halo follows the view's
   // cornerRadius, and rounding it (haloCornerRadius / roundedHaloFix) is flaky.
-  const square = expanded || custom;
   return (
     <Pressable
       onFocusChange={(isFocused) => onNav(index, isFocused)}
@@ -194,11 +193,11 @@ const HaloCard = ({
       haloExpendX={expanded ? 16 : undefined}
       haloExpendY={expanded ? 16 : undefined}
       haloCornerRadius={expanded ? 16 : undefined}
+      roundedHaloFix={expanded ? true : undefined}
       defaultFocusHighlightEnabled={custom ? false : undefined}
       focusStyle={custom ? styles.customRing : undefined}
       style={[
         styles.card,
-        square && styles.cardSquare,
         focused && { backgroundColor: accent + '14', borderColor: accent },
       ]}
     >

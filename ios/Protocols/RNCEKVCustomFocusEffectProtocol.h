@@ -9,7 +9,7 @@
 #define RNCEKVCustomFocusEffectProtocol_h
 
 @protocol RNCEKVCustomFocusEffectProtocol <NSObject>
-- (UIFocusEffect*)customFocusEffect;
+- (UIFocusEffect*)customFocusEffect API_AVAILABLE(ios(15.0));
 @end
 
 #endif /* RNCEKVCustomFocusEffectProtocol_h */

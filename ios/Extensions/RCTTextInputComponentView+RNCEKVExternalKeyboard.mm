@@ -30,7 +30,7 @@
 @end
 
 @implementation RCTUITextField (RNCEKVExternalKeyboard)
-  - (UIFocusEffect*)focusEffect {
+  - (UIFocusEffect*)focusEffect API_AVAILABLE(ios(15.0)) {
     id superParent = self.superview.superview;
     if (superParent != nil && [superParent conformsToProtocol:@protocol(RNCEKVCustomFocusEffectProtocol)]) {
       id<RNCEKVCustomFocusEffectProtocol> parent = (id<RNCEKVCustomFocusEffectProtocol>)superParent;
