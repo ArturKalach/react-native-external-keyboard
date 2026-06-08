@@ -8,4 +8,5 @@ export type UseKeyboardPressProps<T, K> = {
   onPress?: T;
   onPressIn?: K;
   onPressOut?: K;
+  disabled?: boolean;
 };

@@ -40,6 +40,7 @@ export const useKeyboardPress = <
   onPress,
   onLongPress,
   triggerCodes = ANDROID_TRIGGER_CODES,
+  disabled = false,
 }: UseKeyboardPressProps<T, K>) => {
   const isLongPressRef = useRef(false);
 
@@ -64,6 +65,7 @@ export const useKeyboardPress = <
       onPressOut?.(e as unknown as GestureResponderEvent);
       onKeyUpPress?.(e);
 
+      if (disabled) return;
       if (triggerCodes.includes(keyCode)) {
         if (isLongPress) {
           isLongPressRef.current = true;
@@ -71,18 +73,19 @@ export const useKeyboardPress = <
         }
       }
     },
-    [onPressOut, onKeyUpPress, triggerCodes, debouncedOnPress]
+    [onPressOut, onKeyUpPress, triggerCodes, debouncedOnPress, disabled]
   );
 
   const onKeyDownPressHandler = useMemo(() => {
     if (!onPressIn) return onKeyDownPress;
     return (e: OnKeyPress) => {
       onKeyDownPress?.(e);
+      if (disabled) return;
       if (triggerCodes.includes(e.nativeEvent.keyCode)) {
         onPressIn?.(e as unknown as GestureResponderEvent);
       }
     };
-  }, [onKeyDownPress, onPressIn, triggerCodes]);
+  }, [onKeyDownPress, onPressIn, triggerCodes, disabled]);
 
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
