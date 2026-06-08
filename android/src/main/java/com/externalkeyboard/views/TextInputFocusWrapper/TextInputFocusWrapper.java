@@ -37,6 +37,9 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
   // is moving focus out of the EditText, so the blur handler knows not to pull
   // focus back to the wrapper. Cleared right after on the message queue.
   private boolean navigatingAway = false;
+  // FOCUS_BY_PRESS only: set when Enter enters edit mode, so the EditText key listener
+  // swallows the single paired Enter key-up that would otherwise hide the IME hint.
+  private boolean consumeActivationEnterUp = false;
 
   private static boolean resolveIsNativelyFixedVersion() {
     try {
@@ -263,11 +266,27 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
     if (focusType == FOCUS_BY_PRESS && this.reactEditText != null) {
       this.reactEditText.setFocusable(false);
     }
-    if (keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+    // Only activate from the wrapper's idle state (wrapper itself focused). While the
+    // EditText is editing it — not the wrapper — holds focus, so an Enter that bubbles
+    // up here must fall through to submit/blur instead of re-entering edit mode.
+    if (isActivationKey(keyCode) && this.isFocused()) {
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        // Focus is about to move to the EditText; the paired Enter key-up will land on
+        // it and ReactEditText.onKeyUp(Enter) would hide the soft-input hint we just
+        // raised (a visible blink). Mark it so the EditText key listener swallows that
+        // one key-up.
+        consumeActivationEnterUp = true;
+      }
       this.handleTextInputFocus();
       return true;
     }
     return super.onKeyDown(keyCode, event);
+  }
+
+  private boolean isActivationKey(int keyCode) {
+    return keyCode == KeyEvent.KEYCODE_SPACE
+        || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+        || keyCode == KeyEvent.KEYCODE_ENTER;
   }
 
   // --- Touch handling ---
@@ -342,22 +361,27 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
 
   private void onMultiplyBlurSubmitHandle() {
     if (this.reactEditText == null) return;
-    if (this.multiline) {
-      this.reactEditText.setOnKeyListener((v, keyCode, event) -> {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && !event.isShiftPressed()) {
-          Editable editableText = reactEditText.getText();
-          String text = editableText == null ? "" : String.valueOf(editableText);
-          EventHelper.multiplyTextSubmit((ReactContext) context, getId(), text);
-          if (blurOnSubmit && v instanceof EditText) {
-            v.clearFocus();
-            return true;
-          }
+    this.reactEditText.setOnKeyListener((v, keyCode, event) -> {
+      // Swallow the single Enter key-up that immediately follows entering edit mode,
+      // so ReactEditText.onKeyUp doesn't hide the freshly raised soft-input hint.
+      // Runs before the EditText's own onKeyUp, so returning true suppresses the hide.
+      if (consumeActivationEnterUp && event.getAction() == KeyEvent.ACTION_UP
+          && keyCode == KeyEvent.KEYCODE_ENTER) {
+        consumeActivationEnterUp = false;
+        return true;
+      }
+      if (this.multiline && event.getAction() == KeyEvent.ACTION_DOWN
+          && keyCode == KeyEvent.KEYCODE_ENTER && !event.isShiftPressed()) {
+        Editable editableText = reactEditText.getText();
+        String text = editableText == null ? "" : String.valueOf(editableText);
+        EventHelper.multiplyTextSubmit((ReactContext) context, getId(), text);
+        if (blurOnSubmit && v instanceof EditText) {
+          v.clearFocus();
+          return true;
         }
-        return false;
-      });
-    } else {
-      this.reactEditText.setOnKeyListener(null);
-    }
+      }
+      return false;
+    });
   }
 
   private void hideSoftKeyboard(View view) {

@@ -28,7 +28,7 @@
 }
 
 
-- (UIFocusEffect*)focusEffect {
+- (UIFocusEffect*)focusEffect API_AVAILABLE(ios(15.0)) {
   if ([self.superview conformsToProtocol:@protocol(RNCEKVCustomFocusEffectProtocol)]) {
     id<RNCEKVCustomFocusEffectProtocol> parent = (id<RNCEKVCustomFocusEffectProtocol>)self.superview;
     UIFocusEffect* effect = [parent customFocusEffect];
