@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -66,7 +67,16 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
   private void updateFocusability() {
     this.setFocusable(shouldWrapperBeFocusable());
     if (this.reactEditText != null) {
-      this.reactEditText.setFocusable(shouldEditTextBeFocusable());
+      boolean editTextFocusable = shouldEditTextBeFocusable();
+      this.reactEditText.setFocusable(editTextFocusable);
+      if (focusType == FOCUS_BY_PRESS) {
+        // RN creates every ReactEditText with focusableInTouchMode=true, so in touch
+        // mode the EditText stays a focus candidate even with focusable=false. During
+        // navigation focus would land on the field (flashing the soft keyboard) before
+        // resolving to the wrapper. Clear it so focus goes straight to the wrapper;
+        // handleTextInputFocus restores it when the user enters edit mode.
+        this.reactEditText.setFocusableInTouchMode(editTextFocusable);
+      }
     }
   }
 
@@ -139,9 +149,10 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
       focusabilityListener = new View.OnAttachStateChangeListener() {
         @Override
         public void onViewAttachedToWindow(@NonNull View view) {
-          // Re-apply focusability after React Native attaches the view; the
-          // framework may reset it during the layout/commit phase.
-          view.setFocusable(shouldEditTextBeFocusable());
+          // Re-apply focusability (both focusable and focusableInTouchMode) after
+          // React Native attaches the view; the framework may reset them during the
+          // layout/commit phase.
+          updateFocusability();
         }
         @Override
         public void onViewDetachedFromWindow(@NonNull View view) {}
@@ -298,11 +309,19 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
     // focus search. Flag it so the blur handler lets focus move to the next view
     // instead of pulling it back to the wrapper. Cleared on the next loop tick so
     // a search that finds no target (no blur fired) doesn't strand the flag.
+    View next = super.focusSearch(focused, direction);
     if (focusType == FOCUS_BY_PRESS) {
       navigatingAway = true;
       post(() -> navigatingAway = false);
+      // Dismiss the IME up front (only when there's actually somewhere to go) so it
+      // hides together with the focus move instead of flashing after the blur. The
+      // destination is an idle wrapper, not an edit field, and Android won't auto-
+      // hide the keyboard when focus leaves an EditText for a plain focusable View.
+      if (next != null && next != focused && this.reactEditText != null) {
+        hideSoftKeyboard(this.reactEditText);
+      }
     }
-    return super.focusSearch(focused, direction);
+    return next;
   }
 
   @Override
@@ -341,12 +360,23 @@ public class TextInputFocusWrapper extends FocusHighlightBase implements View.On
     }
   }
 
+  private void hideSoftKeyboard(View view) {
+    try {
+      InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+      if (imm != null) {
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+      }
+    } catch (Exception ignored) {
+    }
+  }
+
   private void handleTextInputFocus() {
     this.focusEventIgnore = true;
     this.setFocusable(false);
     this.reactEditText.setFocusable(true);
     // focusableInTouchMode is required for requestFocus() to succeed when the device
-    // is in touch mode (canTakeFocus() returns false without it).
+    // is in touch mode (canTakeFocus() returns false without it), and re-arms the
+    // EditText as a focus target after updateFocusability cleared it for navigation.
     this.reactEditText.setFocusableInTouchMode(true);
     if (!this.reactEditText.hasFocus()) {
       this.reactEditText.requestFocusFromJS();
