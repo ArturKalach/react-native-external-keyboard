@@ -120,6 +120,8 @@ export const KeyboardExtendedInput = React.forwardRef<
         android: defaultFocusHighlightEnabled,
       });
 
+    const isContainerFocusable = !isIOS && focusable ? undefined : false;
+
     return (
       <TextInputFocusWrapperNative
         onFocusChange={hasFocusListener ? nativeFocusHandler : undefined}
@@ -132,7 +134,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         multiline={props.multiline}
         blurOnSubmit={blurOnSubmit}
         onMultiplyTextSubmit={onSubmitEditing}
-        canBeFocused={focusable}
+        canBeFocused={isContainerFocusable}
         tintColor={isIOS ? tintColor : undefined}
         groupIdentifier={groupIdentifier ?? contextIdentifier}
         lockFocus={mapLockFocus(lockFocus)}
