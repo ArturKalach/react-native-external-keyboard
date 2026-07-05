@@ -18,7 +18,12 @@ export type {
   BaseFocusViewProps,
   BaseKeyboardViewProps,
 } from './baseKeyboardView.types';
-export type { FocusStateCallbackType, FocusStyle } from './focusStyle.types';
+export type {
+  FocusStateCallbackType,
+  FocusStyle,
+  InteractionState,
+  InteractiveStyleProp,
+} from './focusStyle.types';
 export type {
   ExtraKeyboardProps,
   KeyboardInputProps,
@@ -32,4 +37,6 @@ export type {
   WithKeyboardProps,
   KeyboardPressType,
   ChildrenRenderState,
+  ContainerStyle,
+  ContainerStyleStateType,
 } from './withKeyboardFocus.types';

@@ -89,7 +89,7 @@ Like other components, the input supports per-platform native indicators and you
 | :-- | :-- | :-- | :-- |
 | `focusable` | `boolean` | `true` | Whether the input can be keyboard-focused. Also controls `editable`. |
 | `haloEffect` | `boolean` | `true` | *(iOS)* Halo ring on focus. |
-| `roundedHaloFix` | `boolean` | `false` | *(iOS)* Keeps a disabled halo (`haloEffect={false}`) suppressed on rounded (`borderRadius`) views. [Why & alternative](./focus-styling.md#roundedhalofix). |
+| `roundedHaloFix` | `boolean` | — | *(iOS, deprecated)* No longer needed or has any effect — a disabled halo is always suppressed now, including on rounded views. [Details](./focus-styling.md#roundedhalofix-deprecated-no-op). |
 | `defaultFocusHighlightEnabled` | `boolean` | `true` | *(Android)* Default focus highlight. |
 | `tintType` | `'default' \| 'none'` | `'default'` | Cross-platform shortcut: `'none'` disables the native focus indicator on both platforms (iOS halo + Android highlight). [Details](./focus-styling.md#turning-off-all-native-indicators). |
 | `tintColor` | `string` | — | *(iOS)* Halo / tint color. |

@@ -6,7 +6,7 @@ This file gives Claude Code guidance specific to the iOS native code under [ios/
 
 - **Prefix `RNCEKV`** is mandatory on every Obj-C class, protocol, enum, and category contributed by this library (stands for "React Native ChaosKey External Keyboard View"). Do not introduce unprefixed symbols — they will collide with React Native or host-app code at link time.
 - Files are `.h` + `.mm` (Objective-C++). The `.mm` is required because Fabric props are C++ structs.
-- One class per directory under `Views/`, `Delegates/`, and `Helpers/`. The directory name matches the class name.
+- One class per directory under `Views/`, `Delegates/`, and `Helpers/`. The directory name matches the class name. Exception: `features/` groups every file for one cross-cutting feature (view + delegate + utils) instead — see `features/Halo/`.
 - Headers use `#ifndef X_h / #define X_h / #endif` include guards (not `#pragma once`).
 
 ## Architecture-conditional compilation
@@ -39,7 +39,7 @@ The main keyboard view stacks behaviors through a chain of single-purpose base c
 RCTViewComponentView / RCTView                  (RN base)
   └── RNCEKVViewGroupBase                       subview tracking, getStoredView, cleanReferences
         └── RNCEKVViewOrderGroupBase            focus-order props (orderId/orderLeft/orderRight/...)
-              └── RNCEKVExternalKeyboardHalloBase  halo (focus highlight) props
+              └── RNCEKVExternalKeyboardHalloBase  halo (focus highlight) props (lives in features/Halo/)
                     └── RNCEKVViewGroupIdentifierBase  customGroupId / focusGroupIdentifier
                           └── RNCEKVViewFocusChangeBase canBeFocused, isKeyboardFocused, onFocusChange
                                 └── RNCEKVViewContextMenuBase  enableContextMenu (UIContextMenuInteractionDelegate)
@@ -61,9 +61,14 @@ Each base view owns a **delegate** that encapsulates its UIKit-side logic, so be
 | [RNCEKVFocusSequenceDelegate](Delegates/RNCEKVFocusSequenceDelegate/) | Implements `orderPosition` + `orderGroup` index-based ordering |
 | [RNCEKVFocusOrderDelegate](Delegates/RNCEKVFocusOrderDelegate/) | Defines `RNCEKVFocusOrderProtocol` (the order-prop contract) |
 | [RNCEKVGroupIdentifierDelegate](Delegates/RNCEKVGroupIdentifierDelegate/) | Maps `customGroupId` to `focusGroupIdentifier` on UIKit |
-| [RNCEKVHaloDelegate](Delegates/RNCEKVHaloDelegate/) | Draws the focus halo (rounded rect highlight) using `UIFocusEffect` |
 
 If you find yourself adding logic directly inside an `updateXxxProps:` method, consider whether a delegate already owns it — most concrete behavior lives in the delegate, and the view only forwards.
+
+> The **halo** subsystem is grouped under [`features/Halo/`](features/Halo/CLAUDE.md)
+> instead of living under `Delegates/`/`Views/Base/`: `RNCEKVExternalKeyboardHalloBase`
+> (the base-chain layer above), `RNCEKVHaloDelegate`, `RNCEKVFocusEffectUtility`, and
+> `RNCEKVHaloProtocol`. Every other base-chain layer and delegate lives in its usual
+> `Views/Base/` / `Delegates/` directory.
 
 ## Protocols
 
@@ -72,7 +77,7 @@ Lightweight contracts under [Protocols/](Protocols/):
 - `RNCEKVKeyboardFocusableProtocol` — declares `- (void)focus;` for any view RN can programmatically focus via the imperative API.
 - `RNCEKVFocusProtocol` — fields the FocusDelegate reads back from its host view.
 - `RNCEKVFocusOrderProtocol` — the full order-prop surface (see [RNCEKVFocusOrderProtocol.h](Delegates/RNCEKVFocusOrderDelegate/RNCEKVFocusOrderProtocol.h)).
-- `RNCEKVHaloProtocol`, `RNCEKVGroupIdentifierProtocol` — same pattern for halo / group features.
+- `RNCEKVGroupIdentifierProtocol` — same pattern for group features. (`RNCEKVHaloProtocol` lives in [features/Halo/](features/Halo/), not here.)
 - `RNCEKVCustomFocusEffectProtocol`, `RNCEKVCustomGroudIdProtocol` — extension points for host apps to override the focus effect or group identifier.
 
 Conform to these on a base class once; do not redeclare them on leaf views.

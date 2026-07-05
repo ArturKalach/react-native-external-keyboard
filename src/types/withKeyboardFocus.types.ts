@@ -1,5 +1,9 @@
-import type { PressableProps, View, ViewProps } from 'react-native';
-import type { FocusStyle } from './focusStyle.types';
+import type { View, ViewProps } from 'react-native';
+import type {
+  FocusStyle,
+  InteractionState,
+  InteractiveStyleProp,
+} from './focusStyle.types';
 import type { KeyboardFocus } from './focus.types';
 import type { OnKeyPress } from './keyPress.types';
 import type { FocusViewProps } from './KeyboardFocusView.types';
@@ -85,31 +89,56 @@ type RenderSlot<CP extends object> = {
   renderFocusable?: RenderFocusableProp;
 };
 
+/**
+ * State passed to a function-form {@link WithKeyboardBaseProps.containerStyle}.
+ */
+export type ContainerStyleStateType = InteractionState;
+
+/**
+ * Container style: a static style (or array), or a callback that receives the
+ * {@link InteractionState} (`{ focused, pressed }`) and returns the style.
+ */
+export type ContainerStyle<ViewStyleType> =
+  | ViewStyleType
+  | ViewProps['style']
+  | ((state: InteractionState) => ViewProps['style']);
+
 type WithKeyboardBaseProps<ViewType, ViewStyleType> = {
   /**
-   * Enables the `pressed` style handler for custom components. Always effectively
-   * `true` for the standard `Pressable`.
-   *
-   * @default false
+   * @deprecated No longer needed — the `pressed` style handler is enabled
+   * automatically when `style` (or `containerStyle`) is a function. Pass an
+   * explicit `false` only to force a static style on a wrapped component that
+   * does not accept a function `style`.
    */
   withPressedStyle?: boolean;
   /**
    * Android only. Physical-keyboard activation (Enter / Space / DPad-center)
    * does not flow through the touch responder, so the wrapped component's
-   * `pressed` state stays `false` for keyboard presses. When enabled, the
-   * press is tracked from the key down/up events and merged into the `pressed`
-   * value passed to `renderContent` and to the `style({ pressed })` function.
-   * No-op on iOS, where native focus already drives `pressed`.
+   * `pressed` state stays `false` for keyboard presses. When enabled, the press
+   * is tracked from the key down/up events and merged into the `pressed` value
+   * passed to `renderContent` and to the `style`/`containerStyle` callbacks.
+   *
+   * Defaults to **auto**: it is enabled whenever a pressed-reactive style exists
+   * (a function `style` or `containerStyle`), so keyboard press styles the same
+   * as touch out of the box. Pass an explicit `true`/`false` to override.
+   * No-op on iOS, where native focus already drives `pressed`. (The
+   * `useIsViewPressed` store always reflects keyboard press, on both platforms.)
    */
   androidKeyboardPressState?: boolean;
-  /** Style for the container wrapping the component. */
-  containerStyle?: ViewStyleType | ViewProps['style'];
+  /**
+   * Style for the container wrapping the component. Static, or a callback
+   * receiving `{ focused, pressed }`. See {@link ContainerStyle}.
+   */
+  containerStyle?: ContainerStyle<ViewStyleType>;
   /** Style applied to the container while focused. */
   containerFocusStyle?: FocusStyle;
   /** Ref to the wrapped component instance. */
   componentRef?: React.RefObject<ViewType>;
-  /** Style for the wrapped component. */
-  style?: PressableProps['style'];
+  /**
+   * Style for the wrapped component. Static/array, or a callback receiving
+   * `{ focused, pressed }` — e.g. `style={(s) => (s.focused ? … : …)}`.
+   */
+  style?: InteractiveStyleProp;
   /** Called when the component loses keyboard focus. */
   onBlur?: (() => void) | null;
   /** Called when the component gains keyboard focus. */

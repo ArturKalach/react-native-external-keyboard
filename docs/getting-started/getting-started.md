@@ -65,7 +65,7 @@ export default function App() {
     <K.Pressable
       autoFocus
       onPress={() => console.log('activated')}
-      focusStyle={{ backgroundColor: 'dodgerblue' }}
+      style={({ focused }) => focused && { backgroundColor: 'dodgerblue' }}
       onFocus={() => console.log('focused')}
       onBlur={() => console.log('blurred')}
     >

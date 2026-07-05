@@ -1,13 +1,20 @@
 import { useState, useMemo, useCallback } from 'react';
-import type { PressableProps } from 'react-native';
-import type { FocusStyle } from '../types';
+import type { FocusStyle, InteractiveStyleProp } from '../types';
+import { useValueStore } from './useValueStore';
 
 type UseFocusStyleProps = {
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
   onFocusChange?: (isFocused: boolean) => void;
-  style?: PressableProps['style'];
+  style?: InteractiveStyleProp;
   pressedStyleSignature?: boolean;
+  /**
+   * Re-render this host on focus change. Default `true`. When `false`, focus
+   * still updates the shared focus store (so `useIsViewFocused` consumers
+   * re-render) but this host does not — used when nothing here depends on
+   * `focused` and only the native halo shows the focus.
+   */
+  reactToFocus?: boolean;
 };
 
 export const useFocusStyle = ({
@@ -16,15 +23,22 @@ export const useFocusStyle = ({
   containerFocusStyle,
   style,
   pressedStyleSignature = false,
+  reactToFocus = true,
 }: UseFocusStyleProps) => {
   const [focused, setFocusStatus] = useState(false);
 
+  // Per-instance focus store — always reflects focus for context consumers,
+  // even when this host opts out of re-rendering (`reactToFocus === false`).
+  const focusController = useValueStore();
+  const focusStore = focusController.store;
+
   const onFocusChangeHandler = useCallback(
     (isFocused: boolean) => {
-      setFocusStatus(isFocused);
+      focusController.set(isFocused);
+      if (reactToFocus) setFocusStatus(isFocused);
       onFocusChange?.(isFocused);
     },
-    [onFocusChange]
+    [onFocusChange, reactToFocus, focusController]
   );
 
   const componentFocusedStyle = useMemo(() => {
@@ -51,12 +65,13 @@ export const useFocusStyle = ({
   const styleHandlerPressable = useCallback(
     ({ pressed }: { pressed: boolean }) => {
       if (typeof style === 'function') {
-        return [style({ pressed }), componentFocusedStyle];
+        // Inject `focused` so the unified `style({ focused, pressed })` works.
+        return [style({ pressed, focused }), componentFocusedStyle];
       } else {
         return [style, componentFocusedStyle];
       }
     },
-    [componentFocusedStyle, style]
+    [componentFocusedStyle, style, focused]
   );
 
   const componentStyleViewStyle = pressedStyleSignature
@@ -69,5 +84,6 @@ export const useFocusStyle = ({
     containerFocusedStyle,
     onFocusChangeHandler,
     focused,
+    focusStore,
   };
 };
