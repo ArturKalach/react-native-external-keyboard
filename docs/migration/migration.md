@@ -2,10 +2,64 @@
 
 Migration notes are listed newest first. Each section only covers changes that need action — additive features are documented in the [component overview](../components/overview.md) and [API reference](../api/overview.md).
 
+- [1.0.x → 1.1.0](#migrating-to-110-from-10x)
 - [0.9.1 → 1.0.0](#migrating-to-100-from-091)
 - [0.9.0 → 0.9.1](#migrating-to-091-from-090)
 - [0.7.x → 0.8.0](#migrating-to-080-from-07x)
 - [0.3.x → 0.4.0](#migrating-to-040-from-03x)
+
+---
+
+## Migrating to 1.1.0 from 1.0.x
+
+1.1.0 is additive — no renamed or removed props, and no new required config. There are two under-the-hood behavior fixes worth checking, plus a set of new APIs for styling and reacting to focus/press. Full guide: [Pressable focus handling](../guides/pressable-focus.md).
+
+### Android: keyboard press now auto-tracked for function styles
+
+This is a **behavioral fix**, not an API change. Before 1.1.0, physical-keyboard activation (Enter / Space / D-pad) on Android only fed into a function `style`/`containerStyle`'s `pressed` value when you explicitly set `androidKeyboardPressState`. In 1.1.0, it's auto-enabled whenever a pressed-reactive style exists (a function `style`, `containerStyle`, `renderContent`, or function `children`) — so keyboard press styles the same as touch by default, with no config.
+
+```tsx
+// 1.0.x — pressed stayed false on keyboard activation unless you opted in
+<KeyboardPressable androidKeyboardPressState style={({ pressed }) => ...}>…</KeyboardPressable>
+
+// 1.1.0 — keyboard press is picked up automatically
+<KeyboardPressable style={({ pressed }) => ...}>…</KeyboardPressable>
+```
+
+> [!NOTE]
+> If you relied on the old default (keyboard press *not* reflected in a function style), pass `androidKeyboardPressState={false}` explicitly to restore it.
+
+### iOS: disabled halo no longer reappears on rounded views
+
+Also a **behavioral fix**. The bug `roundedHaloFix` used to work around is now fixed at the source: a disabled halo (`haloEffect={false}`) always resolves to a suppressed effect and can no longer reappear from a view's `borderRadius` (`layer.cornerRadius`). `roundedHaloFix` is now a true no-op and will be removed in a future major — delete it from your code. [Details](../guides/focus-styling.md#roundedhalofix-deprecated-no-op).
+
+### Deprecated: `withPressedStyle`
+
+| Prop | Status | Notes |
+| :-- | :-- | :-- |
+| `withPressedStyle` | Deprecated, still works | No longer needed — the pressed-style handler is now enabled automatically whenever `style`/`containerStyle` is a function. Pass an explicit `false` only to force a static style on a component that can't take a function `style`. |
+
+### New in 1.1.0
+
+These are additive — no migration required. Adopt them only if you need the functionality.
+
+| Addition | Description |
+| :-- | :-- |
+| `style` / `containerStyle` receive `{ focused, pressed }` | Both callbacks now share one `InteractionState` shape, so `style={({ focused, pressed }) => …}` works the same on either prop. Existing callbacks that only destructure `pressed` keep working unchanged. |
+| `containerStyle` accepts a function | Previously static-only; it now takes the same `({ focused, pressed }) => style` callback as `style`, for styling the outer container/ring. [Details](../guides/pressable-focus.md#styling-on-focus--press). |
+| `useIsViewPressed` | Reads the press state (touch **or** physical keyboard) of the nearest `withKeyboardFocus`-wrapped ancestor without re-rendering it — the press-side counterpart to `useIsViewFocused`. [Details](../guides/pressable-focus.md#reacting-without-re-rendering--useisviewfocused--useisviewpressed). |
+| `InteractionState`, `InteractiveStyleProp`, `ContainerStyle`, `ContainerStyleStateType` | New exported types behind the function-form `style` / `containerStyle`. [Details](../api/overview.md#interactionstate). |
+
+```tsx
+// Zero-re-render context leaf, new in 1.1.0
+import { useIsViewFocused, useIsViewPressed } from 'react-native-external-keyboard';
+
+const Label = () => {
+  const focused = useIsViewFocused();
+  const pressed = useIsViewPressed();
+  return <Text style={focused && styles.focused}>{pressed ? 'Pressed' : 'Idle'}</Text>;
+};
+```
 
 ---
 
