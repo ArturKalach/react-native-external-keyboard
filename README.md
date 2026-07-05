@@ -44,7 +44,7 @@ import { Text } from 'react-native';
 <K.Pressable
   autoFocus
   onPress={onPress}
-  focusStyle={{ backgroundColor: 'dodgerblue' }}
+  style={({ focused }) => focused && { backgroundColor: 'dodgerblue' }}
 >
   <Text>Press me with Space or Enter</Text>
 </K.Pressable>
@@ -72,8 +72,8 @@ const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
 
 | Library version | React Native |
 | :-- | :-- |
-| `1.0.0` | ≥ 0.80 |
-| `0.11.0` | ≤ 0.79 |
+| `1.1.0` | ≥ 0.80 |
+| `0.12.0` | ≤ 0.79 |
 
 ## Documentation
 
@@ -81,7 +81,7 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 
 **Guides** — task-focused walkthroughs
 
-- [Pressable focus handling](./docs/guides/pressable-focus.md) — focus/blur events, `focusStyle`, render props
+- [Pressable focus handling](./docs/guides/pressable-focus.md) — focus/blur events, `style`/`containerStyle`, render props
 - [Native focus styling](./docs/guides/focus-styling.md) — iOS halo & `tintColor`, Android focus highlight
 - [Programmatic focus](./docs/guides/programmatic-focus.md) — `ref.focus()`, `keyboardFocus()`, `autoFocus`
 - [Keyboard text input](./docs/guides/text-input.md) — `KeyboardExtendedInput`, `focusType`, `blurType`
@@ -118,7 +118,7 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 | :-- | :-- |
 | [`Keyboard`](./docs/api/overview.md#keyboard-module) | Dismiss the soft keyboard from a hardware keyboard. |
 | [`KeyboardFocus` ref](./docs/api/overview.md#imperative-ref-keyboardfocus) | Imperative focus handle (`focus`, `keyboardFocus`, `screenReaderFocus`). |
-| [Hooks](./docs/api/overview.md#hooks) | `useIsViewFocused`, `useOrderFocusGroup`. |
+| [Hooks](./docs/api/overview.md#hooks) | `useIsViewFocused`, `useIsViewPressed`, `useOrderFocusGroup`. |
 | [Focus-order props](./docs/api/overview.md#focus-order-props) | `orderId`, `order*`, `orderIndex`, `orderGroup`, `lockFocus`. |
 
 ---

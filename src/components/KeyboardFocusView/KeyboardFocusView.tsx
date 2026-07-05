@@ -39,7 +39,7 @@ export const KeyboardFocusView = React.forwardRef<
     ref
   ) => {
     const {
-      focused,
+      focusStore,
       containerFocusedStyle,
       onFocusChangeHandler,
       onKeyUpPressHandler,
@@ -65,7 +65,7 @@ export const KeyboardFocusView = React.forwardRef<
     );
 
     return (
-      <IsViewFocusedContext.Provider value={focused}>
+      <IsViewFocusedContext.Provider value={focusStore}>
         <BaseKeyboardView
           style={containerStyleArr}
           ref={ref as React.Ref<BaseKeyboardViewType>}

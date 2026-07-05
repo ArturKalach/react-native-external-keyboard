@@ -4,7 +4,7 @@
 | --- | --- |
 | <img src="../images/focus-styling-ios.gif" height="400" alt="Native focus styling on iOS" /> | <img src="../images/focus-styling-android.gif" height="400" alt="Native focus styling on Android" /> |
 
-Beyond your own `focusStyle` ([see Pressable focus handling](./pressable-focus.md)), each platform draws a **native** focus indicator. This guide covers configuring and disabling it: the iOS halo (`haloEffect`, `tintColor`, `haloExpendX`/`haloExpendY`, `haloCornerRadius`, `roundedHaloFix`) and the Android highlight (`defaultFocusHighlightEnabled`).
+Beyond your own `style`/`focusStyle` ([see Pressable focus handling](./pressable-focus.md)), each platform draws a **native** focus indicator. This guide covers configuring and disabling it: the iOS halo (`haloEffect`, `tintColor`, `haloExpendX`/`haloExpendY`, `haloCornerRadius`) and the Android highlight (`defaultFocusHighlightEnabled`).
 
 | Platform | Native indicator | Controlled by |
 | :-- | :-- | :-- |
@@ -66,22 +66,15 @@ Set `haloEffect={false}` to turn the ring off (for example, when you draw your o
 </KeyboardPressable>
 ```
 
-### `roundedHaloFix`
+### `roundedHaloFix` (deprecated, no-op)
 
-When you disable the halo (`haloEffect={false}`) on a view that has a `borderRadius`, the halo can reappear anyway — iOS recalculates and redraws it on the next layout pass, overriding the fact that you turned it off.
+`roundedHaloFix` used to work around a UIKit + React Native interaction where a disabled halo (`haloEffect={false}`) could reappear on a view with `borderRadius` — UIKit re-armed the halo from the view's `layer.cornerRadius` on every layout pass. That is fixed at the source now: a disabled halo always resolves to a suppressed effect, so it can no longer reappear from the view's `layer.cornerRadius`. `roundedHaloFix` is kept only for backwards compatibility, has no effect, and will be removed in a future major version — remove it from your code.
 
-#### Why this happens
-
-This is a UIKit + React Native interaction, not a bug in this library. UIKit arms the focus halo from the focused view's `layer.cornerRadius`, and React Native re-applies that `cornerRadius` (from your `borderRadius` style) on every layout pass. Each time it does, UIKit recalculates the halo and draws it again — re-enabling the effect you had disabled.
-
-You can avoid it in **two ways**:
-
-**1. Use `roundedHaloFix`** — it watches for layout changes and resets the focus effect on each pass, so the disabled halo stays suppressed:
+The halo's shape is no longer inferred from `borderRadius` at all — `haloCornerRadius` is the only thing that rounds the **halo ring**, and you set it explicitly to match a rounded component:
 
 ```tsx
 <KeyboardPressable
-  haloEffect={false}
-  roundedHaloFix
+  haloCornerRadius={16}
   style={{ borderRadius: 16 }}
   onPress={onPress}
 >
@@ -89,20 +82,17 @@ You can avoid it in **two ways**:
 </KeyboardPressable>
 ```
 
-**2. Move the rounding off the focused view** — apply the `borderRadius` (and other border styles) on `containerStyle` instead of `style` or nested children. `containerStyle` targets the outer wrapper, not the focused view, so the focused view's layer keeps a `cornerRadius` of `0` and UIKit never arms the mismatched highlight — while the view still looks rounded:
+To disable the halo on a rounded view, just set `haloEffect={false}` — no extra prop needed:
 
 ```tsx
 <KeyboardPressable
   haloEffect={false}
-  containerStyle={{ borderRadius: 16 }}
+  style={{ borderRadius: 16 }}
   onPress={onPress}
 >
-  <Text>Rounded, no highlight glitch</Text>
+  <Text>Rounded, no halo</Text>
 </KeyboardPressable>
 ```
-
-> [!IMPORTANT]
-> `roundedHaloFix` only takes effect when `haloEffect={false}`. With the halo enabled (the default), the ring already follows `haloCornerRadius`, so the fix is not needed and is ignored.
 
 ---
 
@@ -163,7 +153,7 @@ To rely entirely on your own `focusStyle` / `containerFocusStyle` across both pl
 | `tintType` | `'default' \| 'none'` | `'default'` | `'none'` disables the native focus indicator on both platforms (iOS halo + Android highlight). `'default'` keeps it. |
 
 > [!NOTE]
-> `tintType="none"` also engages the [`roundedHaloFix`](#roundedhalofix) path on iOS when you pass `roundedHaloFix`, just like `haloEffect={false}` — so a disabled halo stays suppressed on rounded views. It works on `KeyboardExtendedInput` too.
+> `tintType="none"` works on `KeyboardExtendedInput` too, and — like `haloEffect={false}` — always resolves to a suppressed halo, including on rounded (`borderRadius`) views. No extra prop needed.
 
 ---
 

@@ -32,7 +32,7 @@ Shared by `withKeyboardFocus`-wrapped components, `KeyboardExtendedView`, and `K
 | `haloCornerRadius` | `number` | — | *(iOS)* Corner radius of the halo ring, in points. |
 | `haloExpendX` | `number` | — | *(iOS)* Horizontal expansion of the halo beyond the view bounds. |
 | `haloExpendY` | `number` | — | *(iOS)* Vertical expansion of the halo beyond the view bounds. |
-| `roundedHaloFix` | `boolean` | — | *(iOS)* When `haloEffect={false}`, keeps the disabled halo from reappearing on rounded (`borderRadius`) views. [Why & alternative](../guides/focus-styling.md#roundedhalofix). |
+| `roundedHaloFix` | `boolean` | — | *(iOS, deprecated)* No longer needed or has any effect — a disabled halo is always suppressed now, including on rounded views. Use `haloCornerRadius` to shape the halo instead. [Details](../guides/focus-styling.md#roundedhalofix-deprecated-no-op). |
 | `defaultFocusHighlightEnabled` | `boolean` | `true` | *(Android)* Enables Android's default focus highlight. |
 | `tintType` | `'default' \| 'none'` | `'default'` | Cross-platform shortcut: `'none'` disables the native focus indicator on both platforms (iOS halo + Android highlight). [Details](../guides/focus-styling.md#turning-off-all-native-indicators). |
 | `screenAutoA11yFocus` | `boolean` | — | Move screen-reader focus to this element automatically. |
@@ -68,17 +68,20 @@ In addition to the [common focus props](#common-focus-props) and the wrapped com
 | `onLongPress` | `(e: GestureResponderEvent) => void` | — | Long press (`Tab + M` on iOS). |
 | `onPressIn` | `(e: GestureResponderEvent) => void` | — | Press-in / keyboard press-in. |
 | `onPressOut` | `(e: GestureResponderEvent) => void` | — | Press-out / keyboard press-out. |
-| `style` | `StyleProp<ViewStyle>` | — | Styles the inner component. |
-| `focusStyle` | [`FocusStyle`](../api/overview.md#focusstyle) | — | Style applied to the inner component when focused. |
-| `containerStyle` | `StyleProp<ViewStyle>` | — | Style for the container. |
-| `containerFocusStyle` | [`FocusStyle`](../api/overview.md#focusstyle) | — | Style applied to the container when focused. |
-| `withPressedStyle` | `boolean` | `false` | Enable the pressed-style handler for custom components (always on for `Pressable`). |
+| `style` | [`InteractiveStyleProp`](../api/overview.md#interactionstate) | — | Styles the inner component. Static/array, or a callback receiving `{ focused, pressed }`. **The default** way to style focus/press. |
+| `containerStyle` | [`ContainerStyle`](../api/overview.md#interactionstate) | — | Style for the container. Static/array, or a callback receiving `{ focused, pressed }`. |
+| `focusStyle` | [`FocusStyle`](../api/overview.md#focusstyle) | — | Legacy, still supported: style applied to the inner component when focused (`{ focused }` only, no `pressed`). |
+| `containerFocusStyle` | [`FocusStyle`](../api/overview.md#focusstyle) | — | Legacy, still supported: style applied to the container when focused. |
+| `withPressedStyle` | `boolean` | *auto* | *(deprecated)* No longer needed — the pressed-style handler is enabled automatically whenever `style`/`containerStyle` is a function. Pass `false` only to force a static style on a component that can't take a function `style`. |
+| `androidKeyboardPressState` | `boolean` | *auto* | *(Android)* Tracks physical-keyboard press (Enter/Space/D-pad) as `pressed`, since it doesn't flow through the touch responder. Defaults to **auto**: enabled whenever a pressed-reactive `style`/`containerStyle`/render prop exists. No-op on iOS. |
 | `renderContent` | `(state: ComponentRenderState & { focused: boolean }) => ReactNode` | — | For components whose `children` is a render function (e.g. `Pressable`); merges the component's own render state with `{ focused }`. |
 | `renderFocusable` | `(state: { focused: boolean }) => ReactNode` | — | Replaces `children` with a render prop receiving `{ focused }`. Use for components without a render-prop `children` (e.g. `TouchableOpacity`). |
 | `triggerCodes` | `number[]` | space + enter | Key codes that trigger `onPress` / `onLongPress`. |
 | `ref` | `Ref<KeyboardFocus>` | — | Imperative [focus handle](../api/overview.md#imperative-ref-keyboardfocus). |
 | `componentRef` | `RefObject<ViewType>` | — | Ref to the wrapped component instance. |
 | `...rest` | wrapped component props | — | Forwarded to the wrapped component. |
+
+See [Pressable focus handling](../guides/pressable-focus.md#styling-on-focus--press) for the full styling guide, and [`useIsViewFocused` / `useIsViewPressed`](../guides/pressable-focus.md#reacting-without-re-rendering--useisviewfocused--useisviewpressed) for the zero-re-render context-leaf pattern.
 
 ### renderContent — `Pressable` with `pressed` + `focused`
 

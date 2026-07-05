@@ -50,6 +50,7 @@ export type { KeyboardPressableProps } from './components';
 // Hooks & context
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
 export { useIsViewFocused } from './context/IsViewFocusedContext';
+export { useIsViewPressed } from './context/IsViewPressedContext';
 export {
   KeyboardOrderFocusGroup,
   OrderFocusGroupContext,

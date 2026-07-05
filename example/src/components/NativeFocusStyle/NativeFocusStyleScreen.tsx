@@ -43,6 +43,7 @@ const CARDS: {
 ];
 
 const CARD_H = 84;
+const CARD_RADIUS = 12;
 const GAP = 24;
 const RAIL_W = 34;
 const RAIL_CX = 17;
@@ -183,8 +184,11 @@ const HaloCard = ({
 }) => {
   const expanded = variant === 'expanded';
   const custom = variant === 'custom';
-  // The last two avoid corner radius — the iOS halo follows the view's
-  // cornerRadius, and rounding it (haloCornerRadius / roundedHaloFix) is flaky.
+  // The halo radius isn't inferred from the card's borderRadius — set it explicitly
+  // so the ring matches the rounded card. An opaque border makes RN render via the
+  // image-border path, which zeroes the view's layer.cornerRadius, so UIKit's default
+  // (unset-radius) halo would otherwise be square. The expanded variant also pads the
+  // ring via haloExpend*.
   return (
     <Pressable
       onFocusChange={(isFocused) => onNav(index, isFocused)}
@@ -192,8 +196,7 @@ const HaloCard = ({
       haloEffect={!custom}
       haloExpendX={expanded ? 16 : undefined}
       haloExpendY={expanded ? 16 : undefined}
-      haloCornerRadius={expanded ? 16 : undefined}
-      roundedHaloFix={expanded ? true : undefined}
+      haloCornerRadius={expanded ? 16 : CARD_RADIUS}
       defaultFocusHighlightEnabled={custom ? false : undefined}
       focusStyle={custom ? styles.customRing : undefined}
       style={[
@@ -264,15 +267,14 @@ const styles = StyleSheet.create({
   cards: { flex: 1, gap: GAP },
   card: {
     height: CARD_H,
-    borderRadius: 12,
+    borderRadius: CARD_RADIUS,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: '#e5e5ea',
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 5,
   },
-  cardSquare: { borderRadius: 0 },
   cardTitle: { fontSize: 16, fontWeight: '700', color: '#1c1c1e' },
   cardCode: { fontFamily: 'Courier', fontSize: 12.5, color: '#8e8e93' },
 

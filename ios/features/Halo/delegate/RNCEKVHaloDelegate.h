@@ -16,7 +16,6 @@
 - (instancetype _Nonnull)initWithView:(UIView<RNCEKVHaloProtocol> *_Nonnull)view;
 
 @property (nonatomic, readonly, nullable) UIFocusEffect *focusEffect API_AVAILABLE(ios(15.0));
-- (void)observeCornerRadius:(CGFloat)radius;
 - (void)invalidate;
 - (void)clear;
 

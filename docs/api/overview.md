@@ -49,9 +49,10 @@ function withKeyboardFocus<C>(Component: C): KeyboardFocusableComponent<C>;
 Wraps any `Pressable`/`Touchable`-like component and returns a new component that:
 
 - forwards focus/blur via `onFocus`, `onBlur`, `onFocusChange`;
-- applies `focusStyle` / `containerFocusStyle` based on focus state;
+- applies `style` / `containerStyle` — static, or a callback receiving `{ focused, pressed }` ([`InteractionState`](#interactionstate)) — plus the legacy, focus-only `focusStyle` / `containerFocusStyle`;
 - supports `autoFocus`, `triggerCodes`, and the `KeyboardFocus` ref;
-- exposes the wrapped component's render state through `renderContent` / `renderFocusable`.
+- exposes the wrapped component's render state through `renderContent` / `renderFocusable`;
+- exposes focus/press to descendants without re-rendering the host via `useIsViewFocused` / `useIsViewPressed`.
 
 See the [withKeyboardFocus component docs](../components/overview.md#withkeyboardfocus) for the full props table and `renderContent` / `renderFocusable` examples.
 
@@ -103,7 +104,8 @@ The handle is a proxy: any property other than the three methods above falls thr
 
 | Hook | Signature | Description |
 | :-- | :-- | :-- |
-| `useIsViewFocused` | `() => boolean` | Returns whether the nearest keyboard-focusable ancestor is currently focused. Read it from a descendant to react to focus state. |
+| `useIsViewFocused` | `() => boolean` | Returns whether the nearest keyboard-focusable ancestor is currently focused. Read it from a descendant to react to focus state without re-rendering the host. |
+| `useIsViewPressed` | `() => boolean` | Returns whether the nearest `withKeyboardFocus`-wrapped ancestor (`K.Pressable` / `withKeyboardFocus(X)`) is currently pressed — touch **or** physical keyboard. Read it from a descendant to react to press state without re-rendering the host. Not available under `KeyboardExtendedView` / `K.View` (no press concept). |
 | `useOrderFocusGroup` | `() => OrderFocusGroupContext` | Returns the current focus-order group context (its `groupId` / namespace). Provided by `KeyboardOrderFocusGroup`. |
 
 Related context exports: `KeyboardOrderFocusGroup`, `OrderFocusGroupContext`.
@@ -207,9 +209,37 @@ type OnFocusChangeFn = (isFocused: boolean, tag?: number) => void;
 
 `isFocused` is `true` on focus, `false` on blur; `tag` is the native view tag when available.
 
+### `InteractionState`
+
+The state passed to a function-form `style` / `containerStyle` on a `withKeyboardFocus`-wrapped component (`K.Pressable`, `withKeyboardFocus(X)`) — one consistent shape for both keyboard focus and press:
+
+```ts
+type InteractionState = {
+  readonly focused: boolean;
+  readonly pressed: boolean;
+};
+```
+
+### `InteractiveStyleProp` / `ContainerStyle`
+
+The types behind `style` and `containerStyle` on a `withKeyboardFocus`-wrapped component: a static style/array, or a callback receiving `InteractionState`.
+
+```ts
+type InteractiveStyleProp =
+  | StyleProp<ViewStyle>
+  | ((state: InteractionState) => StyleProp<ViewStyle>);
+
+type ContainerStyle<ViewStyleType> =
+  | ViewStyleType
+  | ViewProps['style']
+  | ((state: InteractionState) => ViewProps['style']);
+```
+
+See [Pressable focus handling](../guides/pressable-focus.md#the-default-function-style--containerstyle) for usage.
+
 ### `FocusStyle`
 
-A style applied based on focus state — either a static style or a callback.
+The pre-unification, focus-only style prop (`focusStyle` / `containerFocusStyle`) — either a static style or a callback receiving `{ focused }` only (no `pressed`). Still fully supported, not deprecated.
 
 ```ts
 type FocusStyle =
@@ -246,6 +276,7 @@ The matching enum `LockFocusEnum` is also exported.
 | `KeyboardInputProps` | Props for `KeyboardExtendedInput`. |
 | `KeyboardFocusLockProps`, `LockComponentType` | Props/enum for `Focus.Frame` / `Focus.Trap`. |
 | `WithKeyboardFocusProps`, `KeyboardFocusableComponent` | The `withKeyboardFocus` HOC contract. |
+| `InteractionState`, `InteractiveStyleProp`, `ContainerStyle` | Types behind the function-form `style` / `containerStyle`. |
 | `KeyboardFocusEvent`, `NativeFocusChangeHandler` | Raw native focus-change event + handler. |
 
 ---

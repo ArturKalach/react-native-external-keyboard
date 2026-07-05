@@ -8,6 +8,8 @@
 #ifndef RNCEKVHaloProtocol_h
 #define RNCEKVHaloProtocol_h
 
+#import <UIKit/UIKit.h>
+
 @protocol RNCEKVHaloProtocol <NSObject>
 
 - (BOOL)isHaloHidden;
