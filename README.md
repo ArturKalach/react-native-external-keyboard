@@ -72,8 +72,8 @@ const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
 
 | Library version | React Native |
 | :-- | :-- |
-| `1.0.0` | ≥ 0.80 |
-| `0.11.0` | ≤ 0.79 |
+| `1.1.0` | ≥ 0.80 |
+| `0.12.0` | ≤ 0.79 |
 
 ## Documentation
 
