@@ -29,7 +29,7 @@ export type ValueStoreController = {
  * value never re-renders consumers by identity — only a real value change does.
  */
 export const useValueStore = (): ValueStoreController => {
-  const ref = useRef<ValueStoreController>();
+  const ref = useRef<ValueStoreController | undefined>(undefined);
   if (!ref.current) {
     const state = { value: false, listeners: new Set<() => void>() };
     ref.current = {
