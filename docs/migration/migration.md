@@ -101,7 +101,7 @@ These are additive — no migration required. Adopt them only if you need the fu
 | :-- | :-- |
 | `ref.current?.keyboardFocus()` | Imperative handle now exposes `keyboardFocus()` (physical-keyboard focus only) and `screenReaderFocus()` (VoiceOver / TalkBack focus only) alongside `focus()`, which now moves both. |
 | `K` namespace | `K.View`, `K.Input`, `K.Pressable` shorthands for the keyboard-extended components. |
-| `roundedHaloFix` prop | *(iOS)* Keeps a disabled halo (`haloEffect={false}`) from reappearing on rounded (`borderRadius`) views. [Details](../guides/focus-styling.md#roundedhalofix). |
+| `roundedHaloFix` prop | *(iOS, since deprecated)* Kept a disabled halo (`haloEffect={false}`) from reappearing on rounded (`borderRadius`) views. The underlying bug is fixed at the source in a later release, so the prop is now a no-op. [Details](../guides/focus-styling.md#roundedhalofix-deprecated-no-op). |
 | `LockComponentType` | Now exported (enum used by `Focus.Frame` / `Focus.Trap`). |
 
 > [!NOTE]

@@ -14,13 +14,11 @@ export type CommonFocusProps = {
    */
   haloEffect?: boolean;
   /**
-   * Keeps a disabled halo (`haloEffect={false}`) suppressed on views that have
-   * a `borderRadius`. UIKit re-arms the halo from the view's
-   * `layer.cornerRadius` (set by RN from `borderRadius`) on every layout pass,
-   * so the halo can reappear after being disabled; this watches layout changes
-   * and resets the focus effect each pass. Only takes effect when
-   * `haloEffect={false}`. Alternatively, move `borderRadius` to `containerStyle`
-   * so the focused view itself stays square.
+   * @deprecated No longer needed and ignored. The halo is now driven entirely by
+   * the explicit `haloCornerRadius` / `haloExpend*` props and a disabled halo
+   * (`haloEffect={false}`) always resolves to a suppressed effect, so it can no
+   * longer reappear from the view's `layer.cornerRadius`. Will be removed in the
+   * next major. Use `haloCornerRadius` to round the halo.
    *
    * @platform ios
    */
@@ -82,7 +80,10 @@ export type BaseFocusViewProps = {
   /** Called when the component loses keyboard focus. */
   onBlur?: () => void;
   /**
-   * Corner radius of the halo ring, in points.
+   * Corner radius of the **halo ring**, in points — shapes the halo only, not the
+   * view. It is not inferred from `borderRadius` (that styles the view/container);
+   * set it here to match a rounded component. When unset, the system draws its
+   * default halo around the focused view.
    *
    * @platform ios
    */
