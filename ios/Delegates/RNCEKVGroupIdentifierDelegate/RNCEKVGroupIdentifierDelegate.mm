@@ -15,7 +15,7 @@
 
 
 @implementation RNCEKVGroupIdentifierDelegate {
-  UIView<RNCEKVGroupIdentifierProtocol>* _delegate;
+  __weak UIView<RNCEKVGroupIdentifierProtocol>* _delegate;
   NSString* _tagId;
 }
 

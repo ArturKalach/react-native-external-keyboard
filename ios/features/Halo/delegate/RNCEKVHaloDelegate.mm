@@ -14,7 +14,7 @@
 // — `haloCornerRadius`, `haloExpendX`, `haloExpendY`. The radius is an input, not
 // observed off the layer, so there is no stable-radius tracking and no re-arm loop.
 @implementation RNCEKVHaloDelegate {
-  UIView<RNCEKVHaloProtocol> *_delegate;
+  __weak UIView<RNCEKVHaloProtocol> *_delegate;
   UIFocusEffect *_currentEffect;
   BOOL _isDirty;
   CGRect _prevBounds;

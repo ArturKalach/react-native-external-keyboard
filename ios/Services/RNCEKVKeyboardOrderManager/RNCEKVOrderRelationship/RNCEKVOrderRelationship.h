@@ -10,8 +10,8 @@
 
 @interface RNCEKVOrderRelationship : NSObject
 
-@property UIView* entry;
-@property UIView* exit;
+@property (weak) UIView* entry;
+@property (weak) UIView* exit;
 
 - (void)add:(NSNumber*)position withObject:(NSObject*)obj;
 - (void)remove:(NSNumber*)position;
