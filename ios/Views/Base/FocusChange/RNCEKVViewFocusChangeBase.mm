@@ -61,12 +61,11 @@
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-  _isFocused = [self resolveFocusChange:context];
+  NSNumber *focusChange = [self resolveFocusChange:context];
 
-  if ([self hasOnFocusChanged]) {
-    if (_isFocused != nil) {
-      [self onFocusChangeHandler:[_isFocused isEqual:@YES]];
-    }
+  if (focusChange != nil) {
+    _isFocused = focusChange;
+    [self onFocusChangeHandler:[focusChange isEqual:@YES]];
   }
 
   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];

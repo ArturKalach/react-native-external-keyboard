@@ -118,6 +118,9 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 
 - (void)onFocusChangeHandler:(BOOL)isFocused {
   [super onFocusChangeHandler: isFocused];
+  if (!self.hasOnFocusChanged) {
+    return;
+  }
   [RNCEKVFabricEventHelper onFocusChangeEventEmmiter:isFocused
                                          withEmitter:_eventEmitter];
 }
@@ -148,7 +151,7 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
 //
 - (void)onFocusChangeHandler:(BOOL)isFocused {
   [super onFocusChangeHandler: isFocused];
-  if (self.onFocusChange) {
+  if (self.hasOnFocusChanged && self.onFocusChange) {
     self.onFocusChange(@{@"isFocused" : @(isFocused)});
   }
 }
