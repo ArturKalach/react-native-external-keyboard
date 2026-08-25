@@ -6,10 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #import "UIView+React.h"
 #import "RNCEKVViewFocusRequestBase.h"
+#import "RNCEKVKeyboardFocusService.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
@@ -17,19 +17,20 @@
 #endif
 
 @implementation RNCEKVViewFocusRequestBase {
-  BOOL _isAttachedToWindow;
   BOOL _autoFocusRequested;
+  BOOL _pendingFocusRequest;
+  NSUInteger _autoFocusGeneration;
 }
 
 - (void)cleanReferences {
   [super cleanReferences];
-  _isAttachedToWindow = NO;
   _autoFocusRequested = NO;
+  _pendingFocusRequest = NO;
+  _autoFocusGeneration++;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
-    _isAttachedToWindow = NO;
     _autoFocusRequested = NO;
   }
 
@@ -38,9 +39,11 @@
 
 - (void)focus {
   UIViewController *controller = self.reactViewController;
-  if (controller != nil) {
-    [controller rncekvFocusView: self];
+  if (controller == nil) {
+    _pendingFocusRequest = YES;
+    return;
   }
+  [RNCEKVKeyboardFocusService focus:self withFallback:controller];
 }
 
 - (void)screenReaderFocus {
@@ -72,9 +75,17 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
   if (self.autoFocus) {
     if(!_autoFocusRequested) {
       _autoFocusRequested = YES;
+      NSUInteger generation = _autoFocusGeneration;
+      __weak __typeof(self) weakSelf = self;
       dispatch_async(dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-          [self focus];
+          __typeof(self) strongSelf = weakSelf;
+          if (strongSelf == nil || strongSelf->_autoFocusGeneration != generation) {
+            return;
+          }
+          if (strongSelf.window && strongSelf.autoFocus) {
+            [strongSelf focus];
+          }
         });
       });
     }
@@ -86,14 +97,11 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
   [super didMoveToWindow];
 
   if (self.window) {
-    [self onAttached];
-  }
-
-  if (self.window && !_isAttachedToWindow) {
-    if (self.autoFocus) {
+    if (_pendingFocusRequest) {
+      _pendingFocusRequest = NO;
       [self focus];
     }
-    _isAttachedToWindow = YES;
+    [self onAttached];
   }
 }
 

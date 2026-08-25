@@ -41,14 +41,17 @@
 }
 
 + (void)focus:(UIView *)view {
+  [self focus:view withFallback:nil];
+}
+
++ (void)focus:(UIView *)view withFallback:(UIViewController *)controller {
   if (!view) {
     return;
   }
 
   UIWindow *window = RCTKeyWindow();
-  if (window && window.rootViewController) {
-    [window.rootViewController rncekvFocusView:view];
-  }
+  UIViewController *targetController = window.rootViewController ?: controller;
+  [targetController rncekvFocusView:view];
 }
 
 @end

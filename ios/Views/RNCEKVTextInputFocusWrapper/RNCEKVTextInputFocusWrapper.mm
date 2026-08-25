@@ -6,7 +6,7 @@
 #import "RNCEKVFocusEffectUtility.h"
 #import "RCTBaseTextInputView.h"
 #import "RNCEKVOrderLinking.h"
-#import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVKeyboardFocusService.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -41,7 +41,9 @@ using namespace facebook::react;
 static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
-@implementation RNCEKVTextInputFocusWrapper
+@implementation RNCEKVTextInputFocusWrapper {
+  BOOL _pendingFocusRequest;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -122,6 +124,9 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 #ifdef RCT_NEW_ARCH_ENABLED
 
 - (void)onFocusChangeHandler:(BOOL) isFocused {
+    if (!self.hasOnFocusChanged) {
+        return;
+    }
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
         facebook::react::TextInputFocusWrapperEventEmitter::OnFocusChange data = {
@@ -146,7 +151,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 
 - (void)onFocusChangeHandler:(BOOL) isFocused {
-    if(self.onFocusChange) {
+    if(self.hasOnFocusChanged && self.onFocusChange) {
         self.onFocusChange(@{ @"isFocused": @(isFocused) });
     }
 }
@@ -162,13 +167,25 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)focus {
   UIViewController *viewController = self.reactViewController;
+  if (viewController == nil || self.superview == nil) {
+    _pendingFocusRequest = YES;
+    return;
+  }
   [self updateFocus:viewController];
 }
 
 - (void)updateFocus:(UIViewController *)controller {
   UIView *focusingView = self.subviews.count ? self.subviews[0] : nil;
   if (self.superview != nil && controller != nil) {
-    [controller rncekvFocusView:focusingView];
+    [RNCEKVKeyboardFocusService focus:focusingView withFallback:controller];
+  }
+}
+
+- (void)didMoveToWindow {
+  [super didMoveToWindow];
+  if (self.window && _pendingFocusRequest) {
+    _pendingFocusRequest = NO;
+    [self focus];
   }
 }
 
@@ -246,6 +263,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     [super cleanReferences];
     _textField = nil;
     _textView = nil;
+    _pendingFocusRequest = NO;
 }
 
 - (BOOL)getIsTextInputView: (UIView*)view {

@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "RNCEKVViewOrderGroupBase.h"
 #import "RNCEKVOrderLinking.h"
-#import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVKeyboardFocusService.h"
 #import "UIView+React.h"
 #import "RNCEKVPropHelper.h"
 
@@ -34,7 +34,8 @@
 }
 
 - (BOOL)getIsViewFocused:(UIFocusUpdateContext *)context {
-  return context.nextFocusedView == [self getStoredView];
+  UIView *next = context.nextFocusedView;
+  return next != nil && [next isDescendantOfView:self];
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -48,7 +49,7 @@
   BOOL isAttached = self.superview != nil && controller != nil;
 
   if (isAttached) {
-    [controller rncekvFocusView:[self getStoredView]];
+    [RNCEKVKeyboardFocusService focus:[self getStoredView] withFallback:controller];
   }
 }
 
