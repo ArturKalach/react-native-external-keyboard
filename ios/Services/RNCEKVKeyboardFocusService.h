@@ -23,12 +23,10 @@
 /// Moves keyboard focus to the given view on the next focus update.
 + (void)focus:(UIView *)view;
 
-/// Like `focus:`, but resolves the routing controller as: the target view's own
-/// window root first (UIKit honors a focus update only when the environment it is
-/// requested on contains the currently focused item, and only the target's own
-/// scene is guaranteed to contain the target), then the key-window root for
-/// not-yet-attached targets, then the supplied fallback. Returns the controller
-/// the request was routed to, or nil when nothing was routed.
+/// Routes focus through the target's window root when available, keeping the
+/// request in the target's scene. For an unattached target, falls back to the
+/// key-window root and then `controller`. Returns the controller that received
+/// the request, or nil if the request could not be routed.
 + (UIViewController *)focus:(UIView *)view withFallback:(UIViewController *)controller;
 
 @end

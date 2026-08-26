@@ -34,9 +34,8 @@
   _autoFocusGeneration++;
 }
 
-// Clears the controller preference this view installed via the focus service,
-// but only while it still points at this view — a later request routed by
-// another view must not be discarded.
+// Clears this view's preferred-focus entry without removing a newer request
+// from another view.
 - (void)clearRoutedFocusTarget {
   UIViewController *routedController = _focusRoutedController;
   if (routedController != nil && routedController.rncekvCustomFocusView == self) {
@@ -104,8 +103,8 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
             return;
           }
           if (strongSelf.window == nil) {
-            // Detached during the dispatch hop: return the consumed attempt so the
-            // next attach can retry instead of losing autofocus permanently.
+            // The view detached before autofocus ran. Let the next attachment
+            // try again.
             strongSelf->_autoFocusRequested = NO;
             return;
           }
@@ -133,8 +132,7 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
     }
     [self onAttached];
   } else {
-    // Detach invalidates the preference this view installed; a recycled or
-    // navigated-away view must not remain the controller's preferred target.
+    // A detached view must no longer be the controller's preferred target.
     [self clearRoutedFocusTarget];
   }
 }

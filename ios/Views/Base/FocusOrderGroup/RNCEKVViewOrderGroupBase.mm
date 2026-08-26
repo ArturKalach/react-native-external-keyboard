@@ -41,9 +41,8 @@
   if (next == nil || ![next isDescendantOfView:self]) {
     return NO;
   }
-  // Nearest-wrapper ownership: when the focused view sits inside a nested
-  // order-group wrapper (or is one itself), that nested wrapper owns the
-  // focus and this view's directional guides must stay off.
+  // The nearest order wrapper owns the focused view. Keep this wrapper's
+  // directional guides disabled when a nested wrapper owns focus.
   for (UIView *view = next; view != nil && view != self; view = view.superview) {
     if ([view isKindOfClass:[RNCEKVViewOrderGroupBase class]]) {
       return NO;

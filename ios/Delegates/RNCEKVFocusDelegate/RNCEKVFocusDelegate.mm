@@ -16,8 +16,8 @@
   // The view UIKit actually focused inside our subtree (set from the focus engine,
   // not guessed). Weak so a removed/recycled view can't be retained or go stale.
   __weak UIView* _focusedTarget;
-  // Survives _focusedTarget zeroing (target deallocated while focused) so the blur
-  // can still be reported when focus moves on.
+  // Tracks wrapper focus after the weak target is deallocated, allowing the
+  // next focus update to report blur.
   BOOL _isTrackingFocus;
 }
 
@@ -123,9 +123,8 @@
   UIView *next = context.nextFocusedView;
   UIView *prev = context.previouslyFocusedView;
 
-  // Focus entered our subtree: remember the *actual* focused view. A move between
-  // two of our own descendants keeps the wrapper focused — retarget without
-  // reporting a change, so JS never sees focus=true twice with no blur between.
+  // Track the actual focused view. Moving between this wrapper's descendants
+  // updates the target without reporting another focus event.
   if (next && [self ownsFocusedView:next]) {
     BOOL alreadyFocused = _isTrackingFocus;
     _focusedTarget = next;
@@ -133,8 +132,8 @@
     return alreadyFocused ? nil : @YES;
   }
 
-  // Focus left the view we were tracking — or the tracked view deallocated
-  // (_focusedTarget zeroed) and focus moved elsewhere.
+  // Report blur when focus leaves the tracked view, including after the weak
+  // target has been deallocated.
   if (_isTrackingFocus && (_focusedTarget == nil || prev == _focusedTarget)) {
     _focusedTarget = nil;
     _isTrackingFocus = NO;

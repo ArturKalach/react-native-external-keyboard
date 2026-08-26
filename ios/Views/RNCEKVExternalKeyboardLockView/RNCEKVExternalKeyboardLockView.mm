@@ -148,9 +148,8 @@ using namespace facebook::react;
     *std::static_pointer_cast<ExternalKeyboardLockViewProps const>(props);
   [super updateProps:props oldProps:oldProps];
 
-  // lockDisabled must be applied before forceLock: a compound
-  // { forceLock: true, lockDisabled: true } commit from defaults must never
-  // pass through a momentarily-active state that steals focus.
+  // Apply lockDisabled first so { forceLock: true, lockDisabled: true } never
+  // activates the trap between property updates.
   if (_lockDisabled != newViewProps.lockDisabled) {
     self.lockDisabled = newViewProps.lockDisabled;
   }
@@ -169,9 +168,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardLockViewCls(void)
 - (void)didMoveToWindow {
   [super didMoveToWindow];
 
-  // Doubles as the attach replay: an active trap whose setter-time request was
-  // dropped for lack of a controller re-requests here, while the guards above
-  // keep an inactive or disabled trap from stealing focus on mount.
+  // An active trap may request focus before it has a controller. Retry after
+  // attachment; the request guards exclude inactive and disabled traps.
   if (self.window) {
     [self requestFocus];
     [self requestScreenReaderFocus];

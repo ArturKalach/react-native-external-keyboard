@@ -186,9 +186,8 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
   }
 }
 
-// Clears the controller preference this wrapper installed for its child, but
-// only while it still points at that child — a later request routed by
-// another view must not be discarded.
+// Clears this child's preferred-focus entry without removing a newer request
+// from another view.
 - (void)clearRoutedFocusTarget {
   UIViewController *routedController = _focusRoutedController;
   UIView *routedTarget = _focusRoutedTarget;
