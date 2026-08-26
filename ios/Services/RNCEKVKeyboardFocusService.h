@@ -23,12 +23,13 @@
 /// Moves keyboard focus to the given view on the next focus update.
 + (void)focus:(UIView *)view;
 
-/// Like `focus:`, but falls back to the given controller when no key-window root
-/// controller exists. The root is preferred because UIKit honors a focus update
-/// only when the environment it is requested on contains the currently focused
-/// item — a nearest-ancestor controller often does not (nested controllers,
-/// react-native-screens), and the request is then silently discarded.
-+ (void)focus:(UIView *)view withFallback:(UIViewController *)controller;
+/// Like `focus:`, but resolves the routing controller as: the target view's own
+/// window root first (UIKit honors a focus update only when the environment it is
+/// requested on contains the currently focused item, and only the target's own
+/// scene is guaranteed to contain the target), then the key-window root for
+/// not-yet-attached targets, then the supplied fallback. Returns the controller
+/// the request was routed to, or nil when nothing was routed.
++ (UIViewController *)focus:(UIView *)view withFallback:(UIViewController *)controller;
 
 @end
 

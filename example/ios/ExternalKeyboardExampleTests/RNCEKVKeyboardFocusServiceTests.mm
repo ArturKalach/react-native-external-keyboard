@@ -38,7 +38,7 @@
   XCTAssertEqual(rootController.rncekvCustomFocusView, existingFocusView);
 }
 
-- (void)test_focus_prefersKeyWindowRoot_overFallback {
+- (void)test_focus_windowlessTarget_fallsBackToKeyWindowRoot {
   UIViewController *rootController = RCTKeyWindow().rootViewController;
   XCTAssertNotNil(rootController);
 
@@ -60,6 +60,46 @@
   [RNCEKVKeyboardFocusService focus:focusTarget];
 
   XCTAssertEqual(rootController.rncekvCustomFocusView, focusTarget);
+}
+
+- (void)test_focus_targetWithWindow_prefersTargetWindowRoot {
+  UIWindow *localWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  localWindow.rootViewController = [UIViewController new];
+  UIView *target = [UIView new];
+  [localWindow.rootViewController.view addSubview:target];
+  localWindow.hidden = NO;
+
+  UIViewController *fallback = [UIViewController new];
+
+  [RNCEKVKeyboardFocusService focus:target withFallback:fallback];
+
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, target);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+  XCTAssertNil(fallback.rncekvCustomFocusView);
+
+  localWindow.hidden = YES;
+}
+
+- (void)test_focus_returnsRoutedController {
+  UIWindow *localWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  localWindow.rootViewController = [UIViewController new];
+  UIView *target = [UIView new];
+  [localWindow.rootViewController.view addSubview:target];
+  localWindow.hidden = NO;
+
+  UIViewController *fallback = [UIViewController new];
+
+  UIViewController *routed = [RNCEKVKeyboardFocusService focus:target withFallback:fallback];
+  XCTAssertEqualObjects(routed, localWindow.rootViewController);
+
+  XCTAssertEqualObjects([RNCEKVKeyboardFocusService focus:[UIView new] withFallback:fallback],
+                        RCTKeyWindow().rootViewController);
+
+  localWindow.hidden = YES;
+}
+
+- (void)test_focus_nilView_returnsNil {
+  XCTAssertNil([RNCEKVKeyboardFocusService focus:nil withFallback:[UIViewController new]]);
 }
 
 @end

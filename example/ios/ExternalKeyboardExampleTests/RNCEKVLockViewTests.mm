@@ -154,17 +154,19 @@ static UIWindow *RNCEKVMakeDetachedWindowWithRootViewController(void) {
 
 #pragma mark requestFocus routing (real view)
 
-- (void)test_requestFocus_realView_routesThroughService_toKeyWindowRoot {
+- (void)test_requestFocus_realView_routesThroughService_toOwnWindowRoot {
   UIWindow *detachedWindow = RNCEKVMakeDetachedWindowWithRootViewController();
+  detachedWindow.hidden = NO;
   RNCEKVExternalKeyboardLockView *lockView =
       [[RNCEKVExternalKeyboardLockView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
   [detachedWindow.rootViewController.view addSubview:lockView];
 
   lockView.forceLock = YES;
 
-  UIViewController *keyRootController = RCTKeyWindow().rootViewController;
-  XCTAssertNotNil(keyRootController);
-  XCTAssertEqual(keyRootController.rncekvCustomFocusView, lockView);
+  XCTAssertEqualObjects(detachedWindow.rootViewController.rncekvCustomFocusView, lockView);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+
+  detachedWindow.hidden = YES;
 }
 
 - (void)test_requestFocus_inactiveGate_noRouting {

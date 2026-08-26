@@ -63,7 +63,8 @@
   UIWindow *localWindow = [self attachUnderLocalRootController:wrapper];
   XCTAssertNotNil(localWindow.rootViewController, @"reactViewController resolution requires a live root controller");
 
-  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, first);
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, first);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
 }
 
 - (void)test_replay_singleShot {
@@ -73,14 +74,15 @@
   [wrapper addSubview:child];
 
   UIWindow *localWindow = [self attachUnderLocalRootController:wrapper];
-  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, child,
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, child,
                          @"replay must have run once before the single-shot leg is exercised");
 
+  localWindow.rootViewController.rncekvCustomFocusView = nil;
   RNCEKVResetRootCustomFocusView();
   [wrapper removeFromSuperview];
   [localWindow.rootViewController.view addSubview:wrapper];
 
-  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+  XCTAssertNil(localWindow.rootViewController.rncekvCustomFocusView);
 }
 
 - (void)test_cleanReferences_clearsPending {
@@ -91,9 +93,10 @@
 
   UIView *child = [[UIView alloc] initWithFrame:CGRectZero];
   [wrapper addSubview:child];
-  [self attachUnderLocalRootController:wrapper];
+  UIWindow *localWindow = [self attachUnderLocalRootController:wrapper];
 
   XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+  XCTAssertNil(localWindow.rootViewController.rncekvCustomFocusView);
 }
 
 - (void)test_updateFocus_noSubviews_serviceNilGuard_noop {
@@ -116,6 +119,132 @@
 
   wrapper.hasOnFocusChanged = YES;
   XCTAssertNoThrow([wrapper onFocusChangeHandler:NO]);
+}
+
+- (void)test_focus_attachedWithoutChild_parks_thenReplaysAfterReattachWithChild {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIWindow *localWindow = [self attachUnderLocalRootController:wrapper];
+
+  [wrapper focus];
+  XCTAssertNil(localWindow.rootViewController.rncekvCustomFocusView);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+
+  [wrapper removeFromSuperview];
+  UIView *child = [UIView new];
+  [wrapper addSubview:child];
+  [localWindow.rootViewController.view addSubview:wrapper];
+
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, child,
+                        @"pending survives detach and replays once the child exists");
+}
+
+- (void)test_focus_windowNilWithController_parks {
+  UIViewController *vc = [UIViewController new];
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIView *child = [UIView new];
+  [wrapper addSubview:child];
+  [vc.view addSubview:wrapper];
+
+  [wrapper focus];
+
+  XCTAssertNil(vc.rncekvCustomFocusView);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+}
+
+- (void)test_detach_clearsRoutedChildPreference {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIView *child = [UIView new];
+  [wrapper addSubview:child];
+  UIWindow *localWindow = [self attachUnderLocalRootController:wrapper];
+
+  [wrapper focus];
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, child);
+
+  [wrapper removeFromSuperview];
+
+  XCTAssertNil(localWindow.rootViewController.rncekvCustomFocusView);
+}
+
+- (void)test_detach_preservesForeignPreference {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIView *child = [UIView new];
+  [wrapper addSubview:child];
+  UIWindow *localWindow = [self attachUnderLocalRootController:wrapper];
+
+  [wrapper focus];
+
+  UIView *other = [UIView new];
+  localWindow.rootViewController.rncekvCustomFocusView = other;
+  [wrapper removeFromSuperview];
+
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, other);
+}
+
+// Returns UIFocusUpdateContext* (not RNCEKVTestFocusContext*): -resolveFocusChange:
+// is declared to take UIFocusUpdateContext*, whose static type this double does
+// not subclass (see RNCEKVTestFocusContext's header comment) — the cast keeps the
+// call site's static type correct while dynamic dispatch resolves against the
+// accessors the double actually implements.
+- (UIFocusUpdateContext *)contextWithNext:(UIView *)next previous:(UIView *)previous {
+  RNCEKVTestFocusContext *context = [RNCEKVTestFocusContext new];
+  context.nextFocusedView = next;
+  context.previouslyFocusedView = previous;
+  return (UIFocusUpdateContext *)context;
+}
+
+- (void)test_resolveFocusChange_firstDescendantEntry_yes {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIView *child = [[UIView alloc] initWithFrame:CGRectZero];
+  [wrapper addSubview:child];
+
+  UIFocusUpdateContext *context = [self contextWithNext:child previous:nil];
+
+  XCTAssertEqualObjects([wrapper resolveFocusChange:context], @YES);
+}
+
+- (void)test_resolveFocusChange_descendantToDescendant_nil {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIView *child = [[UIView alloc] initWithFrame:CGRectZero];
+  UIView *child2 = [[UIView alloc] initWithFrame:CGRectZero];
+  [wrapper addSubview:child];
+  [wrapper addSubview:child2];
+
+  [wrapper resolveFocusChange:[self contextWithNext:child previous:nil]];
+
+  UIFocusUpdateContext *secondEntry = [self contextWithNext:child2 previous:child];
+  XCTAssertNil([wrapper resolveFocusChange:secondEntry]);
+}
+
+- (void)test_resolveFocusChange_leave_reportsNo {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+  UIView *child = [[UIView alloc] initWithFrame:CGRectZero];
+  [wrapper addSubview:child];
+  [wrapper resolveFocusChange:[self contextWithNext:child previous:nil]];
+
+  UIView *outside = [[UIView alloc] initWithFrame:CGRectZero];
+  UIFocusUpdateContext *leave = [self contextWithNext:outside previous:child];
+
+  XCTAssertEqualObjects([wrapper resolveFocusChange:leave], @NO);
+}
+
+- (void)test_resolveFocusChange_trackedChildDeallocated_blurStillReported {
+  RNCEKVTextInputFocusWrapper *wrapper = [[RNCEKVTextInputFocusWrapper alloc] initWithFrame:CGRectZero];
+
+  __weak UIView *weakChild;
+  @autoreleasepool {
+    UIView *child = [[UIView alloc] initWithFrame:CGRectZero];
+    [wrapper addSubview:child];
+    weakChild = child;
+
+    [wrapper resolveFocusChange:[self contextWithNext:child previous:nil]];
+    [child removeFromSuperview];
+  }
+  XCTAssertNil(weakChild);
+
+  UIView *outside = [[UIView alloc] initWithFrame:CGRectZero];
+  UIFocusUpdateContext *afterDealloc = [self contextWithNext:outside previous:[UIView new]];
+
+  XCTAssertEqualObjects([wrapper resolveFocusChange:afterDealloc], @NO);
 }
 
 @end

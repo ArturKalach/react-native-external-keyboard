@@ -85,7 +85,8 @@
   [view focus];
 
   XCTAssertEqualObjects([view getStoredView], child);
-  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, [view getStoredView]);
+  XCTAssertEqualObjects(localWindow.rootViewController.rncekvCustomFocusView, [view getStoredView]);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
 }
 
 - (void)test_focus_detached_noop {

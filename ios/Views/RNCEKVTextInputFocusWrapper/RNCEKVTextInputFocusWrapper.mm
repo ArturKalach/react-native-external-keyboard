@@ -7,6 +7,7 @@
 #import "RCTBaseTextInputView.h"
 #import "RNCEKVOrderLinking.h"
 #import "RNCEKVKeyboardFocusService.h"
+#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
@@ -43,6 +44,8 @@ static const NSInteger AUTO_BLUR = 2;
 
 @implementation RNCEKVTextInputFocusWrapper {
   BOOL _pendingFocusRequest;
+  __weak UIViewController *_focusRoutedController;
+  __weak UIView *_focusRoutedTarget;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -167,7 +170,8 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)focus {
   UIViewController *viewController = self.reactViewController;
-  if (viewController == nil || self.superview == nil) {
+  if (viewController == nil || self.superview == nil || self.window == nil ||
+      self.subviews.count == 0) {
     _pendingFocusRequest = YES;
     return;
   }
@@ -176,16 +180,35 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)updateFocus:(UIViewController *)controller {
   UIView *focusingView = self.subviews.count ? self.subviews[0] : nil;
-  if (self.superview != nil && controller != nil) {
-    [RNCEKVKeyboardFocusService focus:focusingView withFallback:controller];
+  if (self.superview != nil && controller != nil && focusingView != nil) {
+    _focusRoutedController = [RNCEKVKeyboardFocusService focus:focusingView withFallback:controller];
+    _focusRoutedTarget = focusingView;
   }
+}
+
+// Clears the controller preference this wrapper installed for its child, but
+// only while it still points at that child — a later request routed by
+// another view must not be discarded.
+- (void)clearRoutedFocusTarget {
+  UIViewController *routedController = _focusRoutedController;
+  UIView *routedTarget = _focusRoutedTarget;
+  if (routedController != nil && routedTarget != nil &&
+      routedController.rncekvCustomFocusView == routedTarget) {
+    routedController.rncekvCustomFocusView = nil;
+  }
+  _focusRoutedController = nil;
+  _focusRoutedTarget = nil;
 }
 
 - (void)didMoveToWindow {
   [super didMoveToWindow];
-  if (self.window && _pendingFocusRequest) {
-    _pendingFocusRequest = NO;
-    [self focus];
+  if (self.window) {
+    if (_pendingFocusRequest) {
+      _pendingFocusRequest = NO;
+      [self focus];
+    }
+  } else {
+    [self clearRoutedFocusTarget];
   }
 }
 
@@ -195,16 +218,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (UIView*)getStoredView {
   return _textField;
-}
-
-- (NSNumber *)resolveFocusChange:(UIFocusUpdateContext *)context {
-  if([context.nextFocusedView isDescendantOfView:self]) {
-    return @YES;
-  } else if([context.previouslyFocusedView isDescendantOfView:self]) {
-    return @NO;
-  }
-
-  return nil;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -261,6 +274,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)cleanReferences{
     [super cleanReferences];
+    [self clearRoutedFocusTarget];
     _textField = nil;
     _textView = nil;
     _pendingFocusRequest = NO;
