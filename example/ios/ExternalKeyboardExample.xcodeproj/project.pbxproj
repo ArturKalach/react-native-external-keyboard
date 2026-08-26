@@ -8,22 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1EEE3A3E0203CF05C09377F4 /* RNCEKVViewControllerExtensionTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3846C23D07A57E855A3F9B4C /* RNCEKVViewControllerExtensionTests.mm */; };
-		1F305FA47A9B6677B57844F1 /* RNCEKVLockViewTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF7F64189EF3E74B2841473C /* RNCEKVLockViewTests.mm */; };
-		2DE37770475F7057B5599438 /* RNCEKVRetainCycleTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E43FA7399399E4D366EA80A /* RNCEKVRetainCycleTests.mm */; };
-		2FBF7B772C58DD5E1A887A77 /* RNCEKVFocusChangeEventTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EE8D2342205B1004448CBDA /* RNCEKVFocusChangeEventTests.mm */; };
 		49BB6AB52F57756100D611EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BB6AB42F57756100D611EC /* AppDelegate.swift */; };
-		53A9D0E943566D33D18AEC20 /* RNCEKVTestSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = D8199B21F7B30A13A49C6220 /* RNCEKVTestSupport.mm */; };
-		70ADC087D979C21AF5FD4BFD /* RNCEKVFocusRequestBaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8161B5B461B7D74DBEEFDAC5 /* RNCEKVFocusRequestBaseTests.mm */; };
-		74CE1FA6E9882F06425F601D /* RNCEKVFocusSequenceDelegateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB8BBFA46086F6504CF8553F /* RNCEKVFocusSequenceDelegateTests.mm */; };
-		7E544FB94E365B379EF4CE81 /* libPods-ExternalKeyboardExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9BB9718193ECCA0E69A5EB /* libPods-ExternalKeyboardExampleTests.a */; };
-		7FA320F6D655DD131985493C /* RNCEKVKeyboardFocusServiceTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8E564B145073D9377721FC68 /* RNCEKVKeyboardFocusServiceTests.mm */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8C8CDA348C04716D7E978977 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
-		9AB31AFBF154E1F653ABFDCC /* RNCEKVTextInputFocusWrapperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC046858A2BAA75608DA261A /* RNCEKVTextInputFocusWrapperTests.mm */; };
-		AFA2C580C8C0FA06CD2B0649 /* RNCEKVOrderGroupBaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4863D7E967FC9D5E70EED0D8 /* RNCEKVOrderGroupBaseTests.mm */; };
 		C7DA79396D52E915C74FA1F4 /* libPods-ExternalKeyboardExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21127FDCC5EFDD7380EBF19C /* libPods-ExternalKeyboardExample.a */; };
-		FE3AA40BEAA4EDD086C0B018 /* RNCEKVFocusDelegateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = C57666B7F5A54F1F2729CAC6 /* RNCEKVFocusDelegateTests.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,32 +26,17 @@
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* ExternalKeyboardExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExternalKeyboardExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0EE8D2342205B1004448CBDA /* RNCEKVFocusChangeEventTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVFocusChangeEventTests.mm; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ExternalKeyboardExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExternalKeyboardExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ExternalKeyboardExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ExternalKeyboardExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ExternalKeyboardExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1BA93C23CA0B2C4A9E920F95 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21127FDCC5EFDD7380EBF19C /* libPods-ExternalKeyboardExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37EFAB3374F22BB8020F5BD3 /* Pods-ExternalKeyboardExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.release.xcconfig"; sourceTree = "<group>"; };
-		3846C23D07A57E855A3F9B4C /* RNCEKVViewControllerExtensionTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVViewControllerExtensionTests.mm; sourceTree = "<group>"; };
-		3A4DB40861BDECF47DA62E67 /* Pods-ExternalKeyboardExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		4863D7E967FC9D5E70EED0D8 /* RNCEKVOrderGroupBaseTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVOrderGroupBaseTests.mm; sourceTree = "<group>"; };
 		49BB6AB42F57756100D611EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49BB6AB62F57756400D611EC /* ExternalKeyboardExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ExternalKeyboardExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		4C1BC52B9D066024791DCF89 /* Pods-ExternalKeyboardExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExample.debug.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample.debug.xcconfig"; sourceTree = "<group>"; };
-		4E43FA7399399E4D366EA80A /* RNCEKVRetainCycleTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVRetainCycleTests.mm; sourceTree = "<group>"; };
-		7A9BB9718193ECCA0E69A5EB /* libPods-ExternalKeyboardExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExternalKeyboardExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8161B5B461B7D74DBEEFDAC5 /* RNCEKVFocusRequestBaseTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVFocusRequestBaseTests.mm; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ExternalKeyboardExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8E564B145073D9377721FC68 /* RNCEKVKeyboardFocusServiceTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVKeyboardFocusServiceTests.mm; sourceTree = "<group>"; };
-		AC046858A2BAA75608DA261A /* RNCEKVTextInputFocusWrapperTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVTextInputFocusWrapperTests.mm; sourceTree = "<group>"; };
-		AF7F64189EF3E74B2841473C /* RNCEKVLockViewTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVLockViewTests.mm; sourceTree = "<group>"; };
-		C57666B7F5A54F1F2729CAC6 /* RNCEKVFocusDelegateTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVFocusDelegateTests.mm; sourceTree = "<group>"; };
-		D8199B21F7B30A13A49C6220 /* RNCEKVTestSupport.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVTestSupport.mm; sourceTree = "<group>"; };
-		E87FD7CE298F92A624BB2357 /* Pods-ExternalKeyboardExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExternalKeyboardExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ExternalKeyboardExampleTests/Pods-ExternalKeyboardExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FB8BBFA46086F6504CF8553F /* RNCEKVFocusSequenceDelegateTests.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = RNCEKVFocusSequenceDelegateTests.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E544FB94E365B379EF4CE81 /* libPods-ExternalKeyboardExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,7 +76,6 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				21127FDCC5EFDD7380EBF19C /* libPods-ExternalKeyboardExample.a */,
-				7A9BB9718193ECCA0E69A5EB /* libPods-ExternalKeyboardExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -124,7 +95,6 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
-				A9AC4704AAD612D7990297BE /* ExternalKeyboardExampleTests */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -140,33 +110,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A9AC4704AAD612D7990297BE /* ExternalKeyboardExampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				0EE8D2342205B1004448CBDA /* RNCEKVFocusChangeEventTests.mm */,
-				C57666B7F5A54F1F2729CAC6 /* RNCEKVFocusDelegateTests.mm */,
-				8161B5B461B7D74DBEEFDAC5 /* RNCEKVFocusRequestBaseTests.mm */,
-				FB8BBFA46086F6504CF8553F /* RNCEKVFocusSequenceDelegateTests.mm */,
-				8E564B145073D9377721FC68 /* RNCEKVKeyboardFocusServiceTests.mm */,
-				AF7F64189EF3E74B2841473C /* RNCEKVLockViewTests.mm */,
-				4863D7E967FC9D5E70EED0D8 /* RNCEKVOrderGroupBaseTests.mm */,
-				4E43FA7399399E4D366EA80A /* RNCEKVRetainCycleTests.mm */,
-				D8199B21F7B30A13A49C6220 /* RNCEKVTestSupport.mm */,
-				AC046858A2BAA75608DA261A /* RNCEKVTextInputFocusWrapperTests.mm */,
-				3846C23D07A57E855A3F9B4C /* RNCEKVViewControllerExtensionTests.mm */,
-				1BA93C23CA0B2C4A9E920F95 /* Info.plist */,
-			);
-			name = ExternalKeyboardExampleTests;
-			path = ExternalKeyboardExampleTests;
-			sourceTree = "<group>";
-		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
 				4C1BC52B9D066024791DCF89 /* Pods-ExternalKeyboardExample.debug.xcconfig */,
 				37EFAB3374F22BB8020F5BD3 /* Pods-ExternalKeyboardExample.release.xcconfig */,
-				3A4DB40861BDECF47DA62E67 /* Pods-ExternalKeyboardExampleTests.debug.xcconfig */,
-				E87FD7CE298F92A624BB2357 /* Pods-ExternalKeyboardExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -178,7 +126,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ExternalKeyboardExampleTests" */;
 			buildPhases = (
-				CB5AFCFB03868E4E84DCE553 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -285,7 +232,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n\"$WITH_ENVIRONMENT\" \"$REACT_NATIVE_XCODE\"\n";
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
 		16BED33323DB9400FA927456 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -326,28 +273,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ExternalKeyboardExample/Pods-ExternalKeyboardExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CB5AFCFB03868E4E84DCE553 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ExternalKeyboardExampleTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		ECDD31C7EEDF518249EFE814 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -372,17 +297,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FBF7B772C58DD5E1A887A77 /* RNCEKVFocusChangeEventTests.mm in Sources */,
-				FE3AA40BEAA4EDD086C0B018 /* RNCEKVFocusDelegateTests.mm in Sources */,
-				70ADC087D979C21AF5FD4BFD /* RNCEKVFocusRequestBaseTests.mm in Sources */,
-				74CE1FA6E9882F06425F601D /* RNCEKVFocusSequenceDelegateTests.mm in Sources */,
-				7FA320F6D655DD131985493C /* RNCEKVKeyboardFocusServiceTests.mm in Sources */,
-				1F305FA47A9B6677B57844F1 /* RNCEKVLockViewTests.mm in Sources */,
-				AFA2C580C8C0FA06CD2B0649 /* RNCEKVOrderGroupBaseTests.mm in Sources */,
-				2DE37770475F7057B5599438 /* RNCEKVRetainCycleTests.mm in Sources */,
-				53A9D0E943566D33D18AEC20 /* RNCEKVTestSupport.mm in Sources */,
-				9AB31AFBF154E1F653ABFDCC /* RNCEKVTextInputFocusWrapperTests.mm in Sources */,
-				1EEE3A3E0203CF05C09377F4 /* RNCEKVViewControllerExtensionTests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,14 +321,11 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3A4DB40861BDECF47DA62E67 /* Pods-ExternalKeyboardExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"RCT_NEW_ARCH_ENABLED=1",
 				);
 				INFOPLIST_FILE = ExternalKeyboardExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -428,7 +339,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = externalkeyboard.example.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = externalkeyboard.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExternalKeyboardExample.app/ExternalKeyboardExample";
 			};
@@ -436,15 +347,9 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E87FD7CE298F92A624BB2357 /* Pods-ExternalKeyboardExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"RCT_NEW_ARCH_ENABLED=1",
-				);
 				INFOPLIST_FILE = ExternalKeyboardExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -457,7 +362,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = externalkeyboard.example.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = externalkeyboard.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExternalKeyboardExample.app/ExternalKeyboardExample";
 			};
