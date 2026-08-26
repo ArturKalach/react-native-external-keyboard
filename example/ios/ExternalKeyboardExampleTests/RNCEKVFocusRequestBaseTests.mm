@@ -1,0 +1,169 @@
+//
+//  RNCEKVFocusRequestBaseTests.mm
+//  ExternalKeyboardExampleTests
+//
+
+#import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
+#import <React/RCTUtils.h>
+
+#import "RNCEKVExternalKeyboardView.h"
+#import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVTestSupport.h"
+
+@interface RNCEKVFocusRequestBaseTests : XCTestCase
+@end
+
+@implementation RNCEKVFocusRequestBaseTests {
+  UIWindow *_window;
+  UIViewController *_rootController;
+}
+
+- (void)setUp {
+  [super setUp];
+  RNCEKVResetRootCustomFocusView();
+  _rootController = [UIViewController new];
+  _window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  _window.rootViewController = _rootController;
+  _window.hidden = NO;
+}
+
+- (void)tearDown {
+  _window.hidden = YES;
+  _window = nil;
+  _rootController = nil;
+  RNCEKVResetRootCustomFocusView();
+  [super tearDown];
+}
+
+- (RNCEKVExternalKeyboardView *)makeView {
+  return [[RNCEKVExternalKeyboardView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+}
+
+- (void)test_focus_detached_parks_thenReplaysOnAttach {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+
+  [view focus];
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"a detached view has no reactViewController, so focus should park rather than route");
+
+  [_rootController.view addSubview:view];
+
+  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, view,
+                        @"didMoveToWindow should replay the parked focus request once attached");
+}
+
+- (void)test_attach_withoutPending_doesNotFocus {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+  view.autoFocus = NO;
+
+  [_rootController.view addSubview:view];
+  RNCEKVDrainMainQueue(2);
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+}
+
+- (void)test_cleanReferences_clearsPendingFocus {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+
+  [view focus];
+  [view cleanReferences];
+  [_rootController.view addSubview:view];
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"cleanReferences should clear the parked pending focus request before attach can replay it");
+}
+
+- (void)test_pendingReplay_singleShot_notOnReattach {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+
+  [view focus];
+  [_rootController.view addSubview:view];
+  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, view);
+
+  RNCEKVResetRootCustomFocusView();
+  [view removeFromSuperview];
+  [_rootController.view addSubview:view];
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"the parked focus request is single-shot and must not replay on a second attach");
+}
+
+- (void)test_autoFocus_attach_focusesAfterDoubleDispatch {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+  view.autoFocus = YES;
+
+  [_rootController.view addSubview:view];
+
+  RNCEKVDrainMainQueue(1);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"the inner dispatch_async is still queued after a single drain cycle");
+
+  RNCEKVDrainMainQueue(1);
+  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, view,
+                        @"focus should land only once both nested dispatch_async blocks have run");
+}
+
+- (void)test_autoFocus_generationBumped_staleDispatchDiscarded {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+  view.autoFocus = YES;
+
+  [_rootController.view addSubview:view];
+  [view cleanReferences];
+
+  RNCEKVDrainMainQueue(2);
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"cleanReferences bumps the autofocus generation, so the already-dispatched request is stale");
+}
+
+- (void)test_autoFocus_detachedBeforeDispatch_doesNotFocus_andNoParkedGhost {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+  view.autoFocus = YES;
+
+  [_rootController.view addSubview:view];
+  [view removeFromSuperview];
+
+  RNCEKVDrainMainQueue(2);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"the window guard should discard the dispatched autofocus while the view is detached");
+
+  [_rootController.view addSubview:view];
+  RNCEKVDrainMainQueue(1);
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"nothing was parked while detached, so re-attaching must not focus the view");
+}
+
+- (void)test_autoFocus_viewDeallocatedBeforeDispatch_noCrash {
+  @autoreleasepool {
+    RNCEKVExternalKeyboardView *view = [self makeView];
+    view.autoFocus = YES;
+
+    [_rootController.view addSubview:view];
+    [view removeFromSuperview];
+  }
+
+  RNCEKVDrainMainQueue(2);
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+}
+
+- (void)test_autoFocus_singleShot_noRescheduleOnReattach {
+  RNCEKVExternalKeyboardView *view = [self makeView];
+  view.autoFocus = YES;
+
+  [_rootController.view addSubview:view];
+  RNCEKVDrainMainQueue(2);
+  XCTAssertEqualObjects(RCTKeyWindow().rootViewController.rncekvCustomFocusView, view);
+
+  RNCEKVResetRootCustomFocusView();
+  [view removeFromSuperview];
+  [_rootController.view addSubview:view];
+  RNCEKVDrainMainQueue(2);
+
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView,
+               @"_autoFocusRequested is a single-shot latch; re-attaching without cleanReferences must not reschedule");
+}
+
+@end
