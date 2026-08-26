@@ -184,6 +184,53 @@ static UIWindow *RNCEKVMakeDetachedWindowWithRootViewController(void) {
   XCTAssertNil(keyRootController.rncekvCustomFocusView);
 }
 
+- (void)test_didMoveToWindow_inactiveDefaults_noRequest {
+  UIWindow *detachedWindow = RNCEKVMakeDetachedWindowWithRootViewController();
+  detachedWindow.hidden = NO;
+  RNCEKVExternalKeyboardLockView *lockView =
+      [[RNCEKVExternalKeyboardLockView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+
+  [detachedWindow.rootViewController.view addSubview:lockView];
+
+  XCTAssertNil(detachedWindow.rootViewController.rncekvCustomFocusView);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+
+  detachedWindow.hidden = YES;
+}
+
+- (void)test_didMoveToWindow_disabledTrap_noRequest {
+  RNCEKVExternalKeyboardLockView *lockView =
+      [[RNCEKVExternalKeyboardLockView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+  lockView.forceLock = YES;
+  lockView.lockDisabled = YES;
+
+  UIWindow *detachedWindow = RNCEKVMakeDetachedWindowWithRootViewController();
+  detachedWindow.hidden = NO;
+
+  [detachedWindow.rootViewController.view addSubview:lockView];
+
+  XCTAssertNil(detachedWindow.rootViewController.rncekvCustomFocusView);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+
+  detachedWindow.hidden = YES;
+}
+
+- (void)test_attach_activeTrap_requestReplaysToOwnWindowRoot {
+  RNCEKVExternalKeyboardLockView *lockView =
+      [[RNCEKVExternalKeyboardLockView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+  lockView.forceLock = YES;
+
+  UIWindow *detachedWindow = RNCEKVMakeDetachedWindowWithRootViewController();
+  detachedWindow.hidden = NO;
+
+  [detachedWindow.rootViewController.view addSubview:lockView];
+
+  XCTAssertEqualObjects(detachedWindow.rootViewController.rncekvCustomFocusView, lockView);
+  XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
+
+  detachedWindow.hidden = YES;
+}
+
 #pragma mark shouldUpdateFocusInContext:
 
 - (void)test_shouldUpdateFocus_forceLock_blocksMoveOutsideSubtree {
@@ -263,6 +310,22 @@ static UIWindow *RNCEKVMakeDetachedWindowWithRootViewController(void) {
 
   XCTAssertEqual(lockView.forceLockSetterCount, 1u);
   XCTAssertEqual(lockView.lockDisabledSetterCount, 1u);
+}
+
+- (void)test_updateProps_compoundForceLockAndDisable_noRequest {
+  RNCEKVLockViewSpy *lockView = [[RNCEKVLockViewSpy alloc] initWithFrame:CGRectZero];
+
+  auto newViewProps = std::make_shared<facebook::react::ExternalKeyboardLockViewProps>();
+  newViewProps->forceLock = true;
+  newViewProps->lockDisabled = true;
+  facebook::react::Props::Shared newProps = newViewProps;
+  facebook::react::Props::Shared oldProps =
+      std::make_shared<const facebook::react::ExternalKeyboardLockViewProps>();
+
+  [lockView updateProps:newProps oldProps:oldProps];
+
+  XCTAssertEqual(lockView.requestFocusCount, 0u);
+  XCTAssertEqual(lockView.requestScreenReaderFocusCount, 0u);
 }
 
 #endif /* RCT_NEW_ARCH_ENABLED */

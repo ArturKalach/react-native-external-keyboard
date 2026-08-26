@@ -99,4 +99,44 @@
   XCTAssertNil(RCTKeyWindow().rootViewController.rncekvCustomFocusView);
 }
 
+- (void)test_getIsViewFocused_selfNext_true {
+  RNCEKVExternalKeyboardView *view = [[RNCEKVExternalKeyboardView alloc] initWithFrame:CGRectZero];
+
+  RNCEKVTestFocusContext *context = [RNCEKVTestFocusContext new];
+  context.nextFocusedView = view;
+
+  XCTAssertTrue([view getIsViewFocused:(UIFocusUpdateContext *)context]);
+}
+
+- (void)test_getIsViewFocused_nestedWrapperNext_falseForParent_trueForNested {
+  RNCEKVExternalKeyboardView *parent = [[RNCEKVExternalKeyboardView alloc] initWithFrame:CGRectZero];
+  UIView *mid = [[UIView alloc] initWithFrame:CGRectZero];
+  RNCEKVExternalKeyboardView *nested = [[RNCEKVExternalKeyboardView alloc] initWithFrame:CGRectZero];
+  [parent addSubview:mid];
+  [mid addSubview:nested];
+
+  RNCEKVTestFocusContext *context = [RNCEKVTestFocusContext new];
+  context.nextFocusedView = nested;
+
+  XCTAssertFalse([parent getIsViewFocused:(UIFocusUpdateContext *)context],
+                  @"a nested wrapper owns its own focus");
+  XCTAssertTrue([nested getIsViewFocused:(UIFocusUpdateContext *)context]);
+}
+
+- (void)test_getIsViewFocused_childInsideNestedWrapper_falseForParent_trueForNested {
+  RNCEKVExternalKeyboardView *parent = [[RNCEKVExternalKeyboardView alloc] initWithFrame:CGRectZero];
+  UIView *mid = [[UIView alloc] initWithFrame:CGRectZero];
+  RNCEKVExternalKeyboardView *nested = [[RNCEKVExternalKeyboardView alloc] initWithFrame:CGRectZero];
+  UIView *leaf = [[UIView alloc] initWithFrame:CGRectZero];
+  [parent addSubview:mid];
+  [mid addSubview:nested];
+  [nested addSubview:leaf];
+
+  RNCEKVTestFocusContext *context = [RNCEKVTestFocusContext new];
+  context.nextFocusedView = leaf;
+
+  XCTAssertFalse([parent getIsViewFocused:(UIFocusUpdateContext *)context]);
+  XCTAssertTrue([nested getIsViewFocused:(UIFocusUpdateContext *)context]);
+}
+
 @end

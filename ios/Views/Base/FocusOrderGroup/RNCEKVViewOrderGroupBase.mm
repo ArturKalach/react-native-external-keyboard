@@ -35,7 +35,21 @@
 
 - (BOOL)getIsViewFocused:(UIFocusUpdateContext *)context {
   UIView *next = context.nextFocusedView;
-  return next != nil && [next isDescendantOfView:self];
+  if (next == self) {
+    return YES;
+  }
+  if (next == nil || ![next isDescendantOfView:self]) {
+    return NO;
+  }
+  // Nearest-wrapper ownership: when the focused view sits inside a nested
+  // order-group wrapper (or is one itself), that nested wrapper owns the
+  // focus and this view's directional guides must stay off.
+  for (UIView *view = next; view != nil && view != self; view = view.superview) {
+    if ([view isKindOfClass:[RNCEKVViewOrderGroupBase class]]) {
+      return NO;
+    }
+  }
+  return YES;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context

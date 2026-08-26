@@ -35,6 +35,8 @@
 
 -(void)clear {
   [_positions clear];
+  self.entry = nil;
+  self.exit = nil;
 }
 
 - (int)getItemIndex:(UIView *)element {

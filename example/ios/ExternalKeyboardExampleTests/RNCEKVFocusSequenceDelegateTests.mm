@@ -282,4 +282,33 @@
   XCTAssertNil([[RNCEKVOrderLinking sharedInstance] getInfo:group]);
 }
 
+#pragma mark - RNCEKVOrderRelationship.clear endpoint cleanup
+
+- (void)test_relationshipClear_nilsEntryAndExit {
+  RNCEKVOrderRelationship *relationship = [RNCEKVOrderRelationship new];
+  relationship.entry = [self viewInWindow];
+  relationship.exit = [self viewInWindow];
+
+  [relationship clear];
+
+  XCTAssertNil(relationship.entry);
+  XCTAssertNil(relationship.exit);
+  XCTAssertEqual([relationship count], 0);
+}
+
+- (void)test_lastMemberRemoved_clearsEndpoints {
+  NSString *group = [self uniqueOrderGroup];
+  [self registerItemAtPosition:@0 group:group];
+
+  RNCEKVOrderRelationship *relationship = [[RNCEKVOrderLinking sharedInstance] getInfo:group];
+  relationship.entry = [self viewInWindow];
+  relationship.exit = [self viewInWindow];
+
+  [[RNCEKVOrderLinking sharedInstance] remove:@0 withOrderKey:group];
+
+  XCTAssertNil(relationship.entry, @"emptying the group clears its endpoints");
+  XCTAssertNil(relationship.exit);
+  XCTAssertNil([[RNCEKVOrderLinking sharedInstance] getInfo:group]);
+}
+
 @end
