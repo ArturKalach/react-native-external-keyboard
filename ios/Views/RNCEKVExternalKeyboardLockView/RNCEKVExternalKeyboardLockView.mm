@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVKeyboardFocusService.h"
 
 #import <UIKit/UIKit.h>
 #import <React/RCTViewManager.h>
@@ -78,15 +78,21 @@ using namespace facebook::react;
 }
 
 - (void)setForceLock:(BOOL)forceLock {
+  BOOL becameActive = forceLock && !_forceLock && !_lockDisabled;
   _forceLock = forceLock;
-  [self requestFocus];
-  [self requestScreenReaderFocus];
+  if (becameActive) {
+    [self requestFocus];
+    [self requestScreenReaderFocus];
+  }
 }
 
 - (void)setLockDisabled:(BOOL)lockDisabled {
+  BOOL becameActive = _forceLock && !lockDisabled && _lockDisabled;
   _lockDisabled = lockDisabled;
-  [self requestFocus];
-  [self requestScreenReaderFocus];
+  if (becameActive) {
+    [self requestFocus];
+    [self requestScreenReaderFocus];
+  }
 }
 
 - (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
@@ -103,16 +109,16 @@ using namespace facebook::react;
 }
 
 - (void)requestFocus {
-  if (!_forceLock && _lockDisabled) return;
+  if (!_forceLock || _lockDisabled) return;
 
   UIViewController *controller = self.reactViewController;
   if (controller != nil) {
-    [controller rncekvFocusView: self];
+    [RNCEKVKeyboardFocusService focus:self withFallback:controller];
   }
 }
 
 - (void)requestScreenReaderFocus {
-  if (!_forceLock && _lockDisabled) return;
+  if (!_forceLock || _lockDisabled) return;
 
   UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, self);
 }
@@ -142,8 +148,14 @@ using namespace facebook::react;
     *std::static_pointer_cast<ExternalKeyboardLockViewProps const>(props);
   [super updateProps:props oldProps:oldProps];
 
-  self.forceLock = newViewProps.forceLock;
-  self.lockDisabled = newViewProps.lockDisabled;
+  // Apply lockDisabled first so { forceLock: true, lockDisabled: true } never
+  // activates the trap between property updates.
+  if (_lockDisabled != newViewProps.lockDisabled) {
+    self.lockDisabled = newViewProps.lockDisabled;
+  }
+  if (_forceLock != newViewProps.forceLock) {
+    self.forceLock = newViewProps.forceLock;
+  }
 }
 
 Class<RCTComponentViewProtocol> ExternalKeyboardLockViewCls(void)
@@ -156,6 +168,8 @@ Class<RCTComponentViewProtocol> ExternalKeyboardLockViewCls(void)
 - (void)didMoveToWindow {
   [super didMoveToWindow];
 
+  // An active trap may request focus before it has a controller. Retry after
+  // attachment; the request guards exclude inactive and disabled traps.
   if (self.window) {
     [self requestFocus];
     [self requestScreenReaderFocus];

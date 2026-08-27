@@ -23,6 +23,12 @@
 /// Moves keyboard focus to the given view on the next focus update.
 + (void)focus:(UIView *)view;
 
+/// Routes focus through the target's window root when available, keeping the
+/// request in the target's scene. For an unattached target, falls back to the
+/// key-window root and then `controller`. Returns the controller that received
+/// the request, or nil if the request could not be routed.
++ (UIViewController *)focus:(UIView *)view withFallback:(UIViewController *)controller;
+
 @end
 
 #endif /* RNCEKVKeyboardFocusService_h */

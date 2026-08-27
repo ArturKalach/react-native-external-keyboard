@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "RNCEKVViewOrderGroupBase.h"
 #import "RNCEKVOrderLinking.h"
-#import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVKeyboardFocusService.h"
 #import "UIView+React.h"
 #import "RNCEKVPropHelper.h"
 
@@ -34,7 +34,21 @@
 }
 
 - (BOOL)getIsViewFocused:(UIFocusUpdateContext *)context {
-  return context.nextFocusedView == [self getStoredView];
+  UIView *next = context.nextFocusedView;
+  if (next == self) {
+    return YES;
+  }
+  if (next == nil || ![next isDescendantOfView:self]) {
+    return NO;
+  }
+  // The nearest order wrapper owns the focused view. Keep this wrapper's
+  // directional guides disabled when a nested wrapper owns focus.
+  for (UIView *view = next; view != nil && view != self; view = view.superview) {
+    if ([view isKindOfClass:[RNCEKVViewOrderGroupBase class]]) {
+      return NO;
+    }
+  }
+  return YES;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
@@ -48,7 +62,7 @@
   BOOL isAttached = self.superview != nil && controller != nil;
 
   if (isAttached) {
-    [controller rncekvFocusView:[self getStoredView]];
+    [RNCEKVKeyboardFocusService focus:[self getStoredView] withFallback:controller];
   }
 }
 

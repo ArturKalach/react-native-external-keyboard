@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIViewController (RNCEKVExternalKeyboard)
-@property (nonatomic, strong) UIView *rncekvCustomFocusView;
+@property (nonatomic, weak) UIView *rncekvCustomFocusView;
 - (void)rncekvFocusView:(UIView *)view;
 @end
 

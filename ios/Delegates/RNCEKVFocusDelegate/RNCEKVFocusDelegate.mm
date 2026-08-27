@@ -12,10 +12,13 @@
 #import "RNCEKVFocusProtocol.h"
 
 @implementation RNCEKVFocusDelegate{
-  UIView<RNCEKVFocusProtocol>* _delegate;
+  __weak UIView<RNCEKVFocusProtocol>* _delegate;
   // The view UIKit actually focused inside our subtree (set from the focus engine,
   // not guessed). Weak so a removed/recycled view can't be retained or go stale.
   __weak UIView* _focusedTarget;
+  // Tracks wrapper focus after the weak target is deallocated, allowing the
+  // next focus update to report blur.
+  BOOL _isTrackingFocus;
 }
 
 - (instancetype _Nonnull )initWithView:(UIView<RNCEKVFocusProtocol> *_Nonnull)delegate{
@@ -28,6 +31,7 @@
 
 - (void)reset {
   _focusedTarget = nil;
+  _isTrackingFocus = NO;
 }
 
 // Whether `view` is the focus target THIS wrapper owns. A non-wrapper owns only
@@ -119,18 +123,20 @@
   UIView *next = context.nextFocusedView;
   UIView *prev = context.previouslyFocusedView;
 
-  // Focus entered our subtree: remember the *actual* focused view and report focus.
+  // Track the actual focused view. Moving between this wrapper's descendants
+  // updates the target without reporting another focus event.
   if (next && [self ownsFocusedView:next]) {
-    if (next == _focusedTarget) {
-      return nil; // already tracking this view — not a change
-    }
+    BOOL alreadyFocused = _isTrackingFocus;
     _focusedTarget = next;
-    return @YES;
+    _isTrackingFocus = YES;
+    return alreadyFocused ? nil : @YES;
   }
 
-  // Focus left the view we were tracking.
-  if (prev && prev == _focusedTarget) {
+  // Report blur when focus leaves the tracked view, including after the weak
+  // target has been deallocated.
+  if (_isTrackingFocus && (_focusedTarget == nil || prev == _focusedTarget)) {
     _focusedTarget = nil;
+    _isTrackingFocus = NO;
     return @NO;
   }
 

@@ -8,7 +8,7 @@
 #import "RNCEKVOrderLinking.h"
 #import "RNCEKVOrderRelationship.h"
 #import "RNCEKVKeyboardFocusableProtocol.h"
-#import "UIViewController+RNCEKVExternalKeyboard.h"
+#import "RNCEKVKeyboardFocusService.h"
 #import "UIView+React.h"
 
 static NSNumber *const FOCUS_DEFAULT = nil;
@@ -16,7 +16,7 @@ static NSNumber *const FOCUS_HANDLED = @0;
 
 @implementation RNCEKVFocusSequenceDelegate {
   BOOL _isLinked;
-  UIView<RNCEKVFocusOrderProtocol> *_delegate;
+  __weak UIView<RNCEKVFocusOrderProtocol> *_delegate;
 }
 
 - (instancetype)initWithView:(UIView<RNCEKVFocusOrderProtocol> *)delegate {
@@ -65,10 +65,7 @@ static NSNumber *const FOCUS_HANDLED = @0;
 }
 
 - (void)defaultViewFocus:(UIView *)view {
-  UIViewController *controller = _delegate.reactViewController;
-  if (controller != nil) {
-    [controller rncekvFocusView:view];
-  }
+  [RNCEKVKeyboardFocusService focus:view withFallback:_delegate.reactViewController];
 }
 
 #pragma mark - Sequential navigation
@@ -81,7 +78,7 @@ static NSNumber *const FOCUS_HANDLED = @0;
 
   if (entry == current) {
     [self keyboardedViewFocus:[orderRelationship getItem:0]];
-    return NO;
+    return YES;
   }
 
   if (currentIndex == orderRelationship.count - 1 && exit) {
@@ -133,6 +130,13 @@ static NSNumber *const FOCUS_HANDLED = @0;
     RNCEKVOrderRelationship *orderRelationship = [[RNCEKVOrderLinking sharedInstance] getInfo:_delegate.orderGroup];
     if ([orderRelationship getArray].count == 0) {
       return FOCUS_DEFAULT;
+    }
+
+    if (orderRelationship.entry != nil && orderRelationship.entry.window == nil) {
+      orderRelationship.entry = nil;
+    }
+    if (orderRelationship.exit != nil && orderRelationship.exit.window == nil) {
+      orderRelationship.exit = nil;
     }
 
     int currentIndex = [orderRelationship getItemIndex:current];

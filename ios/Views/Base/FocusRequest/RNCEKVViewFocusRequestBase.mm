@@ -6,10 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #import "UIView+React.h"
 #import "RNCEKVViewFocusRequestBase.h"
+#import "RNCEKVKeyboardFocusService.h"
+#import "UIViewController+RNCEKVExternalKeyboard.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
@@ -17,19 +18,34 @@
 #endif
 
 @implementation RNCEKVViewFocusRequestBase {
-  BOOL _isAttachedToWindow;
   BOOL _autoFocusRequested;
+  BOOL _pendingFocusRequest;
+  BOOL _pendingScreenReaderFocus;
+  NSUInteger _autoFocusGeneration;
+  __weak UIViewController *_focusRoutedController;
 }
 
 - (void)cleanReferences {
   [super cleanReferences];
-  _isAttachedToWindow = NO;
+  [self clearRoutedFocusTarget];
   _autoFocusRequested = NO;
+  _pendingFocusRequest = NO;
+  _pendingScreenReaderFocus = NO;
+  _autoFocusGeneration++;
+}
+
+// Clears this view's preferred-focus entry without removing a newer request
+// from another view.
+- (void)clearRoutedFocusTarget {
+  UIViewController *routedController = _focusRoutedController;
+  if (routedController != nil && routedController.rncekvCustomFocusView == self) {
+    routedController.rncekvCustomFocusView = nil;
+  }
+  _focusRoutedController = nil;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
-    _isAttachedToWindow = NO;
     _autoFocusRequested = NO;
   }
 
@@ -38,12 +54,19 @@
 
 - (void)focus {
   UIViewController *controller = self.reactViewController;
-  if (controller != nil) {
-    [controller rncekvFocusView: self];
+  if (controller == nil || self.window == nil) {
+    _pendingFocusRequest = YES;
+    return;
   }
+  _pendingFocusRequest = NO;
+  _focusRoutedController = [RNCEKVKeyboardFocusService focus:self withFallback:controller];
 }
 
 - (void)screenReaderFocus {
+  if (self.window == nil) {
+    _pendingScreenReaderFocus = YES;
+    return;
+  }
   dispatch_async(dispatch_get_main_queue(), ^{
     UIView *focusView = [self getFocusTargetView];
     UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification,
@@ -72,9 +95,23 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
   if (self.autoFocus) {
     if(!_autoFocusRequested) {
       _autoFocusRequested = YES;
+      NSUInteger generation = _autoFocusGeneration;
+      __weak __typeof(self) weakSelf = self;
       dispatch_async(dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-          [self focus];
+          __typeof(self) strongSelf = weakSelf;
+          if (strongSelf == nil || strongSelf->_autoFocusGeneration != generation) {
+            return;
+          }
+          if (strongSelf.window == nil) {
+            // The view detached before autofocus ran. Let the next attachment
+            // try again.
+            strongSelf->_autoFocusRequested = NO;
+            return;
+          }
+          if (strongSelf.autoFocus) {
+            [strongSelf focus];
+          }
         });
       });
     }
@@ -86,14 +123,18 @@ newProps:(const RNCEKV::AutoFocusProps &)newProps {
   [super didMoveToWindow];
 
   if (self.window) {
-    [self onAttached];
-  }
-
-  if (self.window && !_isAttachedToWindow) {
-    if (self.autoFocus) {
+    if (_pendingFocusRequest) {
+      _pendingFocusRequest = NO;
       [self focus];
     }
-    _isAttachedToWindow = YES;
+    if (_pendingScreenReaderFocus) {
+      _pendingScreenReaderFocus = NO;
+      [self screenReaderFocus];
+    }
+    [self onAttached];
+  } else {
+    // A detached view must no longer be the controller's preferred target.
+    [self clearRoutedFocusTarget];
   }
 }
 

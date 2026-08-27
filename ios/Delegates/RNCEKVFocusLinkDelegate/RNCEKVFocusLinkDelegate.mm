@@ -17,7 +17,7 @@ static NSNumber *const FOCUS_HANDLED = @0;
 
 @implementation RNCEKVFocusLinkDelegate {
   BOOL _isFocused;
-  UIView<RNCEKVFocusOrderProtocol> *_delegate;
+  __weak UIView<RNCEKVFocusOrderProtocol> *_delegate;
   NSMutableDictionary<NSNumber *, UIFocusGuide *> *_sides;
   NSMutableDictionary<NSNumber *, RNCEKVOrderSubscriber *> *_subscribers;
 }

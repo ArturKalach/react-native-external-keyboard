@@ -21,16 +21,29 @@ static void RNCEKVUIViewControllerSwizzle(void) {
   RNCEKVSwizzleInstanceMethod([UIViewController class], @selector(preferredFocusEnvironments), @selector(keyboardedPreferredFocusEnvironments));
 }
 
+@interface RNCEKVWeakFocusViewHolder : NSObject
+@property (nonatomic, weak) UIView *view;
+@end
+
+@implementation RNCEKVWeakFocusViewHolder
+@end
+
 @implementation UIViewController (RNCEKVExternalKeyboard)
 
 RNCEKV_INSTALL_SWIZZLES(RNCEKVUIViewControllerSwizzle)
 
 - (UIView *)rncekvCustomFocusView {
-  return objc_getAssociatedObject(self, &kCustomFocusViewKey);
+  RNCEKVWeakFocusViewHolder *holder = objc_getAssociatedObject(self, &kCustomFocusViewKey);
+  return holder.view;
 }
 
 - (void)setRncekvCustomFocusView:(UIView *)customFocusView {
-  objc_setAssociatedObject(self, &kCustomFocusViewKey, customFocusView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+  RNCEKVWeakFocusViewHolder *holder = nil;
+  if (customFocusView != nil) {
+    holder = [RNCEKVWeakFocusViewHolder new];
+    holder.view = customFocusView;
+  }
+  objc_setAssociatedObject(self, &kCustomFocusViewKey, holder, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)keyboardedViewDidAppear:(BOOL)animated {
@@ -49,13 +62,19 @@ RNCEKV_INSTALL_SWIZZLES(RNCEKVUIViewControllerSwizzle)
 - (NSArray<id<UIFocusEnvironment>> *)keyboardedPreferredFocusEnvironments {
   NSArray<id<UIFocusEnvironment>> *originalEnvironments = [self keyboardedPreferredFocusEnvironments];
 
-  NSMutableArray *focusEnvironments = [originalEnvironments mutableCopy];
-
-  UIView *customFocusView = self.rncekvCustomFocusView;
-  if (customFocusView) {
-    [focusEnvironments insertObject:customFocusView atIndex:0];
+  RNCEKVWeakFocusViewHolder *holder = objc_getAssociatedObject(self, &kCustomFocusViewKey);
+  if (holder == nil) {
+    return originalEnvironments;
   }
 
+  UIView *customFocusView = holder.view;
+  if (customFocusView == nil || customFocusView.window == nil) {
+    self.rncekvCustomFocusView = nil;
+    return originalEnvironments;
+  }
+
+  NSMutableArray *focusEnvironments = [originalEnvironments mutableCopy];
+  [focusEnvironments insertObject:customFocusView atIndex:0];
   return focusEnvironments;
 }
 
