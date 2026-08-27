@@ -175,6 +175,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     _pendingFocusRequest = YES;
     return;
   }
+  _pendingFocusRequest = NO;
   [self updateFocus:viewController];
 }
 

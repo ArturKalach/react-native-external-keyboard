@@ -58,6 +58,7 @@
     _pendingFocusRequest = YES;
     return;
   }
+  _pendingFocusRequest = NO;
   _focusRoutedController = [RNCEKVKeyboardFocusService focus:self withFallback:controller];
 }
 
