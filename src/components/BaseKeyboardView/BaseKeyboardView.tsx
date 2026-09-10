@@ -14,7 +14,7 @@ import {
   type BaseKeyboardViewProps,
   type BaseKeyboardViewType,
 } from '../../types';
-import type { View } from 'react-native';
+import type { ViewInstance } from 'react-native';
 import { KeyPressContext } from '../../context/BubbledKeyPressContext';
 import { useBubbledInfo } from './BaseKeyboardView.hooks';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
@@ -56,7 +56,7 @@ const mapFocusValues = (values: LockFocusType[] | undefined) => {
 };
 
 export const BaseKeyboardView = React.memo(
-  React.forwardRef<BaseKeyboardViewType | View, BaseKeyboardViewProps>(
+  React.forwardRef<BaseKeyboardViewType | ViewInstance, BaseKeyboardViewProps>(
     (
       {
         onFocusChange,
@@ -96,7 +96,7 @@ export const BaseKeyboardView = React.memo(
       },
       ref
     ) => {
-      const targetRef = useRef<View | null>(null);
+      const targetRef = useRef<ViewInstance | null>(null);
       const lockFocusValue = useMemo(
         () => mapFocusValues(lockFocus),
         [lockFocus]
@@ -176,7 +176,7 @@ export const BaseKeyboardView = React.memo(
           },
         };
 
-        return new Proxy({} as BaseKeyboardViewType | View, {
+        return new Proxy({} as BaseKeyboardViewType | ViewInstance, {
           get(_target, prop: string) {
             if (prop in nativeCommands) {
               return nativeCommands[prop];

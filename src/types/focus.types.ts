@@ -29,7 +29,7 @@ export type KeyboardFocusHandle = {
  * component type, so it resolves correctly under both the legacy and strict
  * (`react-native-strict-api`) RN type sets.
  */
-export type KeyboardFocus = (ViewInstance | HostInstance) & KeyboardFocusHandle;
+export type KeyboardFocus = ViewInstance | (HostInstance & KeyboardFocusHandle);
 
 /** Alias of {@link KeyboardFocus}. */
 export type BaseKeyboardViewType = KeyboardFocus;

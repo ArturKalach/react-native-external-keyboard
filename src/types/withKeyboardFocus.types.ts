@@ -1,4 +1,4 @@
-import type { View, ViewProps, ViewInstance } from 'react-native';
+import type { ViewProps, ViewInstance } from 'react-native';
 import type {
   FocusStyle,
   InteractionState,
@@ -133,7 +133,7 @@ type WithKeyboardBaseProps<ViewType, ViewStyleType> = {
   /** Style applied to the container while focused. */
   containerFocusStyle?: FocusStyle;
   /** Ref to the wrapped component instance. */
-  componentRef?: React.RefObject<ViewType | ViewInstance>;
+  componentRef?: React.Ref<ViewType | ViewInstance>;
   /**
    * Style for the wrapped component. Static/array, or a callback receiving
    * `{ focused, pressed }` — e.g. `style={(s) => (s.focused ? … : …)}`.
@@ -151,7 +151,7 @@ type WithKeyboardBaseProps<ViewType, ViewStyleType> = {
  * `renderFocusable` slot.
  */
 export type WithKeyboardProps<
-  ViewType = View,
+  ViewType = ViewInstance,
   ViewStyleType = unknown,
   ComponentProps extends object = {},
 > = WithKeyboardBaseProps<ViewType, ViewStyleType> & RenderSlot<ComponentProps>;
@@ -170,7 +170,7 @@ type MergeProps<BaseProps extends object, OverrideProps extends object> = Omit<
 type KeyboardFocusOverrideProps<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View,
+  ViewType = ViewInstance,
 > = KeyboardPressType<ComponentProps> &
   KeyboardFocusBaseProps &
   WithKeyboardProps<ViewType, ViewStyleType, ComponentProps>;
@@ -183,7 +183,7 @@ type KeyboardFocusOverrideProps<
 export type WithKeyboardFocusProps<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View,
+  ViewType = ViewInstance,
 > = MergeProps<
   ComponentProps,
   KeyboardFocusOverrideProps<ComponentProps, ViewStyleType, ViewType>
@@ -193,7 +193,7 @@ export type WithKeyboardFocusProps<
 export type WithKeyboardFocusPropsWithRef<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View,
+  ViewType = ViewInstance,
 > = WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType> &
   RefAttributes<KeyboardFocus>;
 
@@ -201,7 +201,7 @@ export type WithKeyboardFocusPropsWithRef<
 export type KeyboardFocusableComponentDeclaration<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View,
+  ViewType = ViewInstance,
 > = React.JSXElementConstructor<
   WithKeyboardFocusPropsWithRef<ComponentProps, ViewStyleType, ViewType>
 >;

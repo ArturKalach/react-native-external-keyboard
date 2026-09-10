@@ -1,5 +1,5 @@
 import React, { type RefObject, useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { type ViewInstance } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type {
   BaseKeyboardViewType,
@@ -27,13 +27,13 @@ import { useValueStore } from './useValueStore';
 export const withKeyboardFocus = <
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View,
+  ViewType = ViewInstance,
 >(
   Component: KeyboardFocusableComponent<ComponentProps>
 ) => {
   const WithKeyboardFocus = React.memo(
     React.forwardRef<
-      BaseKeyboardViewType | View,
+      BaseKeyboardViewType | ViewInstance,
       WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType>
     >((allProps, ref) => {
       const {
@@ -222,7 +222,7 @@ export const withKeyboardFocus = <
             <BaseKeyboardView
               style={containerStyleArr}
               defaultFocusHighlightEnabled={defaultFocusHighlightEnabled}
-              ref={ref as RefObject<BaseKeyboardViewType | View>}
+              ref={ref as RefObject<BaseKeyboardViewType | ViewInstance>}
               onKeyUpPress={onKeyUpPressHandler}
               onKeyDownPress={onKeyDownPressHandler}
               onFocus={onFocus ?? undefined}
