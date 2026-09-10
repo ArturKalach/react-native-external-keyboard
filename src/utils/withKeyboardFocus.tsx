@@ -27,7 +27,7 @@ import { useValueStore } from './useValueStore';
 export const withKeyboardFocus = <
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View
+  ViewType = View,
 >(
   Component: KeyboardFocusableComponent<ComponentProps>
 ) => {
@@ -128,11 +128,11 @@ export const withKeyboardFocus = <
       // `useIsViewFocused` update via the focus store — no host re-render needed.
       const reactToFocus = Boolean(
         focusStyle ||
-          containerFocusStyle ||
-          renderContent ||
-          renderFocusable ||
-          typeof style === 'function' ||
-          typeof containerStyle === 'function'
+        containerFocusStyle ||
+        renderContent ||
+        renderFocusable ||
+        typeof style === 'function' ||
+        typeof containerStyle === 'function'
       );
 
       // Auto-enable the pressed-style path when `style` is a function; honor an

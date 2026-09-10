@@ -1,4 +1,4 @@
-import type { View, ViewProps } from 'react-native';
+import type { View, ViewProps, ViewInstance } from 'react-native';
 import type {
   FocusStyle,
   InteractionState,
@@ -18,7 +18,7 @@ type KeyboardPressHandler = (e?: OnKeyPress) => void;
  */
 type PressHandlerProp<
   ComponentProps extends object,
-  PropName extends 'onPress' | 'onLongPress' | 'onPressIn' | 'onPressOut'
+  PropName extends 'onPress' | 'onLongPress' | 'onPressIn' | 'onPressOut',
 > = PropName extends keyof ComponentProps
   ? ComponentProps[PropName]
   : KeyboardPressHandler;
@@ -26,7 +26,7 @@ type PressHandlerProp<
 /** Picks the wrapped component's prop type for `PropName`, or `unknown` if absent. */
 type PickProp<
   ComponentProps extends object,
-  PropName extends string
+  PropName extends string,
 > = PropName extends keyof ComponentProps ? ComponentProps[PropName] : unknown;
 
 /** A component constructor that {@link WithKeyboardFocusProps} can enhance. */
@@ -133,7 +133,7 @@ type WithKeyboardBaseProps<ViewType, ViewStyleType> = {
   /** Style applied to the container while focused. */
   containerFocusStyle?: FocusStyle;
   /** Ref to the wrapped component instance. */
-  componentRef?: React.RefObject<ViewType>;
+  componentRef?: React.RefObject<ViewType | ViewInstance>;
   /**
    * Style for the wrapped component. Static/array, or a callback receiving
    * `{ focused, pressed }` — e.g. `style={(s) => (s.focused ? … : …)}`.
@@ -153,7 +153,7 @@ type WithKeyboardBaseProps<ViewType, ViewStyleType> = {
 export type WithKeyboardProps<
   ViewType = View,
   ViewStyleType = unknown,
-  ComponentProps extends object = {}
+  ComponentProps extends object = {},
 > = WithKeyboardBaseProps<ViewType, ViewStyleType> & RenderSlot<ComponentProps>;
 
 type KeyboardFocusBaseProps = Omit<
@@ -170,7 +170,7 @@ type MergeProps<BaseProps extends object, OverrideProps extends object> = Omit<
 type KeyboardFocusOverrideProps<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View
+  ViewType = View,
 > = KeyboardPressType<ComponentProps> &
   KeyboardFocusBaseProps &
   WithKeyboardProps<ViewType, ViewStyleType, ComponentProps>;
@@ -183,7 +183,7 @@ type KeyboardFocusOverrideProps<
 export type WithKeyboardFocusProps<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View
+  ViewType = View,
 > = MergeProps<
   ComponentProps,
   KeyboardFocusOverrideProps<ComponentProps, ViewStyleType, ViewType>
@@ -193,7 +193,7 @@ export type WithKeyboardFocusProps<
 export type WithKeyboardFocusPropsWithRef<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View
+  ViewType = View,
 > = WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType> &
   RefAttributes<KeyboardFocus>;
 
@@ -201,7 +201,7 @@ export type WithKeyboardFocusPropsWithRef<
 export type KeyboardFocusableComponentDeclaration<
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View
+  ViewType = View,
 > = React.JSXElementConstructor<
   WithKeyboardFocusPropsWithRef<ComponentProps, ViewStyleType, ViewType>
 >;

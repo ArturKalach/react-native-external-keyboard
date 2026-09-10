@@ -111,7 +111,7 @@ export const KeyboardExtendedInput = React.forwardRef<
 
     const blurOnSubmit = submitBehavior
       ? submitBehavior === 'blurAndSubmit'
-      : props.blurOnSubmit ?? true;
+      : (props.blurOnSubmit ?? true);
 
     const withHaloEffect =
       tintType !== 'none' &&

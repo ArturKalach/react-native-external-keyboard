@@ -8,7 +8,7 @@ type AnyPressHandler = (event?: any) => void;
 
 export type UseKeyboardFocusContainerProps<
   TPress extends AnyPressHandler = AnyPressHandler,
-  TKeyOnlyPress extends AnyPressHandler = AnyPressHandler
+  TKeyOnlyPress extends AnyPressHandler = AnyPressHandler,
 > = {
   focusStyle?: FocusStyle;
   containerFocusStyle?: FocusStyle;
@@ -29,7 +29,7 @@ export type UseKeyboardFocusContainerProps<
 
 export const useKeyboardFocusContainer = <
   TPress extends AnyPressHandler = AnyPressHandler,
-  TKeyOnlyPress extends AnyPressHandler = AnyPressHandler
+  TKeyOnlyPress extends AnyPressHandler = AnyPressHandler,
 >({
   focusStyle,
   containerFocusStyle,

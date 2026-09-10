@@ -53,15 +53,15 @@ type IgnoreForCompatibility =
 
 type CompatibleInputProp<
   TextInputPropsType extends object,
-  CompatibilityProp extends IgnoreForCompatibility
+  CompatibilityProp extends IgnoreForCompatibility,
 > = CompatibilityProp extends keyof TextInputPropsType
   ? TextInputPropsType[CompatibilityProp]
   : CompatibilityProp extends keyof TextInputProps
-  ? TextInputProps[CompatibilityProp]
-  : never;
+    ? TextInputProps[CompatibilityProp]
+    : never;
 
 type ReactNativeInputCompatibility<
-  TextInputPropsType extends object = TextInputProps
+  TextInputPropsType extends object = TextInputProps,
 > = Omit<TextInputPropsType, IgnoreForCompatibility> & {
   [CompatibilityProp in IgnoreForCompatibility]?: CompatibleInputProp<
     TextInputPropsType,
@@ -74,7 +74,7 @@ type ReactNativeInputCompatibility<
  * `TextInputProps` shape with the library's {@link ExtraKeyboardProps}.
  */
 export type KeyboardInputPropsDeclaration<
-  TextInputPropsType extends object = TextInputProps
+  TextInputPropsType extends object = TextInputProps,
 > = ReactNativeInputCompatibility<TextInputPropsType> & ExtraKeyboardProps;
 
 /** Props for `KeyboardExtendedInput` — RN `TextInputProps` plus keyboard-focus props. */
