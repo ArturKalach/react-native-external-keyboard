@@ -9,7 +9,7 @@
 #import "RNCEKVOrderRelationship.h"
 #import "RNCEKVKeyboardFocusableProtocol.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
-#import "UIView+React.h"
+#import <React/UIView+React.h>
 
 static NSNumber *const FOCUS_DEFAULT = nil;
 static NSNumber *const FOCUS_HANDLED = @0;

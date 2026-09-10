@@ -9,7 +9,7 @@
 #import "RNCEKVViewOrderGroupBase.h"
 #import "RNCEKVOrderLinking.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
-#import "UIView+React.h"
+#import <React/UIView+React.h>
 #import "RNCEKVPropHelper.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED

@@ -2,7 +2,7 @@
 #import <React/RCTUIManager.h>
 #import "RNCEKVTextInputFocusWrapperManager.h"
 #import "RNCEKVTextInputFocusWrapper.h"
-#import "RCTBridge.h"
+#import <React/RCTBridge.h>
 
 @implementation RNCEKVTextInputFocusWrapperManager
 

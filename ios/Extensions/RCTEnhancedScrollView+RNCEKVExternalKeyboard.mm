@@ -8,9 +8,10 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
-#import "RCTEnhancedScrollView.h"
+#import <React/RCTEnhancedScrollView.h>
+#import <React/RCTScrollViewComponentView.h>
 #import "RNCEKVSwizzleInstanceMethod.h"
-#import "RCTScrollViewComponentView.h"
+
 
 static void RNCEKVEnhancedScrollViewSwizzle(void) {
   RNCEKVSwizzleInstanceMethod([RCTEnhancedScrollView class], @selector(initWithFrame:), @selector(rncekvInitWithFrame:));

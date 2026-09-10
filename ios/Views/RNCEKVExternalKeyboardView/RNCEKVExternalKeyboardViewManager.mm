@@ -2,7 +2,7 @@
 #import <React/RCTUIManager.h>
 #import "RNCEKVExternalKeyboardViewManager.h"
 #import "RNCEKVExternalKeyboardView.h"
-#import "RCTBridge.h"
+#import <React/RCTBridge.h>
 
 @implementation RNCEKVExternalKeyboardViewManager
 
