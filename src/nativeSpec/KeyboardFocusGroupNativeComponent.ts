@@ -2,6 +2,7 @@ import {
   codegenNativeComponent,
   type ViewProps,
   type ColorValue,
+  type HostComponent,
 } from 'react-native';
 import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
 
@@ -16,6 +17,9 @@ export interface KeyboardFocusGroupNativeComponentProps extends ViewProps {
   orderGroup?: string;
 }
 
-export default codegenNativeComponent<KeyboardFocusGroupNativeComponentProps>(
-  'KeyboardFocusGroup'
-);
+const KeyboardFocusGroupNativeComponent: HostComponent<KeyboardFocusGroupNativeComponentProps> =
+  codegenNativeComponent<KeyboardFocusGroupNativeComponentProps>(
+    'KeyboardFocusGroup'
+  );
+
+export default KeyboardFocusGroupNativeComponent;

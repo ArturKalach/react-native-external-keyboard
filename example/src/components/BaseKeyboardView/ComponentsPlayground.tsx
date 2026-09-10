@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   View,
+  type TextInputInstance,
 } from 'react-native';
 import {
   BaseKeyboardView,
@@ -93,7 +94,7 @@ export const ComponentsPlayground = () => {
   const containerRef = useRef<BaseKeyboardViewType>(null);
   const wrapRef = useRef<BaseKeyboardViewType>(null);
   const kPressableRef = useRef<BaseKeyboardViewType>(null);
-  const kInputRef = useRef<TextInput & { focus: () => void }>(null);
+  const kInputRef = useRef<TextInputInstance & { focus: () => void }>(null);
   const clipSelfRef = useRef<BaseKeyboardViewType>(null);
   const clipParentRef = useRef<BaseKeyboardViewType>(null);
   const asymmetricRef = useRef<BaseKeyboardViewType>(null);

@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import type { ViewProps } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import type { ContainerStyle } from '../types';
 
 type UseContainerStyleParams = {
   /** Static style/array, or `({ pressed, focused }) => style`. */
   containerStyle?: ContainerStyle<unknown>;
   /** Style applied while focused (already gated on `focused`). */
-  containerFocusedStyle?: ViewProps['style'];
+  containerFocusedStyle?: StyleProp<ViewStyle>;
   pressed: boolean;
   focused: boolean;
 };
@@ -21,7 +21,7 @@ export const useContainerStyle = ({
   containerFocusedStyle,
   pressed,
   focused,
-}: UseContainerStyleParams) =>
+}: UseContainerStyleParams): StyleProp<ViewStyle> =>
   useMemo(() => {
     const resolved =
       typeof containerStyle === 'function'
@@ -29,8 +29,8 @@ export const useContainerStyle = ({
             containerStyle as (s: {
               pressed: boolean;
               focused: boolean;
-            }) => ViewProps['style']
+            }) => StyleProp<ViewStyle>
           )({ pressed, focused })
-        : (containerStyle as ViewProps['style']);
+        : (containerStyle as StyleProp<ViewStyle>);
     return [resolved, containerFocusedStyle];
   }, [containerStyle, containerFocusedStyle, pressed, focused]);

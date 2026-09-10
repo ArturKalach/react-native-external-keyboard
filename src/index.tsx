@@ -66,7 +66,11 @@ export const Focus = {
   Trap: FocusTrap,
 };
 
-export const K = {
+export const K: {
+  Input: typeof KeyboardExtendedInput;
+  View: typeof KeyboardFocusView;
+  Pressable: typeof Pressable;
+} = {
   Input: KeyboardExtendedInput,
   View: KeyboardFocusView,
   Pressable,

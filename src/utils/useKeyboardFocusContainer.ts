@@ -1,8 +1,15 @@
 import { useCallback, useMemo } from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { useFocusStyle } from './useFocusStyle';
 import { useKeyboardPress } from './useKeyboardPress/useKeyboardPress';
 import { useKeyboardPressState } from './useKeyboardPressState';
-import type { FocusStyle, InteractiveStyleProp, OnKeyPressFn } from '../types';
+import type { ValueStore } from './useValueStore';
+import type {
+  FocusStyle,
+  InteractiveStyleProp,
+  OnKeyPress,
+  OnKeyPressFn,
+} from '../types';
 
 type AnyPressHandler = (event?: any) => void;
 
@@ -27,6 +34,23 @@ export type UseKeyboardFocusContainerProps<
   androidKeyboardPressState?: boolean;
 };
 
+/** Return value of {@link useKeyboardFocusContainer}. */
+export type UseKeyboardFocusContainerResult<
+  TPress extends AnyPressHandler = AnyPressHandler,
+> = {
+  focused: boolean;
+  focusStore: ValueStore;
+  keyboardPressed: boolean;
+  containerFocusedStyle: StyleProp<ViewStyle>;
+  componentStyleViewStyle: InteractiveStyleProp;
+  onFocusChangeHandler: (isFocused: boolean) => void;
+  onKeyUpPressHandler: (e: OnKeyPress) => void;
+  onKeyDownPressHandler: OnKeyPressFn | undefined;
+  onPressHandler: TPress | undefined;
+  onContextMenuHandler: () => void;
+  enableContextMenu: boolean;
+};
+
 export const useKeyboardFocusContainer = <
   TPress extends AnyPressHandler = AnyPressHandler,
   TKeyOnlyPress extends AnyPressHandler = AnyPressHandler,
@@ -45,7 +69,10 @@ export const useKeyboardFocusContainer = <
   onPressOut,
   triggerCodes,
   androidKeyboardPressState = false,
-}: UseKeyboardFocusContainerProps<TPress, TKeyOnlyPress>) => {
+}: UseKeyboardFocusContainerProps<
+  TPress,
+  TKeyOnlyPress
+>): UseKeyboardFocusContainerResult<TPress> => {
   const keyboardPress = useKeyboardPressState({
     enabled: androidKeyboardPressState,
     onPressIn,

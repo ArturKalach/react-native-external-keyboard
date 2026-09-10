@@ -1,4 +1,8 @@
-import { codegenNativeComponent, type ViewProps } from 'react-native';
+import {
+  codegenNativeComponent,
+  type HostComponent,
+  type ViewProps,
+} from 'react-native';
 import type { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface ExternalKeyboardLockViewNativeComponentProps extends ViewProps {
@@ -7,6 +11,9 @@ export interface ExternalKeyboardLockViewNativeComponentProps extends ViewProps 
   forceLock?: boolean;
 }
 
-export default codegenNativeComponent<ExternalKeyboardLockViewNativeComponentProps>(
-  'ExternalKeyboardLockView'
-);
+const ExternalKeyboardLockViewNativeComponent: HostComponent<ExternalKeyboardLockViewNativeComponentProps> =
+  codegenNativeComponent<ExternalKeyboardLockViewNativeComponentProps>(
+    'ExternalKeyboardLockView'
+  );
+
+export default ExternalKeyboardLockViewNativeComponent;

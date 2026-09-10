@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { TextInput, Platform } from 'react-native';
+import { type TextInputInstance, TextInput, Platform } from 'react-native';
 
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
 import { useFocusStyle } from '../../utils/useFocusStyle';
@@ -14,10 +14,9 @@ import { blurMap, focusMap } from './KeyboardExtendedInput.consts';
 
 const isIOS = Platform.OS === 'ios';
 
-export const KeyboardExtendedInput = React.forwardRef<
-  TextInput,
-  KeyboardInputProps
->(
+export const KeyboardExtendedInput: React.ForwardRefExoticComponent<
+  KeyboardInputProps & React.RefAttributes<TextInputInstance>
+> = React.forwardRef<TextInputInstance, KeyboardInputProps>(
   (
     {
       focusType = 'default',
