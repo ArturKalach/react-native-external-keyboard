@@ -1,6 +1,6 @@
 {
   "name": "react-native-external-keyboard",
-  "version": "1.1.0",
+  "version": "1.2.0-alpha.0",
   "description": "Toolkit for improving physical keyboard support in React Native",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
