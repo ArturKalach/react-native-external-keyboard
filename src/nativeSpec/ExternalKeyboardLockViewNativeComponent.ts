@@ -11,9 +11,6 @@ export interface ExternalKeyboardLockViewNativeComponentProps extends ViewProps 
   forceLock?: boolean;
 }
 
-const ExternalKeyboardLockViewNativeComponent: HostComponent<ExternalKeyboardLockViewNativeComponentProps> =
-  codegenNativeComponent<ExternalKeyboardLockViewNativeComponentProps>(
-    'ExternalKeyboardLockView'
-  );
-
-export default ExternalKeyboardLockViewNativeComponent;
+export default codegenNativeComponent<ExternalKeyboardLockViewNativeComponentProps>(
+  'ExternalKeyboardLockView'
+) as HostComponent<ExternalKeyboardLockViewNativeComponentProps>;

@@ -82,7 +82,6 @@ export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
   supportedCommands: ['rnekKeyboardFocus', 'rnekScreenReaderFocus'],
 });
 
-const ExternalKeyboardViewNativeComponent: HostComponent<ExternalKeyboardNativeProps> =
-  codegenNativeComponent<ExternalKeyboardNativeProps>('ExternalKeyboardView');
-
-export default ExternalKeyboardViewNativeComponent;
+export default codegenNativeComponent<ExternalKeyboardNativeProps>(
+  'ExternalKeyboardView'
+) as HostComponent<ExternalKeyboardNativeProps>;

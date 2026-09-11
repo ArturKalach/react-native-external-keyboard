@@ -17,9 +17,6 @@ export interface KeyboardFocusGroupNativeComponentProps extends ViewProps {
   orderGroup?: string;
 }
 
-const KeyboardFocusGroupNativeComponent: HostComponent<KeyboardFocusGroupNativeComponentProps> =
-  codegenNativeComponent<KeyboardFocusGroupNativeComponentProps>(
-    'KeyboardFocusGroup'
-  );
-
-export default KeyboardFocusGroupNativeComponent;
+export default codegenNativeComponent<KeyboardFocusGroupNativeComponentProps>(
+  'KeyboardFocusGroup'
+) as HostComponent<KeyboardFocusGroupNativeComponentProps>;

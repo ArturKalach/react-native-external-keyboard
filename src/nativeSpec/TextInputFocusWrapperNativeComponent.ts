@@ -48,9 +48,6 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   orderLast?: string;
 }
 
-const TextInputFocusWrapperHostComponent: HostComponent<TextInputFocusWrapperNativeComponent> =
-  codegenNativeComponent<TextInputFocusWrapperNativeComponent>(
-    'TextInputFocusWrapper'
-  );
-
-export default TextInputFocusWrapperHostComponent;
+export default codegenNativeComponent<TextInputFocusWrapperNativeComponent>(
+  'TextInputFocusWrapper'
+) as HostComponent<TextInputFocusWrapperNativeComponent>;
