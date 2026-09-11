@@ -125,12 +125,18 @@
     "name": "RNExternalKeyboardViewSpec",
     "type": "all",
     "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.externalkeyboard"
+    },
     "ios": {
       "componentProvider": {
         "ExternalKeyboardView": "RNCEKVExternalKeyboardView",
         "KeyboardFocusGroup": "RNCEKVKeyboardFocusGroup",
         "TextInputFocusWrapper": "RNCEKVTextInputFocusWrapper",
         "ExternalKeyboardLockView": "RNCEKVExternalKeyboardLockView"
+      },
+      "modulesProvider": {
+        "ExternalKeyboardModule": "RNCEKVExternalKeyboardModule"
       }
     }
   },
