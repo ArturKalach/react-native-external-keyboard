@@ -9,27 +9,16 @@ This file gives Claude Code guidance specific to the iOS native code under [ios/
 - One class per directory under `Views/`, `Delegates/`, and `Helpers/`. The directory name matches the class name. Exception: `features/` groups every file for one cross-cutting feature (view + delegate + utils) instead — see `features/Halo/`.
 - Headers use `#ifndef X_h / #define X_h / #endif` include guards (not `#pragma once`).
 
-## Architecture-conditional compilation
+## Fabric only
 
-All code paths must handle both **Fabric (New Architecture)** and **Legacy Bridge**. The toggle is `RCT_NEW_ARCH_ENABLED`:
-
-```objc
-#ifdef RCT_NEW_ARCH_ENABLED
-  // Fabric: subclass RCTViewComponentView, consume C++ Props structs
-#else
-  // Legacy: subclass RCTView, expose RCTDirectEventBlock / RCTBubblingEventBlock
-#endif
-```
-
-[RNCEKVViewGroupBase.h](Views/Base/ViewGroup/RNCEKVViewGroupBase.h) defines `RNCEKVBaseViewClass` as `RCTViewComponentView` or `RCTView` depending on the flag — base view classes inherit from this macro so the rest of the hierarchy is arch-agnostic.
+Every view subclasses `RCTViewComponentView` directly (see [RNCEKVViewGroupBase.h](Views/Base/ViewGroup/RNCEKVViewGroupBase.h)) and consumes C++ Props structs — there is no Legacy Bridge path. `RCT_NEW_ARCH_ENABLED` preprocessor guards and the parallel `RCTView`/`RCTDirectEventBlock` code paths they used to switch on were removed in 1.2.0 along with the per-view `*Manager.mm` (`RCTViewManager`) classes; Fabric registers components via `+componentDescriptorProvider`, not view-manager lookup.
 
 Fabric C++ prop diffing flows through helper structs in [Helpers/RNCEKVNativeProps/](Helpers/RNCEKVNativeProps/) (e.g. `RNCEKV::FocusProps`, `RNCEKV::OrderProps`, `RNCEKV::HaloProps`) — each base class exposes an `updateXxxProps:newProps:` method invoked from [RNCEKVExternalKeyboardView.mm](Views/RNCEKVExternalKeyboardView/RNCEKVExternalKeyboardView.mm) `updateProps:oldProps:`.
 
 When adding a new prop:
 1. Update the JS Codegen spec under `src/nativeSpec/`.
 2. Add the field to the relevant `RNCEKV::XxxProps` C++ struct in `Helpers/RNCEKVNativeProps/`.
-3. Update the corresponding base class `updateXxxProps:newProps:` (Fabric path).
-4. Expose a matching `@property` for the Legacy path (auto-bridged by `RCTViewManager`).
+3. Update the corresponding base class `updateXxxProps:newProps:`.
 
 ## View inheritance chain
 
@@ -97,7 +86,7 @@ Fabric reuses `RCTViewComponentView` instances across mounts. Every base class i
 
 ## Extensions (Categories)
 
-[Extensions/](Extensions/) holds Obj-C categories on RN-owned classes — `RCTViewComponentView`, `UIViewController`, `RCTTextInputComponentView`, `RCTEnhancedScrollView`, `RCTCustomScrollView`. These wire library-wide behavior (e.g. preferred focus environment, focus-aware scrolling) into views the library does not own.
+[Extensions/](Extensions/) holds Obj-C categories on RN-owned classes — `RCTViewComponentView`, `UIViewController`, `RCTTextInputComponentView`, `RCTEnhancedScrollView`. These wire library-wide behavior (e.g. preferred focus environment, focus-aware scrolling) into views the library does not own.
 
 Categories use `+load`-time swizzling via [RNCEKVSwizzlingHelper](Helpers/RNCEKVSwizzlingHelper/) / [RNCEKVSwizzleInstanceMethod](Helpers/RNCEKVSwizzleInstanceMethod/). Keep swizzles idempotent (guard with `dispatch_once`) and isolated to symbols owned by this library — never swizzle a method on a host-app class.
 
@@ -105,6 +94,6 @@ Categories use `+load`-time swizzling via [RNCEKVSwizzlingHelper](Helpers/RNCEKV
 
 [RNCEKVExternalKeyboardModule](Modules/RNCEKVExternalKeyboardModule.h) is the only `RCTBridgeModule` — exposes JS-callable functions (the imperative API in `src/modules/Keyboard.ts`). Keep it thin: route work down to the view via `RNCEKVOrderLinking` lookups.
 
-## View managers
+## Component registration
 
-Each user-facing view has a `*Manager.mm` next to it (e.g. [RNCEKVExternalKeyboardViewManager.mm](Views/RNCEKVExternalKeyboardView/RNCEKVExternalKeyboardViewManager.mm)). On Legacy these export view + props to RN; on Fabric they are mostly empty shells (Fabric uses the codegen'd component descriptor). Imperative commands (`rnekKeyboardFocus`, `rnekScreenReaderFocus`) are handled in `handleCommand:args:` on the Fabric view and via the manager on Legacy.
+There are no `*Manager.mm` (`RCTViewManager`) classes — those were Legacy-Bridge-only and were removed in 1.2.0. Fabric registers each view via `+componentDescriptorProvider`, implemented directly on the view class (e.g. [RNCEKVExternalKeyboardView.mm](Views/RNCEKVExternalKeyboardView/RNCEKVExternalKeyboardView.mm)). Imperative commands (`rnekKeyboardFocus`, `rnekScreenReaderFocus`) are handled in `handleCommand:args:` on the view.

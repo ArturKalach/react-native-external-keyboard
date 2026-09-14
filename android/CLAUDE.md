@@ -2,43 +2,33 @@
 
 Android native implementation of `react-native-external-keyboard`. Read this together with the root [CLAUDE.md](../CLAUDE.md).
 
-## Dual-Architecture Wiring
+## New Architecture only
 
-The same Java view managers and module support both Fabric (New Architecture) and the Legacy Bridge. The split happens at compile time in [build.gradle](build.gradle):
+The library targets Fabric + Turbo Modules exclusively (Legacy Bridge support was removed in 2.0.0, alongside the React Native ≥ 0.87 requirement). [build.gradle](build.gradle) unconditionally applies the `com.facebook.react` codegen plugin, adds `generated/java` + `generated/jni` to `sourceSets.main.java.srcDirs`, and configures the `react { ... }` block (`libraryName = "ExternalKeyboardView"`, `codegenJavaPackageName = "com.externalkeyboard"`). There is no `newArchEnabled` toggle and no `BuildConfig` flag — `ExternalKeyboardViewPackage.java`'s `ReactModuleInfo` hardcodes `isTurboModule = true`.
 
-- `isNewArchitectureEnabled()` checks `rootProject.newArchEnabled`.
-- When **true**: applies `com.facebook.react` plugin, adds `src/newarch` + `generated/java` + `generated/jni` to `sourceSets.main.java.srcDirs`, and configures the `react { ... }` codegen block (`libraryName = "ExternalKeyboardView"`, `codegenJavaPackageName = "com.externalkeyboard"`).
-- When **false**: adds `src/oldarch` instead.
-
-`BuildConfig.IS_NEW_ARCHITECTURE_ENABLED` is generated as a `boolean` field and read at runtime by [ExternalKeyboardViewPackage.java:35](src/main/java/com/externalkeyboard/ExternalKeyboardViewPackage.java#L35) to set the `isTurboModule` flag on `ReactModuleInfo`.
+`build.gradle` carries its own `buildscript` block (AGP 9.2.1, Kotlin 2.2.0 as of this writing) so the module resolves independently of whatever the host app's root `build.gradle` declares. `getExtOrDefault(prop)` still checks `rootProject.ext` first, falling back to the `ExternalKeyboard` version map at the top of the file (`kotlinVersion`, `minSdkVersion`, `compileSdkVersion`, `targetSdkVersion`) — a host app can still override any of these via its own `rootProject.ext`. There is no `android/gradle.properties`/`ExternalKeyboard_`-prefixed fallback anymore.
 
 ### Spec pattern
 
-Each manager/module in `src/main/` extends an arch-specific spec class with the **same FQN** in `src/newarch/` and `src/oldarch/`:
+Each manager/module in `src/main/` extends a codegen-mirroring spec class living in its own `com.externalkeyboard.specs` subpackage ([src/main/java/com/externalkeyboard/specs/](src/main/java/com/externalkeyboard/specs/)), separate from the hand-written implementations (formerly all flat in `com.externalkeyboard`, and before that split into a separate `src/newarch/` source root — both splits are gone in favor of this one):
 
-| Main class | Spec (same name, different src dir) |
+| Main class | Spec |
 |---|---|
-| `ExternalKeyboardViewManager` | `com.externalkeyboard.ExternalKeyboardViewManagerSpec` |
-| `TextInputFocusWrapperManager` | `com.externalkeyboard.TextInputFocusWrapperManagerSpec` |
-| `KeyboardFocusGroupManager` | `com.externalkeyboard.KeyboardFocusGroupManagerSpec` |
-| `ExternalKeyboardLockViewManager` | `com.externalkeyboard.ExternalKeyboardLockViewManagerSpec` |
-| `ExternalKeyboardModule` | `com.externalkeyboard.ExternalKeyboardModuleSpec` |
+| `ExternalKeyboardViewManager` | `com.externalkeyboard.specs.ExternalKeyboardViewManagerSpec` |
+| `TextInputFocusWrapperManager` | `com.externalkeyboard.specs.TextInputFocusWrapperManagerSpec` |
+| `KeyboardFocusGroupManager` | `com.externalkeyboard.specs.KeyboardFocusGroupManagerSpec` |
+| `ExternalKeyboardLockViewManager` | `com.externalkeyboard.specs.ExternalKeyboardLockViewManagerSpec` |
+| `ExternalKeyboardModule` | `com.externalkeyboard.specs.ExternalKeyboardModuleSpec` |
 
-- **newarch** spec extends the codegen-generated `Native…Spec` / `…ManagerInterface` (in `build/generated/source/codegen/java/...`).
-- **oldarch** spec is a hand-written abstract class with the same surface (see [src/oldarch/ExternalKeyboardViewManagerSpec.java](src/oldarch/ExternalKeyboardViewManagerSpec.java)).
+Each spec extends the codegen-generated `Native…Spec` / `…ManagerInterface` (in `build/generated/source/codegen/java/...`) — note the codegen output itself still lands in the bare `com.externalkeyboard` package (`codegenJavaPackageName` in `build.gradle`), so `com.externalkeyboard.specs.ExternalKeyboardModuleSpec` imports `com.externalkeyboard.NativeExternalKeyboardModuleSpec` explicitly rather than sharing a package with it.
 
-When adding a prop or command, you must update **all three** locations:
-1. The codegen TS spec under `../src/nativeSpec/` (regenerates `src/newarch`'s parent interface)
-2. The oldarch spec abstract method
-3. The main implementation in `src/main/`
+When adding a prop or command, update:
+1. The codegen TS spec under `../src/nativeSpec/` (regenerates the spec's parent interface)
+2. The main implementation in `src/main/`
 
-## Manifests
+## Manifest
 
-Two manifests exist for AGP compatibility ([build.gradle:26-33](build.gradle#L26-L33)):
-- [AndroidManifest.xml](src/main/AndroidManifest.xml) — legacy, declares `package="com.externalkeyboard"`.
-- [AndroidManifestNew.xml](src/main/AndroidManifestNew.xml) — used when AGP ≥ 7.3 supports `namespace`, with package declaration removed.
-
-Don't add the package attribute to the New manifest — `supportsNamespace()` switches `manifest.srcFile` based on AGP version.
+A single [AndroidManifest.xml](src/main/AndroidManifest.xml) with no `package` attribute — `android.namespace` in `build.gradle` is the sole source of the package name now (`com.externalkeyboard`). The old dual-manifest setup (a legacy manifest with `package=` plus an `AndroidManifestNew.xml` swapped in via a `supportsNamespace()` AGP-version check) was removed once the module started pinning its own modern AGP version; don't reintroduce a `package` attribute here — it's redundant with `namespace` and newer AGP treats the two disagreeing as an error.
 
 ## View Class Hierarchy
 
@@ -107,11 +97,13 @@ Direct event maps are registered in each manager's `getExportedCustomDirectEvent
 
 ## Build Properties
 
-Configurable from the host app via `rootProject.ext` or `gradle.properties` (with `ExternalKeyboard_` prefix). Defaults in [gradle.properties](gradle.properties):
-- `kotlinVersion=1.7.0`
-- `minSdkVersion=21`
-- `targetSdkVersion=31`
-- `compileSdkVersion=31`
+Configurable from the host app via `rootProject.ext` (e.g. a consuming app's root `build.gradle` `ext { }` block); falls back to the `ExternalKeyboard` map at the top of [build.gradle](build.gradle) otherwise:
+- `kotlinVersion: "2.2.0"`
+- `minSdkVersion: 24`
+- `compileSdkVersion: 37`
+- `targetSdkVersion: 36`
+
+There is no `gradle.properties` in this module and no `ExternalKeyboard_`-prefixed fallback anymore — `rootProject.ext` or the in-file defaults are the only two sources.
 
 ## Gotchas
 

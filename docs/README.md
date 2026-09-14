@@ -1,6 +1,8 @@
 # react-native-external-keyboard — Documentation
 
-Native-first React Native toolkit for physical keyboard support — focus management, key-press events, focus ordering, and focus locking on iOS and Android, for both the New Architecture (Fabric / bridgeless) and the Legacy Bridge.
+Native-first React Native toolkit for physical keyboard support — focus management, key-press events, focus ordering, and focus locking on iOS and Android, for the New Architecture (Fabric / bridgeless).
+
+> Need Old Architecture (Bridge) support or React Native ≤ 0.79? Use `react-native-external-keyboard@0.12.0` — see [React Native compatibility](../README.md#react-native-compatibility).
 
 ---
 
@@ -77,6 +79,7 @@ Version-to-version upgrade notes, newest first.
 
 | Upgrade | Highlights |
 | :-- | :-- |
+| [1.1.x → 2.0.0](./migration/migration.md#migrating-to-200-from-11x) | Old Architecture (Legacy Bridge) support dropped, React Native ≥ 0.87 required — New Architecture only |
 | [0.9.1 → 1.0.0](./migration/migration.md#migrating-to-100-from-091) | Prop & type renames (`group`→`focusableWrapper`, `canBeFocused`→`focusable`); new ref methods + `K` namespace |
 | [0.9.0 → 0.9.1](./migration/migration.md#migrating-to-091-from-090) | `disabled` now suppresses keyboard-triggered presses |
 | [0.7.x → 0.8.0](./migration/migration.md#migrating-to-080-from-07x) | RN 0.83/0.84 type compatibility via the HOC |

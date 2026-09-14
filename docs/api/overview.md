@@ -34,7 +34,7 @@ Keyboard.dismiss();
 | iOS / default | Calls React Native's own `Keyboard.dismiss()`. |
 | Android | Calls React Native's `Keyboard.dismiss()` **and** the library's native `ExternalKeyboard.dismissKeyboard()`. The extra native call is needed because, with a hardware keyboard attached, Android's framework dismiss alone does not always hide the soft keyboard. |
 
-The Android native method is a TurboModule (`ExternalKeyboardModule`) exposing `dismissKeyboard(): Promise<boolean>`, and is also reached through the Legacy Bridge when the New Architecture is off. It is an internal detail — call `Keyboard.dismiss()` rather than the native module directly so your code stays cross-platform.
+The Android native method is a TurboModule (`ExternalKeyboardModule`) exposing `dismissKeyboard(): Promise<boolean>`. It is an internal detail — call `Keyboard.dismiss()` rather than the native module directly so your code stays cross-platform.
 
 > The soft keyboard can also be hidden by the user from system settings or by pressing `Alt + K`.
 

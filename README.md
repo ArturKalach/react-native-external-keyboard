@@ -14,7 +14,7 @@ Native-first React Native toolkit for physical (external) keyboard support on iO
 - 🔢 **Custom focus order** — link-based, index-based, or direction locking
 - 🔒 **Focus lock** — keep focus inside modals and overlays (`Focus.Frame` / `Focus.Trap`)
 - 🎨 **Native focus styling** — iOS halo effect & `tintColor`, Android `defaultFocusHighlightEnabled`
-- ⚡ New Architecture · Old Architecture · Bridgeless · Expo prebuild
+- ⚡ New Architecture · Bridgeless · Expo prebuild
 
 > [!TIP]
 > The quickest start is the `K` namespace — `K.Pressable`, `K.View`, and `K.Input` are drop-in, keyboard-focusable versions of `Pressable`, `View`, and `TextInput`. To add focus to a component you already have (a custom button, `TouchableOpacity`, …), reach for the [`withKeyboardFocus`](./docs/components/overview.md#withkeyboardfocus) HOC. See the [getting started guide](./docs/getting-started/getting-started.md).
@@ -64,16 +64,20 @@ const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
 | Capability | Supported |
 | :-- | :-- |
 | New Architecture (Fabric / Turbo Modules) | ✅ |
-| Old Architecture (Bridge) | ✅ |
 | Bridgeless mode | ✅ |
 | Expo (prebuild / bare) | ✅ |
 
+Old Architecture (Bridge) support was dropped in `2.0.0` — see [React Native compatibility](#react-native-compatibility).
+
 ## React Native compatibility
 
-| Library version | React Native |
-| :-- | :-- |
-| `1.1.0` | ≥ 0.80 |
-| `0.12.0` | ≤ 0.79 |
+| Library version | React Native | Notes |
+| :-- | :-- | :-- |
+| `2.0.0` | ≥ 0.87 | New Architecture only — no Old Architecture code path exists |
+| `1.1.0` | ≥ 0.80 | New Architecture + Old Architecture |
+| `0.12.0` | ≤ 0.79 | New Architecture + Old Architecture |
+
+If you're on an older React Native version, install an older package version — `2.0.0` has no New/Old Architecture toggle to fall back to; that conditional code was removed, not just disabled.
 
 ## Documentation
 
@@ -135,7 +139,7 @@ Both active versions receive fixes:
 
 | Version | React Native | Status |
 | :-- | :-- | :-- |
-| `1.0.0` | ≥ 0.80 | Active — bug fixes and new RN support |
+| `2.0.0` | ≥ 0.87 | Active — bug fixes and new RN support, New Architecture only |
 | `0.11.0` | ≤ 0.79 | Active — bug fixes only |
 
 ---

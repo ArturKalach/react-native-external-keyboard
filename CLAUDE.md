@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-`react-native-external-keyboard` is a React Native library (npm package) that adds physical keyboard support — focus management, key press events, focus ordering, and focus locking — across iOS and Android, for both New Architecture (Fabric/bridgeless) and Legacy Bridge.
+`react-native-external-keyboard` is a React Native library (npm package) that adds physical keyboard support — focus management, key press events, focus ordering, and focus locking — across iOS and Android, for the New Architecture (Fabric/bridgeless). Legacy Bridge (Old Architecture) support was dropped in 2.0.0, which also requires React Native ≥ 0.87 — there is no New/Old Architecture conditional left in the code at all (not just disabled), so a consumer on an older React Native version needs an older package version (`1.1.0` for RN ≥ 0.80, `0.12.0` for RN ≤ 0.79) instead.
 
 ## Commands
 
@@ -34,8 +34,8 @@ Git hooks (lefthook) run lint + typecheck on pre-commit and validate conventiona
 
 ```
 src/               TypeScript/TSX — library source, compiled to lib/
-ios/               Objective-C native implementation
-android/           Java native implementation (dual-arch)
+ios/               Objective-C native implementation (Fabric only)
+android/           Java native implementation (New Architecture only)
 example/           Full example app (React Navigation + all features)
 lib/               Generated build output (commonjs, ESM, types) — do not edit
 ```
@@ -65,12 +65,7 @@ Structured by responsibility:
 
 ### Android Native (`android/src/main/java/com/externalkeyboard`)
 
-Dual-architecture pattern:
-- **`src/main/`** — shared code (view managers, module, delegates, events, helpers)
-- **`src/newarch/`** — Fabric (New Architecture) implementations
-- **`src/oldarch/`** — Legacy Bridge implementations
-
-Gradle conditionally compiles newarch vs oldarch based on the host app's RN architecture setting.
+Single source tree — view managers, module, delegates, events, and helpers all live under `src/main/`, including the codegen-mirroring `*ManagerSpec`/`*ManagerInterface` classes (in their own `specs/` subpackage; formerly split into `src/newarch`/`src/oldarch`, that split was removed along with Legacy Bridge support in 2.0.0). `build.gradle` always applies the `com.facebook.react` codegen plugin.
 
 ## Key Patterns
 
@@ -87,8 +82,5 @@ Gradle conditionally compiles newarch vs oldarch based on the host app's RN arch
 `src/nativeSpec/` defines the Codegen specs. When adding props or events:
 1. Update the relevant spec file in `nativeSpec/`
 2. Implement in iOS (`ios/`)
-3. Implement in Android newarch + oldarch (`android/src/`)
+3. Implement in Android (`android/src/main/`)
 4. Update TypeScript types in `src/types/`
-
-### Architecture Guards
-Android view managers check `ReactNativeVersionChecker` at runtime to select the right implementation. iOS uses `#ifdef RCT_NEW_ARCH_ENABLED` preprocessor guards.
