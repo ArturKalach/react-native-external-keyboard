@@ -11,9 +11,7 @@
 #import "RNCEKVViewGroupIdentifierBase.h"
 #import "RNCEKVFocusDelegate.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
-#endif
 
 @interface RNCEKVViewFocusChangeBase : RNCEKVViewGroupIdentifierBase<RNCEKVFocusProtocol>
 
@@ -24,10 +22,8 @@
 
 @property (nonatomic, strong, readonly) RNCEKVFocusDelegate* focusDelegate;
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusProps:(const RNCEKV::FocusProps &)oldProps
 newProps:(const RNCEKV::FocusProps &)newProps;
-#endif
 
 - (void)onFocusChangeHandler:(BOOL)isFocused;
 

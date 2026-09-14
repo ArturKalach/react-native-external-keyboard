@@ -1,11 +1,12 @@
 package com.externalkeyboard.views.ExternalKeyboardLockView;
 
+import com.externalkeyboard.specs.ExternalKeyboardLockViewManagerSpec;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
 @ReactModule(name = ExternalKeyboardLockViewManager.NAME)
-public class ExternalKeyboardLockViewManager extends com.externalkeyboard.ExternalKeyboardLockViewManagerSpec<ExternalKeyboardLockView> {
+public class ExternalKeyboardLockViewManager extends ExternalKeyboardLockViewManagerSpec<ExternalKeyboardLockView> {
   public static final String NAME = "ExternalKeyboardLockView";
 
   @Override

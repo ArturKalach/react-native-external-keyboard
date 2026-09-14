@@ -14,16 +14,6 @@
 
 @property BOOL focusableWrapper;
 
-#ifndef RCT_NEW_ARCH_ENABLED
-@property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
-@property (nonatomic, copy) RCTDirectEventBlock onContextMenuPress;
-@property (nonatomic, copy) RCTDirectEventBlock onKeyUpPress;
-@property (nonatomic, copy) RCTDirectEventBlock onKeyDownPress;
-@property (nonatomic, copy) RCTBubblingEventBlock onBubbledContextMenuPress;
-#endif
-
 @end
 
-
-//#endif /* RCT_NEW_ARCH_ENABLED */
 #endif /* ExternalKeyboardViewNativeComponent_h */

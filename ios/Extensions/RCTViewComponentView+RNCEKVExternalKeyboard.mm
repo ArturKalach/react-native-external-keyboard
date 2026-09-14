@@ -13,7 +13,7 @@
 #import "RNCEKVFocusProtocol.h"
 #import "RNCEKVHaloProtocol.h"
 
-@implementation RNCEKVViewClass (RNCEKVExternalKeyboard)
+@implementation RCTViewComponentView (RNCEKVExternalKeyboard)
 
 - (NSString *)focusGroupIdentifier {
   if ([self.superview conformsToProtocol:@protocol(RNCEKVCustomGroudIdProtocol)]) {

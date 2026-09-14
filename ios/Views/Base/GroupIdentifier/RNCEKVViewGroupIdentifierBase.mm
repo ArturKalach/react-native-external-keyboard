@@ -9,10 +9,8 @@
 #import "RNCEKVViewGroupIdentifierBase.h"
 #import "RNCEKVGroupIdentifierDelegate.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #include "RNCEKVNativeProps.h"
 #import "RNCEKVPropHelper.h"
-#endif
 
 @implementation RNCEKVViewGroupIdentifierBase {
   RNCEKVGroupIdentifierDelegate *_gIdDelegate;
@@ -40,7 +38,6 @@
 }
 
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateGroupIdentifierProps:(const RNCEKV::GroupIdentifierProps &)oldProps
                           newProps:(const RNCEKV::GroupIdentifierProps &)newProps {
   if (newProps.groupIdentifier.empty() && self.customGroupId != nil) {
@@ -54,7 +51,6 @@
     [self setCustomGroupId: newGroupId];
   }
 }
-#endif
 
 - (void) setCustomGroupId:(NSString *)customGroupId {
   _customGroupId = customGroupId;

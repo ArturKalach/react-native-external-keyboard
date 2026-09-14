@@ -12,9 +12,7 @@
 
 // See CLAUDE.md in this directory for the full rationale.
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTConversions.h>
-#endif
 
 @implementation RNCEKVExternalKeyboardHalloBase {
   RNCEKVHaloDelegate *_haloDelegate;
@@ -85,8 +83,6 @@
   [self haloAppearanceChanged];
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
-
 - (void)updateHaloProps:(const RNCEKV::HaloProps &)oldProps
                newProps:(const RNCEKV::HaloProps &)newProps {
   // Guard every halo param against the current INSTANCE STATE, not `oldProps`.
@@ -119,6 +115,5 @@
     self.tintColor = RCTUIColorFromSharedColor(newProps.tintColor);
   }
 }
-#endif
 
 @end

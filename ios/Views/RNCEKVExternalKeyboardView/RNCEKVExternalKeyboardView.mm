@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "RNCEKVOrderLinking.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/Props.h>
@@ -29,23 +28,18 @@ using namespace facebook::react;
 
 @end
 
-#endif
-
 @implementation RNCEKVExternalKeyboardView
 
 - (instancetype)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
-#ifdef RCT_NEW_ARCH_ENABLED
     static const auto defaultProps =
     std::make_shared<const ExternalKeyboardViewProps>();
     _props = defaultProps;
-#endif
   }
 
   return self;
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider {
   return concreteComponentDescriptorProvider<
   ExternalKeyboardViewComponentDescriptor>();
@@ -105,9 +99,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   return RNCEKVExternalKeyboardView.class;
 }
 
-#endif
-
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)onContextMenuPressHandler {
   [RNCEKVFabricEventHelper onContextMenuPressEventEmmiter:_eventEmitter];
 }
@@ -131,40 +122,5 @@ Class<RCTComponentViewProtocol> ExternalKeyboardViewCls(void) {
   [RNCEKVFabricEventHelper onKeyUpPressEventEmmiter:eventInfo
                                         withEmitter:_eventEmitter];
 }
-
-#else
-
-- (void)onContextMenuPressHandler {
-  if (self.onContextMenuPress) {
-    self.onContextMenuPress(@{});
-  }
-}
-
-- (void)onBubbledContextMenuPressHandler {
-  if (self.onBubbledContextMenuPress) {
-    self.onBubbledContextMenuPress(@{});
-  }
-}
-//
-- (void)onFocusChangeHandler:(BOOL)isFocused {
-  [super onFocusChangeHandler: isFocused];
-  if (self.onFocusChange) {
-    self.onFocusChange(@{@"isFocused" : @(isFocused)});
-  }
-}
-
-- (void)onKeyDownPressHandler:(NSDictionary *)eventInfo {
-  if (self.onKeyDownPress) {
-    self.onKeyDownPress(eventInfo);
-  }
-}
-
-- (void)onKeyUpPressHandler:(NSDictionary *)eventInfo {
-  if (self.onKeyUpPress) {
-    self.onKeyUpPress(eventInfo);
-  }
-}
-
-#endif
 
 @end

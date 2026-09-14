@@ -1,4 +1,4 @@
-package com.externalkeyboard;
+package com.externalkeyboard.specs;
 
 import com.facebook.react.views.view.ReactViewGroup;
 import com.facebook.react.views.view.ReactViewManager;

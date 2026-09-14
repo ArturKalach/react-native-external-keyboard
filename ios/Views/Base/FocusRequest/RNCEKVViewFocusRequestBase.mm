@@ -8,13 +8,11 @@
 #import <Foundation/Foundation.h>
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 
-#import "UIView+React.h"
+#import <React/UIView+React.h>
 #import "RNCEKVViewFocusRequestBase.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
 #import "RNCEKVFabricEventHelper.h"
-#endif
 
 @implementation RNCEKVViewFocusRequestBase {
   BOOL _isAttachedToWindow;
@@ -51,16 +49,12 @@
   });
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusRequestProps:(const RNCEKV::AutoFocusProps &)oldProps
 newProps:(const RNCEKV::AutoFocusProps &)newProps {
     if (oldProps.autoFocus != newProps.autoFocus) {
       [self setAutoFocus: newProps.autoFocus];
     }
 }
-
-
-#endif
 
 
 - (void)onAttached

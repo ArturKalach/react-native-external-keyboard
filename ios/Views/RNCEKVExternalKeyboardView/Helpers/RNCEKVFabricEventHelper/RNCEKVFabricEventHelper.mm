@@ -4,7 +4,6 @@
 //
 //  Created by Artur Kalach on 22/08/2024.
 //
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <Foundation/Foundation.h>
 
 #import "RNCEKVFabricEventHelper.h"
@@ -86,4 +85,3 @@ using namespace facebook::react;
 
 
 @end
-#endif

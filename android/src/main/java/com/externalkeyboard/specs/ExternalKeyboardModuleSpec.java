@@ -1,5 +1,6 @@
-package com.externalkeyboard;
+package com.externalkeyboard.specs;
 
+import com.externalkeyboard.NativeExternalKeyboardModuleSpec;
 import com.facebook.react.bridge.ReactApplicationContext;
 
 public abstract class ExternalKeyboardModuleSpec extends NativeExternalKeyboardModuleSpec {

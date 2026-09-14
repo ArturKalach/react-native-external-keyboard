@@ -12,8 +12,6 @@
 #import <React/RCTViewManager.h>
 #import "RNCEKVExternalKeyboardLockView.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
-
 #include <string>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/EventEmitters.h>
@@ -26,10 +24,6 @@ using namespace facebook::react;
 @interface RNCEKVExternalKeyboardLockView () <RCTExternalKeyboardLockViewViewProtocol>
 
 @end
-
-#endif
-
-
 
 @implementation RNCEKVExternalKeyboardLockView
 
@@ -54,7 +48,6 @@ using namespace facebook::react;
                                                 object:nil];
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)prepareForRecycle {
   [super prepareForRecycle];
   _forceLock = NO;
@@ -63,7 +56,6 @@ using namespace facebook::react;
                                                   name:UIAccessibilityElementFocusedNotification
                                                 object:nil];
 }
-#endif
 
 - (void)onAccessibilityFocusChanged:(NSNotification *)notification {
   if (!_forceLock || _lockDisabled) return;
@@ -117,8 +109,6 @@ using namespace facebook::react;
   UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, self);
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
-
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
   return concreteComponentDescriptorProvider<ExternalKeyboardLockViewComponentDescriptor>();
@@ -150,8 +140,6 @@ Class<RCTComponentViewProtocol> ExternalKeyboardLockViewCls(void)
 {
   return RNCEKVExternalKeyboardLockView.class;
 }
-
-#endif
 
 - (void)didMoveToWindow {
   [super didMoveToWindow];

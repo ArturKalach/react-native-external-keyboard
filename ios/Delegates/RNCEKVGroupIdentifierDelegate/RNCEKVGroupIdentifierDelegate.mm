@@ -9,11 +9,6 @@
 
 #import "RNCEKVGroupIdentifierDelegate.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
-#endif
-
-
 @implementation RNCEKVGroupIdentifierDelegate {
   UIView<RNCEKVGroupIdentifierProtocol>* _delegate;
   NSString* _tagId;

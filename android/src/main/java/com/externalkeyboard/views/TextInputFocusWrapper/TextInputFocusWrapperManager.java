@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.MultiplyTextSubmit;
+import com.externalkeyboard.specs.TextInputFocusWrapperManagerSpec;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 
 @ReactModule(name = TextInputFocusWrapperManager.NAME)
-public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInputFocusWrapperManagerSpec<TextInputFocusWrapper> {
+public class TextInputFocusWrapperManager extends TextInputFocusWrapperManagerSpec<TextInputFocusWrapper> {
   public static final String NAME = "TextInputFocusWrapper";
 
   @Override

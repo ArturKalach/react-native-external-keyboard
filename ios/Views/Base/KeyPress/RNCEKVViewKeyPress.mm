@@ -29,7 +29,6 @@
   [super cleanReferences];
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateKeyPressProps:(const RNCEKV::KeyPressProps &)oldProps
                    newProps:(const RNCEKV::KeyPressProps &)newProps {
   if (oldProps.hasKeyUpPress != newProps.hasKeyUpPress) {
@@ -40,8 +39,6 @@
     [self setHasOnPressDown:newProps.hasKeyDownPress];
   }
 }
-
-#endif
 
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses

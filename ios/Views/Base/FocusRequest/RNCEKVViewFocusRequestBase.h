@@ -11,20 +11,15 @@
 
 #import "RNCEKVViewContextMenuBase.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
-#endif
 
 @interface RNCEKVViewFocusRequestBase : RNCEKVViewContextMenuBase
 
 @property BOOL autoFocus;
 
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusRequestProps:(const RNCEKV::AutoFocusProps &)oldProps
 newProps:(const RNCEKV::AutoFocusProps &)newProps;
-
-#endif
 
 - (void)focus;
 - (void)screenReaderFocus;

@@ -11,10 +11,8 @@
 
 #import "RNCEKVViewContextMenuBase.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
 #import "RNCEKVFabricEventHelper.h"
-#endif
 
 @implementation RNCEKVViewContextMenuBase {
   UIContextMenuInteraction *_contextMenuInteraction;
@@ -69,7 +67,6 @@ API_AVAILABLE(ios(13.0)) {
 - (void)onContextMenuPressHandler {}
 - (void)onBubbledContextMenuPressHandler {}
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateContextMenuProps:(const RNCEKV::ContextMenuProps &)oldProps
 newProps:(const RNCEKV::ContextMenuProps &)newProps {
   if (oldProps.enableContextMenu != newProps.enableContextMenu) {
@@ -77,8 +74,6 @@ newProps:(const RNCEKV::ContextMenuProps &)newProps {
     [self updateContextMenuRegistration];
   }
 }
-
-#endif
 
 
 @end

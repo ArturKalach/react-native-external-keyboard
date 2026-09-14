@@ -11,18 +11,14 @@
 
 #import "RNCEKVViewFocusChangeBase.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
-#endif
 
 @interface RNCEKVViewContextMenuBase : RNCEKVViewFocusChangeBase<UIContextMenuInteractionDelegate>
 
 @property (nonatomic, assign) BOOL enableContextMenu;
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateContextMenuProps:(const RNCEKV::ContextMenuProps &)oldProps
 newProps:(const RNCEKV::ContextMenuProps &)newProps;
-#endif
 
 - (void)onContextMenuPressHandler;
 - (void)onBubbledContextMenuPressHandler;

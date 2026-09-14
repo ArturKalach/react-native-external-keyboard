@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import com.externalkeyboard.events.FocusChangeEvent;
 import com.externalkeyboard.events.KeyPressDownEvent;
 import com.externalkeyboard.events.KeyPressUpEvent;
+import com.externalkeyboard.specs.ExternalKeyboardViewManagerSpec;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -18,7 +19,7 @@ import java.util.Objects;
 
 
 @ReactModule(name = ExternalKeyboardViewManager.NAME)
-public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKeyboardViewManagerSpec<ExternalKeyboardView> {
+public class ExternalKeyboardViewManager extends ExternalKeyboardViewManagerSpec<ExternalKeyboardView> {
 
   public static final String NAME = "ExternalKeyboardView";
 
