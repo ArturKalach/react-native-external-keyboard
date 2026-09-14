@@ -31,7 +31,7 @@ const useDebouncedCallback = <T extends (...args: any[]) => void>(
 
 export const useKeyboardPress = <
   T extends (event?: any) => void,
-  K extends (event?: any) => void
+  K extends (event?: any) => void,
 >({
   onKeyUpPress,
   onKeyDownPress,

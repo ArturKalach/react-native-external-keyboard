@@ -2,6 +2,7 @@ import {
   codegenNativeComponent,
   codegenNativeCommands,
   type ColorValue,
+  type HostComponent,
   type ViewProps,
 } from 'react-native';
 import type {
@@ -83,4 +84,4 @@ export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
 
 export default codegenNativeComponent<ExternalKeyboardNativeProps>(
   'ExternalKeyboardView'
-);
+) as HostComponent<ExternalKeyboardNativeProps>;

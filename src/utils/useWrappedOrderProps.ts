@@ -26,10 +26,10 @@ export const useWrappedOrderProps = ({
       orderUp: wrapPrefix(orderUp),
       orderDown: wrapPrefix(orderDown),
       orderFirst: wrapPrefix(
-        orderFirst === null ? undefined : orderFirst ?? orderForward
+        orderFirst === null ? undefined : (orderFirst ?? orderForward)
       ),
       orderLast: wrapPrefix(
-        orderLast === null ? undefined : orderLast ?? orderBackward
+        orderLast === null ? undefined : (orderLast ?? orderBackward)
       ),
     }),
     [

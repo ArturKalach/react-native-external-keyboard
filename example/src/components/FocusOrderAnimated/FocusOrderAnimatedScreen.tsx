@@ -47,7 +47,7 @@ export const FocusOrderAnimatedScreen = () => {
 
   const cellRefs = useRef(
     STOPS.map(
-      () => ({ current: null } as RefObject<BaseKeyboardViewType | null>)
+      () => ({ current: null }) as RefObject<BaseKeyboardViewType | null>
     )
   ).current;
 

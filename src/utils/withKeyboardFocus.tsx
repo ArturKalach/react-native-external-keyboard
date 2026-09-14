@@ -1,5 +1,5 @@
 import React, { type RefObject, useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { type ViewInstance } from 'react-native';
 import { BaseKeyboardView } from '../components';
 import type {
   BaseKeyboardViewType,
@@ -27,13 +27,13 @@ import { useValueStore } from './useValueStore';
 export const withKeyboardFocus = <
   ComponentProps extends object,
   ViewStyleType,
-  ViewType = View
+  ViewType = ViewInstance,
 >(
   Component: KeyboardFocusableComponent<ComponentProps>
 ) => {
   const WithKeyboardFocus = React.memo(
     React.forwardRef<
-      BaseKeyboardViewType | View,
+      BaseKeyboardViewType | ViewInstance,
       WithKeyboardFocusProps<ComponentProps, ViewStyleType, ViewType>
     >((allProps, ref) => {
       const {
@@ -128,11 +128,11 @@ export const withKeyboardFocus = <
       // `useIsViewFocused` update via the focus store — no host re-render needed.
       const reactToFocus = Boolean(
         focusStyle ||
-          containerFocusStyle ||
-          renderContent ||
-          renderFocusable ||
-          typeof style === 'function' ||
-          typeof containerStyle === 'function'
+        containerFocusStyle ||
+        renderContent ||
+        renderFocusable ||
+        typeof style === 'function' ||
+        typeof containerStyle === 'function'
       );
 
       // Auto-enable the pressed-style path when `style` is a function; honor an
@@ -222,7 +222,7 @@ export const withKeyboardFocus = <
             <BaseKeyboardView
               style={containerStyleArr}
               defaultFocusHighlightEnabled={defaultFocusHighlightEnabled}
-              ref={ref as RefObject<BaseKeyboardViewType | View>}
+              ref={ref as RefObject<BaseKeyboardViewType | ViewInstance>}
               onKeyUpPress={onKeyUpPressHandler}
               onKeyDownPress={onKeyDownPressHandler}
               onFocus={onFocus ?? undefined}

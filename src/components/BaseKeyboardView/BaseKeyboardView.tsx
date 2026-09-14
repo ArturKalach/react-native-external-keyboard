@@ -14,7 +14,7 @@ import {
   type BaseKeyboardViewProps,
   type BaseKeyboardViewType,
 } from '../../types';
-import type { View } from 'react-native';
+import type { ViewInstance } from 'react-native';
 import { KeyPressContext } from '../../context/BubbledKeyPressContext';
 import { useBubbledInfo } from './BaseKeyboardView.hooks';
 import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
@@ -56,7 +56,7 @@ const mapFocusValues = (values: LockFocusType[] | undefined) => {
 };
 
 export const BaseKeyboardView = React.memo(
-  React.forwardRef<BaseKeyboardViewType | View, BaseKeyboardViewProps>(
+  React.forwardRef<BaseKeyboardViewType | ViewInstance, BaseKeyboardViewProps>(
     (
       {
         onFocusChange,
@@ -96,7 +96,7 @@ export const BaseKeyboardView = React.memo(
       },
       ref
     ) => {
-      const targetRef = useRef<View | null>(null);
+      const targetRef = useRef<ViewInstance | null>(null);
       const lockFocusValue = useMemo(
         () => mapFocusValues(lockFocus),
         [lockFocus]
@@ -148,52 +148,46 @@ export const BaseKeyboardView = React.memo(
         orderPrefix,
       ]);
 
-      useImperativeHandle(
-        ref,
-        () => {
-          const nativeCommands: Record<string, () => void> = {
-            keyboardFocus: () => {
-              if (targetRef?.current) {
-                Commands.rnekKeyboardFocus(
-                  targetRef.current as unknown as NativeRef
-                );
-              }
-            },
-            screenReaderFocus: () => {
-              if (targetRef?.current) {
-                Commands.rnekScreenReaderFocus(
-                  targetRef.current as unknown as NativeRef
-                );
-              }
-            },
-            focus: () => {
-              if (targetRef?.current) {
-                Commands.rnekKeyboardFocus(
-                  targetRef.current as unknown as NativeRef
-                );
-                Commands.rnekScreenReaderFocus(
-                  targetRef.current as unknown as NativeRef
-                );
-              }
-            },
-          };
+      useImperativeHandle(ref, () => {
+        const nativeCommands: Record<string, () => void> = {
+          keyboardFocus: () => {
+            if (targetRef?.current) {
+              Commands.rnekKeyboardFocus(
+                targetRef.current as unknown as NativeRef
+              );
+            }
+          },
+          screenReaderFocus: () => {
+            if (targetRef?.current) {
+              Commands.rnekScreenReaderFocus(
+                targetRef.current as unknown as NativeRef
+              );
+            }
+          },
+          focus: () => {
+            if (targetRef?.current) {
+              Commands.rnekKeyboardFocus(
+                targetRef.current as unknown as NativeRef
+              );
+              Commands.rnekScreenReaderFocus(
+                targetRef.current as unknown as NativeRef
+              );
+            }
+          },
+        };
 
-          return new Proxy({} as BaseKeyboardViewType | View, {
-            get(_target, prop: string) {
-              if (prop in nativeCommands) {
-                return nativeCommands[prop];
-              }
-              return (
-                targetRef?.current as unknown as
-                  | Record<string, unknown>
-                  | null
-                  | undefined
-              )?.[prop];
-            },
-          });
-        },
-        [targetRef]
-      );
+        return new Proxy({} as BaseKeyboardViewType | ViewInstance, {
+          get(_target, prop: string) {
+            if (prop in nativeCommands) {
+              return nativeCommands[prop];
+            }
+            return (
+              targetRef?.current as unknown as
+                Record<string, unknown> | null | undefined
+            )?.[prop];
+          },
+        });
+      }, [targetRef]);
 
       const bubbled = useBubbledInfo(onBubbledContextMenuPress);
 
@@ -220,7 +214,7 @@ export const BaseKeyboardView = React.memo(
 
       const platformSpecificHalo =
         tintType !== 'none' &&
-        (isIOS ? haloEffect ?? true : defaultFocusHighlightEnabled);
+        (isIOS ? (haloEffect ?? true) : defaultFocusHighlightEnabled);
 
       return (
         <KeyPressContext.Provider value={bubbled.context}>

@@ -15,8 +15,7 @@ export type InteractionState = {
  * current {@link InteractionState}.
  */
 export type InteractiveStyleProp =
-  | StyleProp<ViewStyle>
-  | ((state: InteractionState) => StyleProp<ViewStyle>);
+  StyleProp<ViewStyle> | ((state: InteractionState) => StyleProp<ViewStyle>);
 
 /** State argument passed to a {@link FocusStyle} callback. */
 export type FocusStateCallbackType = {
