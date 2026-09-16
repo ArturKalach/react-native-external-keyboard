@@ -127,6 +127,22 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 
 ---
 
+## Platform notes
+
+**iOS 26+.** Testing on iOS 26 (including iOS 27) found real Tab-navigation differences
+compared to iOS 18.x — these are OS-level behavior changes, not bugs in this library. If
+something behaves as expected on iOS 18.x but not on the latest iOS, layout is a likely
+reason.
+
+Since iOS 26, inner groups or children that cover a parent `Pressable` can affect Tab
+navigation — the library handles the common case automatically, but a sufficiently complex
+layout may still behave differently. Separately, `TextInput` focus order and behavior has
+also changed; it appears related to layout and geometry, not just component order, and
+there is currently no flag or fix to restore the iOS 18 behavior. For more details see:
+[iOS 26+ platform-specific issues](./docs/guides/ios-26-platform-issues.md).
+
+---
+
 ## Roadmap
 
 All planned features are implemented and released. No new functionality or API changes are planned.

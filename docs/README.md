@@ -33,6 +33,7 @@ Read them in order, or jump to the one you need.
 | Guide | Covers |
 | :-- | :-- |
 | [Native focus services](./guides/native-focus-services.md) | Native-side `KeyboardFocusService` / `FocusMemoryService` for driving focus from your own native code |
+| [iOS 26+ platform-specific issues](./guides/ios-26-platform-issues.md) | iOS 18 vs. iOS 26+ (confirmed through iOS 27): Tab navigation behaves differently — content that covers a parent `Pressable` can drop it from Tab (handled automatically since 2.0.0), and `TextInput` focus order can shift with layout/geometry (no fix yet, work around it in your layout) |
 
 ---
 

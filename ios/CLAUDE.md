@@ -90,6 +90,74 @@ Fabric reuses `RCTViewComponentView` instances across mounts. Every base class i
 
 Categories use `+load`-time swizzling via [RNCEKVSwizzlingHelper](Helpers/RNCEKVSwizzlingHelper/) / [RNCEKVSwizzleInstanceMethod](Helpers/RNCEKVSwizzleInstanceMethod/). Keep swizzles idempotent (guard with `dispatch_once`) and isolated to symbols owned by this library — never swizzle a method on a host-app class.
 
+## Focusability (read before touching `canBecomeFocused`)
+
+`UIView.canBecomeFocused` is `NO` by default; RN only sets it under `TARGET_OS_TV`. The
+category in [Extensions/RCTViewComponentView+RNCEKVExternalKeyboard.mm](Extensions/RCTViewComponentView+RNCEKVExternalKeyboard.mm)
+is the **only** source of focusability on iOS — remove it and nothing is focusable, by Tab
+or arrow keys. Two host shapes:
+
+- **DELEGATED** (`focusableWrapper={true}`, the library `Pressable` pattern) — the
+  wrapper's first subview is the focus item, resolved via the category checking
+  `self.superview`.
+- **SELF-target** (`focusableWrapper={false}`, the default — a bare `BaseKeyboardView`) —
+  the view is its own focus item, resolved in `RNCEKVViewFocusChangeBase.canBecomeFocused`
+  instead, since the category never runs for it.
+
+Either shape is focusable unless JS passes `focusable={false}` (arrives as `canBeFocused`).
+
+**Two traps:**
+
+1. **iOS 26+ occlusion** — iOS drops a focus target from Tab's candidate list if its own
+   content covers it 1:1 (arrow keys / `preferredFocusEnvironments` still reach it). Ruled
+   out on device as causes: group identifiers, `ScrollView`, view flattening, focus
+   redirection — don't re-investigate these. Fixed by the occlusion override below,
+   confirmed working on both iOS 26 and iOS 27 (same `@available` gate covers both). Full
+   write-up: [docs/guides/ios-26-platform-issues.md](../docs/guides/ios-26-platform-issues.md).
+2. **Recursion crash** — never call `canBecomeFocused` while resolving a wrapper's focus
+   target. `RNCEKVFocusDelegate.getFocusingView` is reachable from `canBecomeFocused`, so
+   calling it there recurses until `EXC_BAD_ACCESS code=2`.
+
+### Focus occlusion (`isTransparentFocusItem`)
+
+UIKit derives this from a view's background: opaque → occludes; `clearColor` / nil /
+`alpha == 0` / hidden → transparent (borders, text, subviews don't count). Since iOS 26, an
+occluded item drops out of Tab's candidate list — breaks
+`<Pressable><View style={{flex:1}}/></Pressable>`.
+
+**Fix**: every view inside a resolved focus target's subtree reports transparent (button
+content is never a reason to skip the button). "Resolved focus target"
+(`RNCEKVIsFocusTarget`) covers both host shapes above. Notes from building this:
+
+- Self-target hosts need explicit handling — without it, the content walk never finds a
+  `focusableWrapper` ancestor and keeps occluding (the original fix missed this case; see
+  Focus Sandbox shapes 10-17).
+- Decided purely by tree position when UIKit asks — no geometry measured, nothing to
+  invalidate on recycle/relayout.
+- Views outside any focus host fall through to `[super …]` — unrelated overlays still
+  occlude normally.
+- The focus target itself keeps UIKit's default answer; harmless, since UIKit never treats
+  a focusable item as transparent — this also keeps nested focus hosts safe.
+- Upward walk capped at `kRNCEKVMaxFocusContentDepth` (3, ceiling 4) rather than the screen
+  root, since this runs on every opaque view UIKit's focus engine touches, not just buttons.
+
+Below iOS 26 the override forwards straight to `[super …]`. Gate must be `@available`, not
+`#if` — preprocessor macros only see the SDK/deployment target, not the OS actually running.
+
+**Measured on device:**
+
+- Cost: 3-11µs/call.
+- Only fires on screens with ≥1 resolved focusable item — zero cost otherwise (confirmed by
+  toggling the library off).
+- Idle: <5 calls/sec once something's focusable. Keyboard nav bursts ~350-400/sec vs.
+  ~50/sec for touch — peak CPU still stays under ~2ms/sec.
+- Not purely keyboard-triggered (the idle trickle's source is unconfirmed; halo animation
+  is the leading suspect).
+
+Run the [Focus Sandbox](../example/src/components/FocusSandbox/FocusSandbox.tsx) (shapes
+10-17: both host types nested inside each other's covering content) after touching this
+method.
+
 ## Module
 
 [RNCEKVExternalKeyboardModule](Modules/RNCEKVExternalKeyboardModule.h) is the only `RCTBridgeModule` — exposes JS-callable functions (the imperative API in `src/modules/Keyboard.ts`). Keep it thin: route work down to the view via `RNCEKVOrderLinking` lookups.
