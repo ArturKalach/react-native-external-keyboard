@@ -13,6 +13,22 @@
 #import "RNCEKVFocusProtocol.h"
 #import "RNCEKVHaloProtocol.h"
 
+
+static const NSUInteger kRNCEKVMaxFocusContentDepth = 3;
+
+static inline BOOL RNCEKVIsFocusWrapper(UIView *view) {
+  return [view conformsToProtocol:@protocol(RNCEKVFocusProtocol)] &&
+         [(id<RNCEKVFocusProtocol>)view focusableWrapper];
+}
+
+static inline BOOL RNCEKVIsFocusTarget(UIView *view) {
+  if (RNCEKVIsFocusWrapper(view.superview)) {
+    return YES;
+  }
+  return [view conformsToProtocol:@protocol(RNCEKVFocusProtocol)] &&
+         ![(id<RNCEKVFocusProtocol>)view focusableWrapper];
+}
+
 @implementation RNCEKVViewClass (RNCEKVExternalKeyboard)
 
 - (NSString *)focusGroupIdentifier {
@@ -51,5 +67,24 @@
   return [super canBecomeFocused];
 }
 
-@end
 
+- (BOOL)isTransparentFocusItem {
+  if ([super isTransparentFocusItem]) {
+    return YES;
+  }
+
+  if (@available(iOS 26.0, *)) {
+    UIView *target = self.superview;
+    for (NSUInteger depth = 0;
+         target != nil && depth < kRNCEKVMaxFocusContentDepth;
+         depth++, target = target.superview) {
+      if (RNCEKVIsFocusTarget(target)) {
+        return YES;
+      }
+    }
+  }
+
+  return NO;
+}
+
+@end

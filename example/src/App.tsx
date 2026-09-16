@@ -33,6 +33,7 @@ import { KeyboardPressableShowcaseScreen } from './components/KeyboardPressableS
 import { KeyboardInputScreen } from './components/KeyboardInputFocusType/KeyboardInputScreen';
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
 import { withDemoNav } from './components/DemoNav/DemoNav';
+import { FocusSandbox } from './components/FocusSandbox/FocusSandbox';
 import { Pressable } from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from './constants/styles';
 
@@ -128,6 +129,12 @@ const NAV_GROUPS: NavGroup[] = [
         title: 'Components Playground',
         description: 'Focus, key press, halo & lockFocus',
         color: '#FF3B30',
+      },
+      {
+        name: 'FocusSandbox',
+        title: 'Focus Sandbox',
+        description: 'Tab order across nine content shapes',
+        color: '#8E8E93',
       },
     ],
   },
@@ -300,6 +307,11 @@ export function App() {
             name="ComponentsPlayground"
             component={ComponentsPlayground}
             options={{ title: 'Components Playground' }}
+          />
+          <Stack.Screen
+            name="FocusSandbox"
+            component={FocusSandbox}
+            options={{ title: 'Focus Sandbox' }}
           />
           <Stack.Screen name="FocusLock" component={FocusLockExample} />
           <Stack.Screen
