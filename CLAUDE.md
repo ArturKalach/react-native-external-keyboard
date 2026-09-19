@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-`react-native-external-keyboard` is a React Native library (npm package) that adds physical keyboard support — focus management, key press events, focus ordering, and focus locking — across iOS and Android, for the New Architecture (Fabric/bridgeless). Legacy Bridge (Old Architecture) support was dropped in 2.0.0, which also requires React Native ≥ 0.87 — there is no New/Old Architecture conditional left in the code at all (not just disabled), so a consumer on an older React Native version needs an older package version (`1.1.0` for RN ≥ 0.80, `0.12.0` for RN ≤ 0.79) instead.
+`react-native-external-keyboard` is a React Native library (npm package) that adds physical keyboard support — focus management, key press events, focus ordering, and focus locking — across iOS and Android, for the New Architecture (Fabric/bridgeless). Legacy Bridge (Old Architecture) support was dropped in 2.0.0, which also requires React Native ≥ 0.87 — there is no New/Old Architecture conditional left in the code at all (not just disabled), so a consumer on an older React Native version needs an older package version (`1.2.0` for RN 0.80–0.86, `0.13.0` for RN ≤ 0.79) instead.
 
 ## Commands
 

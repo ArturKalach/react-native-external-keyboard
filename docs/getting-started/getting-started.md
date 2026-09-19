@@ -8,11 +8,11 @@
 
 ## Requirements
 
-- React Native 0.80 or later, with the New Architecture enabled
+- React Native 0.87 or later, with the New Architecture enabled
 - iOS 13+ / Android API 21+
 - Expo SDK 49+ (bare workflow / prebuild)
 
-> Need Old Architecture (Bridge) support or React Native ≤ 0.79? Use `react-native-external-keyboard@0.12.0`.
+> Need Old Architecture (Bridge) support? Use `react-native-external-keyboard@1` on React Native 0.80–0.86, or `@0.13` on 0.79 and older.
 
 ## Architecture support
 

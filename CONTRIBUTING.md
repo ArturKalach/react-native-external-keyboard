@@ -43,7 +43,7 @@ yarn example ios        # iOS
 
 ### Architecture
 
-The library targets the **New Architecture** only (Fabric + Turbo Modules); Old Architecture (Bridge) support was dropped in `2.0.0` (which also requires React Native ≥ 0.87 — there's no New/Old Architecture conditional left to toggle, the code was removed) and lives on in the `1.1.0`/`0.12.0` release lines instead. The example app runs on the New Architecture by default — no toggle needed. To confirm it's active, check the Metro logs for the `"fabric":true` flag:
+The library targets the **New Architecture** only (Fabric + Turbo Modules); Old Architecture (Bridge) support was dropped in `2.0.0` (which also requires React Native ≥ 0.87 — there's no New/Old Architecture conditional left to toggle, the code was removed) and lives on in the `1.2.x` (React Native 0.80–0.86) and `0.13.x` (React Native ≤ 0.79) release lines instead. The example app runs on the New Architecture by default — no toggle needed. To confirm it's active, check the Metro logs for the `"fabric":true` flag:
 
 ```sh
 Running "ExternalKeyboardExample" with {"fabric":true,"concurrentRoot":true,...}

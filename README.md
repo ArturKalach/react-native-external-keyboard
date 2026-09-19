@@ -31,6 +31,8 @@ npm install react-native-external-keyboard
 cd ios && pod install
 ```
 
+This installs `2.x`, which needs React Native 0.87 or newer — on an older version, pick your row in [React Native compatibility](#react-native-compatibility) first.
+
 Get started with the [getting started guide](./docs/getting-started/getting-started.md) or jump straight to the [component overview](./docs/components/overview.md).
 
 ## Quick start
@@ -59,25 +61,17 @@ import { TouchableOpacity } from 'react-native';
 const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
 ```
 
-## Architecture support
-
-| Capability | Supported |
-| :-- | :-- |
-| New Architecture (Fabric / Turbo Modules) | ✅ |
-| Bridgeless mode | ✅ |
-| Expo (prebuild / bare) | ✅ |
-
-Old Architecture (Bridge) support was dropped in `2.0.0` — see [React Native compatibility](#react-native-compatibility).
-
 ## React Native compatibility
 
-| Library version | React Native | Notes |
-| :-- | :-- | :-- |
-| `2.0.0` | ≥ 0.87 | New Architecture only — no Old Architecture code path exists |
-| `1.1.0` | ≥ 0.80 | New Architecture + Old Architecture |
-| `0.12.0` | ≤ 0.79 | New Architecture + Old Architecture |
+Find your React Native version, install the matching package version:
 
-If you're on an older React Native version, install an older package version — `2.0.0` has no New/Old Architecture toggle to fall back to; that conditional code was removed, not just disabled.
+| React Native | Install | Architecture |
+| :-- | :-- | :-- |
+| 0.87 and newer | `react-native-external-keyboard@2` | New Architecture only |
+| 0.80 – 0.86 | `react-native-external-keyboard@1` | New + Old Architecture |
+| 0.79 and older | `react-native-external-keyboard@0.13` | New + Old Architecture |
+
+On `2.0.0` the New Architecture is the only code path — Fabric, Turbo Modules, and bridgeless, in both Expo prebuild and bare projects. Old Architecture (Bridge) support wasn't switched off in `2.0.0`, it was removed, so there's nothing to fall back to: the package declares `react-native >=0.87` as a peer dependency, and installing it on anything older trips the peer check. Pick the row for your version instead.
 
 ## Documentation
 
@@ -156,7 +150,7 @@ Both active versions receive fixes:
 | Version | React Native | Status |
 | :-- | :-- | :-- |
 | `2.0.0` | ≥ 0.87 | Active — bug fixes and new RN support, New Architecture only |
-| `0.11.0` | ≤ 0.79 | Active — bug fixes only |
+| `0.13.0` | ≤ 0.79 | Active — bug fixes only |
 
 ---
 
