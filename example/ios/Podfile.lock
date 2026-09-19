@@ -1892,7 +1892,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-external-keyboard (1.0.0-beta.2):
+  - react-native-external-keyboard (1.1.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2915,7 +2915,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 82d1d7996af4c5850242966eb81e73f9a6dfab1e
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
-  hermes-engine: ee62a2e033aea92a25a072d5964fcf22d52bea88
+  hermes-engine: 2a8183980a3cc1c1fe0e6f8f184fdcab91afe039
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: 9da1d0cf93db23ca8b41e8efe9ae558fd9c0077f
   RCTRequired: 92a63c7041031a131fa5206eb082d53f95729b79
@@ -2952,7 +2952,7 @@ SPEC CHECKSUMS:
   React-logger: 993e4b9793768764e0fdd379ad1d6582f7905463
   React-Mapbuffer: 3a5f700ed673820ab4b1b35ba0cf8476400bc4c5
   React-microtasksnativemodule: 094677e625f12276a8f871844a5ee6a945a90221
-  react-native-external-keyboard: 5a0ffde5b88e9df0c32ca81ac51c369f938e3676
+  react-native-external-keyboard: d7093e9b44b43905da006675d68a86237bfaed24
   react-native-safe-area-context: befb5404eb8a16fdc07fa2bebab3568ecabcbb8a
   React-NativeModulesApple: 29290351acc118784e158aa7b23c42719dc57617
   React-networking: d01f94f15d1a6fce689a8c57d2397a5a40b0b5aa
@@ -2992,6 +2992,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: b669e79fa0f8d3f6f5e35372345f54b99e06b13c
 
-PODFILE CHECKSUM: 8d1304d1eddbaf9ff796c80223c1961a265745d7
+PODFILE CHECKSUM: 7855fd6f13eaf8722a38fbe3b160316c50131a81
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0
