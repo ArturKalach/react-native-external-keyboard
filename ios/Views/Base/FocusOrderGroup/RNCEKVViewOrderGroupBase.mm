@@ -9,13 +9,10 @@
 #import "RNCEKVViewOrderGroupBase.h"
 #import "RNCEKVOrderLinking.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
-#import "UIView+React.h"
+#import <React/UIView+React.h>
 #import "RNCEKVPropHelper.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #include "RNCEKVNativeProps.h"
-#import "RNCEKVPropHelper.h"
-#endif
 
 @interface RNCEKVViewOrderGroupBase ()
 @property (nonatomic, strong, readwrite) RNCEKVFocusSequenceDelegate* sequenceDelegate;
@@ -109,7 +106,6 @@
   return [super shouldUpdateFocusInContext:context];
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusOrderProps:(const RNCEKV::OrderProps &)oldViewProps
                      newProps:(const RNCEKV::OrderProps &)newViewProps {
   NSNumber* lockFocus = [RNCEKVPropHelper unwrapIntValue: newViewProps.lockFocus];
@@ -172,7 +168,6 @@
     [self setOrderFirst: orderFirst];
   }
 }
-#endif
 
 - (void)setLockFocus:(NSNumber *)lockFocus {
   if ([_lockFocus isEqual:lockFocus]) return;

@@ -12,9 +12,7 @@
 #import "RNCEKVCustomFocusEffectProtocol.h"
 #import "RNCEKVHaloProtocol.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #include "RNCEKVNativeProps.h"
-#endif
 
 @interface RNCEKVExternalKeyboardHalloBase : RNCEKVViewOrderGroupBase<RNCEKVHaloProtocol, RNCEKVCustomFocusEffectProtocol>
 
@@ -24,10 +22,8 @@
 @property (nonatomic, assign) BOOL isHaloHidden;
 @property (nonatomic, assign) BOOL roundedHaloFix;
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateHaloProps:(const RNCEKV::HaloProps &)oldProps
                newProps:(const RNCEKV::HaloProps &)newProps;
-#endif
 
 @end
 

@@ -15,7 +15,7 @@ If you can, it's helpful to include:
 
 - A minimal code example or steps to reproduce
 - The library version, React Native version, and platform (iOS / Android)
-- Architecture (New Arch / Old Arch) and, for accessibility issues, the screen reader (VoiceOver / TalkBack)
+- For accessibility issues, the screen reader (VoiceOver / TalkBack)
 
 None of these are required — a rough description or even just a question is enough to get started. The more context you provide, the faster the fix, but something is always better than nothing.
 
@@ -43,29 +43,10 @@ yarn example ios        # iOS
 
 ### Architecture
 
-The example runs on the **New Architecture** by default. To test the **Old Architecture**:
-
-**Android:**
-```sh
-ORG_GRADLE_PROJECT_newArchEnabled=false yarn example android
-```
-
-**iOS:**
-```sh
-cd example/ios && RCT_NEW_ARCH_ENABLED=0 pod install && cd ../..
-yarn example ios
-```
-
-To confirm which architecture is active, check the Metro logs for the `"fabric":true` flag (New Arch):
+The library targets the **New Architecture** only (Fabric + Turbo Modules); Old Architecture (Bridge) support was dropped in `2.0.0` (which also requires React Native ≥ 0.87 — there's no New/Old Architecture conditional left to toggle, the code was removed) and lives on in the `1.2.x` (React Native 0.80–0.86) and `0.13.x` (React Native ≤ 0.79) release lines instead. The example app runs on the New Architecture by default — no toggle needed. To confirm it's active, check the Metro logs for the `"fabric":true` flag:
 
 ```sh
 Running "ExternalKeyboardExample" with {"fabric":true,"concurrentRoot":true,...}
-```
-
-When switching architectures, clean the build folders first:
-
-```sh
-yarn clean
 ```
 
 ### Native code

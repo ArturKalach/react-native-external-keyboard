@@ -4,19 +4,11 @@
 #import <React/RCTLog.h>
 #import <React/RCTUITextView.h>
 #import "RNCEKVFocusEffectUtility.h"
-#import "RCTBaseTextInputView.h"
 #import "RNCEKVOrderLinking.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
 #import <React/RCTTextInputComponentView.h>
-#else
-#import <React/RCTSinglelineTextInputView.h>
-#import <React/RCTMultilineTextInputView.h>
-#endif
-
-#ifdef RCT_NEW_ARCH_ENABLED
 
 #include <string>
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
@@ -36,8 +28,6 @@ using namespace facebook::react;
 
 @end
 
-#endif
-
 static const NSInteger AUTO_FOCUS = 2;
 static const NSInteger AUTO_BLUR = 2;
 
@@ -46,17 +36,14 @@ static const NSInteger AUTO_BLUR = 2;
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-#ifdef RCT_NEW_ARCH_ENABLED
         static const auto defaultProps = std::make_shared<const TextInputFocusWrapperProps>();
         _props = defaultProps;
-#endif
     }
 
     return self;
 }
 
 
-#ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
     return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
@@ -116,11 +103,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     return RNCEKVTextInputFocusWrapper.class;
 }
 
-#endif
-
-
-#ifdef RCT_NEW_ARCH_ENABLED
-
 - (void)onFocusChangeHandler:(BOOL) isFocused {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
@@ -141,24 +123,6 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
         viewEventEmitter->onMultiplyTextSubmit(data);
     };
 }
-
-#else
-
-
-- (void)onFocusChangeHandler:(BOOL) isFocused {
-    if(self.onFocusChange) {
-        self.onFocusChange(@{ @"isFocused": @(isFocused) });
-    }
-}
-
-- (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView {
-    NSString* text = textView != nil ? textView.attributedText.string : @"";
-    if(self.onMultiplyTextSubmit) {
-      self.onMultiplyTextSubmit(@{ @"text": text });
-    }
-}
-
-#endif
 
 - (void)focus {
   UIViewController *viewController = self.reactViewController;
@@ -224,17 +188,9 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
     UIView* input = self.subviews[0];
     UIView* backedTextInputView = nil;
 
-    #ifdef RCT_NEW_ARCH_ENABLED
         if([input isKindOfClass: [RCTTextInputComponentView class]]) {
           backedTextInputView = ((RCTTextInputComponentView *)input).rncekbBackedTextInputView;
         }
-    #else
-        if([input isKindOfClass: [RCTMultilineTextInputView class]]) {
-          backedTextInputView = ((RCTMultilineTextInputView *)input).backedTextInputView;
-        } else if([input isKindOfClass: [RCTSinglelineTextInputView class]]) {
-          backedTextInputView = ((RCTSinglelineTextInputView *)input).backedTextInputView;
-        }
-    #endif
 
     return backedTextInputView;
   } @catch (NSException *ex) {
@@ -249,11 +205,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 
 - (BOOL)getIsTextInputView: (UIView*)view {
-#ifdef RCT_NEW_ARCH_ENABLED
     BOOL isTextInput = [view isKindOfClass: [RCTTextInputComponentView class]];
-#else
-    BOOL isTextInput = [view isKindOfClass: [RCTSinglelineTextInputView class]];
-#endif
     return isTextInput;
 }
 

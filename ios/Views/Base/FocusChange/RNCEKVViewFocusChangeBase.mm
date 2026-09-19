@@ -10,11 +10,8 @@
 
 #import "RNCEKVViewFocusChangeBase.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RNCEKVNativeProps.h"
 #import "RNCEKVFabricEventHelper.h"
-#endif
-//#import "RNCEKVFocusDelegate.h"
 
 @implementation RNCEKVViewFocusChangeBase {
   NSNumber* _isFocused;
@@ -73,7 +70,6 @@
 }
 
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusProps:(const RNCEKV::FocusProps &)oldProps
                           newProps:(const RNCEKV::FocusProps &)newProps {
   if (_canBeFocused != newProps.canBeFocused) {
@@ -84,8 +80,6 @@
     [self setHasOnFocusChanged:newProps.hasOnFocusChanged];
   }
 }
-
-#endif
 
 - (void)onFocusChangeHandler:(BOOL)isFocused {}
 

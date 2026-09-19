@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 import type { FocusStyle, InteractiveStyleProp } from '../types';
-import { useValueStore } from './useValueStore';
+import { useValueStore, type ValueStore } from './useValueStore';
 
 type UseFocusStyleProps = {
   focusStyle?: FocusStyle;
@@ -17,6 +18,16 @@ type UseFocusStyleProps = {
   reactToFocus?: boolean;
 };
 
+/** Return value of {@link useFocusStyle}. */
+export type UseFocusStyleResult = {
+  componentStyleViewStyle: InteractiveStyleProp;
+  componentFocusedStyle: StyleProp<ViewStyle>;
+  containerFocusedStyle: StyleProp<ViewStyle>;
+  onFocusChangeHandler: (isFocused: boolean) => void;
+  focused: boolean;
+  focusStore: ValueStore;
+};
+
 export const useFocusStyle = ({
   focusStyle,
   onFocusChange,
@@ -24,7 +35,7 @@ export const useFocusStyle = ({
   style,
   pressedStyleSignature = false,
   reactToFocus = true,
-}: UseFocusStyleProps) => {
+}: UseFocusStyleProps): UseFocusStyleResult => {
   const [focused, setFocusStatus] = useState(false);
 
   // Per-instance focus store — always reflects focus for context consumers,
@@ -41,13 +52,13 @@ export const useFocusStyle = ({
     [onFocusChange, reactToFocus, focusController]
   );
 
-  const componentFocusedStyle = useMemo(() => {
+  const componentFocusedStyle: StyleProp<ViewStyle> = useMemo(() => {
     const specificStyle =
       typeof focusStyle === 'function' ? focusStyle({ focused }) : focusStyle;
     return focused ? specificStyle : undefined;
   }, [focusStyle, focused]);
 
-  const containerFocusedStyle = useMemo(() => {
+  const containerFocusedStyle: StyleProp<ViewStyle> = useMemo(() => {
     if (!containerFocusStyle) return undefined;
 
     const specificStyle =
@@ -62,7 +73,10 @@ export const useFocusStyle = ({
     () => (pressedStyleSignature ? undefined : [style, componentFocusedStyle]),
     [pressedStyleSignature, style, componentFocusedStyle]
   );
-  const styleHandlerPressable = useCallback(
+
+  const styleHandlerPressable: (state: {
+    pressed: boolean;
+  }) => StyleProp<ViewStyle> = useCallback(
     ({ pressed }: { pressed: boolean }) => {
       if (typeof style === 'function') {
         // Inject `focused` so the unified `style({ focused, pressed })` works.
@@ -74,9 +88,9 @@ export const useFocusStyle = ({
     [componentFocusedStyle, style, focused]
   );
 
-  const componentStyleViewStyle = pressedStyleSignature
-    ? styleHandlerPressable
-    : defaultComponentStyle;
+  const componentStyleViewStyle = (
+    pressedStyleSignature ? styleHandlerPressable : defaultComponentStyle
+  ) as InteractiveStyleProp;
 
   return {
     componentStyleViewStyle,

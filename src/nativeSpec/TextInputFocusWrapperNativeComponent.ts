@@ -2,6 +2,7 @@ import {
   codegenNativeComponent,
   type ViewProps,
   type ColorValue,
+  type HostComponent,
 } from 'react-native';
 import type {
   DirectEventHandler,
@@ -49,4 +50,4 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
 
 export default codegenNativeComponent<TextInputFocusWrapperNativeComponent>(
   'TextInputFocusWrapper'
-);
+) as HostComponent<TextInputFocusWrapperNativeComponent>;

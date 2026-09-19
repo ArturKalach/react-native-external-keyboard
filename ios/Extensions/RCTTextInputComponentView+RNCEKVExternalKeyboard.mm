@@ -4,7 +4,6 @@
 //
 //  Created by Artur Kalach on 14/11/2024.
 //
-#ifdef RCT_NEW_ARCH_ENABLED
 #import "RCTTextInputComponentView+RNCEKVExternalKeyboard.h"
 #import <React/RCTBackedTextInputViewProtocol.h>
 #import <objc/runtime.h>
@@ -40,6 +39,4 @@
     return [super focusEffect];
   }
 @end
-
-#endif
 

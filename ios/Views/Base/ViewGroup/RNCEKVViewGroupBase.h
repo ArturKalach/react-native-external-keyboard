@@ -9,18 +9,11 @@
 #define RNCEKVViewGroupBase_h
 
 #import <UIKit/UIKit.h>
-
-#ifdef RCT_NEW_ARCH_ENABLED
-  #import <React/RCTViewComponentView.h>
-  #define RNCEKVBaseViewClass RCTViewComponentView
-#else
-  #import <React/RCTView.h>
-  #define RNCEKVBaseViewClass RCTView
-#endif
+#import <React/RCTViewComponentView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RNCEKVViewGroupBase : RNCEKVBaseViewClass
+@interface RNCEKVViewGroupBase : RCTViewComponentView
 
 - (UIView*)getStoredView;
 - (void)onSubviewAdded:(UIView *)subview;

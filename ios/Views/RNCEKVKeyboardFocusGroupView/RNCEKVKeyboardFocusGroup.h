@@ -9,8 +9,6 @@
 #define RNCEKVKeyboardFocusGroup_h
 
 #import <UIKit/UIKit.h>
-
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
 
 
@@ -24,18 +22,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-
-#else /* RCT_NEW_ARCH_ENABLED */
-
-
-#import <React/RCTView.h>
-@interface RNCEKVKeyboardFocusGroup : RCTView
-@property (nonatomic, strong, nullable) NSString *customGroupId;
-@property (nonatomic, strong, nullable) NSString *orderGroup;
-@property BOOL isGroupFocused;
-@property (nonatomic, copy) RCTDirectEventBlock onGroupFocusChange;
-@end
-
-
-#endif /* RCT_NEW_ARCH_ENABLED */
 #endif /* RNCEKVKeyboardFocusGroup_h */

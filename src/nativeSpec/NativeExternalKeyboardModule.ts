@@ -1,8 +1,7 @@
-import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { TurboModuleRegistry, type TurboModule } from 'react-native';
 
 export interface Spec extends TurboModule {
-  dismissKeyboard: () => Promise<boolean>;
+  dismissKeyboard(): Promise<boolean>;
 }
 
-export default TurboModuleRegistry.get<Spec>('ExternalKeyboardModule');
+export default TurboModuleRegistry.getEnforcing<Spec>('ExternalKeyboardModule');

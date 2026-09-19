@@ -15,9 +15,7 @@
 #import "RNCEKVFocusLinkDelegate.h"
 #import "RNCEKVKeyboardFocusableProtocol.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #include "RNCEKVNativeProps.h"
-#endif
 
 @interface RNCEKVViewOrderGroupBase : RNCEKVViewGroupBase <RNCEKVFocusOrderProtocol, RNCEKVKeyboardFocusableProtocol>
 
@@ -39,10 +37,8 @@
 @property (nonatomic, strong, readonly) RNCEKVFocusSequenceDelegate* sequenceDelegate;
 @property (nonatomic, strong, readonly) RNCEKVFocusLinkDelegate* linkDelegate;
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateFocusOrderProps:(const RNCEKV::OrderProps &)oldProps
                      newProps:(const RNCEKV::OrderProps &)newProps;
-#endif
 
 @end
 

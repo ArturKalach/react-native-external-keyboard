@@ -15,11 +15,8 @@
 @property BOOL hasOnPressUp;
 @property BOOL hasOnPressDown;
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateKeyPressProps:(const RNCEKV::KeyPressProps &)oldProps
                    newProps:(const RNCEKV::KeyPressProps &)newProps;
-
-#endif
 
 - (void)onKeyDownPressHandler:(NSDictionary *)eventInfo;
 - (void)onKeyUpPressHandler:(NSDictionary *)eventInfo;

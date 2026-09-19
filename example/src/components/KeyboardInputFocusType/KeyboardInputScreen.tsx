@@ -248,6 +248,12 @@ const Field = ({
         editing && styles.fieldEditing,
       ]}
     >
+      {/* iOS 26 can need a layout change for Tab to reach the next field — here,
+          KeyboardExtendedInput must render visually last (see
+          docs/guides/ios-26-textinput-tab-order.md). Don't move StatePill after it or
+          reorder via row-reverse; both reintroduce the bug. */}
+      <StatePill navFocused={navFocused} editing={editing} />
+
       {navFocused && !editing ? (
         <Animated.View
           pointerEvents="none"
@@ -290,8 +296,6 @@ const Field = ({
           style={styles.input}
         />
       </View>
-
-      <StatePill navFocused={navFocused} editing={editing} />
     </View>
   );
 };
@@ -442,6 +446,7 @@ const styles = StyleSheet.create({
   fields: { flex: 1, gap: GAP },
   field: {
     height: FIELD_H,
+    // Plain row, not row-reverse — see the comment on StatePill's render in Field.
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,

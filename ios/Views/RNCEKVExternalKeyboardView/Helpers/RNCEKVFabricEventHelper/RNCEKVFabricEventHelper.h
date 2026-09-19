@@ -5,7 +5,6 @@
 //  Created by Artur Kalach on 22/08/2024.
 //
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #ifndef RNCEKVFabricEventHelper_h
 #define RNCEKVFabricEventHelper_h
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
@@ -32,4 +31,3 @@ using namespace facebook::react;
 
 
 #endif /* RNCEKVFabricEventHelper_h */
-#endif

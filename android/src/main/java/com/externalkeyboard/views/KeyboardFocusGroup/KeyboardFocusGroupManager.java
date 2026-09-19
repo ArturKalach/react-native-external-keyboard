@@ -2,12 +2,13 @@ package com.externalkeyboard.views.KeyboardFocusGroup;
 
 import androidx.annotation.Nullable;
 
+import com.externalkeyboard.specs.KeyboardFocusGroupManagerSpec;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
 @ReactModule(name = KeyboardFocusGroupManager.NAME)
-public class KeyboardFocusGroupManager extends com.externalkeyboard.KeyboardFocusGroupManagerSpec<KeyboardFocusGroup> {
+public class KeyboardFocusGroupManager extends KeyboardFocusGroupManagerSpec<KeyboardFocusGroup> {
   public static final String NAME = "KeyboardFocusGroup";
 
   @Override

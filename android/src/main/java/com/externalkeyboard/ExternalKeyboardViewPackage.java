@@ -41,7 +41,7 @@ public class ExternalKeyboardViewPackage extends BaseReactPackage {
           false,                   // canOverrideExistingModule
           false,                   // needsEagerInit
           false,                   // isCxxModule
-          BuildConfig.IS_NEW_ARCHITECTURE_ENABLED // isTurboModule
+          true                     // isTurboModule
         ));
         return map;
       }

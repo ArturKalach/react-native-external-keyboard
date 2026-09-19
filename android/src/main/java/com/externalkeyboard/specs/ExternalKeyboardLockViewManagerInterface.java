@@ -1,4 +1,4 @@
-package com.externalkeyboard;
+package com.externalkeyboard.specs;
 
 import android.view.View;
 

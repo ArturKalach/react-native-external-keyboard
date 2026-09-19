@@ -2,11 +2,21 @@
 
 Migration notes are listed newest first. Each section only covers changes that need action — additive features are documented in the [component overview](../components/overview.md) and [API reference](../api/overview.md).
 
+- [1.2.x → 2.0.0](#migrating-to-200-from-12x)
 - [1.0.x → 1.1.0](#migrating-to-110-from-10x)
 - [0.9.1 → 1.0.0](#migrating-to-100-from-091)
 - [0.9.0 → 0.9.1](#migrating-to-091-from-090)
 - [0.7.x → 0.8.0](#migrating-to-080-from-07x)
 - [0.3.x → 0.4.0](#migrating-to-040-from-03x)
+
+---
+
+## Migrating to 2.0.0 from 1.2.x
+
+**Old Architecture (Legacy Bridge) support has been removed, and the minimum supported React Native version moved to 0.87.** The library now targets the New Architecture (Fabric + Turbo Modules) exclusively, matching `peerDependencies.react-native` (`>=0.87.0`) — there is no runtime or build-time toggle left for the Old Architecture; the conditional code was deleted, not just disabled.
+
+- If your app still runs on the Old Architecture, or on React Native `< 0.87`, stay on the `1.2.x` line (React Native 0.80–0.86, dual-architecture) or the `0.13.x` line (React Native 0.79 and older, dual-architecture). Both keep the Old Architecture code path.
+- If you're already on the New Architecture on React Native ≥ 0.87, this is a drop-in upgrade — no code or prop changes required. Only the native build (Android `oldarch` source set, iOS legacy `RCTViewManager` classes) was removed internally.
 
 ---
 

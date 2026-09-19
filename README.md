@@ -14,7 +14,7 @@ Native-first React Native toolkit for physical (external) keyboard support on iO
 - 🔢 **Custom focus order** — link-based, index-based, or direction locking
 - 🔒 **Focus lock** — keep focus inside modals and overlays (`Focus.Frame` / `Focus.Trap`)
 - 🎨 **Native focus styling** — iOS halo effect & `tintColor`, Android `defaultFocusHighlightEnabled`
-- ⚡ New Architecture · Old Architecture · Bridgeless · Expo prebuild
+- ⚡ New Architecture · Bridgeless · Expo prebuild
 
 > [!TIP]
 > The quickest start is the `K` namespace — `K.Pressable`, `K.View`, and `K.Input` are drop-in, keyboard-focusable versions of `Pressable`, `View`, and `TextInput`. To add focus to a component you already have (a custom button, `TouchableOpacity`, …), reach for the [`withKeyboardFocus`](./docs/components/overview.md#withkeyboardfocus) HOC. See the [getting started guide](./docs/getting-started/getting-started.md).
@@ -30,6 +30,8 @@ Native-first React Native toolkit for physical (external) keyboard support on iO
 npm install react-native-external-keyboard
 cd ios && pod install
 ```
+
+This installs `2.x`, which needs React Native 0.87 or newer — on an older version, pick your row in [React Native compatibility](#react-native-compatibility) first.
 
 Get started with the [getting started guide](./docs/getting-started/getting-started.md) or jump straight to the [component overview](./docs/components/overview.md).
 
@@ -59,21 +61,17 @@ import { TouchableOpacity } from 'react-native';
 const KeyboardTouchable = withKeyboardFocus(TouchableOpacity);
 ```
 
-## Architecture support
-
-| Capability | Supported |
-| :-- | :-- |
-| New Architecture (Fabric / Turbo Modules) | ✅ |
-| Old Architecture (Bridge) | ✅ |
-| Bridgeless mode | ✅ |
-| Expo (prebuild / bare) | ✅ |
-
 ## React Native compatibility
 
-| Library version | React Native |
-| :-- | :-- |
-| `1.1.0` | ≥ 0.80 |
-| `0.12.0` | ≤ 0.79 |
+Find your React Native version, install the matching package version:
+
+| React Native | Install | Architecture |
+| :-- | :-- | :-- |
+| 0.87 and newer | `react-native-external-keyboard@2` | New Architecture only |
+| 0.80 – 0.86 | `react-native-external-keyboard@1` | New + Old Architecture |
+| 0.79 and older | `react-native-external-keyboard@0.13` | New + Old Architecture |
+
+On `2.0.0` the New Architecture is the only code path — Fabric, Turbo Modules, and bridgeless, in both Expo prebuild and bare projects. Old Architecture (Bridge) support wasn't switched off in `2.0.0`, it was removed, so there's nothing to fall back to: the package declares `react-native >=0.87` as a peer dependency, and installing it on anything older trips the peer check. Pick the row for your version instead.
 
 ## Documentation
 
@@ -123,6 +121,22 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 
 ---
 
+## Platform notes
+
+**iOS 26+.** Testing on iOS 26 (including iOS 27) found real Tab-navigation differences
+compared to iOS 18.x — these are OS-level behavior changes, not bugs in this library. If
+something behaves as expected on iOS 18.x but not on the latest iOS, layout is a likely
+reason.
+
+Since iOS 26, inner groups or children that cover a parent `Pressable` can affect Tab
+navigation — the library handles the common case automatically, but a sufficiently complex
+layout may still behave differently. Separately, `TextInput` focus order and behavior has
+also changed; it appears related to layout and geometry, not just component order, and
+there is currently no flag or fix to restore the iOS 18 behavior. For more details see:
+[iOS 26+ platform-specific issues](./docs/guides/ios-26-platform-issues.md).
+
+---
+
 ## Roadmap
 
 All planned features are implemented and released. No new functionality or API changes are planned.
@@ -135,8 +149,8 @@ Both active versions receive fixes:
 
 | Version | React Native | Status |
 | :-- | :-- | :-- |
-| `1.0.0` | ≥ 0.80 | Active — bug fixes and new RN support |
-| `0.11.0` | ≤ 0.79 | Active — bug fixes only |
+| `2.0.0` | ≥ 0.87 | Active — bug fixes and new RN support, New Architecture only |
+| `0.13.0` | ≤ 0.79 | Active — bug fixes only |
 
 ---
 

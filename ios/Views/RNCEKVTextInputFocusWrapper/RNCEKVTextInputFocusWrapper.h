@@ -20,14 +20,7 @@
 @property BOOL blurOnSubmit;
 @property BOOL multiline;
 
-#ifndef RCT_NEW_ARCH_ENABLED
-@property (nonatomic, copy) RCTDirectEventBlock onFocusChange;
-@property (nonatomic, copy) RCTDirectEventBlock onMultiplyTextSubmit;
-#endif
-
 - (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView;
 @end
 
-
-//#endif /* RCT_NEW_ARCH_ENABLED */
 #endif /* RNCEKVTextInputFocusWrapper_h */

@@ -9,27 +9,16 @@ This file gives Claude Code guidance specific to the iOS native code under [ios/
 - One class per directory under `Views/`, `Delegates/`, and `Helpers/`. The directory name matches the class name. Exception: `features/` groups every file for one cross-cutting feature (view + delegate + utils) instead — see `features/Halo/`.
 - Headers use `#ifndef X_h / #define X_h / #endif` include guards (not `#pragma once`).
 
-## Architecture-conditional compilation
+## Fabric only
 
-All code paths must handle both **Fabric (New Architecture)** and **Legacy Bridge**. The toggle is `RCT_NEW_ARCH_ENABLED`:
-
-```objc
-#ifdef RCT_NEW_ARCH_ENABLED
-  // Fabric: subclass RCTViewComponentView, consume C++ Props structs
-#else
-  // Legacy: subclass RCTView, expose RCTDirectEventBlock / RCTBubblingEventBlock
-#endif
-```
-
-[RNCEKVViewGroupBase.h](Views/Base/ViewGroup/RNCEKVViewGroupBase.h) defines `RNCEKVBaseViewClass` as `RCTViewComponentView` or `RCTView` depending on the flag — base view classes inherit from this macro so the rest of the hierarchy is arch-agnostic.
+Every view subclasses `RCTViewComponentView` directly (see [RNCEKVViewGroupBase.h](Views/Base/ViewGroup/RNCEKVViewGroupBase.h)) and consumes C++ Props structs — there is no Legacy Bridge path. `RCT_NEW_ARCH_ENABLED` preprocessor guards and the parallel `RCTView`/`RCTDirectEventBlock` code paths they used to switch on were removed in 1.2.0 along with the per-view `*Manager.mm` (`RCTViewManager`) classes; Fabric registers components via `+componentDescriptorProvider`, not view-manager lookup.
 
 Fabric C++ prop diffing flows through helper structs in [Helpers/RNCEKVNativeProps/](Helpers/RNCEKVNativeProps/) (e.g. `RNCEKV::FocusProps`, `RNCEKV::OrderProps`, `RNCEKV::HaloProps`) — each base class exposes an `updateXxxProps:newProps:` method invoked from [RNCEKVExternalKeyboardView.mm](Views/RNCEKVExternalKeyboardView/RNCEKVExternalKeyboardView.mm) `updateProps:oldProps:`.
 
 When adding a new prop:
 1. Update the JS Codegen spec under `src/nativeSpec/`.
 2. Add the field to the relevant `RNCEKV::XxxProps` C++ struct in `Helpers/RNCEKVNativeProps/`.
-3. Update the corresponding base class `updateXxxProps:newProps:` (Fabric path).
-4. Expose a matching `@property` for the Legacy path (auto-bridged by `RCTViewManager`).
+3. Update the corresponding base class `updateXxxProps:newProps:`.
 
 ## View inheritance chain
 
@@ -97,14 +86,82 @@ Fabric reuses `RCTViewComponentView` instances across mounts. Every base class i
 
 ## Extensions (Categories)
 
-[Extensions/](Extensions/) holds Obj-C categories on RN-owned classes — `RCTViewComponentView`, `UIViewController`, `RCTTextInputComponentView`, `RCTEnhancedScrollView`, `RCTCustomScrollView`. These wire library-wide behavior (e.g. preferred focus environment, focus-aware scrolling) into views the library does not own.
+[Extensions/](Extensions/) holds Obj-C categories on RN-owned classes — `RCTViewComponentView`, `UIViewController`, `RCTTextInputComponentView`, `RCTEnhancedScrollView`. These wire library-wide behavior (e.g. preferred focus environment, focus-aware scrolling) into views the library does not own.
 
 Categories use `+load`-time swizzling via [RNCEKVSwizzlingHelper](Helpers/RNCEKVSwizzlingHelper/) / [RNCEKVSwizzleInstanceMethod](Helpers/RNCEKVSwizzleInstanceMethod/). Keep swizzles idempotent (guard with `dispatch_once`) and isolated to symbols owned by this library — never swizzle a method on a host-app class.
+
+## Focusability (read before touching `canBecomeFocused`)
+
+`UIView.canBecomeFocused` is `NO` by default; RN only sets it under `TARGET_OS_TV`. The
+category in [Extensions/RCTViewComponentView+RNCEKVExternalKeyboard.mm](Extensions/RCTViewComponentView+RNCEKVExternalKeyboard.mm)
+is the **only** source of focusability on iOS — remove it and nothing is focusable, by Tab
+or arrow keys. Two host shapes:
+
+- **DELEGATED** (`focusableWrapper={true}`, the library `Pressable` pattern) — the
+  wrapper's first subview is the focus item, resolved via the category checking
+  `self.superview`.
+- **SELF-target** (`focusableWrapper={false}`, the default — a bare `BaseKeyboardView`) —
+  the view is its own focus item, resolved in `RNCEKVViewFocusChangeBase.canBecomeFocused`
+  instead, since the category never runs for it.
+
+Either shape is focusable unless JS passes `focusable={false}` (arrives as `canBeFocused`).
+
+**Two traps:**
+
+1. **iOS 26+ occlusion** — iOS drops a focus target from Tab's candidate list if its own
+   content covers it 1:1 (arrow keys / `preferredFocusEnvironments` still reach it). Ruled
+   out on device as causes: group identifiers, `ScrollView`, view flattening, focus
+   redirection — don't re-investigate these. Fixed by the occlusion override below,
+   confirmed working on both iOS 26 and iOS 27 (same `@available` gate covers both). Full
+   write-up: [docs/guides/ios-26-platform-issues.md](../docs/guides/ios-26-platform-issues.md).
+2. **Recursion crash** — never call `canBecomeFocused` while resolving a wrapper's focus
+   target. `RNCEKVFocusDelegate.getFocusingView` is reachable from `canBecomeFocused`, so
+   calling it there recurses until `EXC_BAD_ACCESS code=2`.
+
+### Focus occlusion (`isTransparentFocusItem`)
+
+UIKit derives this from a view's background: opaque → occludes; `clearColor` / nil /
+`alpha == 0` / hidden → transparent (borders, text, subviews don't count). Since iOS 26, an
+occluded item drops out of Tab's candidate list — breaks
+`<Pressable><View style={{flex:1}}/></Pressable>`.
+
+**Fix**: every view inside a resolved focus target's subtree reports transparent (button
+content is never a reason to skip the button). "Resolved focus target"
+(`RNCEKVIsFocusTarget`) covers both host shapes above. Notes from building this:
+
+- Self-target hosts need explicit handling — without it, the content walk never finds a
+  `focusableWrapper` ancestor and keeps occluding (the original fix missed this case; see
+  Focus Sandbox shapes 10-17).
+- Decided purely by tree position when UIKit asks — no geometry measured, nothing to
+  invalidate on recycle/relayout.
+- Views outside any focus host fall through to `[super …]` — unrelated overlays still
+  occlude normally.
+- The focus target itself keeps UIKit's default answer; harmless, since UIKit never treats
+  a focusable item as transparent — this also keeps nested focus hosts safe.
+- Upward walk capped at `kRNCEKVMaxFocusContentDepth` (3, ceiling 4) rather than the screen
+  root, since this runs on every opaque view UIKit's focus engine touches, not just buttons.
+
+Below iOS 26 the override forwards straight to `[super …]`. Gate must be `@available`, not
+`#if` — preprocessor macros only see the SDK/deployment target, not the OS actually running.
+
+**Measured on device:**
+
+- Cost: 3-11µs/call.
+- Only fires on screens with ≥1 resolved focusable item — zero cost otherwise (confirmed by
+  toggling the library off).
+- Idle: <5 calls/sec once something's focusable. Keyboard nav bursts ~350-400/sec vs.
+  ~50/sec for touch — peak CPU still stays under ~2ms/sec.
+- Not purely keyboard-triggered (the idle trickle's source is unconfirmed; halo animation
+  is the leading suspect).
+
+Run the [Focus Sandbox](../example/src/components/FocusSandbox/FocusSandbox.tsx) (shapes
+10-17: both host types nested inside each other's covering content) after touching this
+method.
 
 ## Module
 
 [RNCEKVExternalKeyboardModule](Modules/RNCEKVExternalKeyboardModule.h) is the only `RCTBridgeModule` — exposes JS-callable functions (the imperative API in `src/modules/Keyboard.ts`). Keep it thin: route work down to the view via `RNCEKVOrderLinking` lookups.
 
-## View managers
+## Component registration
 
-Each user-facing view has a `*Manager.mm` next to it (e.g. [RNCEKVExternalKeyboardViewManager.mm](Views/RNCEKVExternalKeyboardView/RNCEKVExternalKeyboardViewManager.mm)). On Legacy these export view + props to RN; on Fabric they are mostly empty shells (Fabric uses the codegen'd component descriptor). Imperative commands (`rnekKeyboardFocus`, `rnekScreenReaderFocus`) are handled in `handleCommand:args:` on the Fabric view and via the manager on Legacy.
+There are no `*Manager.mm` (`RCTViewManager`) classes — those were Legacy-Bridge-only and were removed in 1.2.0. Fabric registers each view via `+componentDescriptorProvider`, implemented directly on the view class (e.g. [RNCEKVExternalKeyboardView.mm](Views/RNCEKVExternalKeyboardView/RNCEKVExternalKeyboardView.mm)). Imperative commands (`rnekKeyboardFocus`, `rnekScreenReaderFocus`) are handled in `handleCommand:args:` on the view.

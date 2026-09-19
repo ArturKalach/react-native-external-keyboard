@@ -10,10 +10,6 @@
 
 
 #import <UIKit/UIKit.h>
-
-
-
-#ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>
 
 
@@ -27,20 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
-
-#else /* RCT_NEW_ARCH_ENABLED */
-
-
-#import <React/RCTView.h>
-@interface RNCEKVExternalKeyboardLockView : RCTView
-
-@property (nonatomic, assign) BOOL forceLock;
-@property (nonatomic, assign) BOOL lockDisabled;
-
-@end
-
-#endif
 
 
 #endif /* RNCEKVExternalKeyboardLockView_h */

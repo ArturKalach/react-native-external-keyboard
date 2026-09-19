@@ -1,6 +1,8 @@
 # react-native-external-keyboard — Documentation
 
-Native-first React Native toolkit for physical keyboard support — focus management, key-press events, focus ordering, and focus locking on iOS and Android, for both the New Architecture (Fabric / bridgeless) and the Legacy Bridge.
+Native-first React Native toolkit for physical keyboard support — focus management, key-press events, focus ordering, and focus locking on iOS and Android, for the New Architecture (Fabric / bridgeless).
+
+> Need Old Architecture (Bridge) support? It lives on in the `1.2.x` line (React Native 0.80–0.86) and the `0.13.x` line (React Native 0.79 and older) — see [React Native compatibility](../README.md#react-native-compatibility).
 
 ---
 
@@ -31,6 +33,7 @@ Read them in order, or jump to the one you need.
 | Guide | Covers |
 | :-- | :-- |
 | [Native focus services](./guides/native-focus-services.md) | Native-side `KeyboardFocusService` / `FocusMemoryService` for driving focus from your own native code |
+| [iOS 26+ platform-specific issues](./guides/ios-26-platform-issues.md) | iOS 18 vs. iOS 26+ (confirmed through iOS 27): Tab navigation behaves differently — content that covers a parent `Pressable` can drop it from Tab (handled automatically since 2.0.0), and `TextInput` focus order can shift with layout/geometry (no fix yet, work around it in your layout) |
 
 ---
 
@@ -77,6 +80,7 @@ Version-to-version upgrade notes, newest first.
 
 | Upgrade | Highlights |
 | :-- | :-- |
+| [1.2.x → 2.0.0](./migration/migration.md#migrating-to-200-from-12x) | Old Architecture (Legacy Bridge) support dropped, React Native ≥ 0.87 required — New Architecture only |
 | [0.9.1 → 1.0.0](./migration/migration.md#migrating-to-100-from-091) | Prop & type renames (`group`→`focusableWrapper`, `canBeFocused`→`focusable`); new ref methods + `K` namespace |
 | [0.9.0 → 0.9.1](./migration/migration.md#migrating-to-091-from-090) | `disabled` now suppresses keyboard-triggered presses |
 | [0.7.x → 0.8.0](./migration/migration.md#migrating-to-080-from-07x) | RN 0.83/0.84 type compatibility via the HOC |

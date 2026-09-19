@@ -1,27 +1,7 @@
-import { NativeModules, Platform, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
+import ExternalKeyboard from '../nativeSpec/NativeExternalKeyboardModule';
 
-const LINKING_ERROR =
-  `The package 'react-native-external-keyboard' doesn't seem to be linked. Make sure: \n\n${Platform.select(
-    { ios: "- You have run 'pod install'\n", default: '' }
-  )}- You rebuilt the app after installing the package\n` +
-  `- You are not using Expo Go\n`;
-
-// @ts-expect-error
-const isTurboModuleEnabled = global.__turboModuleProxy != null;
-const ExternalKeyboardModule = isTurboModuleEnabled
-  ? require('../nativeSpec/NativeExternalKeyboardModule').default
-  : NativeModules.ExternalKeyboardModule;
-
-export const ExternalKeyboard =
-  ExternalKeyboardModule ||
-  new Proxy(
-    {},
-    {
-      get() {
-        throw new Error(LINKING_ERROR);
-      },
-    }
-  );
+export { ExternalKeyboard };
 
 export function dismiss() {
   Keyboard.dismiss();

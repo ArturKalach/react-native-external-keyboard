@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   btnText: { fontSize: 15, fontWeight: '600' },
 
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',

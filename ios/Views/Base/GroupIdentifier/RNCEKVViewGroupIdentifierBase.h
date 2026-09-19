@@ -16,10 +16,8 @@
 
 @property (nonatomic, strong, nullable) NSString *customGroupId;
 
-#ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateGroupIdentifierProps:(const RNCEKV::GroupIdentifierProps &)oldProps
                      newProps:(const RNCEKV::GroupIdentifierProps &)newProps;
-#endif
 
 @end
 

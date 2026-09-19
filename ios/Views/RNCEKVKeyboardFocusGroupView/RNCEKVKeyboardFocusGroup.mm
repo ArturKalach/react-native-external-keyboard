@@ -12,7 +12,6 @@
 #import "RNCEKVOrderLinking.h"
 #import "RNCEKVExternalKeyboardView.h"
 
-#ifdef RCT_NEW_ARCH_ENABLED
 #include <string>
 #import "RCTViewComponentView+RNCEKVExternalKeyboard.h"
 #import <react/renderer/components/RNExternalKeyboardViewSpec/ComponentDescriptors.h>
@@ -30,18 +29,14 @@ using namespace facebook::react;
 
 @end
 
-#endif
-
 @implementation RNCEKVKeyboardFocusGroup
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         _isGroupFocused = false;
-#ifdef RCT_NEW_ARCH_ENABLED
         static const auto defaultProps = std::make_shared<const KeyboardFocusGroupProps>();
         _props = defaultProps;
-#endif
     }
 
     return self;
@@ -62,8 +57,6 @@ using namespace facebook::react;
     }
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
-
 - (void)onFocusChangeHandler:(BOOL) isFocused {
     if (_eventEmitter) {
         auto viewEventEmitter = std::static_pointer_cast<KeyboardFocusGroupEventEmitter const>(_eventEmitter);
@@ -74,36 +67,14 @@ using namespace facebook::react;
     };
 }
 
-#else
-- (void)onFocusChangeHandler:(BOOL) isFocused {
-    if(self.onGroupFocusChange) {
-        self.onGroupFocusChange(@{ @"isFocused": @(isFocused) });
-    }
-}
-#endif
-
 - (void )setCustomGroupId: (NSString *) customGroupId {
     if (@available(iOS 14.0, *)) {
         _customGroupId = customGroupId;
-//        [self updateFocusGroup: customGroupId];
     }
 }
 
-//
-//- (void )updateFocusGroup: (NSString *) customGroupId {
-//    if (@available(iOS 14.0, *)) {
-//      #ifdef RCT_NEW_ARCH_ENABLED
-//        self.rncekvCustomGroup = _customGroupId;
-//      #else
-//        self.focusGroupIdentifier = _customGroupId;
-//      #endif
-//    }
-//}
 
 
-
-
-#ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
     return concreteComponentDescriptorProvider<KeyboardFocusGroupComponentDescriptor>();
@@ -147,10 +118,5 @@ Class<RCTComponentViewProtocol> KeyboardFocusGroupCls(void)
 {
     return RNCEKVKeyboardFocusGroup.class;
 }
-
-
-#endif
-
-
 
 @end
