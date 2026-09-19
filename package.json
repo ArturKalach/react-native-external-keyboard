@@ -91,7 +91,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "<0.80.0"
   },
   "resolutions": {
     "@types/react": "^18.3.30"
