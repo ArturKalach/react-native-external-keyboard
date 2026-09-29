@@ -64,8 +64,9 @@ using namespace facebook::react;
 
 - (void)updateProps:(Props::Shared const &)props
            oldProps:(Props::Shared const &)oldProps {
-  const auto &oldViewProps =
-  *std::static_pointer_cast<ExternalKeyboardViewProps const>(_props);
+  const auto oldViewPropsPtr =
+  std::static_pointer_cast<ExternalKeyboardViewProps const>(_props);
+  const auto &oldViewProps = *oldViewPropsPtr;
   const auto &newViewProps =
   *std::static_pointer_cast<ExternalKeyboardViewProps const>(props);
   [super updateProps:props oldProps:oldProps];
