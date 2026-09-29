@@ -70,7 +70,8 @@ static const NSInteger AUTO_BLUR = 2;
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-    const auto &oldViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(_props);
+    const auto oldViewPropsPtr = std::static_pointer_cast<TextInputFocusWrapperProps const>(_props);
+    const auto &oldViewProps = *oldViewPropsPtr;
     const auto &newViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(props);
     [super updateProps
      :props oldProps:oldProps];
