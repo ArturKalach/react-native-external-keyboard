@@ -1246,7 +1246,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-external-keyboard (2.0.0-alpha.0):
+  - react-native-external-keyboard (2.0.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2090,7 +2090,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 295203fc648a43acf7fba609ddf573aa9fca849f
   React-microtasksnativemodule: 269f81deee27a2a9bedb6b2d1088c1ae93de9bd3
   React-mutationobservernativemodule: 877e9f730e0d8175c2e952901b55c170fc3d372f
-  react-native-external-keyboard: c7223d0e3e91e1eae82ee3e12d30ffcabc7bdd1c
+  react-native-external-keyboard: f4804d2e6dfcda61bf5f04105170d993794ef694
   react-native-safe-area-context: f17f4ec987ecdd130820a4a850498b874fb70388
   React-NativeModulesApple: adb1dd8361dff80e9f6652fb3fdbf033cfbe2a89
   React-networking: c00b437c4408f0640ba0d4158357133488521eca
