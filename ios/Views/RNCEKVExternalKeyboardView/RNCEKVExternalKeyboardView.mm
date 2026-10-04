@@ -36,7 +36,7 @@ using namespace facebook::react;
     std::make_shared<const ExternalKeyboardViewProps>();
     _props = defaultProps;
   }
-
+  
   return self;
 }
 
@@ -69,30 +69,31 @@ using namespace facebook::react;
   const auto &oldViewProps = *oldViewPropsPtr;
   const auto &newViewProps =
   *std::static_pointer_cast<ExternalKeyboardViewProps const>(props);
-  [super updateProps:props oldProps:oldProps];
-
+  
   [self updateKeyPressProps:RNCEKV::KeyPressProps::from(oldViewProps)
-                      newProps:RNCEKV::KeyPressProps::from(newViewProps)];
+                   newProps:RNCEKV::KeyPressProps::from(newViewProps)];
   
   [self updateContextMenuProps:RNCEKV::ContextMenuProps::from(oldViewProps)
                       newProps:RNCEKV::ContextMenuProps::from(newViewProps)];
   
   [self updateFocusProps:RNCEKV::FocusProps::from(oldViewProps)
-                  newProps:RNCEKV::FocusProps::from(newViewProps)];
+                newProps:RNCEKV::FocusProps::from(newViewProps)];
   
   [self updateGroupIdentifierProps:RNCEKV::GroupIdentifierProps::from(oldViewProps)
                           newProps:RNCEKV::GroupIdentifierProps::from(newViewProps)];
-
+  
   [self updateHaloProps:RNCEKV::HaloProps::from(oldViewProps)
                newProps:RNCEKV::HaloProps::from(newViewProps)];
   [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
                      newProps:RNCEKV::OrderProps::from(newViewProps)];
   [self updateFocusRequestProps:RNCEKV::AutoFocusProps::from(oldViewProps)
-                     newProps:RNCEKV::AutoFocusProps::from(newViewProps)];
-
+                       newProps:RNCEKV::AutoFocusProps::from(newViewProps)];
+  
   if (oldViewProps.focusableWrapper != newViewProps.focusableWrapper) {
     [self setFocusableWrapper:newViewProps.focusableWrapper];
   }
+  
+  [super updateProps:props oldProps:oldProps];
 }
 
 
