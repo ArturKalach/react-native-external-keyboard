@@ -50,28 +50,28 @@ using namespace facebook::react;
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
 
-    [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
-    if (@available(iOS 14.0, *)) {
-        NSString* nextFocusGroup = context.nextFocusedView.focusGroupIdentifier;
-        BOOL isFocused = [nextFocusGroup isEqual: _customGroupId];
-    
-        if(_isGroupFocused != isFocused){
-            _isGroupFocused = isFocused;
-            [self onFocusChangeHandler: isFocused];
-        }
+  [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
+  if (@available(iOS 14.0, *)) {
+    NSString* nextFocusGroup = context.nextFocusedView.focusGroupIdentifier;
+    BOOL isFocused = [nextFocusGroup isEqual: _customGroupId];
+
+    if(_isGroupFocused != isFocused){
+      _isGroupFocused = isFocused;
+      [self onFocusChangeHandler: isFocused];
     }
+  }
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
 - (void)onFocusChangeHandler:(BOOL) isFocused {
-    if (_eventEmitter) {
-        auto viewEventEmitter = std::static_pointer_cast<KeyboardFocusGroupEventEmitter const>(_eventEmitter);
-        facebook::react::KeyboardFocusGroupEventEmitter::OnGroupFocusChange data = {
-            .isFocused = isFocused,
-        };
-        viewEventEmitter->onGroupFocusChange(data);
+  if (_eventEmitter) {
+    auto viewEventEmitter = std::static_pointer_cast<KeyboardFocusGroupEventEmitter const>(_eventEmitter);
+    facebook::react::KeyboardFocusGroupEventEmitter::OnGroupFocusChange data = {
+      .isFocused = isFocused,
     };
+    viewEventEmitter->onGroupFocusChange(data);
+  };
 }
 
 #else
@@ -106,47 +106,46 @@ using namespace facebook::react;
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
-    return concreteComponentDescriptorProvider<KeyboardFocusGroupComponentDescriptor>();
+  return concreteComponentDescriptorProvider<KeyboardFocusGroupComponentDescriptor>();
 }
 
 - (void)prepareForRecycle
 {
-    [super prepareForRecycle];
-    self.tintColor = nil;
-//    [self updateFocusGroup: nil];
-    _customGroupId = nil;
+  [super prepareForRecycle];
+  self.tintColor = nil;
+  //    [self updateFocusGroup: nil];
+  _customGroupId = nil;
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-    const auto oldViewPropsPtr = std::static_pointer_cast<KeyboardFocusGroupProps const>(_props);
-    const auto &oldViewProps = *oldViewPropsPtr;
-    const auto &newViewProps = *std::static_pointer_cast<KeyboardFocusGroupProps const>(props);
-    [super updateProps
-     :props oldProps:oldProps];
+  const auto oldViewPropsPtr = std::static_pointer_cast<KeyboardFocusGroupProps const>(_props);
+  const auto &oldViewProps = *oldViewPropsPtr;
+  const auto &newViewProps = *std::static_pointer_cast<KeyboardFocusGroupProps const>(props);
 
+  UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  BOOL isDifferentColor = ![newColor isEqual: self.tintColor];
+  BOOL renewColor = newColor != nil && self.tintColor == nil;
+  BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+  if(isColorChanged || renewColor || isDifferentColor) {
+    self.tintColor = newColor;
+  }
 
-    UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
-    BOOL isDifferentColor = ![newColor isEqual: self.tintColor];
-    BOOL renewColor = newColor != nil && self.tintColor == nil;
-    BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
-    if(isColorChanged || renewColor || isDifferentColor) {
-        self.tintColor = newColor;
+  if(oldViewProps.groupIdentifier != newViewProps.groupIdentifier || !self.customGroupId) {
+    if(newViewProps.groupIdentifier.empty()) {
+      [self setCustomGroupId:nil];
+    } else {
+      NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
+      [self setCustomGroupId:newGroupId];
     }
+  }
 
-      if(oldViewProps.groupIdentifier != newViewProps.groupIdentifier || !self.customGroupId) {
-      if(newViewProps.groupIdentifier.empty()) {
-        [self setCustomGroupId:nil];
-      } else {
-        NSString *newGroupId = [NSString stringWithUTF8String:newViewProps.groupIdentifier.c_str()];
-        [self setCustomGroupId:newGroupId];
-      }
-    }
+  [super updateProps:props oldProps:oldProps];
 }
 
 Class<RCTComponentViewProtocol> KeyboardFocusGroupCls(void)
 {
-    return RNCEKVKeyboardFocusGroup.class;
+  return RNCEKVKeyboardFocusGroup.class;
 }
 
 

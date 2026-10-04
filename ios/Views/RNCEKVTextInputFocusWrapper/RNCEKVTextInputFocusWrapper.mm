@@ -59,62 +59,62 @@ static const NSInteger AUTO_BLUR = 2;
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
-    return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
+  return concreteComponentDescriptorProvider<TextInputFocusWrapperComponentDescriptor>();
 }
 
 - (void)prepareForRecycle
 {
-    [super prepareForRecycle];
-    [self cleanReferences];
+  [super prepareForRecycle];
+  [self cleanReferences];
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-    const auto oldViewPropsPtr = std::static_pointer_cast<TextInputFocusWrapperProps const>(_props);
-    const auto &oldViewProps = *oldViewPropsPtr;
-    const auto &newViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(props);
-    [super updateProps
-     :props oldProps:oldProps];
+  const auto oldViewPropsPtr = std::static_pointer_cast<TextInputFocusWrapperProps const>(_props);
+  const auto &oldViewProps = *oldViewPropsPtr;
+  const auto &newViewProps = *std::static_pointer_cast<TextInputFocusWrapperProps const>(props);
 
-    if(oldViewProps.focusType != newViewProps.focusType) {
-        [self setFocusType: newViewProps.focusType];
-    }
 
-    if(oldViewProps.blurType != newViewProps.blurType) {
-        [self setBlurType: newViewProps.blurType];
-    }
+  if(oldViewProps.focusType != newViewProps.focusType) {
+    [self setFocusType: newViewProps.focusType];
+  }
 
-    if(oldViewProps.blurOnSubmit != newViewProps.blurOnSubmit) {
-        [self setBlurOnSubmit: newViewProps.blurOnSubmit];
-    }
+  if(oldViewProps.blurType != newViewProps.blurType) {
+    [self setBlurType: newViewProps.blurType];
+  }
 
-    if(oldViewProps.multiline != newViewProps.multiline) {
-        [self setMultiline: newViewProps.multiline];
-    }
+  if(oldViewProps.blurOnSubmit != newViewProps.blurOnSubmit) {
+    [self setBlurOnSubmit: newViewProps.blurOnSubmit];
+  }
 
-    [self updateFocusProps:RNCEKV::FocusProps::from(oldViewProps)
-                  newProps:RNCEKV::FocusProps::from(newViewProps)];
+  if(oldViewProps.multiline != newViewProps.multiline) {
+    [self setMultiline: newViewProps.multiline];
+  }
 
-    [self updateGroupIdentifierProps:RNCEKV::GroupIdentifierProps::from(oldViewProps)
-                            newProps:RNCEKV::GroupIdentifierProps::from(newViewProps)];
+  [self updateFocusProps:RNCEKV::FocusProps::from(oldViewProps)
+                newProps:RNCEKV::FocusProps::from(newViewProps)];
 
-    [self updateHaloProps:RNCEKV::HaloProps::from(oldViewProps)
-                 newProps:RNCEKV::HaloProps::from(newViewProps)];
-    [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
-                       newProps:RNCEKV::OrderProps::from(newViewProps)];
+  [self updateGroupIdentifierProps:RNCEKV::GroupIdentifierProps::from(oldViewProps)
+                          newProps:RNCEKV::GroupIdentifierProps::from(newViewProps)];
 
-    UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
-    BOOL renewColor = newColor != nil && self.tintColor == nil;
-    BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
-    if(isColorChanged || renewColor) {
-        self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
-    }
+  [self updateHaloProps:RNCEKV::HaloProps::from(oldViewProps)
+               newProps:RNCEKV::HaloProps::from(newViewProps)];
+  [self updateFocusOrderProps:RNCEKV::OrderProps::from(oldViewProps)
+                     newProps:RNCEKV::OrderProps::from(newViewProps)];
 
+  UIColor* newColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  BOOL renewColor = newColor != nil && self.tintColor == nil;
+  BOOL isColorChanged = oldViewProps.tintColor != newViewProps.tintColor;
+  if(isColorChanged || renewColor) {
+    self.tintColor = RCTUIColorFromSharedColor(newViewProps.tintColor);
+  }
+
+  [super updateProps:props oldProps:oldProps];
 }
 
 Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 {
-    return RNCEKVTextInputFocusWrapper.class;
+  return RNCEKVTextInputFocusWrapper.class;
 }
 
 #endif
@@ -123,24 +123,24 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 #ifdef RCT_NEW_ARCH_ENABLED
 
 - (void)onFocusChangeHandler:(BOOL) isFocused {
-    if (_eventEmitter) {
-        auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
-        facebook::react::TextInputFocusWrapperEventEmitter::OnFocusChange data = {
-            .isFocused = isFocused,
-        };
-        viewEventEmitter->onFocusChange(data);
+  if (_eventEmitter) {
+    auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
+    facebook::react::TextInputFocusWrapperEventEmitter::OnFocusChange data = {
+      .isFocused = isFocused,
     };
+    viewEventEmitter->onFocusChange(data);
+  };
 }
 
 - (void)onMultiplyTextSubmitHandler: (RCTUITextView*) textView {
-    if (_eventEmitter) {
-      NSString* text = textView != nil ? textView.attributedText.string : @"";
-        auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
-      facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {
-        .text = [text UTF8String]
-      };
-        viewEventEmitter->onMultiplyTextSubmit(data);
+  if (_eventEmitter) {
+    NSString* text = textView != nil ? textView.attributedText.string : @"";
+    auto viewEventEmitter = std::static_pointer_cast<TextInputFocusWrapperEventEmitter const>(_eventEmitter);
+    facebook::react::TextInputFocusWrapperEventEmitter::OnMultiplyTextSubmit data = {
+      .text = [text UTF8String]
     };
+    viewEventEmitter->onMultiplyTextSubmit(data);
+  };
 }
 
 #else
@@ -174,7 +174,7 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 
 - (BOOL)canBecomeFocused {
-    return NO;
+  return NO;
 }
 
 - (UIView*)getStoredView {
@@ -194,30 +194,30 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context
        withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
 
-    if(_textField == nil) {
-      _textField = [self getTextFieldComponent];
-    }
+  if(_textField == nil) {
+    _textField = [self getTextFieldComponent];
+  }
 
-    BOOL isNext = context.nextFocusedView == _textField;
-    BOOL isPrev = context.previouslyFocusedView == _textField;
+  BOOL isNext = context.nextFocusedView == _textField;
+  BOOL isPrev = context.previouslyFocusedView == _textField;
 
-    if(isNext) {
-      if(self.focusType == AUTO_FOCUS) {
-        if(_textField != nil) {
-          [_textField reactFocus];
-        }
+  if(isNext) {
+    if(self.focusType == AUTO_FOCUS) {
+      if(_textField != nil) {
+        [_textField reactFocus];
       }
     }
+  }
 
-    if(isPrev) {
-      if(self.blurType == AUTO_BLUR) {
-        if(_textField != nil) {
-          [_textField reactBlur];
-        }
+  if(isPrev) {
+    if(self.blurType == AUTO_BLUR) {
+      if(_textField != nil) {
+        [_textField reactBlur];
       }
     }
+  }
 
-   [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
+  [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
 }
 
 - (UIView*)getTextFieldComponent {
@@ -244,9 +244,9 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 }
 
 - (void)cleanReferences{
-    [super cleanReferences];
-    _textField = nil;
-    _textView = nil;
+  [super cleanReferences];
+  _textField = nil;
+  _textView = nil;
 }
 
 - (BOOL)getIsTextInputView: (UIView*)view {
@@ -260,31 +260,31 @@ Class<RCTComponentViewProtocol> TextInputFocusWrapperCls(void)
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses
            withEvent:(UIPressesEvent *)event {
-    if (@available(iOS 13.4, *)) {
-        UIKey *key = presses.allObjects[0].key;
-        BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
+  if (@available(iOS 13.4, *)) {
+    UIKey *key = presses.allObjects[0].key;
+    BOOL isEnter = [key.characters isEqualToString:@"\n"] || [key.characters isEqualToString:@"\r"];
 
-        RCTUITextField* textView = _textField != nil ? _textField : [self getTextFieldComponent];
-        if(isEnter && textView && !textView.isFirstResponder) {
-            [_textField reactFocus];
-            return;
-        }
-
-        if(self.multiline) {
-            BOOL isShiftPressed = (key.modifierFlags & UIKeyModifierShift) != 0;
-
-            if(textView && textView.isFirstResponder) {
-                if(!isShiftPressed && isEnter) {
-                    [self onMultiplyTextSubmitHandler: (UIView*)textView];
-                    if(self.blurOnSubmit) {
-                        [textView resignFirstResponder];
-                    }
-                }
-            }
-        }
+    RCTUITextField* textView = _textField != nil ? _textField : [self getTextFieldComponent];
+    if(isEnter && textView && !textView.isFirstResponder) {
+      [_textField reactFocus];
+      return;
     }
 
-    [super pressesBegan:presses withEvent:event];
+    if(self.multiline) {
+      BOOL isShiftPressed = (key.modifierFlags & UIKeyModifierShift) != 0;
+
+      if(textView && textView.isFirstResponder) {
+        if(!isShiftPressed && isEnter) {
+          [self onMultiplyTextSubmitHandler: (UIView*)textView];
+          if(self.blurOnSubmit) {
+            [textView resignFirstResponder];
+          }
+        }
+      }
+    }
+  }
+
+  [super pressesBegan:presses withEvent:event];
 }
 
 
