@@ -71,11 +71,13 @@ Cached as `static final` — RN version is compile-time constant for any given c
 
 ## ExternalKeyboardLockView modes
 
-`componentType` encodes which lock role this instance plays (see [ExternalKeyboardLockView.java](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/ExternalKeyboardLockView.java)):
-- `0` = **Frame** — records the last accessibility-focused descendant into `LockService` so a Trap can route focus back to it.
-- `1` = **Trap** — intercepts accessibility focus events and redirects to the stored view; also returns the stored keyboard view from `focusSearch` to contain D-pad navigation.
+`componentType` encodes which lock role this instance plays (`TYPE_TRAP` in [ExternalKeyboardLockViewManager.java](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/ExternalKeyboardLockViewManager.java)):
+- `0` = **Trap** (`Focus.Trap`) — contains keyboard focus (subtree-only `focusSearch`, Tab/Shift-Tab wrap, programmatic escapes pulled back) and records where keyboard and TalkBack focus last were inside it. It never drops TalkBack events, so focus inside is announced.
+- `1` = **Frame** (`Focus.Frame`) — sends keyboard moves and TalkBack focus that land outside the active trap back to the trap's recorded view (else its first focusable/accessible view).
 
-[LockService](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/LockService.java) is a process-wide singleton holding `WeakReference<View>` for the focused descendant and the last keyboard-focused view; cleared on `onDetachedFromWindow`.
+Attached traps stack in a static list ([TrapRegistry](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/delegates/TrapRegistry.java), removed on detach); the newest enabled, shown trap in the same window is active, and older traps don't fight it. The view keeps props, lifecycle and framework overrides and delegates to the helpers in [`delegates/`](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/delegates/) via `LockHost`: `LockKeyboard`, `LockScreenReader`, `LockInitialFocus` (focuses inside once; the TalkBack half only while a screen reader runs) and `TrapRegistry`. `lockDisabled` turns a trap off; `forceLock` is a no-op on Android.
+
+The lock view and its delegates are a copy of `react-native-a11y`'s `A11yLockView/` (only the package and `A11yHelper` → `FocusHelper` differ). Port fixes between the two.
 
 ## Commands
 

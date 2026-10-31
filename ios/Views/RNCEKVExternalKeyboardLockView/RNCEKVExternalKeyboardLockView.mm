@@ -95,7 +95,7 @@ using namespace facebook::react;
 }
 
 - (void)requestFocus {
-  if (!_forceLock && _lockDisabled) return;
+  if (_lockDisabled || !_forceLock) return;
 
   UIViewController *controller = self.reactViewController;
   if (controller != nil) {
@@ -104,7 +104,7 @@ using namespace facebook::react;
 }
 
 - (void)requestScreenReaderFocus {
-  if (!_forceLock && _lockDisabled) return;
+  if (_lockDisabled) return;
 
   UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, self);
 }
@@ -130,10 +130,11 @@ using namespace facebook::react;
 {
   const auto &newViewProps =
     *std::static_pointer_cast<ExternalKeyboardLockViewProps const>(props);
-  [super updateProps:props oldProps:oldProps];
 
   self.forceLock = newViewProps.forceLock;
   self.lockDisabled = newViewProps.lockDisabled;
+
+  [super updateProps:props oldProps:oldProps];
 }
 
 Class<RCTComponentViewProtocol> ExternalKeyboardLockViewCls(void)
