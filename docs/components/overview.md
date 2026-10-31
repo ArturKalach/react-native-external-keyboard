@@ -240,7 +240,7 @@ A pair of components that lock focus inside a region — useful for modals, bott
 - **`Focus.Frame`** — placed at the root of a "screen" to detect focus leaks and keep focus contained.
 - **`Focus.Trap`** — wraps the content area where focus should be explicitly locked.
 
-On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal`. Pass `forceLock` for stronger containment (e.g. to keep focus away from navigation bars/headers) — focus is corrected reactively, so VoiceOver may briefly jump outside the trap before being returned. On Android, where no `accessibilityViewIsModal` equivalent exists, a custom implementation provides the lock.
+On iOS, `Focus.Trap` uses the native `accessibilityViewIsModal`. Pass `forceLock` for stronger containment (e.g. to keep focus away from navigation bars/headers) — focus is corrected reactively, so VoiceOver may briefly jump outside the trap before being returned. On Android, where no `accessibilityViewIsModal` equivalent exists, a custom implementation provides the lock: focus moves into the trap once when it mounts, Tab and Shift-Tab wrap around inside it, and keyboard or TalkBack focus that escapes returns to the last element it had inside. With several traps mounted, the newest one is active.
 
 ```tsx
 import { Focus } from 'react-native-external-keyboard';
@@ -259,7 +259,7 @@ import { Focus } from 'react-native-external-keyboard';
 | Prop | Type | Description |
 | :-- | :-- | :-- |
 | `forceLock` | `boolean` | *(iOS, `Focus.Trap`)* Strengthen containment beyond `accessibilityViewIsModal` by returning focus into the trap when it escapes. |
-| `lockDisabled` | `boolean` | *(Android)* Disable the focus lock when `true`. |
+| `lockDisabled` | `boolean` | *(Android; iOS with `forceLock`)* Disable the focus lock when `true`. Takes precedence over `forceLock`. |
 | `...ViewProps` | — | All standard `View` properties (`style`, `testID`, …). |
 
 ---
