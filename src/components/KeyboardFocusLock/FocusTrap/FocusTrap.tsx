@@ -21,6 +21,8 @@ export const FocusTrap = ({
   }
 
   return (
-    <View collapsable={false} accessibilityViewIsModal={true} {...props} />
+    <FocusTrapMountWrapper>
+      <View collapsable={false} accessibilityViewIsModal={true} {...props} />
+    </FocusTrapMountWrapper>
   );
 };

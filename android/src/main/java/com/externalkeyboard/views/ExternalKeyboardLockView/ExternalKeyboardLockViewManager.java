@@ -7,6 +7,8 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 @ReactModule(name = ExternalKeyboardLockViewManager.NAME)
 public class ExternalKeyboardLockViewManager extends com.externalkeyboard.ExternalKeyboardLockViewManagerSpec<ExternalKeyboardLockView> {
   public static final String NAME = "ExternalKeyboardLockView";
+  // `componentType` values sent from JS. Keep in sync with `LockComponentType` in src/types/KeyboardFocusLock.types.ts.
+  private static final int TYPE_TRAP = 0;
 
   @Override
   public String getName() {
@@ -21,7 +23,7 @@ public class ExternalKeyboardLockViewManager extends com.externalkeyboard.Extern
   @Override
   @ReactProp(name = "componentType")
   public void setComponentType(ExternalKeyboardLockView view, int value) {
-    view.setComponentType(value);
+    view.setTrap(value == TYPE_TRAP);
   }
 
   @Override
@@ -33,6 +35,6 @@ public class ExternalKeyboardLockViewManager extends com.externalkeyboard.Extern
   @Override
   @ReactProp(name = "forceLock")
   public void setForceLock(ExternalKeyboardLockView view, boolean value) {
-    view.setForceLock(value);
+    // Android already restores focus for every enabled trap; forceLock never overrides lockDisabled.
   }
 }
