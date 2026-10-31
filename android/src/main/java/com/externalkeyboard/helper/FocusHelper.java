@@ -1,13 +1,17 @@
 package com.externalkeyboard.helper;
 
+import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 
 public class FocusHelper {
   private static final int MASK_FOCUS_UP = 0b1;
@@ -63,7 +67,15 @@ public class FocusHelper {
     return null;
   }
   public static boolean isAccessible(@Nullable View view) {
-    return view != null && view.isImportantForAccessibility();
+    return view != null && ViewCompat.isImportantForAccessibility(view);
+  }
+
+  public static boolean isA11yServiceEnabled(@NonNull Context context) {
+    AccessibilityManager accessibilityManager =
+      (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+    return accessibilityManager != null
+      && accessibilityManager.isEnabled()
+      && accessibilityManager.isTouchExplorationEnabled();
   }
 
   public static View findFirstAccessible(@Nullable ViewGroup viewGroup, boolean ignoreRoot) {
@@ -77,11 +89,14 @@ public class FocusHelper {
 
     for (int i = 0; i < viewGroup.getChildCount(); i++) {
       View child = viewGroup.getChildAt(i);
+      if (child.getVisibility() != View.VISIBLE) {
+        continue;
+      }
       if (isAccessible(child)) {
         return child;
       }
 
-      if (child instanceof ViewGroup) {
+      if (child instanceof ViewGroup && !hidesDescendants(child)) {
         View accessibleChild = findFirstAccessible((ViewGroup) child, true);
         if (accessibleChild != null) {
           return accessibleChild;
@@ -96,37 +111,8 @@ public class FocusHelper {
     return findFirstAccessible(viewGroup, false);
   }
 
-  public static View findFirstFocusable(@Nullable ViewGroup viewGroup, boolean ignoreRoot) {
-    if (viewGroup == null) {
-      return null;
-    }
-
-    if (!ignoreRoot && isKeyboardFocusable(viewGroup)) {
-      return viewGroup;
-    }
-
-    for (int i = 0; i < viewGroup.getChildCount(); i++) {
-      View child = viewGroup.getChildAt(i);
-      if (isKeyboardFocusable(child)) {
-        return child;
-      }
-
-      if (child instanceof ViewGroup) {
-        View focusableChild = findFirstFocusable((ViewGroup) child, true);
-        if (focusableChild != null) {
-          return focusableChild;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  public static View findFirstFocusable(@Nullable ViewGroup viewGroup) {
-    return findFirstFocusable(viewGroup, false);
-  }
-
-  private static boolean isKeyboardFocusable(View view) {
-    return view.isFocusable() && view.getVisibility() == View.VISIBLE && view.isEnabled();
+  private static boolean hidesDescendants(@NonNull View view) {
+    return ViewCompat.getImportantForAccessibility(view)
+      == ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
   }
 }
