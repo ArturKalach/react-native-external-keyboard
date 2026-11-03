@@ -123,7 +123,8 @@
         "ExternalKeyboardView": "RNCEKVExternalKeyboardView",
         "KeyboardFocusGroup": "RNCEKVKeyboardFocusGroup",
         "TextInputFocusWrapper": "RNCEKVTextInputFocusWrapper",
-        "ExternalKeyboardLockView": "RNCEKVExternalKeyboardLockView"
+        "ExternalKeyboardLockView": "RNCEKVExternalKeyboardLockView",
+        "KeyboardFocusGuide": "RNCEKVKeyboardFocusGuide"
       }
     }
   },

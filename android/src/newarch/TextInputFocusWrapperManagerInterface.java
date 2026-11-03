@@ -19,6 +19,7 @@ public interface TextInputFocusWrapperManagerInterface<T extends View> {
   void setBlurOnSubmit(T view, boolean value);
   void setMultiline(T view, boolean value);
   void setGroupIdentifier(T view, @Nullable String value);
+  void setUniqueGroupIdentifierEnabled(T view, boolean value);
   void setLockFocus(T view, int value);
   void setOrderGroup(T view, @Nullable String value);
   void setOrderIndex(T view, int value);

@@ -68,6 +68,7 @@ export const withKeyboardFocus = <
         onBlur,
         onFocusChange,
         groupIdentifier,
+        uniqueGroupIdentifier,
         haloCornerRadius,
         haloExpendX,
         haloExpendY,
@@ -240,6 +241,7 @@ export const withKeyboardFocus = <
               tintColor={tintColor}
               focusableWrapper={focusableWrapper}
               groupIdentifier={groupIdentifier}
+              uniqueGroupIdentifier={uniqueGroupIdentifier}
               screenAutoA11yFocus={screenAutoA11yFocus}
               screenAutoA11yFocusDelay={screenAutoA11yFocusDelay}
               lockFocus={lockFocus}

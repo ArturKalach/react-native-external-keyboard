@@ -3,7 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Pressable } from 'react-native-external-keyboard';
+import {
+  KeyboardGroupProvider,
+  Pressable,
+} from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 /** Ordered list of the demo screens, shared by the Prev/Next footer. */
@@ -13,6 +16,7 @@ export const DEMO_ORDER: { name: string; title: string }[] = [
   { name: 'ProgrammaticFocus', title: 'Programmatic Focus' },
   { name: 'KeyboardInput', title: 'TextInput' },
   { name: 'FocusOrderAnimated', title: 'Focus Order' },
+  { name: 'FocusGuideDemo', title: 'Focus Guide' },
 ];
 
 type Step = (typeof DEMO_ORDER)[number];
@@ -26,20 +30,22 @@ const DemoFooter = ({ prev, next }: { prev?: Step; next?: Step }) => {
       collapsable={false}
       style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}
     >
-      <FooterButton
-        align="start"
-        step={prev}
-        caption="Prev"
-        chevron="‹"
-        onPress={() => prev && navigation.replace(prev.name)}
-      />
-      <FooterButton
-        align="end"
-        step={next}
-        caption="Next"
-        chevron="›"
-        onPress={() => next && navigation.replace(next.name)}
-      />
+      <KeyboardGroupProvider groupIdentifier="demo-nav-footer">
+        <FooterButton
+          align="start"
+          step={prev}
+          caption="Prev"
+          chevron="‹"
+          onPress={() => prev && navigation.replace(prev.name)}
+        />
+        <FooterButton
+          align="end"
+          step={next}
+          caption="Next"
+          chevron="›"
+          onPress={() => next && navigation.replace(next.name)}
+        />
+      </KeyboardGroupProvider>
     </View>
   );
 };

@@ -115,6 +115,7 @@ using namespace facebook::react;
   self.tintColor = nil;
   //    [self updateFocusGroup: nil];
   _customGroupId = nil;
+  _isGroupFocused = NO;
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps

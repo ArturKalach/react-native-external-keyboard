@@ -26,6 +26,8 @@ public abstract class TextInputFocusWrapperManagerSpec<T extends ViewGroup> exte
 
   public abstract void setGroupIdentifier(TextInputFocusWrapper view, @Nullable String value);
 
+  public abstract void setUniqueGroupIdentifierEnabled(TextInputFocusWrapper view, boolean value);
+
   public abstract void setOrderGroup(TextInputFocusWrapper view, @Nullable String value);
 
   public abstract void setOrderIndex(TextInputFocusWrapper view, int value);

@@ -25,6 +25,8 @@ Read them in order, or jump to the one you need.
 | 3 | [Programmatic focus](./guides/programmatic-focus.md) | `ref.focus()`, `keyboardFocus()`, `screenReaderFocus()`, `autoFocus` |
 | 4 | [Keyboard text input](./guides/text-input.md) | `KeyboardExtendedInput`, `focusType`, `blurType`, multiline submit |
 | 5 | [Focus order](./guides/focus-order.md) | Link-based, index-based, and direction-lock ordering |
+| 6 | [Focus guide](./guides/focus-guide.md) | `Focus.Guide`: send keyboard or screen-reader focus that enters an area on to a chosen view |
+| 7 | [Keyboard grouping](./guides/keyboard-grouping.md) | iOS focus groups: `uniqueGroupIdentifier`, `KeyboardGroupProvider`, `Keyboard.configure` |
 
 **Advanced**
 
@@ -48,6 +50,8 @@ Concise descriptions, when-to-use guidance, and full props tables for every comp
 | [`KeyboardExtendedBaseView`](./components/overview.md#keyboardextendedbaseview) | Low-level focusable view (alias `ExternalKeyboardView`) |
 | [`KeyboardFocusGroup`](./components/overview.md#keyboardfocusgroup) | iOS `focusGroupIdentifier` grouping + global `tintColor` |
 | [`Focus.Frame` / `Focus.Trap`](./components/overview.md#focusframe--focustrap) | Focus confinement for modals and overlays |
+| [`Focus.Guide`](./components/overview.md#focusguide) | Redirect focus that moves into an area to a chosen view (alias `KeyboardFocusGuide`) |
+| [`KeyboardGroupProvider`](./components/overview.md#keyboardgroupprovider) | iOS focus grouping for a region, without a native view |
 | [`KeyboardOrderFocusGroup`](./components/overview.md#keyboardorderfocusgroup) | Namespacing + index-based focus ordering |
 
 ---

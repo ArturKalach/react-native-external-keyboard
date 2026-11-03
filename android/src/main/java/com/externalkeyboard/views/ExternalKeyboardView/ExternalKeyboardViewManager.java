@@ -257,6 +257,11 @@ public class ExternalKeyboardViewManager extends com.externalkeyboard.ExternalKe
   }
 
   @Override
+  public void setUniqueGroupIdentifierEnabled(ExternalKeyboardView view, boolean value) {
+    // stub (iOS)
+  }
+
+  @Override
   public void rnekKeyboardFocus(ExternalKeyboardView view) {
     view.focus();
   }

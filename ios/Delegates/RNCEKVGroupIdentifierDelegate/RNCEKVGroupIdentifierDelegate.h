@@ -15,7 +15,9 @@
 
 - (instancetype _Nonnull)initWithView:(UIView<RNCEKVGroupIdentifierProtocol> *_Nonnull)view;
 
-@property (nonatomic, readonly, nonnull) NSString *focusGroupIdentifier;
+/// Explicit custom id, else the generated unique id when enabled, else nil
+/// (callers then fall back to `[super focusGroupIdentifier]`).
+@property (nonatomic, readonly, nullable) NSString *focusGroupIdentifier;
 
 @end
 

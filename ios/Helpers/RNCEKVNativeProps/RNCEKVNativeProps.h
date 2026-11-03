@@ -62,11 +62,13 @@ struct HaloProps {
 
 struct GroupIdentifierProps {
   std::string groupIdentifier{};
+  bool uniqueGroupIdentifierEnabled{false};
 
   template <typename T>
   static GroupIdentifierProps from(const T &props) {
     return GroupIdentifierProps{
       props.groupIdentifier,
+      props.uniqueGroupIdentifierEnabled,
     };
   }
 };

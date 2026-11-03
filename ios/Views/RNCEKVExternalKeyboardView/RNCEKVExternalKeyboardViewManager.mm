@@ -123,6 +123,12 @@ RCT_CUSTOM_VIEW_PROPERTY(groupIdentifier, NSString, RNCEKVExternalKeyboardView)
   [view setCustomGroupId: value];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(uniqueGroupIdentifierEnabled, BOOL, RNCEKVExternalKeyboardView)
+{
+  BOOL value = json ? [RCTConvert BOOL:json] : NO;
+  [view setUniqueGroupIdentifierEnabled: value];
+}
+
 RCTK_SIMPLE_PROP(orderGroup, NSString, RNCEKVExternalKeyboardView)
 RCTK_SIMPLE_PROP(orderId, NSString, RNCEKVExternalKeyboardView)
 RCTK_SIMPLE_PROP(orderLeft, NSString, RNCEKVExternalKeyboardView)

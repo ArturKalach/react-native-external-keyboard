@@ -21,6 +21,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if (self = [super initWithFrame:frame]) {
+    _uniqueGroupIdentifierEnabled = NO;
     _gIdDelegate = [[RNCEKVGroupIdentifierDelegate alloc] initWithView: self];
   }
   
@@ -29,7 +30,7 @@
 
 - (NSString *)focusGroupIdentifier {
   if(self.canBecomeFocused) {
-    return [self customGroupIdentifier];
+    return [self customGroupIdentifier] ?: [super focusGroupIdentifier];
   }
   
   return [super focusGroupIdentifier];
@@ -53,6 +54,8 @@
   if(![_customGroupId isEqual: newGroupId]) {
     [self setCustomGroupId: newGroupId];
   }
+
+  self.uniqueGroupIdentifierEnabled = newProps.uniqueGroupIdentifierEnabled;
 }
 #endif
 
@@ -63,6 +66,7 @@
 - (void)cleanReferences {
   [super cleanReferences];
   _customGroupId = nil;
+  _uniqueGroupIdentifierEnabled = NO;
 }
 
 

@@ -39,6 +39,8 @@ public abstract class ExternalKeyboardViewManagerSpec<T extends ViewGroup> exten
 
   public abstract void setGroupIdentifier(ExternalKeyboardView view, @Nullable String value);
 
+  public abstract void setUniqueGroupIdentifierEnabled(ExternalKeyboardView view, boolean value);
+
   public abstract void setScreenAutoA11yFocus(ExternalKeyboardView wrapper, boolean enableA11yFocus);
 
   public abstract void setScreenAutoA11yFocusDelay(ExternalKeyboardView wrapper, int value);

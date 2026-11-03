@@ -47,6 +47,7 @@ lib/               Generated build output (commonjs, ESM, types) — do not edit
   - `BaseKeyboardView` — core wrapper, used by most other components
   - `KeyboardFocusGroup` — maps to iOS `focusGroupIdentifier`
   - `KeyboardFocusLock/` — `Focus.Frame` (leak detection) and `Focus.Trap` (containment)
+  - `KeyboardFocusGuide` — `Focus.Guide`: redirects keyboard / screen-reader focus that enters an area to a target `orderId`
   - `KeyboardExtendedInput` — TextInput with focus support
   - `Touchable/` — Pressable wrapper
 - **`modules/`** — JS-side native module bridge (`Keyboard.ts` / `Keyboard.android.ts`)
@@ -57,9 +58,9 @@ lib/               Generated build output (commonjs, ESM, types) — do not edit
 ### iOS Native (`ios/`)
 
 Structured by responsibility:
-- **Views**: `RNCEKVExternalKeyboardView`, `RNCEKVKeyboardFocusGroup`, `RNCEKVExternalKeyboardLockView`, `RNCEKVTextInputFocusWrapper`
+- **Views**: `RNCEKVExternalKeyboardView`, `RNCEKVKeyboardFocusGroup`, `RNCEKVExternalKeyboardLockView`, `RNCEKVTextInputFocusWrapper`, `RNCEKVKeyboardFocusGuide` (in `features/FocusGuide/`)
 - **Delegates**: `FocusDelegate`, `FocusOrderDelegate`, `HaloDelegate`, `GroupIdentifierDelegate`
-- **Services**: `RNCEKVKeyboardOrderManager` — manages directional focus order graph
+- **Services**: `RNCEKVKeyboardOrderManager` — manages directional focus order graph; `RNCEKVFocusService` — VoiceOver focus tracking (used by the focus guide)
 - **Extensions**: Categories on `RCTViewComponentView`, `UIViewController`, `RCTTextInputComponentView`
 - **Module**: `RNCEKVExternalKeyboardModule`
 

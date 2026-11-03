@@ -17,7 +17,7 @@ import {
 import type { View } from 'react-native';
 import { KeyPressContext } from '../../context/BubbledKeyPressContext';
 import { useBubbledInfo } from './BaseKeyboardView.hooks';
-import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
+import { useResolvedGroupIdentifier } from '../../context/GroupIdentifierContext';
 import { useOnFocusChange } from '../../utils/useOnFocusChange';
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
 import { useWrappedOrderProps } from '../../utils/useWrappedOrderProps';
@@ -70,6 +70,7 @@ export const BaseKeyboardView = React.memo(
         onFocus,
         onBlur,
         groupIdentifier,
+        uniqueGroupIdentifier,
         tintColor,
         // TODO: revisit screenAutoA11yFocusDelay default (currently 300ms)
         screenAutoA11yFocusDelay = 300,
@@ -102,7 +103,10 @@ export const BaseKeyboardView = React.memo(
         [lockFocus]
       );
 
-      const contextIdentifier = useGroupIdentifierContext();
+      const groupIdentifierProps = useResolvedGroupIdentifier({
+        groupIdentifier,
+        uniqueGroupIdentifier,
+      });
       const contextGroupId = useOrderFocusGroup();
       const groupId = orderGroup ?? contextGroupId;
 
@@ -234,7 +238,7 @@ export const BaseKeyboardView = React.memo(
             onKeyDownPress={onKeyDownPress}
             onKeyUpPress={onKeyUpPress}
             onBubbledContextMenuPress={bubbled.contextMenu}
-            groupIdentifier={groupIdentifier ?? contextIdentifier}
+            {...groupIdentifierProps}
             tintColor={isIOS ? tintColor : undefined}
             onFocusChange={hasFocusListener ? onFocusChangeHandler : undefined}
             hasKeyDownPress={Boolean(onKeyDownPress)}

@@ -10,6 +10,7 @@
 #import "RNCEKVOrderSubscriber.h"
 #import "RNCEKVOrderLinking.h"
 #import "RNCEKVKeyboardFocusableProtocol.h"
+#import "RNCEKVKeyboardFocusService.h"
 
 static NSNumber *const FOCUS_DEFAULT = nil;
 static NSNumber *const FOCUS_LOCK = @0;
@@ -181,6 +182,12 @@ static NSNumber *const FOCUS_HANDLED = @0;
     else if (movementHint == UIFocusHeadingFirst)    orderId = _delegate.orderFirst;
     else if (movementHint == UIFocusHeadingNext)     orderId = _delegate.orderForward;
     else if (movementHint == UIFocusHeadingPrevious) orderId = _delegate.orderBackward;
+
+    // Tab moves between focus groups, Ctrl+Tab inside one; follow the link only at the order's level.
+    BOOL isSequential = movementHint == UIFocusHeadingNext || movementHint == UIFocusHeadingPrevious;
+    if (orderId && isSequential && ![RNCEKVKeyboardFocusService isOrderMove:context forView:_delegate]) {
+      return FOCUS_DEFAULT;
+    }
 
     if (orderId) {
       UIView *nextView = [[RNCEKVOrderLinking sharedInstance] getOrderView:orderId];

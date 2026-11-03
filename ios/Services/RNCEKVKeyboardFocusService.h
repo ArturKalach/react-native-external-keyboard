@@ -23,6 +23,13 @@
 /// Moves keyboard focus to the given view on the next focus update.
 + (void)focus:(UIView *)view;
 
+/// Whether a Next / Previous update belongs to the keyboard order of `view`.
+/// Tab and Ctrl+Tab both report Next / Previous, and the context has no public modifier flags, so the key is read
+/// from the search UIKit ran (private: groups for Tab, items for Ctrl+Tab). The order takes Tab when `view` is its
+/// own focus group (`uniqueGroupIdentifier` without `groupIdentifier`), Ctrl+Tab otherwise. When the search cannot
+/// be read, the order takes both keys.
++ (BOOL)isOrderMove:(UIFocusUpdateContext *)context forView:(UIView *)view;
+
 @end
 
 #endif /* RNCEKVKeyboardFocusService_h */

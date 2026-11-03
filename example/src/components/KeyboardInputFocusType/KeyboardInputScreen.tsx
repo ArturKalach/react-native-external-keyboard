@@ -4,6 +4,7 @@ import {
   Easing,
   Pressable as RNPressable,
   StyleSheet,
+  ScrollView,
   Text,
   View,
 } from 'react-native';
@@ -94,7 +95,10 @@ export const KeyboardInputScreen = () => {
   const editing = editIndex != null;
 
   return (
-    <View collapsable={false} style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.screenContent}
+    >
       <View style={styles.intro}>
         <Text style={styles.introText}>
           A <Text style={styles.code}>KeyboardExtendedInput</Text> joins the Tab
@@ -201,7 +205,7 @@ export const KeyboardInputScreen = () => {
         <Text style={styles.code}>press</Text>, the field highlights on Tab but
         only captures keystrokes after you press Return.
       </Text>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -353,7 +357,8 @@ const Caret = () => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#f2f2f7', padding: 16 },
+  screen: { flex: 1, backgroundColor: '#f2f2f7' },
+  screenContent: { padding: 16 },
 
   intro: {
     backgroundColor: '#ffffff',

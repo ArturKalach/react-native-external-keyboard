@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Pressable } from 'react-native-external-keyboard';
 
 const RAIL = '#d8d8e0';
@@ -94,7 +94,10 @@ export const NativeFocusStyleScreen = () => {
   const cometColor = focused != null ? CARDS[focused]!.accent : SYSTEM_BLUE;
 
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.screenContent}
+    >
       <Text style={styles.intro}>
         Tab through the buttons — each shows a different native focus halo. iOS
         draws the halo; Android shows its system highlight.
@@ -159,7 +162,7 @@ export const NativeFocusStyleScreen = () => {
         The comet on the left tracks keyboard focus; the halo around each button
         is the native effect those props produce.
       </Text>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -213,7 +216,8 @@ const HaloCard = ({
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#f2f2f7', padding: 16 },
+  screen: { flex: 1, backgroundColor: '#f2f2f7' },
+  screenContent: { padding: 16 },
 
   intro: {
     fontSize: 13.5,

@@ -31,6 +31,18 @@ export type CommonFocusProps = {
    * @platform ios
    */
   groupIdentifier?: string;
+  /**
+   * Generate a unique `focusGroupIdentifier` for this view when no `groupIdentifier`
+   * is set, so the view is its own keyboard focus group. `false` skips the generated
+   * id and leaves grouping to the system. A `groupIdentifier` always wins, whether
+   * set on this view or inherited from an enclosing `KeyboardGroupProvider` /
+   * `KeyboardFocusGroup`. Falls back to the nearest `KeyboardGroupProvider`, then
+   * `Keyboard.configure`.
+   *
+   * @default false
+   * @platform ios
+   */
+  uniqueGroupIdentifier?: boolean;
   /** Directions in which focus movement is locked. See {@link LockFocusType}. */
   lockFocus?: LockFocusType[];
   /**

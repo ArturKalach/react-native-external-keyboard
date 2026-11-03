@@ -24,6 +24,21 @@ Keyboard.dismiss();
 | Function | Platform | Description |
 | :-- | :-- | :-- |
 | `Keyboard.dismiss()` | iOS / Android | Hides the soft keyboard. |
+| `Keyboard.configure(config)` | iOS (no-op settings on Android) | Sets app-wide defaults. Call once at startup, before the first render. |
+
+### `Keyboard.configure`
+
+```ts
+import { Keyboard } from 'react-native-external-keyboard';
+
+Keyboard.configure({ uniqueGroupIdentifier: true });
+```
+
+| Option | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `uniqueGroupIdentifier` | `boolean` | `false` | *(iOS)* Give every focusable view without a `groupIdentifier` its own generated focus group (the pre-0.14 behavior). Overridden by `KeyboardGroupProvider` and the view prop. See [Keyboard grouping](../guides/keyboard-grouping.md). |
+
+It is a plain module setting (type `ExternalKeyboardConfig`), so it also reaches portals and separate React roots. It does not re-render mounted views.
 
 ### Platform behavior
 

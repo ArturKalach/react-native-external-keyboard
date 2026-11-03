@@ -1,5 +1,7 @@
 import { NativeModules, Platform, Keyboard } from 'react-native';
 
+export { configure } from '../config';
+
 const LINKING_ERROR =
   `The package 'react-native-external-keyboard' doesn't seem to be linked. Make sure: \n\n${Platform.select(
     { ios: "- You have run 'pod install'\n", default: '' }

@@ -34,6 +34,8 @@ static inline BOOL RNCEKVIsFocusTarget(UIView *view) {
 - (NSString *)focusGroupIdentifier {
   if ([self.superview conformsToProtocol:@protocol(RNCEKVCustomGroudIdProtocol)]) {
     id<RNCEKVCustomGroudIdProtocol> parent = (id<RNCEKVCustomGroudIdProtocol>)self.superview;
+    // nil when the parent has no explicit id and `uniqueGroupIdentifierEnabled` is NO
+    // -> fall through to the system default below.
     NSString* groupId = [parent customGroupIdentifier];
     if(groupId != nil) {
       return groupId;

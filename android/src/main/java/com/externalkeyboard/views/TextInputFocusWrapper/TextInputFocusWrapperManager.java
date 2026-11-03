@@ -67,6 +67,11 @@ public class TextInputFocusWrapperManager extends com.externalkeyboard.TextInput
   }
 
   @Override
+  public void setUniqueGroupIdentifierEnabled(TextInputFocusWrapper view, boolean value) {
+    // stub (iOS)
+  }
+
+  @Override
   @ReactProp(name = "orderGroup")
   public void setOrderGroup(TextInputFocusWrapper view, @Nullable String value) {
     if (!Objects.equals(view.getOrderGroup(), value)) {

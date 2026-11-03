@@ -13,6 +13,8 @@
 @protocol RNCEKVGroupIdentifierProtocol <NSObject>
 
 - (NSString*) customGroupId;
+/// YES: a view without a `customGroupId` gets a generated unique group id. Default NO.
+- (BOOL) uniqueGroupIdentifierEnabled;
 - (UIView*) getFocusTargetView;
 
 @end

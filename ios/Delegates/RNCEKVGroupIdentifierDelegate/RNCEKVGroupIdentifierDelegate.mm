@@ -37,9 +37,12 @@
 
 - (NSString *)focusGroupIdentifier {
   if (@available(iOS 14.0, *)) {
-    return _delegate.customGroupId ?: self.tagId;
+    NSString *customId = _delegate.customGroupId;
+    if (customId != nil) {
+      return customId;
+    }
   }
-  return self.tagId;
+  return _delegate.uniqueGroupIdentifierEnabled ? self.tagId : nil;
 }
 
 @end

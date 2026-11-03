@@ -15,6 +15,8 @@
 @interface RNCEKVViewGroupIdentifierBase : RNCEKVExternalKeyboardHalloBase<RNCEKVGroupIdentifierProtocol, RNCEKVCustomGroudIdProtocol>
 
 @property (nonatomic, strong, nullable) NSString *customGroupId;
+/// Default NO (matches JS/codegen). YES: generate a unique group id for a view without `customGroupId`.
+@property (nonatomic, assign) BOOL uniqueGroupIdentifierEnabled;
 
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateGroupIdentifierProps:(const RNCEKV::GroupIdentifierProps &)oldProps

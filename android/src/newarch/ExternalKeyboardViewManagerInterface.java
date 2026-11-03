@@ -22,6 +22,7 @@ public interface ExternalKeyboardViewManagerInterface<T extends View> {
   void setTintColor(T view, @Nullable Integer value);
   void setFocusableWrapper(T view, boolean value);
   void setGroupIdentifier(T view, @Nullable String value);
+  void setUniqueGroupIdentifierEnabled(T view, boolean value);
   void setScreenAutoA11yFocus(T view, boolean value);
   void setScreenAutoA11yFocusDelay(T view, int value);
   void setOrderGroup(T view, @Nullable String value);

@@ -2,10 +2,106 @@
 
 Migration notes are listed newest first. Each section only covers changes that need action — additive features are documented in the [component overview](../components/overview.md) and [API reference](../api/overview.md).
 
+- [0.13.x → 0.14.0](#migrating-to-0140-from-013x)
 - [0.9.1 → 1.0.0](#migrating-to-100-from-091)
 - [0.9.0 → 0.9.1](#migrating-to-091-from-090)
 - [0.7.x → 0.8.0](#migrating-to-080-from-07x)
 - [0.3.x → 0.4.0](#migrating-to-040-from-03x)
+
+---
+
+## Migrating to 0.14.0 from 0.13.x
+
+0.14.0 includes a **breaking change** to iOS keyboard navigation: focusable views no longer
+generate a unique keyboard focus group for each component by default.
+
+### Why it changed
+
+iOS has two levels of keyboard navigation. `Tab` and `Shift + Tab` move between focus groups,
+while `Ctrl + Tab` and `Ctrl + Shift + Tab` move between the elements inside a group.
+
+Until 0.13, every focusable view of this library was placed in its own generated group. As a
+result, `Tab` stopped at every single element, and the element-level shortcuts had nothing to
+move through. This is different from how the rest of iOS works, and an app that behaves
+differently from the system can confuse keyboard users.
+
+It could also limit system features that depend on the native grouping, such as automatic
+scrolling to the next focused component.
+
+0.14.0 follows the system behavior: views are no longer split into separate groups, so `Tab`
+moves between groups and `Ctrl + Tab` moves between elements, as users expect.
+
+### What changed
+
+The old behavior is still available as the opt-in `uniqueGroupIdentifier` setting.
+
+| | 0.13 | 0.14 |
+| :-- | :-- | :-- |
+| View without a `groupIdentifier` | Gets its own generated, unique `focusGroupIdentifier` | No id is generated; iOS applies its own grouping |
+| `uniqueGroupIdentifier` | Did not exist | New setting, default `false` |
+| Explicit `groupIdentifier` | Joins that group | Unchanged |
+| `orderIndex`, `orderForward` / `orderBackward` | Followed by `Tab` | Followed by `Ctrl + Tab`; `Tab` moves to the next group. With `uniqueGroupIdentifier`, followed by `Tab` as in 0.13 |
+| Android | n/a | Unchanged (the setting is ignored) |
+
+`KeyboardFocusGroup`'s `orderGroup` is now applied in JS: views inside it that have no
+`orderGroup` of their own inherit it as their keyboard order group (natively the prop was
+already a no-op).
+
+### Who is affected
+
+iOS apps that use a hardware keyboard or Full Keyboard Access and relied on every focusable view
+being its own stop. Their Tab behavior can change.
+
+Apps without keyboard support, and all Android apps, see no difference.
+
+### How to migrate
+
+Choose one of the two options.
+
+#### Option 1: Keep the 0.13 behavior
+
+Add one line at startup:
+
+```ts
+// index.js — before the first render
+import { Keyboard } from 'react-native-external-keyboard';
+
+Keyboard.configure({ uniqueGroupIdentifier: true });
+```
+
+#### Option 2: Adopt the new default
+
+1. Do nothing in code.
+2. Test your screens on a device with Full Keyboard Access turned on.
+3. Fix the screens where Tab order is wrong:
+   - To make a region act as **one unit**, give it a `groupIdentifier`
+     (`KeyboardGroupProvider` or `KeyboardFocusGroup`).
+   - To keep **one stop per view** in a region, wrap it in a `KeyboardGroupProvider` with
+     `uniqueGroupIdentifier`:
+
+```tsx
+<KeyboardGroupProvider uniqueGroupIdentifier>
+  <List />
+</KeyboardGroupProvider>
+```
+
+### APIs for the new grouping setting
+
+| API | Purpose |
+| :-- | :-- |
+| `Keyboard.configure({ uniqueGroupIdentifier })` | App-wide default; also covers portals and extra roots |
+| `KeyboardGroupProvider` | Region- or tree-scoped group id / setting without a native view |
+| `uniqueGroupIdentifier` prop | On `KeyboardExtendedView`, `Pressable`, `KeyboardExtendedInput`, `KeyboardExtendedBaseView` and `withKeyboardFocus` components |
+
+A view's own prop wins over the nearest provider, and a provider wins over `Keyboard.configure`.
+A `groupIdentifier`, set on the view or inherited from an enclosing group, always wins over
+`uniqueGroupIdentifier`.
+
+> [!NOTE]
+> The default is `false` in every layer (JS, codegen and native), so rendering the native
+> components directly behaves like the new default too.
+
+Full explanation and examples: [Keyboard grouping](../guides/keyboard-grouping.md).
 
 ---
 

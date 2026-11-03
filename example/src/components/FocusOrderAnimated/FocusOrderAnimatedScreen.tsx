@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {
   KeyboardOrderFocusGroup,
   Pressable,
@@ -102,7 +109,10 @@ export const FocusOrderAnimatedScreen = () => {
   };
 
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.screenContent}
+    >
       <View style={styles.intro}>
         <Text style={styles.introText}>
           The cells are numbered in <Text style={styles.bold}>focus order</Text>{' '}
@@ -183,7 +193,7 @@ export const FocusOrderAnimatedScreen = () => {
         Press Tab / Shift+Tab to walk the spiral order, or tap a cell to focus
         it. The highlight follows real focus events.
       </Text>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -296,7 +306,8 @@ const Cell = ({
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#f2f2f7', padding: 16 },
+  screen: { flex: 1, backgroundColor: '#f2f2f7' },
+  screenContent: { padding: 16 },
 
   intro: {
     backgroundColor: '#ffffff',

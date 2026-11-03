@@ -11,6 +11,7 @@ export interface KeyboardFocusGroupNativeComponentProps extends ViewProps {
   onGroupFocusChange?: DirectEventHandler<FocusChange>;
   tintColor?: ColorValue;
   groupIdentifier?: string;
+  /** Accepted for compatibility; a no-op natively. `KeyboardFocusGroup` scopes `orderGroup` in JS. */
   orderGroup?: string;
 }
 

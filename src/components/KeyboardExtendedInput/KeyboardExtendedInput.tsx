@@ -4,7 +4,7 @@ import { TextInput, Platform } from 'react-native';
 import { TextInputFocusWrapperNative } from '../../nativeSpec';
 import { useFocusStyle } from '../../utils/useFocusStyle';
 import { focusEventMapper } from '../../utils/focusEventMapper';
-import { useGroupIdentifierContext } from '../../context/GroupIdentifierContext';
+import { useResolvedGroupIdentifier } from '../../context/GroupIdentifierContext';
 import { useOrderFocusGroup } from '../../context/OrderFocusContext';
 import { mapLockFocus } from '../../utils/mapLockFocus';
 import { useOrderValidation } from '../../utils/useOrderValidation';
@@ -34,6 +34,7 @@ export const KeyboardExtendedInput = React.forwardRef<
       onSubmitEditing,
       submitBehavior,
       groupIdentifier,
+      uniqueGroupIdentifier,
       lockFocus,
       orderGroup,
       orderIndex,
@@ -67,7 +68,10 @@ export const KeyboardExtendedInput = React.forwardRef<
       containerFocusStyle,
     });
 
-    const contextIdentifier = useGroupIdentifierContext();
+    const groupIdentifierProps = useResolvedGroupIdentifier({
+      groupIdentifier,
+      uniqueGroupIdentifier,
+    });
     const contextGroupId = useOrderFocusGroup();
     const groupId = orderGroup ?? contextGroupId;
     const orderPrefix = _orderPrefix ?? contextGroupId ?? '';
@@ -136,7 +140,7 @@ export const KeyboardExtendedInput = React.forwardRef<
         onMultiplyTextSubmit={onSubmitEditing}
         canBeFocused={isContainerFocusable}
         tintColor={isIOS ? tintColor : undefined}
-        groupIdentifier={groupIdentifier ?? contextIdentifier}
+        {...groupIdentifierProps}
         lockFocus={mapLockFocus(lockFocus)}
         orderGroup={groupId}
         orderIndex={orderIndex ?? -1}

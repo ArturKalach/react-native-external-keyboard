@@ -86,6 +86,8 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 - [Programmatic focus](./docs/guides/programmatic-focus.md) — `ref.focus()`, `keyboardFocus()`, `autoFocus`
 - [Keyboard text input](./docs/guides/text-input.md) — `KeyboardExtendedInput`, `focusType`, `blurType`
 - [Focus order](./docs/guides/focus-order.md) — link-based, index-based, and direction-lock ordering
+- [Focus guide](./docs/guides/focus-guide.md) — `Focus.Guide`: redirect focus that enters an area to a chosen view
+- [Keyboard grouping](./docs/guides/keyboard-grouping.md) — iOS focus groups: `uniqueGroupIdentifier`, `KeyboardGroupProvider`, `Keyboard.configure`
 
 **Advanced**
 
@@ -110,13 +112,15 @@ New here? Start with the [getting started guide](./docs/getting-started/getting-
 | [`KeyboardExtendedBaseView`](./docs/components/overview.md#keyboardextendedbaseview) | Low-level focusable view (alias `ExternalKeyboardView`). |
 | [`KeyboardFocusGroup`](./docs/components/overview.md#keyboardfocusgroup) | iOS `focusGroupIdentifier` grouping + global `tintColor`. |
 | [`Focus.Frame` / `Focus.Trap`](./docs/components/overview.md#focusframe--focustrap) | Confine focus to a region (modals, overlays). |
+| [`Focus.Guide`](./docs/components/overview.md#focusguide) | Send keyboard or screen-reader focus that enters an area on to a chosen view (alias `KeyboardFocusGuide`). |
+| [`KeyboardGroupProvider`](./docs/components/overview.md#keyboardgroupprovider) | iOS focus grouping for a region, without a native view. |
 | [`KeyboardOrderFocusGroup`](./docs/components/overview.md#keyboardorderfocusgroup) | Namespacing + index-based focus ordering. |
 
 **API**
 
 | Export | Purpose |
 | :-- | :-- |
-| [`Keyboard`](./docs/api/overview.md#keyboard-module) | Dismiss the soft keyboard from a hardware keyboard. |
+| [`Keyboard`](./docs/api/overview.md#keyboard-module) | Dismiss the soft keyboard from a hardware keyboard; `Keyboard.configure` for app-wide defaults. |
 | [`KeyboardFocus` ref](./docs/api/overview.md#imperative-ref-keyboardfocus) | Imperative focus handle (`focus`, `keyboardFocus`, `screenReaderFocus`). |
 | [Hooks](./docs/api/overview.md#hooks) | `useIsViewFocused`, `useIsViewPressed`, `useOrderFocusGroup`. |
 | [Focus-order props](./docs/api/overview.md#focus-order-props) | `orderId`, `order*`, `orderIndex`, `orderGroup`, `lockFocus`. |

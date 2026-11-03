@@ -3,6 +3,7 @@ import {
   Animated,
   Easing,
   StyleSheet,
+  ScrollView,
   Text,
   View,
   type ViewStyle,
@@ -95,7 +96,10 @@ export const ProgrammaticFocusScreen = () => {
   };
 
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.screenContent}
+    >
       <View style={styles.intro}>
         <Text style={styles.introText}>
           Pressing <Text style={styles.code}>Jump</Text> calls{' '}
@@ -157,7 +161,7 @@ export const ProgrammaticFocusScreen = () => {
         Tip: connect a keyboard and Tab through the buttons to feel the normal
         order, then press Jump to watch focus leap straight to the Target.
       </Text>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -291,7 +295,8 @@ const FocusCard = ({
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#f2f2f7', padding: 16 },
+  screen: { flex: 1, backgroundColor: '#f2f2f7' },
+  screenContent: { padding: 16 },
 
   intro: {
     backgroundColor: '#ffffff',

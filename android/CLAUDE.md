@@ -22,6 +22,7 @@ Each manager/module in `src/main/` extends an arch-specific spec class with the 
 | `TextInputFocusWrapperManager` | `com.externalkeyboard.TextInputFocusWrapperManagerSpec` |
 | `KeyboardFocusGroupManager` | `com.externalkeyboard.KeyboardFocusGroupManagerSpec` |
 | `ExternalKeyboardLockViewManager` | `com.externalkeyboard.ExternalKeyboardLockViewManagerSpec` |
+| `KeyboardFocusGuideManager` | `com.externalkeyboard.KeyboardFocusGuideManagerSpec` |
 | `ExternalKeyboardModule` | `com.externalkeyboard.ExternalKeyboardModuleSpec` |
 
 - **newarch** spec extends the codegen-generated `Native…Spec` / `…ManagerInterface` (in `build/generated/source/codegen/java/...`).
@@ -68,7 +69,7 @@ Two process-wide singletons coordinate the focus graph across mounted views:
 
 ## Stub Pattern
 
-Many iOS-only props/commands have empty `//stub` implementations in Android managers (e.g. `setHaloCornerRadius`, `setHaloExpendX/Y`, `setTintColor`, `setGroupIdentifier`, `setOrderFirst/Last`, `setEnableContextMenu`). They must still be declared because the New Architecture codegen interface requires them. Don't remove the stubs — the build will fail on `@Override`.
+Many iOS-only props/commands have empty `//stub` implementations in Android managers (e.g. `setHaloCornerRadius`, `setHaloExpendX/Y`, `setTintColor`, `setGroupIdentifier`, `setUniqueGroupIdentifierEnabled`, `setOrderFirst/Last`, `setEnableContextMenu`). They must still be declared because the New Architecture codegen interface requires them. Don't remove the stubs — the build will fail on `@Override`.
 
 ## React Native Version Handling
 
@@ -88,6 +89,28 @@ Cached as `static final` — RN version is compile-time constant for any given c
 Attached traps stack in a static list ([TrapRegistry](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/delegates/TrapRegistry.java), removed on detach); the newest enabled, shown trap in the same window is active, and older traps don't fight it. The view keeps props, lifecycle and framework overrides and delegates to the helpers in [`delegates/`](src/main/java/com/externalkeyboard/views/ExternalKeyboardLockView/delegates/) via `LockHost`: `LockKeyboard`, `LockScreenReader`, `LockInitialFocus` (focuses inside once; the TalkBack half only while a screen reader runs) and `TrapRegistry`. `lockDisabled` turns a trap off; `forceLock` is a no-op on Android.
 
 The lock view and its delegates are a copy of `react-native-a11y`'s `A11yLockView/` (only the package and `A11yHelper` → `FocusHelper` differ). Port fixes between the two.
+
+## KeyboardFocusGuide
+
+[`views/KeyboardFocusGuide/`](src/main/java/com/externalkeyboard/views/KeyboardFocusGuide/) backs `Focus.Guide`
+(`KeyboardFocusGuide`, manager name `KeyboardFocusGuide`), the Android counterpart of iOS `UIFocusGuide`. While linked to a
+target via `FocusLinkObserver` it is a focus candidate whose `requestFocus` hands focus to the target synchronously. The view
+keeps props and framework overrides and delegates to package-private helpers: `GuideMask` (flags + which input wins),
+`GuideTargetLink` (`FocusLinkObserver` subscription), `GuideKeyboardRedirect`, `GuideScreenReaderRedirect`, via the `GuideHost`
+interface. JS maps `guide` to one native integer, `guideMask` (bit flags `ARROWS` 1, `TAB` 2, `SCREEN_READER` 4; default 3),
+checked with `GuideMask.has(...)`. The view's own state follows the mask alone: keyboard flags make it a keyboard stop
+(`focusable` only with a live target), the screen-reader flag exposes it to TalkBack (`importantForAccessibility`,
+screen-reader focusable). What is redirected is decided at use time (`GuideMask.redirectsKeyboard`,
+`GuideMask.redirectsScreenReader`): with both a keyboard input and the screen-reader bit, the screen reader only while TalkBack
+runs (`FocusHelper.isA11yServiceEnabled`, read live, so there is no listener or stored state), the keyboard otherwise. A keyboard
+move that is not redirected, a move started from the target and a missing/detached target continue past the guide. When
+TalkBack focus lands on it (`TYPE_VIEW_ACCESSIBILITY_FOCUSED`) it moves it to the target
+(`performAccessibilityAction(ACTION_ACCESSIBILITY_FOCUS)`, falling back to `FocusHelper.focus` on the next frame). Unlike iOS it
+cannot tell that the move came from the target, so swiping from the target onto the guide bounces back.
+
+The guide is a copy of `react-native-a11y`'s `views/A11yFocusGuide/` (only the package, `A11yHelper` → `FocusHelper` and the
+`FocusLinkObserver` package differ). `FocusHelper.focus/isFocused` and `helper/ChoreographerUtils` were ported with it. Port fixes
+between the two.
 
 ## Commands
 

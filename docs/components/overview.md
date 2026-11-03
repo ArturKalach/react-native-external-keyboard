@@ -10,6 +10,8 @@ Every focusable component shares the same set of **common focus props** (focus e
 | [`KeyboardExtendedBaseView`](#keyboardextendedbaseview) | native focus view | You want the lowest-level focusable primitive |
 | [`KeyboardFocusGroup`](#keyboardfocusgroup) | `View` | iOS focus grouping or a shared `tintColor` |
 | [`Focus.Frame` / `Focus.Trap`](#focusframe--focustrap) | `View` | Confine focus inside a modal/overlay |
+| [`Focus.Guide`](#focusguide) | `View` | Send focus that moves into an area on to a chosen view |
+| [`KeyboardGroupProvider`](#keyboardgroupprovider) | context | iOS focus grouping for a region, without a native view |
 | [`KeyboardOrderFocusGroup`](#keyboardorderfocusgroup) | context | Namespace `orderId`s or order by index |
 
 ---
@@ -28,6 +30,8 @@ Shared by `withKeyboardFocus`-wrapped components, `KeyboardExtendedView`, and `K
 | `onKeyDownPress` | `(e: OnKeyPress) => void` | — | Physical key-down handler. See [`KeyPress`](../api/overview.md#keypress). |
 | `onKeyUpPress` | `(e: OnKeyPress) => void` | — | Physical key-up handler. |
 | `tintColor` | `string` | — | Color used to tint the component on focus. |
+| `groupIdentifier` | `string` | — | *(iOS)* The `focusGroupIdentifier` this view belongs to. Inherited from an enclosing `KeyboardGroupProvider` / `KeyboardFocusGroup` when unset. |
+| `uniqueGroupIdentifier` | `boolean` | `false` | *(iOS)* Without a `groupIdentifier`, give this view its own generated focus group (one Tab stop per view). Falls back to `KeyboardGroupProvider`, then `Keyboard.configure`. [Details](../guides/keyboard-grouping.md). |
 | `haloEffect` | `boolean` | — | *(iOS)* Draw the focus halo ring on focus. |
 | `haloCornerRadius` | `number` | — | *(iOS)* Corner radius of the halo ring, in points. |
 | `haloExpendX` | `number` | — | *(iOS)* Horizontal expansion of the halo beyond the view bounds. |
@@ -223,13 +227,37 @@ A `View`-based component built on the iOS focus API. Use it to define an iOS foc
 
 | Prop | Type | Description |
 | :-- | :-- | :-- |
-| `groupIdentifier` | `string` | *(iOS)* The `focusGroupIdentifier` this view belongs to. |
+| `groupIdentifier` | `string` | *(iOS)* The `focusGroupIdentifier` this view belongs to. Shared with descendants that have no id of their own, and needed for the group focus events. |
+| `orderGroup` | `string` | Keyboard order group inherited by descendants without their own `orderGroup`. |
 | `tintColor` | `string` | Tint color applied to focused descendants. |
 | `focusStyle` | [`FocusStyle`](../api/overview.md#focusstyle) | Style applied to the inner component when focused. |
 | `onFocus` | `() => void` | Called when the group gains focus. |
 | `onBlur` | `() => void` | Called when the group loses focus. |
 | `onFocusChange` | `(isFocused: boolean) => void` | Called on focus or blur. |
 | `...ViewProps` | — | All standard `View` properties. |
+
+---
+
+## KeyboardGroupProvider
+
+*(iOS)* A JS-only focus-group scope: no native view, no layout. It decides which keyboard focus group the focusable views inside belong to, i.e. what one `Tab` stop is. Use `KeyboardFocusGroup` instead when you also need group focus events or a `tintColor`. See [Keyboard grouping](../guides/keyboard-grouping.md).
+
+```tsx
+import { KeyboardGroupProvider, Pressable } from 'react-native-external-keyboard';
+
+<KeyboardGroupProvider groupIdentifier="toolbar">
+  <Pressable onPress={bold}><Text>Bold</Text></Pressable>
+  <Pressable onPress={italic}><Text>Italic</Text></Pressable>
+</KeyboardGroupProvider>
+```
+
+### Props
+
+| Prop | Type | Description |
+| :-- | :-- | :-- |
+| `groupIdentifier` | `string` | `focusGroupIdentifier` for every view inside without its own. Unset inherits from the parent scope. |
+| `uniqueGroupIdentifier` | `boolean` | Overrides whether views inside get their own generated group when they have no group id. Unset inherits from the parent scope, then `Keyboard.configure`. |
+| `children` | `ReactNode` | Child components. |
 
 ---
 
@@ -261,6 +289,35 @@ import { Focus } from 'react-native-external-keyboard';
 | `forceLock` | `boolean` | *(iOS, `Focus.Trap`)* Strengthen containment beyond `accessibilityViewIsModal` by returning focus into the trap when it escapes. |
 | `lockDisabled` | `boolean` | *(Android; iOS with `forceLock`)* Disable the focus lock when `true`. Takes precedence over `forceLock`. |
 | `...ViewProps` | — | All standard `View` properties (`style`, `testID`, …). |
+
+---
+
+## Focus.Guide
+
+An area that passes focus on (also exported as `KeyboardFocusGuide`). When keyboard focus moves into it, focus goes to the view whose `orderId` is `to`, the React Native equivalent of iOS `UIFocusGuide`. It works on Android too. By default it redirects arrow keys and Tab; it can also redirect VoiceOver / TalkBack. See the [Focus guide](../guides/focus-guide.md) guide for how it works and its limits.
+
+```tsx
+import { Focus, KeyboardOrderFocusGroup, Pressable } from 'react-native-external-keyboard';
+
+<KeyboardOrderFocusGroup groupId="checkout">
+  <Pressable orderId="pay" onPress={pay}><Text>Pay</Text></Pressable>
+  {/* Down from the views above this area lands on "Pay". */}
+  <Focus.Guide to="pay" style={{ flex: 1 }} />
+</KeyboardOrderFocusGroup>
+```
+
+> [!IMPORTANT]
+> A guide needs a non-zero size to take focus. For an invisible one, use `height: 1` with a transparent background.
+
+### Props
+
+| Prop | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `to` | `string` | — | `orderId` of the view that receives focus when focus moves into the guide. |
+| `enabled` | `boolean` | `true` | Turns the redirect on or off. |
+| `guide` | `'keyboard' \| 'arrows' \| 'screen-reader'` or a list of them | `'keyboard'` | What to redirect: arrow keys + Tab, arrow keys only, or VoiceOver / TalkBack. |
+| `orderGroup` | `string` | surrounding `KeyboardOrderFocusGroup` | Namespace of the target: its `KeyboardOrderFocusGroup` `groupId` or its `orderPrefix`. |
+| `...ViewProps` | — | — | All standard `View` properties. Children render as usual. |
 
 ---
 

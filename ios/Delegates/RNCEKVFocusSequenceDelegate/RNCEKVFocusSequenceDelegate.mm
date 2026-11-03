@@ -8,6 +8,7 @@
 #import "RNCEKVOrderLinking.h"
 #import "RNCEKVOrderRelationship.h"
 #import "RNCEKVKeyboardFocusableProtocol.h"
+#import "RNCEKVKeyboardFocusService.h"
 #import "UIViewController+RNCEKVExternalKeyboard.h"
 #import "UIView+React.h"
 
@@ -122,6 +123,34 @@ static NSNumber *const FOCUS_HANDLED = @0;
   return NO;
 }
 
+#pragma mark - Entry / exit
+
+// An outside view UIKit proposes at the edge of the sequence.
+- (BOOL)isEdgeView:(UIView *)view index:(int)index {
+  return index == -1 && [view isKindOfClass:[UIView class]];
+}
+
+// `entry` / `exit` follow UIKit's latest proposal across the edge, not its first one.
+// Tab (between focus groups) and Ctrl+Tab (inside a group) both report Next/Previous but
+// propose different views, so a remembered one may belong to the other key.
+- (void)updateEdges:(RNCEKVOrderRelationship *)orderRelationship
+            heading:(UIFocusHeading)heading
+            current:(UIView *)current
+       currentIndex:(int)currentIndex
+               next:(UIView *)next
+          nextIndex:(int)nextIndex {
+  BOOL entering = nextIndex != -1 && [self isEdgeView:current index:currentIndex];
+  BOOL leaving = currentIndex != -1 && [self isEdgeView:next index:nextIndex];
+
+  if (heading == UIFocusHeadingNext) {
+    if (entering) orderRelationship.entry = current;
+    if (leaving) orderRelationship.exit = next;
+  } else if (heading == UIFocusHeadingPrevious) {
+    if (entering) orderRelationship.exit = current;
+    if (leaving) orderRelationship.entry = next;
+  }
+}
+
 #pragma mark - shouldUpdateFocusInContext
 
 - (NSNumber *)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context {
@@ -138,13 +167,19 @@ static NSNumber *const FOCUS_HANDLED = @0;
     int currentIndex = [orderRelationship getItemIndex:current];
     int nextIndex = [orderRelationship getItemIndex:next];
 
-    if (orderRelationship.entry == nil && currentIndex == -1 && movementHint == UIFocusHeadingNext) {
-      orderRelationship.entry = current;
+    // Tab moves between focus groups, Ctrl+Tab inside one; follow the order only at its own level.
+    // Checked before entry/exit are remembered, so a group move does not become a boundary.
+    if ((movementHint == UIFocusHeadingNext || movementHint == UIFocusHeadingPrevious) &&
+        ![RNCEKVKeyboardFocusService isOrderMove:context forView:_delegate]) {
+      return FOCUS_DEFAULT;
     }
 
-    if (orderRelationship.exit == nil && nextIndex == -1 && movementHint == UIFocusHeadingNext) {
-      orderRelationship.exit = next;
-    }
+    [self updateEdges:orderRelationship
+              heading:movementHint
+              current:current
+         currentIndex:currentIndex
+                 next:next
+            nextIndex:nextIndex];
 
     if (movementHint == UIFocusHeadingNext) {
       BOOL handled = [self handleNextFocus:current currentIndex:currentIndex orderRelationship:orderRelationship];

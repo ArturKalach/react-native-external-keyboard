@@ -34,6 +34,9 @@ import { KeyboardInputScreen } from './components/KeyboardInputFocusType/Keyboar
 import { OrderMaze } from './components/OrderMaze/OrderMaze';
 import { withDemoNav } from './components/DemoNav/DemoNav';
 import { FocusSandbox } from './components/FocusSandbox/FocusSandbox';
+import { FocusGuideScreen } from './components/FocusGuide/FocusGuideScreen';
+import { FocusGuideDemoScreen } from './components/FocusGuide/FocusGuideDemoScreen';
+import { KeyboardGroupingScreen } from './components/KeyboardGrouping/KeyboardGroupingScreen';
 import { Pressable } from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from './constants/styles';
 
@@ -82,6 +85,12 @@ const NAV_GROUPS: NavGroup[] = [
         title: 'Focus Order',
         description: 'Custom Tab order traced along a spiral',
         color: '#AF52DE',
+      },
+      {
+        name: 'FocusGuideDemo',
+        title: 'Focus Guide',
+        description: 'Redirect keyboard focus to a chosen view',
+        color: '#3454D1',
       },
     ],
   },
@@ -135,6 +144,18 @@ const NAV_GROUPS: NavGroup[] = [
         title: 'Focus Sandbox',
         description: 'Tab order across nine content shapes',
         color: '#8E8E93',
+      },
+      {
+        name: 'FocusGuide',
+        title: 'Focus Guide Cases',
+        description: 'Grid, stacked guides, long list, modes',
+        color: '#FB7185',
+      },
+      {
+        name: 'KeyboardGrouping',
+        title: 'Keyboard Grouping',
+        description: 'iOS focus groups: Tab vs Ctrl+Tab',
+        color: '#30B0C7',
       },
     ],
   },
@@ -222,6 +243,7 @@ const FocusOrderAnimatedDemo = withDemoNav(
   FocusOrderAnimatedScreen,
   'FocusOrderAnimated'
 );
+const FocusGuideDemo = withDemoNav(FocusGuideDemoScreen, 'FocusGuideDemo');
 
 const Stack = createNativeStackNavigator();
 
@@ -313,6 +335,16 @@ export function App() {
             component={FocusSandbox}
             options={{ title: 'Focus Sandbox' }}
           />
+          <Stack.Screen
+            name="FocusGuide"
+            component={FocusGuideScreen}
+            options={{ title: 'Focus Guide Cases' }}
+          />
+          <Stack.Screen
+            name="KeyboardGrouping"
+            component={KeyboardGroupingScreen}
+            options={{ title: 'Keyboard Grouping' }}
+          />
           <Stack.Screen name="FocusLock" component={FocusLockExample} />
           <Stack.Screen
             name="NativeFocusStyle"
@@ -328,6 +360,11 @@ export function App() {
             name="FocusOrderAnimated"
             component={FocusOrderAnimatedDemo}
             options={{ title: 'Focus Order' }}
+          />
+          <Stack.Screen
+            name="FocusGuideDemo"
+            component={FocusGuideDemo}
+            options={{ title: 'Focus Guide' }}
           />
           <Stack.Screen
             name="KeyboardPressableShowcase"

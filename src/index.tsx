@@ -1,6 +1,7 @@
 import {
   FocusFrame,
   FocusTrap,
+  KeyboardFocusGuide,
   KeyboardFocusView,
   KeyboardExtendedInput,
   Pressable,
@@ -22,6 +23,7 @@ export {
   KeyboardFocusView,
   KeyboardFocusView as KeyboardExtendedView,
   KeyboardFocusGroup,
+  KeyboardFocusGuide,
   KeyboardExtendedInput,
   KeyboardExtendedInput as TextInput,
   Pressable,
@@ -45,7 +47,11 @@ export {
   type KeyboardInputProps,
   type ExtraKeyboardProps,
 } from './types';
-export type { KeyboardPressableProps } from './components';
+export type {
+  KeyboardPressableProps,
+  KeyboardFocusGuideProps,
+  KeyboardFocusGuideMode,
+} from './components';
 
 // Hooks & context
 export { withKeyboardFocus } from './utils/withKeyboardFocus';
@@ -56,6 +62,11 @@ export {
   OrderFocusGroupContext,
   useOrderFocusGroup,
 } from './context/OrderFocusContext';
+export {
+  KeyboardGroupProvider,
+  type KeyboardGroupProviderProps,
+} from './context/KeyboardGroupProvider';
+export type { ExternalKeyboardConfig } from './config';
 
 // Modules
 export { Keyboard };
@@ -64,6 +75,7 @@ export { Keyboard };
 export const Focus = {
   Frame: FocusFrame,
   Trap: FocusTrap,
+  Guide: KeyboardFocusGuide,
 };
 
 export const K = {

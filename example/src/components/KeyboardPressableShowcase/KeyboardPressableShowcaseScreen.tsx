@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { Pressable } from 'react-native-external-keyboard';
 
 const ACCENT = '#5856d6'; // press
@@ -45,7 +52,10 @@ export const KeyboardPressableShowcaseScreen = () => {
     );
 
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.screenContent}
+    >
       <View style={styles.intro}>
         <Text style={styles.introText}>
           This Pressable exposes the keyboard{' '}
@@ -86,7 +96,7 @@ export const KeyboardPressableShowcaseScreen = () => {
           log.map((e) => <EventRow key={e.id} entry={e} />)
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -287,7 +297,8 @@ const EventRow = ({ entry }: { entry: LogEntry }) => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#f2f2f7', padding: 16 },
+  screen: { flex: 1, backgroundColor: '#f2f2f7' },
+  screenContent: { padding: 16 },
 
   intro: {
     backgroundColor: '#ffffff',

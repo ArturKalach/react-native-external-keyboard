@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 
 import java.util.HashMap;
@@ -68,6 +69,20 @@ public class FocusHelper {
   }
   public static boolean isAccessible(@Nullable View view) {
     return view != null && ViewCompat.isImportantForAccessibility(view);
+  }
+
+  public static boolean isFocused(@Nullable View view) {
+    return view != null && view.isAccessibilityFocused();
+  }
+
+  /** Moves screen-reader focus to `view` a couple of frames later, unless it already has it. */
+  public static void focus(@Nullable View view) {
+    if (view == null || isFocused(view)) return;
+    ChoreographerUtils.run(() -> {
+      if (!isFocused(view)) {
+        view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+      }
+    });
   }
 
   public static boolean isA11yServiceEnabled(@NonNull Context context) {

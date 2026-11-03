@@ -9,6 +9,11 @@ export {
 } from './KeyboardFocusView';
 export { KeyboardFocusGroup } from './KeyboardFocusGroup/KeyboardFocusGroup';
 export {
+  KeyboardFocusGuide,
+  type KeyboardFocusGuideProps,
+  type KeyboardFocusGuideMode,
+} from './KeyboardFocusGuide';
+export {
   KeyboardExtendedInput,
   KeyboardExtendedInput as TextInput,
 } from './KeyboardExtendedInput/KeyboardExtendedInput';

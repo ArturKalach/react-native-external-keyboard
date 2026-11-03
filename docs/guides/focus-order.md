@@ -10,6 +10,9 @@ By default, physical-keyboard focus follows the native view hierarchy. When your
 2. **[Index-based](#2-index-based-ordering)** — elements in a named group are focused in ascending index order.
 3. **[Direction locking](#3-direction-locking)** — block focus movement in specific directions.
 
+> Order is separate from iOS **focus groups** (`groupIdentifier`, `uniqueGroupIdentifier`),
+> which decide what one Tab stop is. See [Keyboard grouping](./keyboard-grouping.md).
+
 All of these props are available on every focusable component (`withKeyboardFocus`-wrapped components, `KeyboardExtendedView`, `KeyboardExtendedInput`, `KeyboardExtendedBaseView`).
 
 ---
@@ -39,6 +42,11 @@ The most explicit approach: give an element an `orderId`, then point each direct
 | `orderLeft` / `orderRight` | Arrow / DPad horizontal |
 | `orderUp` / `orderDown` | Arrow / DPad vertical |
 | `orderFirst` / `orderLast` | *(iOS)* jump to first / last. `null` clears the link. |
+
+On iOS, `orderForward` / `orderBackward` follow `Ctrl + Tab` / `Ctrl + Shift + Tab` by default or
+inside a named focus group; plain `Tab` / `Shift + Tab` stays native group navigation. With
+`uniqueGroupIdentifier` enabled and no named `groupIdentifier`, plain `Tab` / `Shift + Tab` follows
+the links too. See [Keyboard grouping](./keyboard-grouping.md).
 
 This makes link-based ordering ideal for both linear (`Tab`) flows and 2-D directional (DPad / arrow) navigation.
 
@@ -111,6 +119,11 @@ import { KeyboardOrderFocusGroup } from 'react-native-external-keyboard';
 <Pressable orderGroup="main" orderIndex={1} onPress={onPress}><Text>Second</Text></Pressable>
 ```
 
+On iOS, default or named focus groups follow index order with `Ctrl + Tab` /
+`Ctrl + Shift + Tab`; plain `Tab` / `Shift + Tab` remains native group navigation.
+With `uniqueGroupIdentifier` enabled and no named `groupIdentifier`, plain `Tab` /
+`Shift + Tab` follows index order too.
+
 > [!NOTE]
 > `orderIndex` must have a group. Declare it inside a `KeyboardOrderFocusGroup` or pass `orderGroup` — otherwise a dev warning is logged and ordering won't apply.
 
@@ -161,7 +174,8 @@ The three systems are independent and can be mixed. A common pattern is index-ba
 
 - [API reference → Focus-order props](../api/overview.md#focus-order-props)
 - [Component overview → KeyboardOrderFocusGroup](../components/overview.md#keyboardorderfocusgroup)
+- [Focus guide](./focus-guide.md) — send focus that enters an area on to a chosen view
 
 ---
 
-← [Keyboard text input](./text-input.md) · [Component overview →](../components/overview.md)
+← [Keyboard text input](./text-input.md) · [Focus guide →](./focus-guide.md)

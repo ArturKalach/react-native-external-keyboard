@@ -31,6 +31,16 @@ export interface TextInputFocusWrapperNativeComponent extends ViewProps {
   blurOnSubmit?: boolean;
   multiline?: boolean;
   groupIdentifier?: string;
+  /**
+   * iOS: when `true` a view without an explicit `groupIdentifier` gets a
+   * generated, unique `focusGroupIdentifier` (one keyboard focus group per view).
+   * When `false` (the JS default since 0.14) no id is generated and the system default
+   * grouping applies.
+   * An explicit `groupIdentifier` always wins. Android: no-op.
+   * Codegen defaults an omitted boolean to `false`, so JS always passes the resolved value.
+   * Public JS prop: `uniqueGroupIdentifier`.
+   */
+  uniqueGroupIdentifierEnabled?: boolean;
   lockFocus?: Int32;
   orderGroup?: string;
   orderIndex?: Int32;
