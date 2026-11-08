@@ -1,64 +1,50 @@
-# Advanced: native focus services
+# Native focus services
 
-> [!NOTE]
-> This is an **advanced, native-side** guide. Most apps never need it — for moving
-> focus from JS use the [imperative ref](./programmatic-focus.md). Reach for these
-> services only when you write your own native code (a custom view, a patch, a
-> native module) and need to drive keyboard focus directly.
-
-The library exposes the same two small building blocks on both platforms so you can
-patch behavior or compose your own focus services on top of them:
+Two native building blocks behind the library's keyboard focus handling, available to custom native code such as a custom view, a patch, or a native module. Both exist on iOS and Android with the same shape. Focus moves from JS go through the [`ref` focus methods](./programmatic-focus.md) instead.
 
 | Role | iOS | Android |
 | :-- | :-- | :-- |
 | Stateless focus API | `RNCEKVKeyboardFocusService` | `KeyboardFocusService` |
-| Remember / restore focus | `RNCEKVFocusMemoryService` | `FocusMemoryService` |
+| Focus memory | `RNCEKVFocusMemoryService` | `FocusMemoryService` |
 
-The memory service is built *on top of* the focus API — so anything it does, you
-can also do by hand with the focus API alone.
+## How it works
 
----
+### Focus API
 
-## Focus API — `RNCEKVKeyboardFocusService` / `KeyboardFocusService`
+The focus API reads the focused view and moves keyboard focus. It is stateless, so all methods are static:
 
-Stateless. Read the focused view and move focus programmatically.
-
-| iOS (static) | Android (static) | Does |
+| iOS | Android | Result |
 | :-- | :-- | :-- |
-| `+ getFocusedItem:(id<UIFocusEnvironment>)` → `UIView *` | `getFocusedItem(View environment)` → `View` | Returns the view currently focused in that environment's window, or `nil`/`null`. |
-| `+ updatePreferredFocusEnvironment:(UIView *)` | *(n/a)* | Marks a view preferred **without** forcing an update. iOS-only — Android focus is imperative. |
-| `+ focus:(UIView *)` | `focus(View view)` | Moves keyboard focus to the view (on the main thread). |
+| `+ getFocusedItem:(id<UIFocusEnvironment>)` → `UIView *` | `getFocusedItem(View environment)` → `View` | View focused in the environment's window, or `nil` / `null` |
+| `+ focus:(UIView *)` | `focus(View view)` | Keyboard focus on the view. On Android, the request is posted to the main thread. |
+| `+ updatePreferredFocusEnvironment:(UIView *)` | — | Preferred focus view, without a focus update. Android has no equivalent, because its focus moves only on request. |
 
-> The target must be focusable (on Android: focusable, visible and enabled) — same
-> rule as native focus everywhere.
+```java
+View current = KeyboardFocusService.getFocusedItem(container);
+KeyboardFocusService.focus(nextField);
+```
 
----
+The target follows the usual native rules. On Android it is focusable, visible, and enabled.
 
-## Memory service — `RNCEKVFocusMemoryService` / `FocusMemoryService`
+### Focus memory
 
-Instance-based. Remembers a focused view (held weakly) so you can restore it after a
-"leave then come back" flow — a modal, an overlay, a screen change.
+The memory service builds on the focus API. It stores the focused view and restores focus to it later, for flows that leave and come back, such as a modal, an overlay, or a screen change. The stored view is held weakly, so a removed view is never kept alive:
 
-| iOS | Android | Does |
+| iOS | Android | Result |
 | :-- | :-- | :-- |
-| `- store:(id<UIFocusEnvironment>)` | `store(View environment)` | Captures the currently focused view in that environment. |
-| `- restore` | `restore()` | Focuses the stored view (if any), then clears it. |
-| `- get` → `UIView *` | `get()` → `View` | Returns the stored view without consuming it (peek). |
-| `- clean` | `clean()` | Drops the stored reference without restoring focus. |
+| `- store:(id<UIFocusEnvironment>)` | `store(View environment)` | Stores the view focused in the environment's window |
+| `- restore` | `restore()` | Focus on the stored view, then clears it |
+| `- get` → `UIView *` | `get()` → `View` | Stored view, without clearing it |
+| `- clean` | `clean()` | Clears the stored view without moving focus |
 
-The only difference between flows is **call ordering**: a modal stores on present and
-restores on dismiss; a navigation push stores on disappear and restores on appear.
+On iOS, `store` also marks the stored view as the preferred focus environment. Flows differ only in the call order. A modal stores on present and restores on dismiss, and a navigation push stores on disappear and restores on appear.
 
----
+### Overlay focus service
 
-## Simple example: an overlay focus service
-
-A custom service that moves focus into an overlay when it opens, and gives focus back
-to wherever it was when the overlay closes — built from the two services above.
-
-### iOS
+The two services combine into a custom service. This one moves focus into an overlay when it opens and returns focus to the previous view when it closes:
 
 ```objc
+// iOS
 #import "RNCEKVKeyboardFocusService.h"
 #import "RNCEKVFocusMemoryService.h"
 
@@ -80,57 +66,52 @@ to wherever it was when the overlay closes — built from the two services above
 }
 
 - (void)willShowOverlay:(UIView *)firstField {
-  [_memory store:firstField];                      // remember what's focused now
-  [RNCEKVKeyboardFocusService focus:firstField];   // move focus into the overlay
+  [_memory store:firstField];                      // the view focused now
+  [RNCEKVKeyboardFocusService focus:firstField];   // focus into the overlay
 }
 
 - (void)didHideOverlay {
-  [_memory restore];                               // hand focus back
+  [_memory restore];                               // focus back
 }
 
 @end
 ```
 
-### Android
-
 ```java
-import com.externalkeyboard.services.KeyboardFocusService;
-import com.externalkeyboard.services.FocusMemoryService;
+// Android
 import android.view.View;
+import com.externalkeyboard.services.FocusMemoryService;
+import com.externalkeyboard.services.KeyboardFocusService;
 
 public class OverlayFocusService {
   private final FocusMemoryService memory = new FocusMemoryService();
 
   public void willShowOverlay(View firstField) {
-    memory.store(firstField);              // remember what's focused now
-    KeyboardFocusService.focus(firstField); // move focus into the overlay
+    memory.store(firstField);               // the view focused now
+    KeyboardFocusService.focus(firstField); // focus into the overlay
   }
 
   public void didHideOverlay() {
-    memory.restore();                       // hand focus back
+    memory.restore();                       // focus back
   }
 }
 ```
 
-Same shape on both platforms. Swap `restore` for `clean` if a flow is cancelled and
-you want to drop the remembered view instead of focusing it.
+A cancelled flow calls `clean` instead of `restore`, so the stored view is dropped without receiving focus.
 
----
+### Manual memory
 
-## Patching / building your own from scratch
-
-If you only need the focus API and want full control over state, skip the memory
-service and keep the reference yourself:
+Code that keeps its own state needs only the focus API. A reference to the focused view replaces the memory service:
 
 ```objc
-// iOS — minimal hand-rolled remember/restore
+// iOS
 __weak UIView *previous = [RNCEKVKeyboardFocusService getFocusedItem:container];
 // … later …
 [RNCEKVKeyboardFocusService focus:previous];
 ```
 
 ```java
-// Android — minimal hand-rolled remember/restore
+// Android
 View previous = KeyboardFocusService.getFocusedItem(container);
 // … later …
 KeyboardFocusService.focus(previous);
@@ -138,8 +119,23 @@ KeyboardFocusService.focus(previous);
 
 ---
 
+## Quick decision guide
+
+| Need | API |
+| :-- | :-- |
+| Focus from JS | `ref.current?.focus()` ([Programmatic focus](./programmatic-focus.md)) |
+| Currently focused view in native code | `getFocusedItem` |
+| Keyboard focus on a view from native code | `focus` |
+| Focus return after a modal, overlay, or screen change | `FocusMemoryService` / `RNCEKVFocusMemoryService` |
+| Own focus state in native code | `getFocusedItem` with a stored reference |
+
+---
+
 ## Related
 
-- [Programmatic focus](./programmatic-focus.md) — the JS imperative ref (the common case)
+- [Programmatic focus](./programmatic-focus.md): `ref` focus methods from JS
 - [API reference](../api/overview.md)
 
+---
+
+← [Focus groups](./keyboard-grouping.md) · [Component overview →](../components/overview.md)

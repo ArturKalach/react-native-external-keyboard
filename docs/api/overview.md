@@ -4,6 +4,7 @@ The non-component surface of `react-native-external-keyboard`: the `Keyboard` mo
 
 - [`Keyboard` module](#keyboard-module)
 - [`withKeyboardFocus` HOC](#withkeyboardfocus-hoc)
+- [Default key behavior](#default-key-behavior)
 - [Imperative ref: `KeyboardFocus`](#imperative-ref-keyboardfocus)
 - [Hooks](#hooks)
 - [Focus-order props](#focus-order-props)
@@ -36,7 +37,7 @@ Keyboard.configure({ uniqueGroupIdentifier: true });
 
 | Option | Type | Default | Description |
 | :-- | :-- | :-- | :-- |
-| `uniqueGroupIdentifier` | `boolean` | `false` | *(iOS)* Give every focusable view without a `groupIdentifier` its own generated focus group (the pre-0.14 behavior). Overridden by `KeyboardGroupProvider` and the view prop. See [Keyboard grouping](../guides/keyboard-grouping.md). |
+| `uniqueGroupIdentifier` | `boolean` | `false` | (iOS) Give every focusable view without a `groupIdentifier` its own generated focus group (the pre-0.14 behavior). Overridden by `K.GroupIdentifierProvider` and the view prop. See [Focus groups](../guides/keyboard-grouping.md#app-wide-default). |
 
 It is a plain module setting (type `ExternalKeyboardConfig`), so it also reaches portals and separate React roots. It does not re-render mounted views.
 
@@ -49,7 +50,7 @@ It is a plain module setting (type `ExternalKeyboardConfig`), so it also reaches
 | iOS / default | Calls React Native's own `Keyboard.dismiss()`. |
 | Android | Calls React Native's `Keyboard.dismiss()` **and** the library's native `ExternalKeyboard.dismissKeyboard()`. The extra native call is needed because, with a hardware keyboard attached, Android's framework dismiss alone does not always hide the soft keyboard. |
 
-The Android native method is a TurboModule (`ExternalKeyboardModule`) exposing `dismissKeyboard(): Promise<boolean>`, and is also reached through the Legacy Bridge when the New Architecture is off. It is an internal detail — call `Keyboard.dismiss()` rather than the native module directly so your code stays cross-platform.
+The Android native method is a TurboModule (`ExternalKeyboardModule`) with `dismissKeyboard(): Promise<boolean>`, also reached through the Legacy Bridge when the New Architecture is off. It is an internal detail. `Keyboard.dismiss()` is the cross-platform entry point.
 
 > The soft keyboard can also be hidden by the user from system settings or by pressing `Alt + K`.
 
@@ -64,7 +65,7 @@ function withKeyboardFocus<C>(Component: C): KeyboardFocusableComponent<C>;
 Wraps any `Pressable`/`Touchable`-like component and returns a new component that:
 
 - forwards focus/blur via `onFocus`, `onBlur`, `onFocusChange`;
-- applies `style` / `containerStyle` — static, or a callback receiving `{ focused, pressed }` ([`InteractionState`](#interactionstate)) — plus the legacy, focus-only `focusStyle` / `containerFocusStyle`;
+- applies `style` / `containerStyle`, static or as a callback that receives `{ focused, pressed }` ([`InteractionState`](#interactionstate)), and the focus-only `focusStyle` / `containerFocusStyle`;
 - supports `autoFocus`, `triggerCodes`, and the `KeyboardFocus` ref;
 - exposes the wrapped component's render state through `renderContent` / `renderFocusable`;
 - exposes focus/press to descendants without re-rendering the host via `useIsViewFocused` / `useIsViewPressed`.
@@ -77,6 +78,24 @@ See the [withKeyboardFocus component docs](../components/overview.md#withkeyboar
 | :-- | :-- | :-- |
 | `renderContent` | the component's own render state merged with `{ focused }` | the wrapped component's `children` is a render function (e.g. `Pressable`) |
 | `renderFocusable` | `{ focused }` only | always — for components without a render-prop `children` (e.g. `TouchableOpacity`) |
+
+---
+
+## Default key behavior
+
+Keyboard behavior of a focused component:
+
+| Action | iOS | Android |
+| :-- | :-- | :-- |
+| Move focus | `Ctrl + Tab` / `Ctrl + Shift + Tab`, arrow keys | `Tab` / `Shift + Tab`, arrow keys, D-pad |
+| Move across focus groups | `Tab` / `Shift + Tab` | — |
+| `onPress` | `Space` or `Enter` | `Space`, `Enter`, or D-pad center |
+| `onLongPress` | "Open context menu" command (default `Tab + M`) | Holding a press key |
+
+`onPress` fires on key release. The `triggerCodes` prop replaces the press keys with other key codes.
+
+> [!NOTE]
+> iOS has no long press for a held key: *Full Keyboard Access* handles keys itself. For this reason, `onLongPress` on iOS is bound to the context menu command, which is remappable in **Settings → Accessibility → Keyboards → Full Keyboard Access → Commands**.
 
 ---
 
@@ -120,66 +139,16 @@ The handle is a proxy: any property other than the three methods above falls thr
 | Hook | Signature | Description |
 | :-- | :-- | :-- |
 | `useIsViewFocused` | `() => boolean` | Returns whether the nearest keyboard-focusable ancestor is currently focused. Read it from a descendant to react to focus state without re-rendering the host. |
-| `useIsViewPressed` | `() => boolean` | Returns whether the nearest `withKeyboardFocus`-wrapped ancestor (`K.Pressable` / `withKeyboardFocus(X)`) is currently pressed — touch **or** physical keyboard. Read it from a descendant to react to press state without re-rendering the host. Not available under `KeyboardExtendedView` / `K.View` (no press concept). |
-| `useOrderFocusGroup` | `() => OrderFocusGroupContext` | Returns the current focus-order group context (its `groupId` / namespace). Provided by `KeyboardOrderFocusGroup`. |
+| `useIsViewPressed` | `() => boolean` | Returns whether the nearest `withKeyboardFocus`-wrapped ancestor (`K.Pressable` / `withKeyboardFocus(X)`) is currently pressed — touch **or** physical keyboard. Read it from a descendant to react to press state without re-rendering the host. Not available under `K.View`, which has no press state. |
+| `useOrderFocusGroup` | `() => OrderFocusGroupContext` | Returns the current focus-order group context (its `groupId` / namespace). Provided by `K.Order`. |
 
-Related context exports: `KeyboardOrderFocusGroup`, `OrderFocusGroupContext`.
+Related context export: `OrderFocusGroupContext`, the context provided by `K.Order`.
 
 ---
 
 ## Focus-order props
 
-These props appear on every focusable component. There are three independent ordering systems; they can be combined.
-
-### 1. Link-based ordering
-
-Name a target element's `orderId` for each direction.
-
-```tsx
-<Pressable orderId="0_0" orderForward="0_1"><Text>1</Text></Pressable>
-<Pressable orderId="0_1" orderBackward="0_0" orderForward="0_2"><Text>2</Text></Pressable>
-<Pressable orderId="0_2" orderBackward="0_1"><Text>3</Text></Pressable>
-```
-
-| Prop | Type | Description |
-| :-- | :-- | :-- |
-| `orderId` | `string` | Unique ID used as the link target for other elements. |
-| `orderForward` | `string` | Target focused on forward navigation (`Tab`). |
-| `orderBackward` | `string` | Target focused on backward navigation (`Shift + Tab`). |
-| `orderLeft` | `string` | Target focused when navigating left. |
-| `orderRight` | `string` | Target focused when navigating right. |
-| `orderUp` | `string` | Target focused when navigating up. |
-| `orderDown` | `string` | Target focused when navigating down. |
-| `orderFirst` | `string \| null` | *(iOS)* Target when jumping to the first element. `null` clears the link. |
-| `orderLast` | `string \| null` | *(iOS)* Target when jumping to the last element. `null` clears the link. |
-| `orderPrefix` | `string` | Prefix prepended to this element's `orderId` and all `order*` targets, to keep IDs unique. |
-
-> [!IMPORTANT]
-> `orderId` values are **global**. In repeated content (a list rendering the same row), duplicate IDs cause incorrect focus jumps. Namespace them with `orderPrefix` or wrap the subtree in [`KeyboardOrderFocusGroup`](../components/overview.md#keyboardorderfocusgroup). Using a link prop with no prefix logs a console warning.
-
-### 2. Index-based ordering
-
-Within a named group, elements are focused in ascending `orderIndex`. Provide the group via `KeyboardOrderFocusGroup` or the `orderGroup` prop.
-
-| Prop | Type | Description |
-| :-- | :-- | :-- |
-| `orderGroup` | `string` | Name of the group containing ordered elements. |
-| `orderIndex` | `number` | Position within the group; lower indices are focused first. |
-
-### 3. Direction locking
-
-| Prop | Type | Description |
-| :-- | :-- | :-- |
-| `lockFocus` | [`LockFocusType[]`](#lockfocustype) | Directions in which focus movement is blocked. |
-
-```tsx
-<Pressable lockFocus={['down', 'right']}>
-  <Text>Lock Example</Text>
-</Pressable>
-```
-
-> [!NOTE]
-> `first` and `last` are iOS-specific. When `forward` / `backward` are blocked on iOS, the system falls back to the `first` / `last` elements.
+Links between views (`orderId`, `order*`, `orderPrefix`), index order (`orderGroup`, `orderIndex`), and locked directions (`lockFocus`) are props of every keyboard-focusable component. The full table is in [Focus order → Props](../guides/focus-order.md#props).
 
 ---
 
@@ -250,7 +219,7 @@ type ContainerStyle<ViewStyleType> =
   | ((state: InteractionState) => ViewProps['style']);
 ```
 
-See [Pressable focus handling](../guides/pressable-focus.md#the-default-function-style--containerstyle) for usage.
+See [Focus styles and events](../guides/pressable-focus.md#how-it-works) for usage.
 
 ### `FocusStyle`
 
@@ -278,17 +247,19 @@ type LockFocusType =
 - `forward` / `backward` — block `Tab` and `Shift + Tab`.
 - `first` / `last` — *(iOS)* block jumping to the first / last focusable element.
 
-The matching enum `LockFocusEnum` is also exported.
+The matching enum `LockFocusEnum` is also defined. <!-- TODO: confirm — `LockFocusEnum`, `LockFocusType`, `FocusStyle`, `InteractionState`, `InteractiveStyleProp`, `ContainerStyle` are exported from src/types but not re-exported from src/index.tsx -->
 
 ### Other exported types
+
+<!-- TODO: confirm — of this table, src/index.tsx re-exports only `KeyboardFocus`, `BaseKeyboardViewType`, `KeyboardInputProps`, `KeyboardFocusLockProps`, `LockComponentType`, `WithKeyboardFocusProps`, `KeyboardFocusableComponent`; the rest are internal -->
 
 | Type | Description |
 | :-- | :-- |
 | `KeyboardFocus` | Imperative ref handle (`focus`, `keyboardFocus`, `screenReaderFocus`). |
 | `BaseKeyboardViewType` | `View` augmented with the `KeyboardFocus` handle. |
-| `BaseKeyboardViewProps` / `BaseFocusViewProps` | Props for `BaseKeyboardView`. |
-| `KeyboardFocusViewProps` / `FocusViewProps` | Props for `KeyboardFocusView`. |
-| `KeyboardInputProps` | Props for `KeyboardExtendedInput`. |
+| `BaseKeyboardViewProps` / `BaseFocusViewProps` | Props for `K.BaseView`. |
+| `KeyboardFocusViewProps` / `FocusViewProps` | Props for `K.View`. |
+| `KeyboardInputProps` | Props for `K.Input`. |
 | `KeyboardFocusLockProps`, `LockComponentType` | Props/enum for `Focus.Frame` / `Focus.Trap`. |
 | `WithKeyboardFocusProps`, `KeyboardFocusableComponent` | The `withKeyboardFocus` HOC contract. |
 | `InteractionState`, `InteractiveStyleProp`, `ContainerStyle` | Types behind the function-form `style` / `containerStyle`. |

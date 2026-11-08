@@ -1,188 +1,169 @@
-# Keyboard grouping — focus groups on iOS
+# Focus groups
 
-With a physical keyboard on iOS, focusable views can be organized into **focus groups**. This
-guide explains how grouping works, which behavior `react-native-external-keyboard` gives you by
-default, and how to change it for the whole app, a part of it, or a single view.
+On iOS, a physical keyboard moves between focus groups with `Tab` and between the elements of one group with `Ctrl + Tab`. This guide covers how views join groups: the `groupIdentifier` and `uniqueGroupIdentifier` props, `K.GroupIdentifierProvider`, `K.FocusGroup`, and `Keyboard.configure`. Android has no `focusGroupIdentifier`, so these settings have no effect there.
 
-> [!NOTE]
-> Grouping and order are two separate things, set with separate props and components:
->
-> | | Question it answers | View props | Scope component |
-> | :-- | :-- | :-- | :-- |
-> | **Focus groups** (this guide, iOS) | What is one Tab stop? | `groupIdentifier`, `uniqueGroupIdentifier` | `KeyboardGroupProvider`, `KeyboardFocusGroup` |
-> | **Focus order** ([guide](./focus-order.md)) | In which order are views visited? | `orderGroup` + `orderIndex`, `orderId` + `order*` | `KeyboardOrderFocusGroup` |
+## How it works
 
-- [How iOS keyboard navigation works](#how-ios-keyboard-navigation-works)
-- [The setting: `uniqueGroupIdentifier`](#the-setting-uniquegroupidentifier)
-- [Where to set it](#where-to-set-it)
-- [Which option should I use?](#which-option-should-i-use)
-- [Modals and portals](#modals-and-portals)
+### Tab stops on iOS
 
-## How iOS keyboard navigation works
+iOS keyboard navigation has two levels. `Tab` / `Shift + Tab` moves between focus groups, and `Ctrl + Tab` / `Ctrl + Shift + Tab` moves between the elements inside a group. For this reason, the split into groups decides what one `Tab` stop is. Related views that share a `groupIdentifier` form one stop:
 
-iOS has two levels of keyboard navigation:
+```tsx
+<K.GroupIdentifierProvider groupIdentifier="toolbar">
+  {/* One Tab stop. Ctrl + Tab moves between Bold and Italic. */}
+  <K.Pressable onPress={onPress}>
+    <Text>Bold</Text>
+  </K.Pressable>
+  <K.Pressable onPress={onPress}>
+    <Text>Italic</Text>
+  </K.Pressable>
+</K.GroupIdentifierProvider>
+```
 
-- `Tab` and `Shift + Tab` move between **focus groups**.
-- `Ctrl + Tab` and `Ctrl + Shift + Tab` move between the **elements** inside a group.
+Focus groups are separate from [focus order](./focus-order.md). Groups decide what one `Tab` stop is, and order decides the sequence in which views are visited.
 
-How views are split into groups therefore decides how the keyboard feels. If every view is its
-own group, `Tab` stops at each element and the element-level shortcuts have nothing to move
-through. If related views share a group, `Tab` jumps between regions and `Ctrl + Tab` moves
-within one.
+### Views without a group
 
-> [!IMPORTANT]
-> **Breaking change in 0.14.0.** Until 0.13, every focusable view of this library became its own
-> focus group. From 0.14 this is **off by default**, and iOS applies its own grouping. See the
-> [migration notes](../migration/migration.md#migrating-to-0140-from-013x) for the reasoning.
-
-## The setting: `uniqueGroupIdentifier`
-
-The setting controls what happens to a view that has no `groupIdentifier`:
+A view without a `groupIdentifier` follows the `uniqueGroupIdentifier` setting:
 
 | Value | Result |
 | :-- | :-- |
-| `false` (**default**) | No group id is generated. The view is left to the system's own grouping. |
-| `true` | The view gets its own generated, unique `focusGroupIdentifier`, so it is its own focus group (the 0.13 behavior). |
+| `false` (default) | No group id. The view follows the system's own grouping. |
+| `true` | A generated, unique `focusGroupIdentifier`, so the view is its own `Tab` stop. |
 
-Two rules do not depend on the setting:
-
-- A `groupIdentifier` always wins, whether the view sets it or inherits it from an enclosing
-  `KeyboardGroupProvider` or `KeyboardFocusGroup`. The view joins that group, so
-  `uniqueGroupIdentifier` has no effect inside a named group.
-- The setting works on **iOS only**. Android has no `focusGroupIdentifier`, so the setting is
-  accepted and ignored there.
-
-`Focus.Guide` is a Tab stop too, so it follows the same setting and scopes as the views
-around it (it has no grouping props of its own). With `uniqueGroupIdentifier` it is its own
-stop, and inside a named group it joins that group.
-
-Keyboard **order** follows the same split: `orderIndex` and `orderForward` / `orderBackward`
-follow `Ctrl + Tab` by default and inside a named group, and plain `Tab` when the view is its own
-group (`uniqueGroupIdentifier` without a `groupIdentifier`). See [Focus order](./focus-order.md).
-
-## Where to set it
-
-You can set the value at three levels. The most specific level wins:
-
-```
-view prop  >  KeyboardGroupProvider  >  Keyboard.configure  >  false
+```tsx
+<K.Pressable uniqueGroupIdentifier onPress={onPress}>
+  <Text>Own Tab stop</Text>
+</K.Pressable>
 ```
 
-| Level | How | Reaches |
+A `groupIdentifier` always takes precedence, whether set on the view or inherited from an enclosing `K.GroupIdentifierProvider` or `K.FocusGroup`. For this reason, `uniqueGroupIdentifier` has no effect inside a named group.
+
+Until 0.13, every focusable view of this library was its own focus group. Since 0.14 the default is `false`, so iOS applies its own grouping ([migration notes](../migration/migration.md#migrating-to-0140-from-013x)).
+
+The setting also decides which key follows [focus order](./focus-order.md#order-keys-on-ios). `K.Guide` is a `Tab` stop too and follows the same setting and scopes as the views around it.
+
+### Setting levels
+
+The setting has three levels, and the most specific one wins:
+
+```
+view prop  >  K.GroupIdentifierProvider  >  Keyboard.configure  >  false
+```
+
+| Level | API | Reach |
 | :-- | :-- | :-- |
-| Global | `Keyboard.configure({ ... })` | Every view, everywhere |
-| Region (or the whole tree) | `<KeyboardGroupProvider>` | Everything inside |
-| View | `uniqueGroupIdentifier` prop on `KeyboardExtendedView`, `Pressable`, `KeyboardExtendedInput`, `KeyboardExtendedBaseView` or a `withKeyboardFocus` component | That view |
+| App | `Keyboard.configure` | Every view, portals and separate React roots included |
+| Region | `K.GroupIdentifierProvider`, `K.FocusGroup` | The React subtree inside |
+| View | `groupIdentifier`, `uniqueGroupIdentifier` props | The view itself |
 
-### Global — `Keyboard.configure`
+### App-wide default
 
-Call it once, before the first render, for example in `index.js`:
+`Keyboard.configure` is a plain module setting rather than a React context. For this reason, it reaches content outside any provider, but it does not re-render mounted views and belongs at startup, before the first render:
 
 ```ts
+// index.js
 import { Keyboard } from 'react-native-external-keyboard';
 
 Keyboard.configure({ uniqueGroupIdentifier: true });
 ```
 
-This is a plain module setting, so it also reaches portals and extra React roots (see
-[Modals and portals](#modals-and-portals)). It does not re-render views that are already
-mounted, so set it at startup and do not change it later.
+### Region scope
 
-### Region — `KeyboardGroupProvider` and `KeyboardFocusGroup`
-
-Both components configure a region:
-
-| Prop | `KeyboardGroupProvider` | `KeyboardFocusGroup` | Meaning |
-| :-- | :-- | :-- | :-- |
-| `groupIdentifier` | Yes | Yes | Every focusable view inside that has no id of its own joins this group. |
-| `uniqueGroupIdentifier` | Yes | No | Overrides the setting for everything inside. When unset, the value is inherited. |
-
-`KeyboardFocusGroup` does not take `uniqueGroupIdentifier`: it is a group itself, and with its
-`groupIdentifier` set the setting would have no effect. Its focus events also need a
-`groupIdentifier`: they fire when the focused view's group id equals the group's, so a
-`KeyboardFocusGroup` without one never reports focus.
-
-They differ in what they render:
-
-| | Renders a native view | Group focus events and styling |
-| :-- | :-- | :-- |
-| `KeyboardGroupProvider` | No (JS only, no layout) | No |
-| `KeyboardFocusGroup` | Yes | Yes: `onFocusChange`, `onFocus` / `onBlur`, `tintColor`, `focusStyle` |
-
-Use `KeyboardGroupProvider` when you only need grouping. Use `KeyboardFocusGroup` when you also
-need to react to the group gaining or losing focus.
+`K.GroupIdentifierProvider` sets `groupIdentifier` or `uniqueGroupIdentifier` for the views inside it. It renders no native view and affects no layout. An unset prop inherits the parent scope:
 
 ```tsx
-import {
-  KeyboardFocusGroup,
-  KeyboardGroupProvider,
-  Pressable,
-} from 'react-native-external-keyboard';
-
-// Grouping only: no extra native view
-<KeyboardGroupProvider groupIdentifier="toolbar">
-  <Pressable onPress={bold} />
-  <Pressable onPress={italic} />
-</KeyboardGroupProvider>
-
-// Focus events or a tint are needed: use the native group
-<KeyboardFocusGroup groupIdentifier="colors" onFocusChange={setColorsFocused}>
-  {colors.map((c) => <Pressable key={c} onPress={() => pick(c)} />)}
-</KeyboardFocusGroup>
-
-// One region where every view is its own stop, even if the app default is off
-<KeyboardGroupProvider uniqueGroupIdentifier>
+<K.GroupIdentifierProvider uniqueGroupIdentifier>
+  {/* Every row is its own Tab stop, whatever the app default */}
   <List />
-</KeyboardGroupProvider>
+</K.GroupIdentifierProvider>
 ```
 
-A `KeyboardGroupProvider` around the whole app sets the default for that React tree, and unlike
-`Keyboard.configure` it can change at runtime:
+Unlike `Keyboard.configure`, a provider can change at runtime. A provider around the whole app therefore sets a switchable default for that React tree:
 
 ```tsx
-<KeyboardGroupProvider uniqueGroupIdentifier={legacyTabOrder}>
+<K.GroupIdentifierProvider uniqueGroupIdentifier={separateTabStops}>
   <App />
-</KeyboardGroupProvider>
+</K.GroupIdentifierProvider>
 ```
 
-### View
+### Group focus events
+
+`K.FocusGroup` is a native view that defines a group and reports when focus enters or leaves it. Its `groupIdentifier` is shared with the views inside, like a provider's, and its focus events need that `groupIdentifier`, because they fire when the focused view's group id equals the group's:
 
 ```tsx
-<Pressable uniqueGroupIdentifier onPress={save} />      // this view is its own group
-<Pressable groupIdentifier="dialog" onPress={cancel} /> // joins a named group
+<K.FocusGroup groupIdentifier="colors" tintColor="green" onFocusChange={onFocusChange}>
+  {colors.map((color) => (
+    <K.Pressable key={color} onPress={onPress}>
+      <Text>{color}</Text>
+    </K.Pressable>
+  ))}
+</K.FocusGroup>
 ```
 
-## Which option should I use?
+| Component | Native view | Group focus events and styling |
+| :-- | :-- | :-- |
+| `K.GroupIdentifierProvider` | No | No |
+| `K.FocusGroup` | Yes | `onFocus`, `onBlur`, `onFocusChange`, `tintColor`, `focusStyle` |
 
-| Situation | Use |
-| :-- | :-- |
-| New app that should follow iOS | Nothing. The default is correct. |
-| Existing app that must behave exactly like 0.13 | `Keyboard.configure({ uniqueGroupIdentifier: true })` |
-| Toolbar, grid or palette that should act as one unit | `KeyboardGroupProvider` or `KeyboardFocusGroup` with a `groupIdentifier` |
-| One list where every row must be its own stop | A `KeyboardGroupProvider uniqueGroupIdentifier` around it |
-| Content in a portal or a separate root | `Keyboard.configure`, because a provider will not reach it |
+`K.FocusGroup` has no `uniqueGroupIdentifier` prop. It is a named group itself, so the setting would have no effect inside it.
 
-## Modals and portals
+### Modals and portals
 
-A provider applies to its React subtree. RN's own `Modal` renders its children inside that same
-tree (`Libraries/Modal/Modal.js` in RN 0.76.5), so `KeyboardGroupProvider` and
-`KeyboardFocusGroup` apply to modal content. The native iOS modal is a separate view
-controller, but this does not matter, because the setting travels as a prop on each view.
+A provider applies to its React subtree. React Native's own `Modal` renders its children inside that same tree (`Libraries/Modal/Modal.js` in RN 0.76.5), so a provider around a `Modal` applies to its content. The native iOS modal is a separate view controller, which does not matter, because the setting travels as a prop on each view.
 
-A provider does **not** reach content that is mounted outside it:
-
-- portal-based sheets, toasts or overlays whose host sits above or beside the provider;
-- separate React roots, such as an extra `AppRegistry` surface or a native-embedded surface.
-
-This is based on reading the code and has not been tested with those libraries. For such
-content, set the value globally with `Keyboard.configure`, which does not depend on tree position.
-
-## Related
-
-- [Migration: 0.13 to 0.14](../migration/migration.md#migrating-to-0140-from-013x)
-- [`KeyboardGroupProvider`](../components/overview.md#keyboardgroupprovider) and [`KeyboardFocusGroup`](../components/overview.md#keyboardfocusgroup)
-- [Focus order](./focus-order.md)
+A provider does not reach content mounted outside it, such as portal-based sheets, toasts, or overlays whose host sits above or beside the provider, or separate React roots. `Keyboard.configure` does not depend on tree position, so it covers that content. <!-- TODO: confirm — based on reading the code, not tested with portal libraries -->
 
 ---
 
-← [Focus guide](./focus-guide.md) · [Component overview →](../components/overview.md)
+## Quick decision guide
+
+| Need | API |
+| :-- | :-- |
+| Native iOS grouping | Nothing, it is the default |
+| One `Tab` stop for a toolbar, grid, or palette | `K.GroupIdentifierProvider` with `groupIdentifier` |
+| One `Tab` stop with group focus events or a tint | `K.FocusGroup` with `groupIdentifier` |
+| Own `Tab` stop for every view in one region | `K.GroupIdentifierProvider uniqueGroupIdentifier` |
+| Own `Tab` stop for every view in the app, as in 0.13 | `Keyboard.configure({ uniqueGroupIdentifier: true })` |
+| Content in a portal or a separate React root | `Keyboard.configure`, a provider does not reach it |
+
+---
+
+## Props
+
+All grouping props are iOS only.
+
+View props of `K.Pressable`, `K.View`, `K.Input`, `K.BaseView`, and `withKeyboardFocus` components:
+
+| Prop | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `groupIdentifier` | `string` | inherited | `focusGroupIdentifier` of the view. When unset, inherited from an enclosing `K.GroupIdentifierProvider` or `K.FocusGroup`. |
+| `uniqueGroupIdentifier` | `boolean` | inherited, then `false` | Own generated focus group for a view without a `groupIdentifier`. When unset, inherited from `K.GroupIdentifierProvider`, then `Keyboard.configure`. |
+
+`K.GroupIdentifierProvider` props:
+
+| Prop | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `groupIdentifier` | `string` | parent scope | `focusGroupIdentifier` for every view inside without its own. |
+| `uniqueGroupIdentifier` | `boolean` | parent scope | `uniqueGroupIdentifier` for every view inside without its own. |
+| `children` | `ReactNode` | — | Content. |
+
+`Keyboard.configure` options (type `ExternalKeyboardConfig`):
+
+| Option | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `uniqueGroupIdentifier` | `boolean` | `false` | App-wide default of `uniqueGroupIdentifier`. |
+
+`K.FocusGroup` props are listed in the [component overview](../components/overview.md#kfocusgroup).
+
+---
+
+## Related
+
+- [Focus order](./focus-order.md): order of views inside and across groups
+- [Component overview → K.GroupIdentifierProvider](../components/overview.md#kgroupidentifierprovider) and [K.FocusGroup](../components/overview.md#kfocusgroup)
+- [Migration: 0.13 to 0.14](../migration/migration.md#migrating-to-0140-from-013x): reasons for the new default
+
+---
+
+← [Focus lock](./focus-lock.md) · [Native focus services →](./native-focus-services.md)

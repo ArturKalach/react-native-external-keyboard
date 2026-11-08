@@ -1,108 +1,101 @@
 # Programmatic focus
 
+Focus sometimes moves in response to app logic: after opening a panel, submitting a form, or restoring a previous position. Keyboard-focusable components expose focus methods through their `ref` for this.
+
 | iOS | Android |
 | --- | --- |
 | <img src="../images/programatic-focus-ios.gif" height="400" alt="Programmatic focus on iOS" /> | <img src="../images/programatic-focus-android.gif" height="400" alt="Programmatic focus on Android" /> |
 
-Sometimes focus needs to move in response to app logic — after opening a panel, submitting a form, or restoring a previous position. Every keyboard-focusable component exposes an imperative handle through `ref` for exactly this.
+## How it works
+
+### Focus methods
+
+The `ref` of `K.Pressable`, `K.View`, `K.BaseView`, and `withKeyboardFocus` components has three focus methods:
+
+| Method | Moves |
+| :-- | :-- |
+| `focus()` | Keyboard and screen reader focus |
+| `keyboardFocus()` | Keyboard focus only |
+| `screenReaderFocus()` | Screen reader focus only (VoiceOver / TalkBack) |
+
+`focus()` covers both keyboard and screen reader users, so it fits most cases:
 
 ```tsx
 import { useRef } from 'react';
-import {
-  withKeyboardFocus,
-  type KeyboardFocus,
-} from 'react-native-external-keyboard';
+import { Text } from 'react-native';
+import { K, type KeyboardFocus } from 'react-native-external-keyboard';
 
-const KeyboardPressable = withKeyboardFocus(Pressable);
-
-function Example() {
-  const ref = useRef<KeyboardFocus>(null);
+export function Form({ onSubmit }: { onSubmit: () => void }) {
+  const submitRef = useRef<KeyboardFocus>(null);
 
   return (
     <>
-      <Button title="Focus the item" onPress={() => ref.current?.focus()} />
-      <KeyboardPressable ref={ref} onPress={onPress}>
-        <Text>Target</Text>
-      </KeyboardPressable>
+      <K.Pressable onPress={() => submitRef.current?.focus()}>
+        <Text>Skip to Submit</Text>
+      </K.Pressable>
+
+      <K.Pressable ref={submitRef} onPress={onSubmit}>
+        <Text>Submit</Text>
+      </K.Pressable>
     </>
   );
 }
 ```
 
----
+`K.Input` passes its `ref` to the inner `TextInput`, so it has the standard `TextInput` methods, such as `focus()` and `blur()`.
 
-## The `KeyboardFocus` handle
+### Focus on mount
 
-| Method | Moves | Use when |
-| :-- | :-- | :-- |
-| `focus()` | physical-keyboard **and** screen-reader focus | You want the element focused for both hardware-keyboard and VoiceOver/TalkBack users (the common case). |
-| `keyboardFocus()` | physical-keyboard focus only | You only want to move the hardware-keyboard focus ring, without touching screen-reader focus. |
-| `screenReaderFocus()` | screen-reader focus only | You want to move VoiceOver / TalkBack focus only. |
+For focus on mount, the `autoFocus` prop needs no `ref`:
 
 ```tsx
-ref.current?.focus();             // keyboard + screen reader
-ref.current?.keyboardFocus();     // keyboard only
-ref.current?.screenReaderFocus(); // screen reader only
-```
-
-> [!NOTE]
-> `focus()` is **not** an alias of `keyboardFocus()` — it invokes both `keyboardFocus()` and `screenReaderFocus()`. Reach for `keyboardFocus()` when you specifically want to leave screen-reader focus where it is.
-
----
-
-## Choosing between `autoFocus` and a ref
-
-For "focus this on mount", prefer the [`autoFocus`](../components/overview.md#common-focus-props) prop — it's declarative and works on both platforms:
-
-```tsx
-<KeyboardPressable autoFocus onPress={onPress}>
+<K.Pressable autoFocus onPress={onPress}>
   <Text>Focused on mount</Text>
-</KeyboardPressable>
+</K.Pressable>
 ```
 
-Use the imperative `ref` when the focus move is driven by an event that happens *after* mount (a press, a navigation, a state change):
+A `ref` covers focus moves after mount, such as after a press, a navigation, or a state change.
 
-```tsx
-const ref = useRef<KeyboardFocus>(null);
+### Native view methods
 
-const onOpenPanel = () => {
-  setPanelOpen(true);
-  ref.current?.focus(); // move focus into the panel
-};
-```
-
----
-
-## Calling native view methods
-
-The handle is a proxy. Beyond `focus` / `keyboardFocus` / `screenReaderFocus`, any other property falls through to the underlying native focusable view — so the standard `View` methods work off the same ref, with no extra setup:
+Other properties of the `ref` go to the native container view (the `K.BaseView` from the [two style layers](./pressable-focus.md#styles)), so standard view methods work on the same `ref`:
 
 ```tsx
 ref.current?.measure((x, y, width, height) => {
   /* … */
 });
-ref.current?.setNativeProps({ /* … */ });
 ```
 
-### Reaching the wrapped component instance
-
-That ref points at the focusable view. When you need the **wrapped** component itself (the `Pressable`, `TextInput`, etc. — for example to call a method it defines), pass a separate `componentRef`:
+The wrapped component itself, such as the inner `Pressable`, is available through a separate `componentRef`:
 
 ```tsx
 const componentRef = useRef<View>(null);
 
-<KeyboardPressable componentRef={componentRef} onPress={onPress}>
+<K.Pressable componentRef={componentRef} onPress={onPress}>
   <Text>Item</Text>
-</KeyboardPressable>
+</K.Pressable>
 ```
+
+---
+
+## Quick decision guide
+
+| Need | API |
+| :-- | :-- |
+| Focus on mount | `autoFocus` |
+| Focus after an event, for keyboard and screen reader users | `ref.current?.focus()` |
+| Keyboard focus only, screen reader focus stays in place | `ref.current?.keyboardFocus()` |
+| Screen reader focus only | `ref.current?.screenReaderFocus()` |
+| Native view methods, such as `measure` | The same `ref` |
+| The wrapped component instance | `componentRef` |
 
 ---
 
 ## Related
 
-- [Pressable focus handling](./pressable-focus.md) — focus/blur events and styling
+- [Focus styles and events](./pressable-focus.md): focus events, `style` and `containerStyle` callbacks
 - [API reference → Imperative ref](../api/overview.md#imperative-ref-keyboardfocus)
 
 ---
 
-← [Native focus styling](./focus-styling.md) · [Keyboard text input →](./text-input.md)
+← [Native focus indicators](./focus-styling.md) · [Text input →](./text-input.md)

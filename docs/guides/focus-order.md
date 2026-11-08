@@ -1,181 +1,173 @@
 # Focus order
 
+Keyboard focus follows the native view hierarchy by default. When the visual layout differs from that hierarchy, as in grids and columns, three systems set the order instead: links between views, an index within a group, and locked directions. They work on `K.Pressable`, `K.View`, `K.Input`, `K.BaseView`, and `withKeyboardFocus` components and can be combined.
+
 | iOS | Android |
 | --- | --- |
 | <img src="../images/focus-order-ios.gif" height="400" alt="Focus order on iOS" /> | <img src="../images/focus-order-android.gif" height="400" alt="Focus order on Android" /> |
 
-By default, physical-keyboard focus follows the native view hierarchy. When your visual layout differs from that order — grids, columns, custom navigation — you can take control with three independent systems that can be combined:
+## How it works
 
-1. **[Link-based](#1-link-based-ordering)** — each element names which element to focus next in each direction.
-2. **[Index-based](#2-index-based-ordering)** — elements in a named group are focused in ascending index order.
-3. **[Direction locking](#3-direction-locking)** — block focus movement in specific directions.
+### Links between views
 
-> Order is separate from iOS **focus groups** (`groupIdentifier`, `uniqueGroupIdentifier`),
-> which decide what one Tab stop is. See [Keyboard grouping](./keyboard-grouping.md).
-
-All of these props are available on every focusable component (`withKeyboardFocus`-wrapped components, `KeyboardExtendedView`, `KeyboardExtendedInput`, `KeyboardExtendedBaseView`).
-
----
-
-## 1. Link-based ordering
-
-The most explicit approach: give an element an `orderId`, then point each directional prop at the `orderId` of the element that should receive focus when moving that way.
+Each view gets an `orderId`, and its direction props name the `orderId` of the view that receives focus in that direction:
 
 ```tsx
-<View>
-  <Pressable orderId="a" orderForward="b" onPress={onPress}>
+<K.Order>
+  <K.Pressable orderId="a" orderForward="b" onPress={onPress}>
     <Text>1</Text>
-  </Pressable>
-  <Pressable orderId="b" orderBackward="a" orderForward="c" onPress={onPress}>
+  </K.Pressable>
+  <K.Pressable orderId="b" orderBackward="a" orderForward="c" onPress={onPress}>
     <Text>2</Text>
-  </Pressable>
-  <Pressable orderId="c" orderBackward="b" onPress={onPress}>
+  </K.Pressable>
+  <K.Pressable orderId="c" orderBackward="b" onPress={onPress}>
     <Text>3</Text>
-  </Pressable>
-</View>
+  </K.Pressable>
+</K.Order>
 ```
 
-| Prop | Direction |
+| Prop | Key |
 | :-- | :-- |
-| `orderForward` | `Tab` |
-| `orderBackward` | `Shift + Tab` |
-| `orderLeft` / `orderRight` | Arrow / DPad horizontal |
-| `orderUp` / `orderDown` | Arrow / DPad vertical |
-| `orderFirst` / `orderLast` | *(iOS)* jump to first / last. `null` clears the link. |
+| `orderForward` / `orderBackward` | `Tab` / `Shift + Tab` |
+| `orderLeft` / `orderRight` | Left / right arrow, D-pad |
+| `orderUp` / `orderDown` | Up / down arrow, D-pad |
+| `orderFirst` / `orderLast` (iOS) | Jump to the first / last element |
 
-On iOS, `orderForward` / `orderBackward` follow `Ctrl + Tab` / `Ctrl + Shift + Tab` by default or
-inside a named focus group; plain `Tab` / `Shift + Tab` stays native group navigation. With
-`uniqueGroupIdentifier` enabled and no named `groupIdentifier`, plain `Tab` / `Shift + Tab` follows
-the links too. See [Keyboard grouping](./keyboard-grouping.md).
+Links cover both linear `Tab` flows and two-dimensional arrow-key navigation. `orderFirst` and `orderLast` default to the `orderForward` and `orderBackward` targets, and `null` clears them.
 
-This makes link-based ordering ideal for both linear (`Tab`) flows and 2-D directional (DPad / arrow) navigation.
+### Unique ids
 
-### ⚠️ `orderId` values are global
-
-`orderId`s share one global namespace. If the same component renders more than once — a list row, a repeated card — duplicate `orderId`s collide and cause focus to jump to the wrong element. Using a link prop with no namespace also logs a dev warning.
-
-There are two ways to keep IDs unique.
-
-#### Auto-namespace with `KeyboardOrderFocusGroup`
-
-Wrap repeated content; every `orderId` inside gets an automatic, isolated namespace. Best when you just need uniqueness and don't care about the exact prefix:
+`orderId` values share one global namespace. For this reason, a component rendered more than once, such as a list row, produces duplicate ids, and focus jumps to the wrong view. `K.Order` gives every `orderId` inside it a namespace of its own:
 
 ```tsx
-import { KeyboardOrderFocusGroup } from 'react-native-external-keyboard';
-
 {items.map((item) => (
-  <KeyboardOrderFocusGroup key={item.id}>
-    <Pressable orderId="title" orderForward="action" onPress={onPress}>…</Pressable>
-    <Pressable orderId="action" orderBackward="title" onPress={onPress}>…</Pressable>
-  </KeyboardOrderFocusGroup>
+  <K.Order key={item.id}>
+    <K.Pressable orderId="title" orderForward="action" onPress={onPress}>
+      <Text>{item.title}</Text>
+    </K.Pressable>
+    <K.Pressable orderId="action" orderBackward="title" onPress={onPress}>
+      <Text>Open</Text>
+    </K.Pressable>
+  </K.Order>
 ))}
 ```
 
-#### Static namespace with `groupId` / `orderPrefix`
+The namespace applies to the view's `orderId` and to all of its `order*` targets, so links inside one namespace keep working. A link prop outside any namespace logs a dev warning.
 
-Use an explicit string when you need a stable, predictable prefix — for example to link two sibling components that know about each other:
+The generated namespace is not known outside the `K.Order`. A fixed one makes the ids reachable from elsewhere, for example from a [`K.Guide`](./focus-guide.md#target-lookup) with `orderGroup`. `groupId` on `K.Order` sets it for a subtree:
 
 ```tsx
-// groupId on the wrapper
-<KeyboardOrderFocusGroup groupId="card_42">
-  <Pressable orderId="title" orderForward="action" onPress={onPress}>…</Pressable>
-  <Pressable orderId="action" orderBackward="title" onPress={onPress}>…</Pressable>
-</KeyboardOrderFocusGroup>
-
-// or orderPrefix directly on each component
-<Pressable orderPrefix="card_42" orderId="title" orderForward="action" onPress={onPress}>…</Pressable>
-<Pressable orderPrefix="card_42" orderId="action" orderBackward="title" onPress={onPress}>…</Pressable>
+<K.Order groupId="card_42">
+  <K.Pressable orderId="title" orderForward="action" onPress={onPress}>
+    <Text>Title</Text>
+  </K.Pressable>
+  <K.Pressable orderId="action" orderBackward="title" onPress={onPress}>
+    <Text>Open</Text>
+  </K.Pressable>
+</K.Order>
 ```
 
-The prefix is prepended to this element's `orderId` **and** all of its `order*` targets, so links inside the same namespace keep working unchanged.
+`orderPrefix="card_42"` on a single view has the same effect and takes precedence over the surrounding `K.Order`.
 
----
+### Index within a group
 
-## 2. Index-based ordering
-
-When you just need a sequence within a container, index-based ordering is less verbose than linking. Elements that declare `orderIndex` inside a named group are focused in ascending index order — regardless of their position in the tree.
+For a plain sequence, an index is shorter than links. Views with `orderIndex` inside one `K.Order` receive focus in ascending index order, whatever their position in the tree:
 
 ```tsx
-import { KeyboardOrderFocusGroup } from 'react-native-external-keyboard';
-
-<KeyboardOrderFocusGroup>
-  <View>
-    <Pressable orderIndex={0} onPress={onPress}><Text>First</Text></Pressable>
-    <Pressable orderIndex={2} onPress={onPress}><Text>Third</Text></Pressable>
-    <Pressable orderIndex={1} onPress={onPress}><Text>Second</Text></Pressable>
-  </View>
-</KeyboardOrderFocusGroup>
+<K.Order>
+  <K.Pressable orderIndex={0} onPress={onPress}>
+    <Text>First</Text>
+  </K.Pressable>
+  <K.Pressable orderIndex={2} onPress={onPress}>
+    <Text>Third</Text>
+  </K.Pressable>
+  <K.Pressable orderIndex={1} onPress={onPress}>
+    <Text>Second</Text>
+  </K.Pressable>
+</K.Order>
 ```
 
-| Prop | Type | Description |
-| :-- | :-- | :-- |
-| `orderGroup` | `string` | Name of the group. Provided automatically by `KeyboardOrderFocusGroup`. |
-| `orderIndex` | `number` | Position within the group; lower is focused first. |
+`K.Order` sets both the index group and the `orderId` namespace, so one wrapper serves both systems. Without the wrapper, `orderGroup` on each view sets the group. An `orderIndex` with no group has no effect and logs a dev warning.
 
-`KeyboardOrderFocusGroup` provides the group via context, so children only need `orderIndex`. Alternatively, set `orderGroup` directly on each element to skip the wrapper:
+### Locked directions
 
-```tsx
-<Pressable orderGroup="main" orderIndex={0} onPress={onPress}><Text>First</Text></Pressable>
-<Pressable orderGroup="main" orderIndex={1} onPress={onPress}><Text>Second</Text></Pressable>
-```
-
-On iOS, default or named focus groups follow index order with `Ctrl + Tab` /
-`Ctrl + Shift + Tab`; plain `Tab` / `Shift + Tab` remains native group navigation.
-With `uniqueGroupIdentifier` enabled and no named `groupIdentifier`, plain `Tab` /
-`Shift + Tab` follows index order too.
-
-> [!NOTE]
-> `orderIndex` must have a group. Declare it inside a `KeyboardOrderFocusGroup` or pass `orderGroup` — otherwise a dev warning is logged and ordering won't apply.
-
-### `KeyboardOrderFocusGroup` props
-
-| Prop | Type | Description |
-| :-- | :-- | :-- |
-| `groupId` | `string` | Explicit group name. Auto-generated when omitted. |
-| `children` | `ReactNode` | Child components. |
-
----
-
-## 3. Direction locking
-
-`lockFocus` blocks focus from moving out of an element in the given directions. Useful for keeping focus within a region or preventing accidental escapes.
+`lockFocus` blocks focus from leaving a view in the listed directions, for example at the edge of a region:
 
 ```tsx
-<Pressable lockFocus={['down', 'right']} onPress={onPress}>
-  <Text>Can't move down or right from here</Text>
-</Pressable>
+<K.Pressable lockFocus={['down', 'right']} onPress={onPress}>
+  <Text>No exit down or right</Text>
+</K.Pressable>
 ```
 
 | Value | Blocks |
 | :-- | :-- |
-| `'up'` / `'down'` / `'left'` / `'right'` | Directional (arrow / DPad) movement |
+| `'up'` / `'down'` / `'left'` / `'right'` | Arrow-key and D-pad moves |
 | `'forward'` / `'backward'` | `Tab` / `Shift + Tab` |
-| `'first'` / `'last'` | *(iOS)* jumping to the first / last focusable element |
+| `'first'` / `'last'` (iOS) | Jump to the first / last element |
 
-> [!NOTE]
-> `first` and `last` are iOS-specific. When `forward` / `backward` are blocked on iOS, the system tries to focus the `first` / `last` element — locking those too fully contains focus.
+On iOS, a blocked `forward` or `backward` move falls back to the first or last element. Locking `first` and `last` as well keeps focus in place.
+
+### Order keys on iOS
+
+On iOS, `Tab` moves between focus groups and `Ctrl + Tab` moves inside a group (see [Focus groups](./keyboard-grouping.md)). For this reason, `orderForward`, `orderBackward`, and index order follow `Ctrl + Tab` / `Ctrl + Shift + Tab` by default and inside a named group. A view that is its own focus group, with `uniqueGroupIdentifier` and no `groupIdentifier`, follows plain `Tab` instead:
+
+```tsx
+<K.Pressable uniqueGroupIdentifier orderId="a" orderForward="b" onPress={onPress}>
+  <Text>Tab goes to "b"</Text>
+</K.Pressable>
+```
 
 ---
 
-## Combining systems
+## Quick decision guide
 
-The three systems are independent and can be mixed. A common pattern is index-based ordering for the overall sequence plus `lockFocus` to keep focus contained, or link-based ordering with `orderPrefix` for repeated cards. Pick the simplest system that expresses the intent:
-
-| Need | Use |
+| Need | API |
 | :-- | :-- |
-| A simple linear or directional sequence | Link-based (`orderForward` / arrows) |
-| Reorder a set of siblings by number | Index-based (`orderIndex` + group) |
-| Repeated components (lists, cards) | Either system + `KeyboardOrderFocusGroup` / `orderPrefix` |
-| Trap focus in a region | `lockFocus` (and see [Focus.Trap](../components/overview.md#focusframe--focustrap)) |
+| Sequence of sibling views by number | `orderIndex` inside `K.Order` |
+| Next view for each key, set on the view focus leaves | `orderId` with `orderForward`, `orderDown`, … |
+| Unique ids in repeated content | `K.Order` around each item |
+| Fixed namespace, reachable from outside | `K.Order` with `groupId`, or `orderPrefix` |
+| No exit in some directions | `lockFocus` |
+| One target for every move into an area | `K.Guide` ([Focus guide](./focus-guide.md)) |
+| Focus containment for modals and overlays | `Focus.Trap` ([Focus lock](./focus-lock.md)) |
+
+---
+
+## Props
+
+Focus order props of `K.Pressable`, `K.View`, `K.Input`, `K.BaseView`, and `withKeyboardFocus` components:
+
+| Prop | Platform | Type | Default | Description |
+| :-- | :-- | :-- | :-- | :-- |
+| `orderId` | Both | `string` | — | Id of the view, the target of other views' links. |
+| `orderForward` | Both | `string` | — | Target of `Tab`. |
+| `orderBackward` | Both | `string` | — | Target of `Shift + Tab`. |
+| `orderLeft` | Both | `string` | — | Target of the left arrow. |
+| `orderRight` | Both | `string` | — | Target of the right arrow. |
+| `orderUp` | Both | `string` | — | Target of the up arrow. |
+| `orderDown` | Both | `string` | — | Target of the down arrow. |
+| `orderFirst` | iOS | `string \| null` | `orderForward` | Target of a jump to the first element. `null` clears it. |
+| `orderLast` | iOS | `string \| null` | `orderBackward` | Target of a jump to the last element. `null` clears it. |
+| `orderPrefix` | Both | `string` | surrounding `K.Order` | Namespace of `orderId` and all `order*` targets. |
+| `orderGroup` | Both | `string` | surrounding `K.Order` | Group of index-based order. |
+| `orderIndex` | Both | `number` | — | Position within the group, lowest first. |
+| `lockFocus` | Both | [`LockFocusType[]`](../api/overview.md#lockfocustype) | — | Directions in which focus cannot leave the view. `'first'` and `'last'` are iOS only. |
+
+`K.Order` props:
+
+| Prop | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `groupId` | `string` | generated | Index group and `orderId` namespace for the views inside. |
+| `children` | `ReactNode` | — | Content. |
 
 ---
 
 ## Related
 
-- [API reference → Focus-order props](../api/overview.md#focus-order-props)
-- [Component overview → KeyboardOrderFocusGroup](../components/overview.md#keyboardorderfocusgroup)
-- [Focus guide](./focus-guide.md) — send focus that enters an area on to a chosen view
+- [Focus guide](./focus-guide.md): focus that enters an area moves on to a chosen view
+- [Focus groups](./keyboard-grouping.md): iOS `Tab` stops and `focusGroupIdentifier`
+- [Component overview → K.Order](../components/overview.md#korder)
 
 ---
 
-← [Keyboard text input](./text-input.md) · [Focus guide →](./focus-guide.md)
+← [Text input](./text-input.md) · [Focus guide →](./focus-guide.md)

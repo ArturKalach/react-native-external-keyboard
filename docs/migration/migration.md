@@ -13,7 +13,9 @@ Migration notes are listed newest first. Each section only covers changes that n
 ## Migrating to 0.14.0 from 0.13.x
 
 0.14.0 includes a **breaking change** to iOS keyboard navigation: focusable views no longer
-generate a unique keyboard focus group for each component by default.
+generate a unique keyboard focus group for each component by default. It also extends the `K`
+namespace to every component ([New `K` namespace entries](#new-k-namespace-entries)), with no
+action needed.
 
 ### Why it changed
 
@@ -43,7 +45,7 @@ The old behavior is still available as the opt-in `uniqueGroupIdentifier` settin
 | `orderIndex`, `orderForward` / `orderBackward` | Followed by `Tab` | Followed by `Ctrl + Tab`; `Tab` moves to the next group. With `uniqueGroupIdentifier`, followed by `Tab` as in 0.13 |
 | Android | n/a | Unchanged (the setting is ignored) |
 
-`KeyboardFocusGroup`'s `orderGroup` is now applied in JS: views inside it that have no
+`K.FocusGroup`'s `orderGroup` is now applied in JS: views inside it that have no
 `orderGroup` of their own inherit it as their keyboard order group (natively the prop was
 already a no-op).
 
@@ -75,14 +77,14 @@ Keyboard.configure({ uniqueGroupIdentifier: true });
 2. Test your screens on a device with Full Keyboard Access turned on.
 3. Fix the screens where Tab order is wrong:
    - To make a region act as **one unit**, give it a `groupIdentifier`
-     (`KeyboardGroupProvider` or `KeyboardFocusGroup`).
-   - To keep **one stop per view** in a region, wrap it in a `KeyboardGroupProvider` with
+     (`K.GroupIdentifierProvider` or `K.FocusGroup`).
+   - To keep **one stop per view** in a region, wrap it in a `K.GroupIdentifierProvider` with
      `uniqueGroupIdentifier`:
 
 ```tsx
-<KeyboardGroupProvider uniqueGroupIdentifier>
+<K.GroupIdentifierProvider uniqueGroupIdentifier>
   <List />
-</KeyboardGroupProvider>
+</K.GroupIdentifierProvider>
 ```
 
 ### APIs for the new grouping setting
@@ -90,8 +92,8 @@ Keyboard.configure({ uniqueGroupIdentifier: true });
 | API | Purpose |
 | :-- | :-- |
 | `Keyboard.configure({ uniqueGroupIdentifier })` | App-wide default; also covers portals and extra roots |
-| `KeyboardGroupProvider` | Region- or tree-scoped group id / setting without a native view |
-| `uniqueGroupIdentifier` prop | On `KeyboardExtendedView`, `Pressable`, `KeyboardExtendedInput`, `KeyboardExtendedBaseView` and `withKeyboardFocus` components |
+| `K.GroupIdentifierProvider` | Region- or tree-scoped group id / setting without a native view |
+| `uniqueGroupIdentifier` prop | On `K.Pressable`, `K.View`, `K.Input`, `K.BaseView`, and `withKeyboardFocus` components |
 
 A view's own prop wins over the nearest provider, and a provider wins over `Keyboard.configure`.
 A `groupIdentifier`, set on the view or inherited from an enclosing group, always wins over
@@ -101,7 +103,39 @@ A `groupIdentifier`, set on the view or inherited from an enclosing group, alway
 > The default is `false` in every layer (JS, codegen and native), so rendering the native
 > components directly behaves like the new default too.
 
-Full explanation and examples: [Keyboard grouping](../guides/keyboard-grouping.md).
+Full explanation and examples: [Focus groups](../guides/keyboard-grouping.md).
+
+### New `K` namespace entries
+
+Until 0.13, the `K` namespace held `K.Pressable`, `K.View`, and `K.Input`. From 0.14 it holds every
+component, and the docs use the `K` names. Root exports and older aliases keep working, so no
+change is needed.
+
+Existing components with a new `K` name:
+
+| `K` name | Same component as |
+| :-- | :-- |
+| `K.BaseView` | `BaseKeyboardView`, `ExternalKeyboardView`, `KeyboardExtendedBaseView` |
+| `K.Order` | `KeyboardOrderFocusGroup` |
+| `K.FocusGroup` | `KeyboardFocusGroup` |
+
+New components, with a `K` name and a root export:
+
+| `K` name | Root export | Purpose |
+| :-- | :-- | :-- |
+| `K.GroupIdentifierProvider` | `KeyboardGroupProvider` | iOS focus group scope without a native view |
+| `K.Guide` | `KeyboardFocusGuide` | Focus redirection from an area to a chosen view |
+
+```tsx
+// 0.13
+import { KeyboardOrderFocusGroup, KeyboardFocusGroup } from 'react-native-external-keyboard';
+
+// 0.14, same components
+import { K } from 'react-native-external-keyboard';
+// K.Order, K.FocusGroup
+```
+
+The full list of `K` names, root exports, and aliases is in [Getting started → Aliases](../getting-started/getting-started.md#aliases).
 
 ---
 
@@ -158,7 +192,7 @@ Full explanation and examples: [Keyboard grouping](../guides/keyboard-grouping.m
 
 | Prop | 0.9.1 | 1.0.0 | Notes |
 | :-- | :-- | :-- | :-- |
-| `tintType` | `'default' \| 'hover' \| 'background' \| 'none'` | `'default' \| 'none'` | The `'hover'` and `'background'` values are gone — tinting color is controlled via `tintColor`. `'none'` is retained as a cross-platform shortcut to disable the native focus indicator (iOS halo + Android highlight); `'default'` keeps it. [Details](../guides/focus-styling.md#turning-off-all-native-indicators). |
+| `tintType` | `'default' \| 'hover' \| 'background' \| 'none'` | `'default' \| 'none'` | The `'hover'` and `'background'` values are gone — tinting color is controlled via `tintColor`. `'none'` is retained as a cross-platform shortcut to disable the native focus indicator (iOS halo + Android highlight); `'default'` keeps it. [Details](../guides/focus-styling.md#turning-the-indicator-off). |
 
 ```tsx
 // Before (0.9.1) — 'background'/'hover' tinted the view
@@ -197,7 +231,7 @@ These are additive — no migration required. Adopt them only if you need the fu
 | :-- | :-- |
 | `ref.current?.keyboardFocus()` | Imperative handle now exposes `keyboardFocus()` (physical-keyboard focus only) and `screenReaderFocus()` (VoiceOver / TalkBack focus only) alongside `focus()`, which now moves both. |
 | `K` namespace | `K.View`, `K.Input`, `K.Pressable` shorthands for the keyboard-extended components. |
-| `roundedHaloFix` prop | *(iOS, since deprecated)* Kept a disabled halo (`haloEffect={false}`) from reappearing on rounded (`borderRadius`) views. The underlying bug is fixed at the source in a later release, so the prop is now a no-op. [Details](../guides/focus-styling.md#roundedhalofix-deprecated-no-op). |
+| `roundedHaloFix` prop | *(iOS, since deprecated)* Kept a disabled halo (`haloEffect={false}`) from reappearing on rounded (`borderRadius`) views. The underlying bug is fixed at the source in a later release, so the prop is now a no-op. [Details](../guides/focus-styling.md#props). |
 | `LockComponentType` | Now exported (enum used by `Focus.Frame` / `Focus.Trap`). |
 
 > [!NOTE]
@@ -294,7 +328,7 @@ const KeyboardPressable = withKeyboardFocus(Pressable);
 
 ### Component aliases
 
-For compatibility with `0.2.x`, the old names are kept as aliases and will be maintained in future releases:
+For compatibility with `0.2.x`, the old names are kept as aliases. The current names and aliases are listed in [Getting started → Aliases](../getting-started/getting-started.md#aliases). <!-- TODO: confirm — `A11yModule` and `KeyboardExtendedModule` are not exported from src/index.tsx; the module is `Keyboard` -->
 
 | Old name | Current name |
 | :-- | :-- |
