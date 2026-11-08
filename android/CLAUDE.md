@@ -92,7 +92,7 @@ The lock view and its delegates are a copy of `react-native-a11y`'s `A11yLockVie
 
 ## KeyboardFocusGuide
 
-[`views/KeyboardFocusGuide/`](src/main/java/com/externalkeyboard/views/KeyboardFocusGuide/) backs `Focus.Guide`
+[`views/KeyboardFocusGuide/`](src/main/java/com/externalkeyboard/views/KeyboardFocusGuide/) backs `K.Guide`
 (`KeyboardFocusGuide`, manager name `KeyboardFocusGuide`), the Android counterpart of iOS `UIFocusGuide`. While linked to a
 target via `FocusLinkObserver` it is a focus candidate whose `requestFocus` hands focus to the target synchronously. The view
 keeps props and framework overrides and delegates to package-private helpers: `GuideMask` (flags + which input wins),

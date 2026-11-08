@@ -18,7 +18,7 @@ const config: Required<ExternalKeyboardConfig> = {
 /**
  * Sets app-wide defaults. Call it once, before the first render (e.g. in `index.js`).
  * It is a plain module setting, so it also covers portals and extra React roots that
- * `KeyboardGroupProvider` cannot reach. It does not re-render mounted views.
+ * `K.GroupIdentifierProvider` cannot reach. It does not re-render mounted views.
  */
 export const configure = (next: ExternalKeyboardConfig) => {
   if (next.uniqueGroupIdentifier !== undefined) {

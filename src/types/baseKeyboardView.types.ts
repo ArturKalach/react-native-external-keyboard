@@ -35,8 +35,8 @@ export type CommonFocusProps = {
    * Generate a unique `focusGroupIdentifier` for this view when no `groupIdentifier`
    * is set, so the view is its own keyboard focus group. `false` skips the generated
    * id and leaves grouping to the system. A `groupIdentifier` always wins, whether
-   * set on this view or inherited from an enclosing `KeyboardGroupProvider` /
-   * `KeyboardFocusGroup`. Falls back to the nearest `KeyboardGroupProvider`, then
+   * set on this view or inherited from an enclosing `K.GroupIdentifierProvider` /
+   * `K.FocusGroup`. Falls back to the nearest `K.GroupIdentifierProvider`, then
    * `Keyboard.configure`.
    *
    * @default false

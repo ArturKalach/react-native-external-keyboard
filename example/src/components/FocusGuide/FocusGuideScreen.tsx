@@ -10,8 +10,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import {
-  Focus,
-  KeyboardOrderFocusGroup,
+  K,
   Pressable,
   type KeyboardFocusGuideProps,
 } from 'react-native-external-keyboard';
@@ -163,7 +162,7 @@ const GuideBar = ({
   guide,
   style,
 }: GuideBarProps) => (
-  <Focus.Guide
+  <K.Guide
     orderGroup={group}
     to={to}
     enabled={enabled}
@@ -176,7 +175,7 @@ const GuideBar = ({
       {enabled ? '' : ' (disabled)'}
     </Text>
     <Text style={styles.guideSub}>FocusGuide → {to}</Text>
-  </Focus.Guide>
+  </K.Guide>
 );
 
 const Status = ({
@@ -271,7 +270,7 @@ const GridSection = ({ tracker }: { tracker: Tracker }) => {
         }`}
       />
 
-      <KeyboardOrderFocusGroup groupId={GRID_GROUP}>
+      <K.Order groupId={GRID_GROUP}>
         <View style={styles.grid}>
           {Array.from({ length: ROWS }, (_, r) => r + 1).map((row) => (
             <View collapsable={false} key={row} style={styles.row}>
@@ -288,7 +287,7 @@ const GridSection = ({ tracker }: { tracker: Tracker }) => {
             </View>
           ))}
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
 
       <View style={styles.controls}>
         <Toggle
@@ -364,7 +363,7 @@ const StackSection = ({ tracker }: { tracker: Tracker }) => {
         value={guidesCollapsed ? '1PX' : 'VISIBLE'}
         onPress={() => setGuidesCollapsed((v) => !v)}
       />
-      <KeyboardOrderFocusGroup groupId={STACK_GROUP}>
+      <K.Order groupId={STACK_GROUP}>
         <View collapsable={false} style={styles.grid}>
           <View collapsable={false} style={styles.row}>
             {STACK_ROWS[0]!.map((id) => (
@@ -405,7 +404,7 @@ const StackSection = ({ tracker }: { tracker: Tracker }) => {
             ))}
           </View>
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
     </Card>
   );
 };
@@ -441,7 +440,7 @@ const ListSection = ({ tracker }: { tracker: Tracker }) => {
         value={guidesCollapsed ? '1PX' : 'VISIBLE'}
         onPress={() => setGuidesCollapsed((v) => !v)}
       />
-      <KeyboardOrderFocusGroup groupId={LIST_GROUP}>
+      <K.Order groupId={LIST_GROUP}>
         <View style={styles.list}>
           <FocusCell
             id="start"
@@ -476,7 +475,7 @@ const ListSection = ({ tracker }: { tracker: Tracker }) => {
             isTarget
           />
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
     </Card>
   );
 };
@@ -487,7 +486,7 @@ export const FocusGuideScreen = () => {
   const tracker = useFocusTracker();
 
   return (
-    <Screen description="Focus.Guide (KeyboardFocusGuide) redirects hardware-keyboard focus to a target by orderId: a focusable stop on iOS and Android (iOS adds a native UIFocusGuide for the arrows-only modes). The guide never holds focus itself. Connect a keyboard, use the arrow keys and Tab, and watch where focus lands.">
+    <Screen description="K.Guide (KeyboardFocusGuide) redirects hardware-keyboard focus to a target by orderId: a focusable stop on iOS and Android (iOS adds a native UIFocusGuide for the arrows-only modes). The guide never holds focus itself. Connect a keyboard, use the arrow keys and Tab, and watch where focus lands.">
       <View style={styles.legend}>
         <LegendDot color={FOCUS} label="focused" />
         <LegendDot color={TARGET} label="guide target" />

@@ -7,10 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {
-  KeyboardOrderFocusGroup,
-  Pressable,
-} from 'react-native-external-keyboard';
+import { K, Pressable } from 'react-native-external-keyboard';
 import type { BaseKeyboardViewType } from 'react-native-external-keyboard';
 
 const ACCENT = '#5856d6'; // the custom order path / visited cells
@@ -158,7 +155,7 @@ export const FocusOrderAnimatedScreen = () => {
           })}
 
           {/* Focusable cells, grouped so order IDs stay namespaced. */}
-          <KeyboardOrderFocusGroup>
+          <K.Order>
             {STOPS.map((s, i) => {
               const step = i + 1;
               return (
@@ -177,7 +174,7 @@ export const FocusOrderAnimatedScreen = () => {
                 />
               );
             })}
-          </KeyboardOrderFocusGroup>
+          </K.Order>
 
           {/* Comet that rides the order path (on top). */}
           <Animated.View

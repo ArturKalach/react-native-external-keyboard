@@ -97,7 +97,7 @@ When a view's order props change, route the mutation through `RNCEKVOrderLinking
 
 ## Focus guide
 
-[`features/FocusGuide/`](features/FocusGuide/) backs `Focus.Guide` (`KeyboardFocusGuide`; codegen component `KeyboardFocusGuide`,
+[`features/FocusGuide/`](features/FocusGuide/) backs `K.Guide` (`KeyboardFocusGuide`; codegen component `KeyboardFocusGuide`,
 view `RNCEKVKeyboardFocusGuide`). It is a copy of react-native-a11y's `views/RNCEKVKeyboardFocusGuide/` (prefix and Fabric names
 differ), so port fixes between the two. The view keeps props, its accessibility/focus state and the UIKit
 overrides, and delegates to helpers in the same folder (mirroring Android): `RNCEKVGuideMaskPolicy` (flags + which input wins),

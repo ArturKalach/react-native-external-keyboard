@@ -25,8 +25,8 @@ export type KeyboardGroupProviderProps = React.PropsWithChildren<{
 /**
  * JS-only focus-group scope (iOS): no native view, no layout. It decides which keyboard
  * focus group the focusable views inside belong to, i.e. what one Tab stop is. Focus
- * *order* is separate: use `KeyboardOrderFocusGroup` for that. Reach for
- * `KeyboardFocusGroup` instead when you also need group focus events
+ * *order* is separate: use `K.Order` for that. Reach for
+ * `K.FocusGroup` instead when you also need group focus events
  * (`onGroupFocusChange`/`onFocusChange`) or group styling (`tintColor`, `focusStyle`).
  * Wrap the whole app in one to set the default for a React tree.
  */

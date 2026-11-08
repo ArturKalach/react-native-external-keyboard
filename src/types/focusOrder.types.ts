@@ -26,7 +26,7 @@ export type LockFocusType = `${LockFocusEnum}`;
  * of the element that should receive focus when moving in that direction.
  *
  * > `orderId` values are global. In repeated content (lists, cards) duplicate IDs cause
- * > incorrect focus jumps — namespace them with `orderPrefix` or a `KeyboardOrderFocusGroup`.
+ * > incorrect focus jumps — namespace them with `orderPrefix` or a `K.Order`.
  */
 export type FocusOrderProps = {
   /** Unique ID used as the link target for other elements' `order*` props. */

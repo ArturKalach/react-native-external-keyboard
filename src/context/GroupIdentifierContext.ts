@@ -3,7 +3,7 @@ import { getUniqueGroupIdentifier } from '../config';
 
 /**
  * iOS keyboard focus grouping inherited by descendant focusable views. Set by
- * `KeyboardGroupProvider` (also used by `KeyboardFocusGroup`). An unset field means
+ * `K.GroupIdentifierProvider` (also used by `K.FocusGroup`). An unset field means
  * "not set here": inherit from the parent scope.
  */
 export type GroupIdentifierScope = {

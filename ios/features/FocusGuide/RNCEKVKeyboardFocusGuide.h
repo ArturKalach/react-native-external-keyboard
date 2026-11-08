@@ -2,7 +2,7 @@
 //  RNCEKVKeyboardFocusGuide.h
 //  react-native-external-keyboard
 //
-//  iOS host backing `KeyboardFocusGuide` (`Focus.Guide`): redirects hardware-keyboard focus to the view
+//  iOS host backing `KeyboardFocusGuide` (`K.Guide`): redirects hardware-keyboard focus to the view
 //  registered under `preferredFocusOrderId`.
 //
 

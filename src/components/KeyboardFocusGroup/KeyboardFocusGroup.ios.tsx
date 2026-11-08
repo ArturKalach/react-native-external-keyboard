@@ -13,7 +13,7 @@ export type { KeyboardFocusGroupProps };
 
 /**
  * Native focus group: group focus events and styling. Its `groupIdentifier` is shared
- * with descendants through `KeyboardGroupProvider` (use that directly when you only need
+ * with descendants through `K.GroupIdentifierProvider` (use that directly when you only need
  * the grouping, without a native view), and its `orderGroup` as their keyboard order group.
  */
 export const KeyboardFocusGroup = React.memo<KeyboardFocusGroupProps>(

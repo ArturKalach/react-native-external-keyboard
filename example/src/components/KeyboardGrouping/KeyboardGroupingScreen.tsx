@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import {
-  KeyboardGroupProvider,
-  KeyboardOrderFocusGroup,
-  Pressable,
-} from 'react-native-external-keyboard';
+import { K, Pressable } from 'react-native-external-keyboard';
 
 const FOCUS = '#34c759';
 
@@ -87,23 +83,23 @@ export const KeyboardGroupingScreen = () => {
         {...item}
       />
 
-      <KeyboardGroupProvider groupIdentifier="grouping-toolbar">
+      <K.GroupIdentifierProvider groupIdentifier="grouping-toolbar">
         <Region
-          title="NAMED GROUP · KeyboardGroupProvider groupIdentifier"
+          title="NAMED GROUP · K.GroupIdentifierProvider groupIdentifier"
           hint="One Tab stop for the row; Ctrl+Tab moves between T1–T3."
           prefix="T"
           {...item}
         />
-      </KeyboardGroupProvider>
+      </K.GroupIdentifierProvider>
 
-      <KeyboardGroupProvider uniqueGroupIdentifier>
+      <K.GroupIdentifierProvider uniqueGroupIdentifier>
         <Region
-          title="UNIQUE · KeyboardGroupProvider uniqueGroupIdentifier"
+          title="UNIQUE · K.GroupIdentifierProvider uniqueGroupIdentifier"
           hint="Every view is its own group, so Tab stops at U1, U2 and U3 (the pre-0.14 behavior)."
           prefix="U"
           {...item}
         />
-      </KeyboardGroupProvider>
+      </K.GroupIdentifierProvider>
 
       <View style={styles.card}>
         <Text style={styles.cardLabel}>PER VIEW · uniqueGroupIdentifier</Text>
@@ -146,15 +142,15 @@ export const KeyboardGroupingScreen = () => {
             uniqueGroupIdentifier: {orderUnique ? 'ON' : 'OFF'}
           </Text>
         </Pressable>
-        <KeyboardGroupProvider uniqueGroupIdentifier={orderUnique}>
-          <KeyboardOrderFocusGroup groupId="grouping-order">
+        <K.GroupIdentifierProvider uniqueGroupIdentifier={orderUnique}>
+          <K.Order groupId="grouping-order">
             <View style={styles.row}>
               {[1, 2, 3].map((n) => (
                 <Item key={n} id={`O${n}`} orderIndex={3 - n} {...item} />
               ))}
             </View>
-          </KeyboardOrderFocusGroup>
-        </KeyboardGroupProvider>
+          </K.Order>
+        </K.GroupIdentifierProvider>
       </View>
     </ScrollView>
   );

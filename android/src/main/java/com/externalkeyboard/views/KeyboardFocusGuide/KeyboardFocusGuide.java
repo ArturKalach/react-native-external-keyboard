@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 
 import com.facebook.react.views.view.ReactViewGroup;
 
-/** `KeyboardFocusGuide` (`Focus.Guide`): an area that sends keyboard or TalkBack focus on to the target view (like iOS `UIFocusGuide`). */
+/** `KeyboardFocusGuide` (`K.Guide`): an area that sends keyboard or TalkBack focus on to the target view (like iOS `UIFocusGuide`). */
 public class KeyboardFocusGuide extends ReactViewGroup implements GuideHost {
   public static final int DEFAULT_GUIDE_MASK = GuideMask.DEFAULT;
 

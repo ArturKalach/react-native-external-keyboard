@@ -26,6 +26,6 @@ export type KeyboardFocusGuideProps = ViewProps & {
    * Defaults to `'keyboard'`.
    */
   guide?: KeyboardFocusGuideMode | KeyboardFocusGuideMode[];
-  /** Order group of the target. Defaults to the surrounding `KeyboardOrderFocusGroup`. */
+  /** Order group of the target. Defaults to the surrounding `K.Order`. */
   orderGroup?: string;
 };

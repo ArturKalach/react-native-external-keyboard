@@ -47,7 +47,7 @@ lib/               Generated build output (commonjs, ESM, types) — do not edit
   - `BaseKeyboardView` — core wrapper, used by most other components
   - `KeyboardFocusGroup` — maps to iOS `focusGroupIdentifier`
   - `KeyboardFocusLock/` — `Focus.Frame` (leak detection) and `Focus.Trap` (containment)
-  - `KeyboardFocusGuide` — `Focus.Guide`: redirects keyboard / screen-reader focus that enters an area to a target `orderId`
+  - `KeyboardFocusGuide` — `K.Guide`: redirects keyboard / screen-reader focus that enters an area to a target `orderId`
   - `KeyboardExtendedInput` — TextInput with focus support
   - `Touchable/` — Pressable wrapper
 - **`modules/`** — JS-side native module bridge (`Keyboard.ts` / `Keyboard.android.ts`)

@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {
-  KeyboardFocusGroup,
+  K,
   withKeyboardFocus,
   type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
@@ -153,7 +153,7 @@ export const FocusGroupExample = forwardRef<BaseKeyboardViewType>((_, ref) => {
           />
         </View>
       )}
-      <KeyboardFocusGroup style={styles.colorsContainer} groupIdentifier="main">
+      <K.FocusGroup style={styles.colorsContainer} groupIdentifier="main">
         {colors.map((item, index) => (
           <FocusItem
             ref={index === 0 ? ref : undefined}
@@ -165,9 +165,9 @@ export const FocusGroupExample = forwardRef<BaseKeyboardViewType>((_, ref) => {
             onPress={() => setCurrentItem(item)}
           />
         ))}
-      </KeyboardFocusGroup>
+      </K.FocusGroup>
       <View style={styles.optionGroupContainer}>
-        <KeyboardFocusGroup
+        <K.FocusGroup
           style={styles.optionGroup}
           focusStyle={styles.optionGroupFocus}
           groupIdentifier="additional"
@@ -175,7 +175,7 @@ export const FocusGroupExample = forwardRef<BaseKeyboardViewType>((_, ref) => {
           <OptionButton onPress={() => setRadious(5)} content={5} />
           <OptionButton onPress={() => setRadious(15)} content={15} />
           <OptionButton onPress={() => setRadious(30)} content={30} />
-        </KeyboardFocusGroup>
+        </K.FocusGroup>
       </View>
     </View>
   );

@@ -10,9 +10,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import {
-  Focus,
-  KeyboardGroupProvider,
-  KeyboardOrderFocusGroup,
+  K,
   Pressable,
   useIsViewFocused,
   type KeyboardFocusGuideProps,
@@ -359,7 +357,7 @@ export const FocusGuideDemoScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.description}>
-          Focus.Guide sends keyboard focus to a view you choose. Use a hardware
+          K.Guide sends keyboard focus to a view you choose. Use a hardware
           keyboard.
         </Text>
         <View style={styles.body}>
@@ -373,7 +371,7 @@ export const FocusGuideDemoScreen = () => {
             <Legend color={THEME.redirect} label="redirect" />
           </View>
 
-          <KeyboardOrderFocusGroup groupId={GROUP}>
+          <K.Order groupId={GROUP}>
             <View
               collapsable={false}
               style={[styles.stage, { height: stageHeight }]}
@@ -407,7 +405,7 @@ export const FocusGuideDemoScreen = () => {
                       invisible && styles.capsuleInvisible,
                     ]}
                   >
-                    <Focus.Guide
+                    <K.Guide
                       orderGroup={GROUP}
                       to="pay"
                       guide={guideInputs}
@@ -437,9 +435,9 @@ export const FocusGuideDemoScreen = () => {
                       >
                         {enabled ? guideLabel(0) : 'guide off'}
                       </Text>
-                    </Focus.Guide>
+                    </K.Guide>
                     {invisible ? null : <View style={styles.capsuleDivider} />}
-                    <Focus.Guide
+                    <K.Guide
                       orderGroup={GROUP}
                       to="coffee"
                       guide={guideInputs}
@@ -469,7 +467,7 @@ export const FocusGuideDemoScreen = () => {
                       >
                         {enabled ? guideLabel(1) : 'guide off'}
                       </Text>
-                    </Focus.Guide>
+                    </K.Guide>
                   </View>
 
                   {trip ? (
@@ -496,7 +494,7 @@ export const FocusGuideDemoScreen = () => {
                 </View>
               ) : null}
             </View>
-          </KeyboardOrderFocusGroup>
+          </K.Order>
 
           <View
             style={[styles.banner, trip?.redirected && styles.bannerOn]}
@@ -520,7 +518,7 @@ export const FocusGuideDemoScreen = () => {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <KeyboardGroupProvider groupIdentifier="guide-demo-toggles">
+        <K.GroupIdentifierProvider groupIdentifier="guide-demo-toggles">
           <View style={styles.toggles}>
             <Toggle
               label="Guide"
@@ -543,7 +541,7 @@ export const FocusGuideDemoScreen = () => {
               }}
             />
           </View>
-        </KeyboardGroupProvider>
+        </K.GroupIdentifierProvider>
       </View>
     </View>
   );
@@ -577,7 +575,7 @@ type HorizontalDemoProps = {
 /** A scrolling row with two shortcuts: a guide after the first card sends → to the last card, one before the last card sends ← back to the first. */
 const HorizontalDemo = ({ enabled, guide }: HorizontalDemoProps) => {
   const jump = (to: string, arrow: string, label: string) => (
-    <Focus.Guide
+    <K.Guide
       orderGroup={H_GROUP}
       to={to}
       guide={guide}
@@ -586,7 +584,7 @@ const HorizontalDemo = ({ enabled, guide }: HorizontalDemoProps) => {
     >
       <Text style={hs.guideArrow}>{arrow}</Text>
       <Text style={hs.guideText}>{enabled ? label : 'off'}</Text>
-    </Focus.Guide>
+    </K.Guide>
   );
 
   return (
@@ -595,7 +593,7 @@ const HorizontalDemo = ({ enabled, guide }: HorizontalDemoProps) => {
         <Text style={hs.title}>Horizontal list</Text>
         <Text style={hs.sub}>start ⇄ end</Text>
       </View>
-      <KeyboardOrderFocusGroup groupId={H_GROUP}>
+      <K.Order groupId={H_GROUP}>
         <BlueprintStage style={hs.stage}>
           <ScrollView
             horizontal
@@ -633,7 +631,7 @@ const HorizontalDemo = ({ enabled, guide }: HorizontalDemoProps) => {
             })}
           </ScrollView>
         </BlueprintStage>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
     </View>
   );
 };
@@ -680,7 +678,7 @@ type VerticalDemoProps = {
 /** A scrolling column with two shortcuts: a guide before the first item sends ↑ to the last item, one after the last item sends ↓ back to the first. */
 const VerticalDemo = ({ enabled, guide }: VerticalDemoProps) => {
   const jump = (to: string, arrow: string, label: string) => (
-    <Focus.Guide
+    <K.Guide
       orderGroup={V_GROUP}
       to={to}
       guide={guide}
@@ -689,7 +687,7 @@ const VerticalDemo = ({ enabled, guide }: VerticalDemoProps) => {
     >
       <Text style={vs.guideArrow}>{arrow}</Text>
       <Text style={vs.guideText}>{enabled ? label : 'off'}</Text>
-    </Focus.Guide>
+    </K.Guide>
   );
 
   return (
@@ -698,7 +696,7 @@ const VerticalDemo = ({ enabled, guide }: VerticalDemoProps) => {
         <Text style={vs.title}>Vertical list</Text>
         <Text style={vs.sub}>first ↕ last</Text>
       </View>
-      <KeyboardOrderFocusGroup groupId={V_GROUP}>
+      <K.Order groupId={V_GROUP}>
         <BlueprintStage style={vs.stage}>
           <ScrollView
             // Off-screen children stay mounted, so a guide can reach a target that is scrolled out of view.
@@ -737,7 +735,7 @@ const VerticalDemo = ({ enabled, guide }: VerticalDemoProps) => {
             })}
           </ScrollView>
         </BlueprintStage>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
     </View>
   );
 };

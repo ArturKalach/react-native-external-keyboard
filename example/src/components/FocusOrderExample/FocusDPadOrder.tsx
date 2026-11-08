@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {
-  KeyboardOrderFocusGroup,
+  K,
   Pressable,
   type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
@@ -44,7 +44,7 @@ export const FocusDPadOrder = () => {
           to change its link target.
         </Text>
       </View>
-      <KeyboardOrderFocusGroup>
+      <K.Order>
         <View style={styles.grid}>
           <View style={styles.row}>
             <Pressable
@@ -152,7 +152,7 @@ export const FocusDPadOrder = () => {
             </Pressable>
           </View>
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
     </View>
   );
 };

@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import {
+  K,
   KeyboardExtendedInput,
-  KeyboardOrderFocusGroup,
   Pressable,
   type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
@@ -31,7 +31,7 @@ export const FocusMixedDpadOrder = () => {
           links change on press.
         </Text>
       </View>
-      <KeyboardOrderFocusGroup>
+      <K.Order>
         <View style={styles.grid}>
           <View style={styles.row}>
             <KeyboardExtendedInput
@@ -134,7 +134,7 @@ export const FocusMixedDpadOrder = () => {
             />
           </View>
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, styles.legendInput]} />

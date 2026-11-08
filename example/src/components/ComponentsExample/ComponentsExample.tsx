@@ -14,11 +14,11 @@ import {
   View,
 } from 'react-native';
 import {
+  K,
   KeyboardExtendedInput,
   KeyboardExtendedBaseView,
   type KeyPress,
   withKeyboardFocus,
-  KeyboardFocusGroup,
   Keyboard,
   type BaseKeyboardViewType,
 } from 'react-native-external-keyboard';
@@ -77,7 +77,7 @@ export const ComponentsExample = forwardRef<BaseKeyboardViewType, {}>(
     };
 
     return (
-      <KeyboardFocusGroup tintColor="orange" style={styles.flex}>
+      <K.FocusGroup tintColor="orange" style={styles.flex}>
         <ScrollView
           contentContainerStyle={styles.contentContainer}
           style={styles.container}
@@ -255,7 +255,7 @@ export const ComponentsExample = forwardRef<BaseKeyboardViewType, {}>(
             </Modal>
           </KeyboardExtendedBaseView>
         </ScrollView>
-      </KeyboardFocusGroup>
+      </K.FocusGroup>
     );
   }
 );

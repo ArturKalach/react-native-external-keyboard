@@ -3,10 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  KeyboardGroupProvider,
-  Pressable,
-} from 'react-native-external-keyboard';
+import { K, Pressable } from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
 
 /** Ordered list of the demo screens, shared by the Prev/Next footer. */
@@ -30,7 +27,7 @@ const DemoFooter = ({ prev, next }: { prev?: Step; next?: Step }) => {
       collapsable={false}
       style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}
     >
-      <KeyboardGroupProvider groupIdentifier="demo-nav-footer">
+      <K.GroupIdentifierProvider groupIdentifier="demo-nav-footer">
         <FooterButton
           align="start"
           step={prev}
@@ -45,7 +42,7 @@ const DemoFooter = ({ prev, next }: { prev?: Step; next?: Step }) => {
           chevron="›"
           onPress={() => next && navigation.replace(next.name)}
         />
-      </KeyboardGroupProvider>
+      </K.GroupIdentifierProvider>
     </View>
   );
 };

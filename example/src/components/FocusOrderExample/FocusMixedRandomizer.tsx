@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import {
+  K,
   KeyboardExtendedInput,
-  KeyboardOrderFocusGroup,
   Pressable,
 } from 'react-native-external-keyboard';
 import { ANDROID_SECONDARY_FOCUS_STYLE } from '../../constants/styles';
@@ -58,7 +58,7 @@ export const FocusMixedRandomizer = () => {
           pressables. Tab through to verify the new sequence.
         </Text>
       </View>
-      <KeyboardOrderFocusGroup>
+      <K.Order>
         <View style={styles.grid}>
           {Array.from({ length: rows }, (_i, row) => (
             <View key={row} style={styles.row}>
@@ -104,7 +104,7 @@ export const FocusMixedRandomizer = () => {
             </View>
           ))}
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, styles.legendInput]} />

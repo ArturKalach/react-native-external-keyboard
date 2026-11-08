@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import {
+  K,
   KeyboardExtendedInput,
-  KeyboardOrderFocusGroup,
   Pressable,
 } from 'react-native-external-keyboard';
 import { ANDROID_FOCUS_STYLE } from '../../constants/styles';
@@ -17,7 +17,7 @@ export const FocusMixedOrder = () => {
           <Text style={styles.code}>orderBackward</Text>.
         </Text>
       </View>
-      <KeyboardOrderFocusGroup>
+      <K.Order>
         <View style={styles.grid}>
           <View style={styles.row}>
             <KeyboardExtendedInput
@@ -133,7 +133,7 @@ export const FocusMixedOrder = () => {
             />
           </View>
         </View>
-      </KeyboardOrderFocusGroup>
+      </K.Order>
       <View style={styles.legend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, styles.legendInput]} />

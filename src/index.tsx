@@ -1,12 +1,16 @@
 import {
+  BaseKeyboardView,
   FocusFrame,
   FocusTrap,
+  KeyboardFocusGroup,
   KeyboardFocusGuide,
   KeyboardFocusView,
   KeyboardExtendedInput,
   Pressable,
 } from './components';
 import * as Keyboard from './modules/Keyboard';
+import { KeyboardOrderFocusGroup } from './context/OrderFocusContext';
+import { KeyboardGroupProvider } from './context/KeyboardGroupProvider';
 
 // Native spec
 export {
@@ -75,11 +79,15 @@ export { Keyboard };
 export const Focus = {
   Frame: FocusFrame,
   Trap: FocusTrap,
-  Guide: KeyboardFocusGuide,
 };
 
 export const K = {
   Input: KeyboardExtendedInput,
   View: KeyboardFocusView,
+  BaseView: BaseKeyboardView,
   Pressable,
+  Guide: KeyboardFocusGuide,
+  Order: KeyboardOrderFocusGroup,
+  FocusGroup: KeyboardFocusGroup,
+  GroupIdentifierProvider: KeyboardGroupProvider,
 };
